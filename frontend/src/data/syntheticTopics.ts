@@ -317,14 +317,14 @@ export const functionsTopic: RawTopic = {
           expl: 'Define `lineTotal` once—call it anywhere you need price × quantity.',
         },
         {
-          l: 5,
+          l: 4,
           vars: { total: 38 },
           out: [],
           expl: `Pass arguments 9.5 and 4; multiply inside the function.`,
           changed: ['total'],
         },
         {
-          l: 7,
+          l: 6,
           vars: { total: 38 },
           out: ['38'],
           expl: 'Returned value becomes your single source of truth.',
@@ -349,7 +349,7 @@ export const functionsTopic: RawTopic = {
           expl: 'Concatenate strings inside the function boundary.',
         },
         {
-          l: 5,
+          l: 4,
           vars: {},
           out: ['Hi Ada Lovelace!'],
           expl: 'Reuse the same helper for any customer name.',
@@ -466,7 +466,7 @@ console.log(order.shipTo.city);`,
           changed: ['order'],
         },
         {
-          l: 5,
+          l: 6,
           vars: { order: { id: 901, shipTo: { city: 'Oslo', country: 'NO' } } },
           out: ['Oslo'],
           expl: 'Chain property access to drill into nested data.',
@@ -544,14 +544,14 @@ console.log(headline.textContent);`,
           expl: 'The real DOM is richer—here a tiny mock shows the selection API shape.',
         },
         {
-          l: 8,
+          l: 7,
           vars: { heading: { textContent: 'Invoices' } },
           out: [],
           expl: 'Store the matched node to read `textContent`—what screen readers and layout use.',
           changed: ['heading'],
         },
         {
-          l: 9,
+          l: 8,
           vars: { heading: { textContent: 'Invoices' } },
           out: ['Invoices'],
           expl: 'Log the headline string you might bind into a SPA view.',
@@ -855,14 +855,14 @@ export const asyncTopic: RawTopic = {
       ],
       steps: [
         {
-          l: 5,
+          l: 4,
           vars: { user: { id: 7, name: 'Sam' } },
           out: [],
           expl: 'Real `fetch` is async—this shapes the data you would `await` later.',
           changed: ['user'],
         },
         {
-          l: 7,
+          l: 6,
           vars: { user: { id: 7, name: 'Sam' } },
           out: ['Sam'],
           expl: 'Once resolved, use the value like any other object.',
@@ -881,7 +881,7 @@ export const asyncTopic: RawTopic = {
       ],
       steps: [
         {
-          l: 3,
+          l: 4,
           vars: { step: 3 },
           out: ['Done after 3 steps'],
           expl: 'Async flows often mirror sequential checkpoints—here shown with integers.',
@@ -941,7 +941,7 @@ export const errorsTopic: RawTopic = {
       ],
       steps: [
         {
-          l: 8,
+          l: 9,
           vars: {},
           out: ['5 null'],
           expl: 'Catch converts a thrown error into a neutral `null` for the caller.',
@@ -1033,10 +1033,17 @@ export const modulesTopic: RawTopic = {
           expl: 'Bundlers wrap real modules—this object stands in for `import { vat } from "./tax"`.',
         },
         {
-          l: 7,
+          l: 6,
+          vars: { gross: 120 },
+          out: [],
+          expl: 'Call the shared helper exactly like an imported function.',
+          changed: ['gross'],
+        },
+        {
+          l: 8,
           vars: { gross: 120 },
           out: ['120'],
-          expl: 'Call the shared helper exactly like an imported function.',
+          expl: 'Log the result you would wire into UI after a real import.',
           console: true,
         },
       ],
@@ -1053,7 +1060,7 @@ export const modulesTopic: RawTopic = {
       ],
       steps: [
         {
-          l: 6,
+          l: 5,
           vars: { api: { defaultBase: 'https://api.example.com' } },
           out: ['https://api.example.com ok'],
           expl: 'Default exports bundle a primary value; named exports expose many symbols—both compose app layers.',
@@ -1146,7 +1153,7 @@ export const classesTopic: RawTopic = {
       ],
       steps: [
         {
-          l: 9,
+          l: 10,
           vars: { p: { tag: 'premium' } },
           out: ['premium'],
           expl: 'Subclasses override behavior while sharing the same interface.',

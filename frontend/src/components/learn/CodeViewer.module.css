@@ -1,5 +1,7 @@
 .wrap {
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
+  font-feature-settings: var(--font-mono-code-features);
   font-size: 0.8125rem;
   line-height: 1.55;
   border-radius: var(--radius-md);

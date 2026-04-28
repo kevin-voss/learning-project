@@ -103,6 +103,8 @@
   background: rgb(5 8 18 / 92%);
   color: var(--color-fg);
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
+  font-feature-settings: var(--font-mono-code-features);
   font-size: 0.8125rem;
   line-height: 1.5;
   resize: vertical;

@@ -52,8 +52,9 @@ type PlaygroundTaskBase = {
   id: string
   topicId: string
   title: string
+  /** Goal in plain language — how the sandbox works is summarized in the Practice panel. */
   description: string
-  /** Problem detail shown under title (e.g. constraints) */
+  /** Scenario: inputs, literals, wording, branches (mechanics are in the checker summary). */
   problemDetail?: string
   starterCode: string
   hints: string[]

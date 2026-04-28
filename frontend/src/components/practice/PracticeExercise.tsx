@@ -13,6 +13,7 @@ import { PlaybackControls } from '@/components/learn/PlaybackControls'
 import { Toast } from '@/components/learn/Toast'
 import { HintPanel } from '@/components/practice/HintPanel'
 import { PlaygroundCodeEditor } from '@/components/practice/PlaygroundCodeEditor'
+import { PracticeTaskBrief } from '@/components/practice/PracticeTaskBrief'
 import { TestResults } from '@/components/practice/TestResults'
 import { VariableInspector } from '@/components/learn/VariableInspector'
 import { canStepBack, canStepForward } from '@/engine/playback'
@@ -285,8 +286,10 @@ export function PracticeExercise({ task, editorId = 'playground-code' }: Props) 
             <p className={learnStyles.overline}>Practice · {task.title}</p>
             <p className={learnStyles.desc}>{task.description}</p>
           </div>
+          <PracticeTaskBrief task={task} />
           {task.problemDetail ? (
-            <aside className={learnStyles.intro} aria-label="Problem detail">
+            <aside className={learnStyles.intro} aria-label="Scenario and specifics">
+              <p className={learnStyles.introTitle}>Scenario and specifics</p>
               <p className={learnStyles.introBody}>{task.problemDetail}</p>
             </aside>
           ) : null}

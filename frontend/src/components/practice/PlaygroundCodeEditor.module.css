@@ -36,6 +36,8 @@
   width: 2.75rem;
   padding: var(--space-3) var(--space-2) var(--space-3) var(--space-3);
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
+  font-feature-settings: var(--font-mono-code-features);
   font-size: 0.8125rem;
   line-height: 1.5;
   text-align: right;
@@ -82,6 +84,8 @@
   margin: 0;
   padding: var(--space-3);
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
+  font-feature-settings: var(--font-mono-code-features);
   font-size: 0.8125rem;
   line-height: 1.5;
   tab-size: 2;
@@ -128,6 +132,8 @@
   border: none;
   padding: var(--space-3);
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
+  font-feature-settings: var(--font-mono-code-features);
   font-size: 0.8125rem;
   line-height: 1.5;
   background: transparent;

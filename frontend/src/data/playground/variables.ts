@@ -5,7 +5,7 @@ export const variablesPlaygroundTasks: PlaygroundTask[] = [
     id: 'pg-wallet-bindings',
     topicId: 'variables',
     title: 'Wallet snapshot',
-    description: 'Bindings mode pre-declares names—assign only, no `let`/`const`.',
+    description: 'Populate the three wallet fields so they match the checker’s expected snapshot.',
     problemDetail: 'Set `currency` to `USD`, `balance` to `42.5`, and `active` to `true`.',
     mode: 'bindings',
     bindings: ['currency', 'balance', 'active'],
@@ -26,7 +26,7 @@ export const variablesPlaygroundTasks: PlaygroundTask[] = [
     id: 'pg-line-item-console',
     topicId: 'variables',
     title: 'Log a line item',
-    description: 'Compute with operators, then print the exact line the checker expects.',
+    description: 'Use the given constants, then log the line the tests compare against.',
     problemDetail: 'Unit price 9, quantity 3. Log `Line: 27` (one line, no extra spaces).',
     mode: 'console',
     expected: {

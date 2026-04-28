@@ -5,8 +5,8 @@ export const objectsPlaygroundTasks: PlaygroundTask[] = [
     id: 'pg-product-bindings',
     topicId: 'objects',
     title: 'Product fields',
-    description: 'Fill `title` and `price` on a pre-declared product object.',
-    problemDetail: 'Title `Mug`, price `12.5` (number).',
+    description: 'Assign plain values to the two identifiers the checker exposes.',
+    problemDetail: 'Set `title` to `Mug` and `price` to the number `12.5`.',
     mode: 'bindings',
     bindings: ['title', 'price'],
     expected: [

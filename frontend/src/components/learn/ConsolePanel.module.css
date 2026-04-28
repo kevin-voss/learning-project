@@ -231,6 +231,7 @@
   word-break: break-word;
   color: var(--color-fg);
   font-variant-ligatures: none;
+  font-feature-settings: var(--font-mono-code-features);
 }
 
 /* Syntax tint — aligned with CodeViewer */

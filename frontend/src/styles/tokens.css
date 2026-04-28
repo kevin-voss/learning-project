@@ -23,6 +23,8 @@
 
   --font-ui: var(--font-stack-sans);
   --font-mono: var(--font-stack-mono);
+  /* JetBrains Mono merges === / !== via liga+calt; code surfaces need raw glyphs */
+  --font-mono-code-features: "liga" 0, "calt" 0;
 
   /* Radius & rhythm */
   --radius-sm: 6px;

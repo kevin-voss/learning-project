@@ -1,0 +1,42 @@
+:root {
+  /* Surface */
+  --color-bg-base: #080d1a;
+  --color-bg-raised: #0f1729;
+  --color-bg-muted: #162033;
+
+  --color-fg: #e2e8f0;
+  --color-fg-muted: #5a6b82;
+
+  --color-accent: #00d4aa;
+  --color-accent-strong: #00ffd0;
+  --color-accent-muted: rgb(0 212 170 / 12%);
+
+  --color-accent-2: #ff6b35;
+
+  --color-border: #1a2744;
+
+  --color-code-line-hl: rgb(0 212 170 / 8%);
+  --color-focus-ring: var(--color-accent);
+
+  --font-stack-sans: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-stack-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --font-ui: var(--font-stack-sans);
+  --font-mono: var(--font-stack-mono);
+
+  /* Radius & rhythm */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+
+  /* Layout widths */
+  --layout-topic-col: minmax(14rem, 18rem);
+  --layout-sidebar-col: minmax(14rem, 17.5rem);
+  --breakpoint-sidebar-collapse: 56.25rem; /* 900px */
+}

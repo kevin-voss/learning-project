@@ -1,0 +1,170 @@
+.shell {
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  background: rgb(5 8 18 / 92%);
+  overflow: hidden;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.embedded {
+  border: none;
+  border-radius: 0;
+  background: transparent;
+}
+
+.shell:focus-within {
+  border-color: rgb(0 212 170 / 45%);
+  box-shadow: 0 0 0 1px rgb(0 212 170 / 25%);
+}
+
+.disabled {
+  opacity: 0.75;
+}
+
+.body {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.gutter {
+  flex-shrink: 0;
+  width: 2.75rem;
+  padding: var(--space-3) var(--space-2) var(--space-3) var(--space-3);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  text-align: right;
+  color: var(--color-fg-muted);
+  user-select: none;
+  background: rgb(8 11 22 / 90%);
+  align-self: stretch;
+}
+
+.gutterLine {
+  min-height: calc(0.8125rem * 1.5);
+}
+
+.gutterLineActive {
+  color: var(--color-accent);
+}
+
+.inputStack {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.layerGrid {
+  display: grid;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.layerGrid > * {
+  grid-area: 1 / 1;
+}
+
+.highlightPane {
+  overflow: auto;
+  pointer-events: none;
+  z-index: 0;
+  min-height: 0;
+}
+
+.highlightLines {
+  margin: 0;
+  padding: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  tab-size: 2;
+}
+
+.hlRow {
+  display: flex;
+  align-items: stretch;
+  min-height: calc(0.8125rem * 1.5);
+  margin: 0 calc(-1 * var(--space-3));
+  padding: 0 var(--space-3);
+  border-left: 3px solid transparent;
+  white-space: pre;
+}
+
+.hlRowActive {
+  background: var(--color-code-line-hl);
+  border-left-color: var(--color-accent);
+}
+
+.hlSeg {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border-radius: 2px;
+  transition:
+    background 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+.segmentFocused {
+  background: rgb(255 107 53 / 14%);
+  box-shadow:
+    inset 0 0 0 1px rgb(255 107 53 / 35%),
+    0 0 0 1px rgb(255 107 53 / 18%);
+}
+
+.textarea {
+  z-index: 1;
+  margin: 0;
+  resize: vertical;
+  min-height: clamp(12rem, 28dvh, 24rem);
+  flex: 1 1 auto;
+  border: none;
+  padding: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  background: transparent;
+  color: transparent;
+  /* WebKit often still paints textarea text unless fill is forced transparent */
+  -webkit-text-fill-color: transparent;
+  caret-color: var(--color-fg);
+  tab-size: 2;
+  overflow: auto;
+}
+
+.textarea:focus {
+  outline: none;
+}
+
+.textarea::selection {
+  background: rgb(0 212 170 / 22%);
+}
+
+/* Syntax tint — match CodeViewer / console */
+.shell :global(.syn-kw) {
+  color: #c792ea;
+}
+
+.shell :global(.syn-str) {
+  color: #c3e88d;
+}
+
+.shell :global(.syn-num) {
+  color: #f78c6c;
+}
+
+.shell :global(.syn-fn) {
+  color: #82aaff;
+}
+
+.shell :global(.syn-cmt) {
+  color: #546e7a;
+  font-style: italic;
+}

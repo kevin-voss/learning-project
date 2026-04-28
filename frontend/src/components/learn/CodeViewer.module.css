@@ -1,0 +1,77 @@
+.wrap {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-raised);
+  overflow-x: auto;
+}
+
+.codeLine {
+  display: flex;
+  align-items: stretch;
+  padding: 0 var(--space-3);
+  border-left: 3px solid transparent;
+}
+
+.lineHighlighted {
+  background: var(--color-code-line-hl);
+  border-left-color: var(--color-accent);
+}
+
+.lineNum {
+  flex-shrink: 0;
+  width: 2.25rem;
+  padding: var(--space-2) var(--space-2) var(--space-2) 0;
+  color: var(--color-fg-muted);
+  text-align: right;
+  user-select: none;
+}
+
+.lineHighlighted .lineNum {
+  color: var(--color-accent);
+}
+
+.lineCode {
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-2) 0;
+  white-space: pre;
+}
+
+.segment {
+  border-radius: 2px;
+  transition:
+    background 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+.segmentFocused {
+  background: rgb(255 107 53 / 14%);
+  box-shadow:
+    inset 0 0 0 1px rgb(255 107 53 / 35%),
+    0 0 0 1px rgb(255 107 53 / 18%);
+}
+
+/* Syntax tint — mirrors prototype classes */
+.wrap :global(.syn-kw) {
+  color: #c792ea;
+}
+
+.wrap :global(.syn-str) {
+  color: #c3e88d;
+}
+
+.wrap :global(.syn-num) {
+  color: #f78c6c;
+}
+
+.wrap :global(.syn-fn) {
+  color: #82aaff;
+}
+
+.wrap :global(.syn-cmt) {
+  color: #546e7a;
+  font-style: italic;
+}

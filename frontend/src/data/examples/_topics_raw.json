@@ -1,0 +1,3035 @@
+[
+  {
+    "id": "for-loop",
+    "name": "For Loop",
+    "icon": "fa-rotate",
+    "desc": "A for loop repeats code a specific number of times. It has three parts: initialization, condition, and update.",
+    "examples": [
+      {
+        "name": "Count 1 to 5",
+        "code": [
+          "for (let i = 1; i <= 5; i++) {",
+          "  console.log(i);",
+          "}"
+        ],
+        "steps": [
+          {
+            "l": 0,
+            "vars": {
+              "i": 1
+            },
+            "out": [],
+            "expl": "Initialize i to 1. This runs once before the loop starts.",
+            "changed": [
+              "i"
+            ]
+          },
+          {
+            "l": 0,
+            "vars": {
+              "i": 1
+            },
+            "out": [],
+            "expl": "Check condition: is i (1) <= 5? Yes — enter the loop body."
+          },
+          {
+            "l": 1,
+            "vars": {
+              "i": 1
+            },
+            "out": [
+              "1"
+            ],
+            "expl": "Print the current value of i, which is 1.",
+            "console": true
+          },
+          {
+            "l": 0,
+            "vars": {
+              "i": 2
+            },
+            "out": [
+              "1"
+            ],
+            "expl": "i++ increments i from 1 to 2. Then re-check the condition.",
+            "changed": [
+              "i"
+            ]
+          },
+          {
+            "l": 0,
+            "vars": {
+              "i": 2
+            },
+            "out": [
+              "1"
+            ],
+            "expl": "Check condition: is i (2) <= 5? Yes — continue looping."
+          },
+          {
+            "l": 1,
+            "vars": {
+              "i": 2
+            },
+            "out": [
+              "1",
+              "2"
+            ],
+            "expl": "Print the current value of i, which is 2.",
+            "console": true
+          },
+          {
+            "l": 0,
+            "vars": {
+              "i": 3
+            },
+            "out": [
+              "1",
+              "2"
+            ],
+            "expl": "i++ increments i from 2 to 3.",
+            "changed": [
+              "i"
+            ]
+          },
+          {
+            "l": 0,
+            "vars": {
+              "i": 3
+            },
+            "out": [
+              "1",
+              "2"
+            ],
+            "expl": "Check condition: is i (3) <= 5? Yes — continue."
+          },
+          {
+            "l": 1,
+            "vars": {
+              "i": 3
+            },
+            "out": [
+              "1",
+              "2",
+              "3"
+            ],
+            "expl": "Print i = 3.",
+            "console": true
+          },
+          {
+            "l": 0,
+            "vars": {
+              "i": 4
+            },
+            "out": [
+              "1",
+              "2",
+              "3"
+            ],
+            "expl": "i++ increments i from 3 to 4.",
+            "changed": [
+              "i"
+            ]
+          },
+          {
+            "l": 0,
+            "vars": {
+              "i": 4
+            },
+            "out": [
+              "1",
+              "2",
+              "3"
+            ],
+            "expl": "Check condition: is i (4) <= 5? Yes — continue."
+          },
+          {
+            "l": 1,
+            "vars": {
+              "i": 4
+            },
+            "out": [
+              "1",
+              "2",
+              "3",
+              "4"
+            ],
+            "expl": "Print i = 4.",
+            "console": true
+          },
+          {
+            "l": 0,
+            "vars": {
+              "i": 5
+            },
+            "out": [
+              "1",
+              "2",
+              "3",
+              "4"
+            ],
+            "expl": "i++ increments i from 4 to 5.",
+            "changed": [
+              "i"
+            ]
+          },
+          {
+            "l": 0,
+            "vars": {
+              "i": 5
+            },
+            "out": [
+              "1",
+              "2",
+              "3",
+              "4"
+            ],
+            "expl": "Check condition: is i (5) <= 5? Yes — continue."
+          },
+          {
+            "l": 1,
+            "vars": {
+              "i": 5
+            },
+            "out": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5"
+            ],
+            "expl": "Print i = 5.",
+            "console": true
+          },
+          {
+            "l": 0,
+            "vars": {
+              "i": 6
+            },
+            "out": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5"
+            ],
+            "expl": "i++ increments i from 5 to 6.",
+            "changed": [
+              "i"
+            ]
+          },
+          {
+            "l": 2,
+            "vars": {
+              "i": 6
+            },
+            "out": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5"
+            ],
+            "expl": "Check condition: is i (6) <= 5? No — exit the loop. Done!"
+          }
+        ]
+      },
+      {
+        "name": "Sum 1 to 5",
+        "code": [
+          "let sum = 0;",
+          "",
+          "for (let i = 1; i <= 5; i++) {",
+          "  sum = sum + i;",
+          "}",
+          "",
+          "console.log(\"Total:\", sum);"
+        ],
+        "steps": [
+          {
+            "l": 0,
+            "vars": {
+              "sum": 0
+            },
+            "out": [],
+            "expl": "Initialize sum to 0. This will accumulate the total.",
+            "changed": [
+              "sum"
+            ]
+          },
+          {
+            "l": 2,
+            "vars": {
+              "sum": 0,
+              "i": 1
+            },
+            "out": [],
+            "expl": "Start the loop: initialize i to 1.",
+            "changed": [
+              "i"
+            ]
+          },
+          {
+            "l": 2,
+            "vars": {
+              "sum": 0,
+              "i": 1
+            },
+            "out": [],
+            "expl": "Check: i (1) <= 5? Yes."
+          },
+          {
+            "l": 3,
+            "vars": {
+              "sum": 1,
+              "i": 1
+            },
+            "out": [],
+            "expl": "sum = 0 + 1 = 1. First number added!",
+            "changed": [
+              "sum"
+            ]
+          },
+          {
+            "l": 2,
+            "vars": {
+              "sum": 1,
+              "i": 2
+            },
+            "out": [],
+            "expl": "i++ → i becomes 2.",
+            "changed": [
+              "i"
+            ]
+          },
+          {
+            "l": 2,
+            "vars": {
+              "sum": 1,
+              "i": 2
+            },
+            "out": [],
+            "expl": "Check: i (2) <= 5? Yes."
+          },
+          {
+            "l": 3,
+            "vars": {
+              "sum": 3,
+              "i": 2
+            },
+            "out": [],
+            "expl": "sum = 1 + 2 = 3.",
+            "changed": [
+              "sum"
+            ]
+          },
+          {
+            "l": 2,
+            "vars": {
+              "sum": 3,
+              "i": 3
+            },
+            "out": [],
+            "expl": "i++ → i becomes 3.",
+            "changed": [
+              "i"
+            ]
+          },
+          {
+            "l": 2,
+            "vars": {
+              "sum": 3,
+              "i": 3
+            },
+            "out": [],
+            "expl": "Check: i (3) <= 5? Yes."
+          },
+          {
+            "l": 3,
+            "vars": {
+              "sum": 6,
+              "i": 3
+            },
+            "out": [],
+            "expl": "sum = 3 + 3 = 6.",
+            "changed": [
+              "sum"
+            ]
+          },
+          {
+            "l": 2,
+            "vars": {
+              "sum": 6,
+              "i": 4
+            },
+            "out": [],
+            "expl": "i++ → i becomes 4.",
+            "changed": [
+              "i"
+            ]
+          },
+          {
+            "l": 2,
+            "vars": {
+              "sum": 6,
+              "i": 4
+            },
+            "out": [],
+            "expl": "Check: i (4) <= 5? Yes."
+          },
+          {
+            "l": 3,
+            "vars": {
+              "sum": 10,
+              "i": 4
+            },
+            "out": [],
+            "expl": "sum = 6 + 4 = 10.",
+            "changed": [
+              "sum"
+            ]
+          },
+          {
+            "l": 2,
+            "vars": {
+              "sum": 10,
+              "i": 5
+            },
+            "out": [],
+            "expl": "i++ → i becomes 5.",
+            "changed": [
+              "i"
+            ]
+          },
+          {
+            "l": 2,
+            "vars": {
+              "sum": 10,
+              "i": 5
+            },
+            "out": [],
+            "expl": "Check: i (5) <= 5? Yes."
+          },
+          {
+            "l": 3,
+            "vars": {
+              "sum": 15,
+              "i": 5
+            },
+            "out": [],
+            "expl": "sum = 10 + 5 = 15.",
+            "changed": [
+              "sum"
+            ]
+          },
+          {
+            "l": 2,
+            "vars": {
+              "sum": 15,
+              "i": 6
+            },
+            "out": [],
+            "expl": "i++ → i becomes 6.",
+            "changed": [
+              "i"
+            ]
+          },
+          {
+            "l": 5,
+            "vars": {
+              "sum": 15,
+              "i": 6
+            },
+            "out": [],
+            "expl": "Check: i (6) <= 5? No — exit loop."
+          },
+          {
+            "l": 6,
+            "vars": {
+              "sum": 15,
+              "i": 6
+            },
+            "out": [
+              "Total: 15"
+            ],
+            "expl": "Print the final result: the sum of 1+2+3+4+5 = 15.",
+            "console": true
+          }
+        ]
+      },
+      {
+        "name": "Countdown",
+        "code": [
+          "for (let i = 5; i > 0; i--) {",
+          "  console.log(i);",
+          "}",
+          "console.log(\"Go!\");"
+        ],
+        "steps": [
+          {
+            "l": 0,
+            "vars": {
+              "i": 5
+            },
+            "out": [],
+            "expl": "Initialize i to 5. Counting down this time!",
+            "changed": [
+              "i"
+            ]
+          },
+          {
+            "l": 0,
+            "vars": {
+              "i": 5
+            },
+            "out": [],
+            "expl": "Check: i (5) > 0? Yes — enter loop."
+          },
+          {
+            "l": 1,
+            "vars": {
+              "i": 5
+            },
+            "out": [
+              "5"
+            ],
+            "expl": "Print i = 5.",
+            "console": true
+          },
+          {
+            "l": 0,
+            "vars": {
+              "i": 4
+            },
+            "out": [
+              "5"
+            ],
+            "expl": "i-- decrements i from 5 to 4.",
+            "changed": [
+              "i"
+            ]
+          },
+          {
+            "l": 0,
+            "vars": {
+              "i": 4
+            },
+            "out": [
+              "5"
+            ],
+            "expl": "Check: i (4) > 0? Yes."
+          },
+          {
+            "l": 1,
+            "vars": {
+              "i": 4
+            },
+            "out": [
+              "5",
+              "4"
+            ],
+            "expl": "Print i = 4.",
+            "console": true
+          },
+          {
+            "l": 0,
+            "vars": {
+              "i": 3
+            },
+            "out": [
+              "5",
+              "4"
+            ],
+            "expl": "i-- → i becomes 3.",
+            "changed": [
+              "i"
+            ]
+          },
+          {
+            "l": 0,
+            "vars": {
+              "i": 3
+            },
+            "out": [
+              "5",
+              "4"
+            ],
+            "expl": "Check: i (3) > 0? Yes."
+          },
+          {
+            "l": 1,
+            "vars": {
+              "i": 3
+            },
+            "out": [
+              "5",
+              "4",
+              "3"
+            ],
+            "expl": "Print i = 3.",
+            "console": true
+          },
+          {
+            "l": 0,
+            "vars": {
+              "i": 2
+            },
+            "out": [
+              "5",
+              "4",
+              "3"
+            ],
+            "expl": "i-- → i becomes 2.",
+            "changed": [
+              "i"
+            ]
+          },
+          {
+            "l": 0,
+            "vars": {
+              "i": 2
+            },
+            "out": [
+              "5",
+              "4",
+              "3"
+            ],
+            "expl": "Check: i (2) > 0? Yes."
+          },
+          {
+            "l": 1,
+            "vars": {
+              "i": 2
+            },
+            "out": [
+              "5",
+              "4",
+              "3",
+              "2"
+            ],
+            "expl": "Print i = 2.",
+            "console": true
+          },
+          {
+            "l": 0,
+            "vars": {
+              "i": 1
+            },
+            "out": [
+              "5",
+              "4",
+              "3",
+              "2"
+            ],
+            "expl": "i-- → i becomes 1.",
+            "changed": [
+              "i"
+            ]
+          },
+          {
+            "l": 0,
+            "vars": {
+              "i": 1
+            },
+            "out": [
+              "5",
+              "4",
+              "3",
+              "2"
+            ],
+            "expl": "Check: i (1) > 0? Yes."
+          },
+          {
+            "l": 1,
+            "vars": {
+              "i": 1
+            },
+            "out": [
+              "5",
+              "4",
+              "3",
+              "2",
+              "1"
+            ],
+            "expl": "Print i = 1.",
+            "console": true
+          },
+          {
+            "l": 0,
+            "vars": {
+              "i": 0
+            },
+            "out": [
+              "5",
+              "4",
+              "3",
+              "2",
+              "1"
+            ],
+            "expl": "i-- → i becomes 0.",
+            "changed": [
+              "i"
+            ]
+          },
+          {
+            "l": 2,
+            "vars": {
+              "i": 0
+            },
+            "out": [
+              "5",
+              "4",
+              "3",
+              "2",
+              "1"
+            ],
+            "expl": "Check: i (0) > 0? No — exit loop."
+          },
+          {
+            "l": 3,
+            "vars": {
+              "i": 0
+            },
+            "out": [
+              "5",
+              "4",
+              "3",
+              "2",
+              "1",
+              "Go!"
+            ],
+            "expl": "After the loop, print \"Go!\" — countdown complete!",
+            "console": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "while-loop",
+    "name": "While Loop",
+    "icon": "fa-arrows-spin",
+    "desc": "A while loop keeps running as long as its condition is true. Use it when you don't know exactly how many iterations you need.",
+    "examples": [
+      {
+        "name": "Double Until 100",
+        "code": [
+          "let n = 3;",
+          "",
+          "while (n < 100) {",
+          "  console.log(n);",
+          "  n = n * 2;",
+          "}",
+          "",
+          "console.log(\"Final:\", n);"
+        ],
+        "steps": [
+          {
+            "l": 0,
+            "vars": {
+              "n": 3
+            },
+            "out": [],
+            "expl": "Initialize n to 3.",
+            "changed": [
+              "n"
+            ]
+          },
+          {
+            "l": 2,
+            "vars": {
+              "n": 3
+            },
+            "out": [],
+            "expl": "Check: n (3) < 100? Yes — enter loop."
+          },
+          {
+            "l": 3,
+            "vars": {
+              "n": 3
+            },
+            "out": [
+              "3"
+            ],
+            "expl": "Print n = 3.",
+            "console": true
+          },
+          {
+            "l": 4,
+            "vars": {
+              "n": 6
+            },
+            "out": [
+              "3"
+            ],
+            "expl": "Double n: 3 × 2 = 6.",
+            "changed": [
+              "n"
+            ]
+          },
+          {
+            "l": 2,
+            "vars": {
+              "n": 6
+            },
+            "out": [
+              "3"
+            ],
+            "expl": "Check: n (6) < 100? Yes."
+          },
+          {
+            "l": 3,
+            "vars": {
+              "n": 6
+            },
+            "out": [
+              "3",
+              "6"
+            ],
+            "expl": "Print n = 6.",
+            "console": true
+          },
+          {
+            "l": 4,
+            "vars": {
+              "n": 12
+            },
+            "out": [
+              "3",
+              "6"
+            ],
+            "expl": "Double n: 6 × 2 = 12.",
+            "changed": [
+              "n"
+            ]
+          },
+          {
+            "l": 2,
+            "vars": {
+              "n": 12
+            },
+            "out": [
+              "3",
+              "6"
+            ],
+            "expl": "Check: n (12) < 100? Yes."
+          },
+          {
+            "l": 3,
+            "vars": {
+              "n": 12
+            },
+            "out": [
+              "3",
+              "6",
+              "12"
+            ],
+            "expl": "Print n = 12.",
+            "console": true
+          },
+          {
+            "l": 4,
+            "vars": {
+              "n": 24
+            },
+            "out": [
+              "3",
+              "6",
+              "12"
+            ],
+            "expl": "Double n: 12 × 2 = 24.",
+            "changed": [
+              "n"
+            ]
+          },
+          {
+            "l": 2,
+            "vars": {
+              "n": 24
+            },
+            "out": [
+              "3",
+              "6",
+              "12"
+            ],
+            "expl": "Check: n (24) < 100? Yes."
+          },
+          {
+            "l": 3,
+            "vars": {
+              "n": 24
+            },
+            "out": [
+              "3",
+              "6",
+              "12",
+              "24"
+            ],
+            "expl": "Print n = 24.",
+            "console": true
+          },
+          {
+            "l": 4,
+            "vars": {
+              "n": 48
+            },
+            "out": [
+              "3",
+              "6",
+              "12",
+              "24"
+            ],
+            "expl": "Double n: 24 × 2 = 48.",
+            "changed": [
+              "n"
+            ]
+          },
+          {
+            "l": 2,
+            "vars": {
+              "n": 48
+            },
+            "out": [
+              "3",
+              "6",
+              "12",
+              "24"
+            ],
+            "expl": "Check: n (48) < 100? Yes."
+          },
+          {
+            "l": 3,
+            "vars": {
+              "n": 48
+            },
+            "out": [
+              "3",
+              "6",
+              "12",
+              "24",
+              "48"
+            ],
+            "expl": "Print n = 48.",
+            "console": true
+          },
+          {
+            "l": 4,
+            "vars": {
+              "n": 96
+            },
+            "out": [
+              "3",
+              "6",
+              "12",
+              "24",
+              "48"
+            ],
+            "expl": "Double n: 48 × 2 = 96.",
+            "changed": [
+              "n"
+            ]
+          },
+          {
+            "l": 2,
+            "vars": {
+              "n": 96
+            },
+            "out": [
+              "3",
+              "6",
+              "12",
+              "24",
+              "48"
+            ],
+            "expl": "Check: n (96) < 100? Yes — one more!"
+          },
+          {
+            "l": 3,
+            "vars": {
+              "n": 96
+            },
+            "out": [
+              "3",
+              "6",
+              "12",
+              "24",
+              "48",
+              "96"
+            ],
+            "expl": "Print n = 96.",
+            "console": true
+          },
+          {
+            "l": 4,
+            "vars": {
+              "n": 192
+            },
+            "out": [
+              "3",
+              "6",
+              "12",
+              "24",
+              "48",
+              "96"
+            ],
+            "expl": "Double n: 96 × 2 = 192.",
+            "changed": [
+              "n"
+            ]
+          },
+          {
+            "l": 6,
+            "vars": {
+              "n": 192
+            },
+            "out": [
+              "3",
+              "6",
+              "12",
+              "24",
+              "48",
+              "96"
+            ],
+            "expl": "Check: n (192) < 100? No — exit loop."
+          },
+          {
+            "l": 7,
+            "vars": {
+              "n": 192
+            },
+            "out": [
+              "3",
+              "6",
+              "12",
+              "24",
+              "48",
+              "96",
+              "Final: 192"
+            ],
+            "expl": "Print the final value of n: 192. Exponential growth in action!",
+            "console": true
+          }
+        ]
+      },
+      {
+        "name": "Digit Counter",
+        "code": [
+          "let num = 4287;",
+          "let digits = 0;",
+          "",
+          "while (num > 0) {",
+          "  num = Math.floor(num / 10);",
+          "  digits++;",
+          "}",
+          "",
+          "console.log(\"Digits:\", digits);"
+        ],
+        "steps": [
+          {
+            "l": 0,
+            "vars": {
+              "num": 4287,
+              "digits": 0
+            },
+            "out": [],
+            "expl": "Start with num = 4287 and digits = 0.",
+            "changed": [
+              "num",
+              "digits"
+            ]
+          },
+          {
+            "l": 3,
+            "vars": {
+              "num": 4287,
+              "digits": 0
+            },
+            "out": [],
+            "expl": "Check: num (4287) > 0? Yes."
+          },
+          {
+            "l": 4,
+            "vars": {
+              "num": 428,
+              "digits": 0
+            },
+            "out": [],
+            "expl": "Divide by 10 and floor: 4287/10 = 428.7 → 428. Removes last digit!",
+            "changed": [
+              "num"
+            ]
+          },
+          {
+            "l": 5,
+            "vars": {
+              "num": 428,
+              "digits": 1
+            },
+            "out": [],
+            "expl": "digits++ → 1. We counted one digit.",
+            "changed": [
+              "digits"
+            ]
+          },
+          {
+            "l": 3,
+            "vars": {
+              "num": 428,
+              "digits": 1
+            },
+            "out": [],
+            "expl": "Check: num (428) > 0? Yes."
+          },
+          {
+            "l": 4,
+            "vars": {
+              "num": 42,
+              "digits": 1
+            },
+            "out": [],
+            "expl": "428/10 = 42.8 → 42. Another digit removed.",
+            "changed": [
+              "num"
+            ]
+          },
+          {
+            "l": 5,
+            "vars": {
+              "num": 42,
+              "digits": 2
+            },
+            "out": [],
+            "expl": "digits++ → 2.",
+            "changed": [
+              "digits"
+            ]
+          },
+          {
+            "l": 3,
+            "vars": {
+              "num": 42,
+              "digits": 2
+            },
+            "out": [],
+            "expl": "Check: num (42) > 0? Yes."
+          },
+          {
+            "l": 4,
+            "vars": {
+              "num": 4,
+              "digits": 2
+            },
+            "out": [],
+            "expl": "42/10 = 4.2 → 4.",
+            "changed": [
+              "num"
+            ]
+          },
+          {
+            "l": 5,
+            "vars": {
+              "num": 4,
+              "digits": 3
+            },
+            "out": [],
+            "expl": "digits++ → 3.",
+            "changed": [
+              "digits"
+            ]
+          },
+          {
+            "l": 3,
+            "vars": {
+              "num": 4,
+              "digits": 3
+            },
+            "out": [],
+            "expl": "Check: num (4) > 0? Yes."
+          },
+          {
+            "l": 4,
+            "vars": {
+              "num": 0,
+              "digits": 3
+            },
+            "out": [],
+            "expl": "4/10 = 0.4 → 0. Last digit removed.",
+            "changed": [
+              "num"
+            ]
+          },
+          {
+            "l": 5,
+            "vars": {
+              "num": 0,
+              "digits": 4
+            },
+            "out": [],
+            "expl": "digits++ → 4.",
+            "changed": [
+              "digits"
+            ]
+          },
+          {
+            "l": 7,
+            "vars": {
+              "num": 0,
+              "digits": 4
+            },
+            "out": [],
+            "expl": "Check: num (0) > 0? No — exit loop."
+          },
+          {
+            "l": 8,
+            "vars": {
+              "num": 0,
+              "digits": 4
+            },
+            "out": [
+              "Digits: 4"
+            ],
+            "expl": "4287 has 4 digits!",
+            "console": true
+          }
+        ]
+      },
+      {
+        "name": "Collatz Sequence",
+        "code": [
+          "let n = 6;",
+          "let steps = 0;",
+          "",
+          "while (n !== 1) {",
+          "  console.log(n);",
+          "  if (n % 2 === 0) {",
+          "    n = n / 2;",
+          "  } else {",
+          "    n = 3 * n + 1;",
+          "  }",
+          "  steps++;",
+          "}",
+          "",
+          "console.log(\"Reached 1 in\", steps, \"steps\");"
+        ],
+        "steps": [
+          {
+            "l": 0,
+            "vars": {
+              "n": 6,
+              "steps": 0
+            },
+            "out": [],
+            "expl": "Start with n = 6, steps = 0.",
+            "changed": [
+              "n",
+              "steps"
+            ]
+          },
+          {
+            "l": 3,
+            "vars": {
+              "n": 6,
+              "steps": 0
+            },
+            "out": [],
+            "expl": "Check: n (6) !== 1? Yes — enter loop."
+          },
+          {
+            "l": 4,
+            "vars": {
+              "n": 6,
+              "steps": 0
+            },
+            "out": [
+              "6"
+            ],
+            "expl": "Print n = 6.",
+            "console": true
+          },
+          {
+            "l": 5,
+            "vars": {
+              "n": 6,
+              "steps": 0
+            },
+            "out": [
+              "6"
+            ],
+            "expl": "Is n (6) even? 6 % 2 === 0? Yes!"
+          },
+          {
+            "l": 6,
+            "vars": {
+              "n": 3,
+              "steps": 0
+            },
+            "out": [
+              "6"
+            ],
+            "expl": "n is even: divide by 2 → 6/2 = 3.",
+            "changed": [
+              "n"
+            ]
+          },
+          {
+            "l": 10,
+            "vars": {
+              "n": 3,
+              "steps": 1
+            },
+            "out": [
+              "6"
+            ],
+            "expl": "steps++ → 1.",
+            "changed": [
+              "steps"
+            ]
+          },
+          {
+            "l": 3,
+            "vars": {
+              "n": 3,
+              "steps": 1
+            },
+            "out": [
+              "6"
+            ],
+            "expl": "Check: n (3) !== 1? Yes."
+          },
+          {
+            "l": 4,
+            "vars": {
+              "n": 3,
+              "steps": 1
+            },
+            "out": [
+              "6",
+              "3"
+            ],
+            "expl": "Print n = 3.",
+            "console": true
+          },
+          {
+            "l": 5,
+            "vars": {
+              "n": 3,
+              "steps": 1
+            },
+            "out": [
+              "6",
+              "3"
+            ],
+            "expl": "Is 3 even? No — go to else branch."
+          },
+          {
+            "l": 8,
+            "vars": {
+              "n": 10,
+              "steps": 1
+            },
+            "out": [
+              "6",
+              "3"
+            ],
+            "expl": "n is odd: 3×3+1 = 10.",
+            "changed": [
+              "n"
+            ]
+          },
+          {
+            "l": 10,
+            "vars": {
+              "n": 10,
+              "steps": 2
+            },
+            "out": [
+              "6",
+              "3"
+            ],
+            "expl": "steps++ → 2.",
+            "changed": [
+              "steps"
+            ]
+          },
+          {
+            "l": 3,
+            "vars": {
+              "n": 10,
+              "steps": 2
+            },
+            "out": [
+              "6",
+              "3"
+            ],
+            "expl": "Check: n (10) !== 1? Yes."
+          },
+          {
+            "l": 4,
+            "vars": {
+              "n": 10,
+              "steps": 2
+            },
+            "out": [
+              "6",
+              "3",
+              "10"
+            ],
+            "expl": "Print n = 10.",
+            "console": true
+          },
+          {
+            "l": 5,
+            "vars": {
+              "n": 10,
+              "steps": 2
+            },
+            "out": [
+              "6",
+              "3",
+              "10"
+            ],
+            "expl": "Is 10 even? Yes!"
+          },
+          {
+            "l": 6,
+            "vars": {
+              "n": 5,
+              "steps": 2
+            },
+            "out": [
+              "6",
+              "3",
+              "10"
+            ],
+            "expl": "10/2 = 5.",
+            "changed": [
+              "n"
+            ]
+          },
+          {
+            "l": 10,
+            "vars": {
+              "n": 5,
+              "steps": 3
+            },
+            "out": [
+              "6",
+              "3",
+              "10"
+            ],
+            "expl": "steps++ → 3.",
+            "changed": [
+              "steps"
+            ]
+          },
+          {
+            "l": 3,
+            "vars": {
+              "n": 5,
+              "steps": 3
+            },
+            "out": [
+              "6",
+              "3",
+              "10"
+            ],
+            "expl": "Check: n (5) !== 1? Yes."
+          },
+          {
+            "l": 4,
+            "vars": {
+              "n": 5,
+              "steps": 3
+            },
+            "out": [
+              "6",
+              "3",
+              "10",
+              "5"
+            ],
+            "expl": "Print n = 5.",
+            "console": true
+          },
+          {
+            "l": 5,
+            "vars": {
+              "n": 5,
+              "steps": 3
+            },
+            "out": [
+              "6",
+              "3",
+              "10",
+              "5"
+            ],
+            "expl": "Is 5 even? No."
+          },
+          {
+            "l": 8,
+            "vars": {
+              "n": 16,
+              "steps": 3
+            },
+            "out": [
+              "6",
+              "3",
+              "10",
+              "5"
+            ],
+            "expl": "3×5+1 = 16.",
+            "changed": [
+              "n"
+            ]
+          },
+          {
+            "l": 10,
+            "vars": {
+              "n": 16,
+              "steps": 4
+            },
+            "out": [
+              "6",
+              "3",
+              "10",
+              "5"
+            ],
+            "expl": "steps++ → 4.",
+            "changed": [
+              "steps"
+            ]
+          },
+          {
+            "l": 3,
+            "vars": {
+              "n": 16,
+              "steps": 4
+            },
+            "out": [
+              "6",
+              "3",
+              "10",
+              "5"
+            ],
+            "expl": "Check: n (16) !== 1? Yes."
+          },
+          {
+            "l": 4,
+            "vars": {
+              "n": 16,
+              "steps": 4
+            },
+            "out": [
+              "6",
+              "3",
+              "10",
+              "5",
+              "16"
+            ],
+            "expl": "Print n = 16.",
+            "console": true
+          },
+          {
+            "l": 5,
+            "vars": {
+              "n": 16,
+              "steps": 4
+            },
+            "out": [
+              "6",
+              "3",
+              "10",
+              "5",
+              "16"
+            ],
+            "expl": "Is 16 even? Yes!"
+          },
+          {
+            "l": 6,
+            "vars": {
+              "n": 8,
+              "steps": 4
+            },
+            "out": [
+              "6",
+              "3",
+              "10",
+              "5",
+              "16"
+            ],
+            "expl": "16/2 = 8.",
+            "changed": [
+              "n"
+            ]
+          },
+          {
+            "l": 10,
+            "vars": {
+              "n": 8,
+              "steps": 5
+            },
+            "out": [
+              "6",
+              "3",
+              "10",
+              "5",
+              "16"
+            ],
+            "expl": "steps++ → 5.",
+            "changed": [
+              "steps"
+            ]
+          },
+          {
+            "l": 3,
+            "vars": {
+              "n": 8,
+              "steps": 5
+            },
+            "out": [
+              "6",
+              "3",
+              "10",
+              "5",
+              "16"
+            ],
+            "expl": "Check: n (8) !== 1? Yes — continuing..."
+          },
+          {
+            "l": 4,
+            "vars": {
+              "n": 8,
+              "steps": 5
+            },
+            "out": [
+              "6",
+              "3",
+              "10",
+              "5",
+              "16",
+              "8"
+            ],
+            "expl": "Print n = 8.",
+            "console": true
+          },
+          {
+            "l": 6,
+            "vars": {
+              "n": 4,
+              "steps": 5
+            },
+            "out": [
+              "6",
+              "3",
+              "10",
+              "5",
+              "16",
+              "8"
+            ],
+            "expl": "8/2 = 4.",
+            "changed": [
+              "n"
+            ]
+          },
+          {
+            "l": 10,
+            "vars": {
+              "n": 4,
+              "steps": 6
+            },
+            "out": [
+              "6",
+              "3",
+              "10",
+              "5",
+              "16",
+              "8"
+            ],
+            "expl": "steps++ → 6.",
+            "changed": [
+              "steps"
+            ]
+          },
+          {
+            "l": 3,
+            "vars": {
+              "n": 4,
+              "steps": 6
+            },
+            "out": [
+              "6",
+              "3",
+              "10",
+              "5",
+              "16",
+              "8"
+            ],
+            "expl": "n (4) !== 1? Yes."
+          },
+          {
+            "l": 4,
+            "vars": {
+              "n": 4,
+              "steps": 6
+            },
+            "out": [
+              "6",
+              "3",
+              "10",
+              "5",
+              "16",
+              "8",
+              "4"
+            ],
+            "expl": "Print 4.",
+            "console": true
+          },
+          {
+            "l": 6,
+            "vars": {
+              "n": 2,
+              "steps": 6
+            },
+            "out": [
+              "6",
+              "3",
+              "10",
+              "5",
+              "16",
+              "8",
+              "4"
+            ],
+            "expl": "4/2 = 2.",
+            "changed": [
+              "n"
+            ]
+          },
+          {
+            "l": 10,
+            "vars": {
+              "n": 2,
+              "steps": 7
+            },
+            "out": [
+              "6",
+              "3",
+              "10",
+              "5",
+              "16",
+              "8",
+              "4"
+            ],
+            "expl": "steps++ → 7.",
+            "changed": [
+              "steps"
+            ]
+          },
+          {
+            "l": 3,
+            "vars": {
+              "n": 2,
+              "steps": 7
+            },
+            "out": [
+              "6",
+              "3",
+              "10",
+              "5",
+              "16",
+              "8",
+              "4"
+            ],
+            "expl": "n (2) !== 1? Yes."
+          },
+          {
+            "l": 4,
+            "vars": {
+              "n": 2,
+              "steps": 7
+            },
+            "out": [
+              "6",
+              "3",
+              "10",
+              "5",
+              "16",
+              "8",
+              "4",
+              "2"
+            ],
+            "expl": "Print 2.",
+            "console": true
+          },
+          {
+            "l": 6,
+            "vars": {
+              "n": 1,
+              "steps": 7
+            },
+            "out": [
+              "6",
+              "3",
+              "10",
+              "5",
+              "16",
+              "8",
+              "4",
+              "2"
+            ],
+            "expl": "2/2 = 1.",
+            "changed": [
+              "n"
+            ]
+          },
+          {
+            "l": 10,
+            "vars": {
+              "n": 1,
+              "steps": 8
+            },
+            "out": [
+              "6",
+              "3",
+              "10",
+              "5",
+              "16",
+              "8",
+              "4",
+              "2"
+            ],
+            "expl": "steps++ → 8.",
+            "changed": [
+              "steps"
+            ]
+          },
+          {
+            "l": 12,
+            "vars": {
+              "n": 1,
+              "steps": 8
+            },
+            "out": [
+              "6",
+              "3",
+              "10",
+              "5",
+              "16",
+              "8",
+              "4",
+              "2"
+            ],
+            "expl": "Check: n (1) !== 1? No — exit loop!"
+          },
+          {
+            "l": 13,
+            "vars": {
+              "n": 1,
+              "steps": 8
+            },
+            "out": [
+              "6",
+              "3",
+              "10",
+              "5",
+              "16",
+              "8",
+              "4",
+              "2",
+              "Reached 1 in 8 steps"
+            ],
+            "expl": "The Collatz sequence from 6 reaches 1 in 8 steps. Every starting number eventually reaches 1 — or so we think!",
+            "console": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "if-else",
+    "name": "If / Else",
+    "icon": "fa-code-branch",
+    "desc": "Conditional statements let your code make decisions. If a condition is true, run one block; otherwise, run another.",
+    "examples": [
+      {
+        "name": "Grade Classifier",
+        "code": [
+          "let score = 85;",
+          "let grade;",
+          "",
+          "if (score >= 90) {",
+          "  grade = \"A\";",
+          "} else if (score >= 80) {",
+          "  grade = \"B\";",
+          "} else if (score >= 70) {",
+          "  grade = \"C\";",
+          "} else {",
+          "  grade = \"F\";",
+          "}",
+          "",
+          "console.log(\"Grade:\", grade);"
+        ],
+        "steps": [
+          {
+            "l": 0,
+            "vars": {
+              "score": 85
+            },
+            "out": [],
+            "expl": "Set score to 85.",
+            "changed": [
+              "score"
+            ]
+          },
+          {
+            "l": 1,
+            "vars": {
+              "score": 85,
+              "grade": "undefined"
+            },
+            "out": [],
+            "expl": "Declare grade without a value — it's undefined for now.",
+            "changed": [
+              "grade"
+            ]
+          },
+          {
+            "l": 3,
+            "vars": {
+              "score": 85,
+              "grade": "undefined"
+            },
+            "out": [],
+            "expl": "Check: score (85) >= 90? No — skip this branch."
+          },
+          {
+            "l": 5,
+            "vars": {
+              "score": 85,
+              "grade": "undefined"
+            },
+            "out": [],
+            "expl": "Check: score (85) >= 80? Yes! Enter this branch."
+          },
+          {
+            "l": 6,
+            "vars": {
+              "score": 85,
+              "grade": "B"
+            },
+            "out": [],
+            "expl": "grade = \"B\". Score 85 falls in the B range (80-89).",
+            "changed": [
+              "grade"
+            ]
+          },
+          {
+            "l": 12,
+            "vars": {
+              "score": 85,
+              "grade": "B"
+            },
+            "out": [],
+            "expl": "Skip remaining else-if and else blocks since we found a match."
+          },
+          {
+            "l": 13,
+            "vars": {
+              "score": 85,
+              "grade": "B"
+            },
+            "out": [
+              "Grade: B"
+            ],
+            "expl": "Print the result: Grade B.",
+            "console": true
+          }
+        ]
+      },
+      {
+        "name": "Number Analyzer",
+        "code": [
+          "let x = -7;",
+          "",
+          "if (x > 0) {",
+          "  console.log(x, \"is positive\");",
+          "} else if (x < 0) {",
+          "  console.log(x, \"is negative\");",
+          "} else {",
+          "  console.log(x, \"is zero\");",
+          "}",
+          "",
+          "if (x % 2 === 0) {",
+          "  console.log(x, \"is even\");",
+          "} else {",
+          "  console.log(x, \"is odd\");",
+          "}"
+        ],
+        "steps": [
+          {
+            "l": 0,
+            "vars": {
+              "x": -7
+            },
+            "out": [],
+            "expl": "Set x to -7.",
+            "changed": [
+              "x"
+            ]
+          },
+          {
+            "l": 2,
+            "vars": {
+              "x": -7
+            },
+            "out": [],
+            "expl": "Check: x (-7) > 0? No."
+          },
+          {
+            "l": 4,
+            "vars": {
+              "x": -7
+            },
+            "out": [],
+            "expl": "Check: x (-7) < 0? Yes!"
+          },
+          {
+            "l": 5,
+            "vars": {
+              "x": -7
+            },
+            "out": [
+              "-7 is negative"
+            ],
+            "expl": "Print \"-7 is negative\".",
+            "console": true
+          },
+          {
+            "l": 10,
+            "vars": {
+              "x": -7
+            },
+            "out": [
+              "-7 is negative"
+            ],
+            "expl": "Now check even/odd. Is x % 2 === 0?"
+          },
+          {
+            "l": 10,
+            "vars": {
+              "x": -7
+            },
+            "out": [
+              "-7 is negative"
+            ],
+            "expl": "-7 % 2 = -1. Not === 0, so no."
+          },
+          {
+            "l": 13,
+            "vars": {
+              "x": -7
+            },
+            "out": [
+              "-7 is negative",
+              "-7 is odd"
+            ],
+            "expl": "x is odd. Print \"-7 is odd\".",
+            "console": true
+          }
+        ]
+      },
+      {
+        "name": "Leap Year Check",
+        "code": [
+          "let year = 2024;",
+          "let isLeap;",
+          "",
+          "if (year % 400 === 0) {",
+          "  isLeap = true;",
+          "} else if (year % 100 === 0) {",
+          "  isLeap = false;",
+          "} else if (year % 4 === 0) {",
+          "  isLeap = true;",
+          "} else {",
+          "  isLeap = false;",
+          "}",
+          "",
+          "console.log(year, isLeap ? \"is a leap year\" : \"is not a leap year\");"
+        ],
+        "steps": [
+          {
+            "l": 0,
+            "vars": {
+              "year": 2024
+            },
+            "out": [],
+            "expl": "Set year to 2024.",
+            "changed": [
+              "year"
+            ]
+          },
+          {
+            "l": 1,
+            "vars": {
+              "year": 2024,
+              "isLeap": "undefined"
+            },
+            "out": [],
+            "expl": "Declare isLeap.",
+            "changed": [
+              "isLeap"
+            ]
+          },
+          {
+            "l": 3,
+            "vars": {
+              "year": 2024,
+              "isLeap": "undefined"
+            },
+            "out": [],
+            "expl": "Check: 2024 % 400 === 0? 2024/400 = 5.06 → No."
+          },
+          {
+            "l": 5,
+            "vars": {
+              "year": 2024,
+              "isLeap": "undefined"
+            },
+            "out": [],
+            "expl": "Check: 2024 % 100 === 0? 2024/100 = 20.24 → No."
+          },
+          {
+            "l": 7,
+            "vars": {
+              "year": 2024,
+              "isLeap": "undefined"
+            },
+            "out": [],
+            "expl": "Check: 2024 % 4 === 0? 2024/4 = 506 → Yes!"
+          },
+          {
+            "l": 8,
+            "vars": {
+              "year": 2024,
+              "isLeap": true
+            },
+            "out": [],
+            "expl": "isLeap = true. Divisible by 4 but not 100 → leap year!",
+            "changed": [
+              "isLeap"
+            ]
+          },
+          {
+            "l": 12,
+            "vars": {
+              "year": 2024,
+              "isLeap": true
+            },
+            "out": [],
+            "expl": "Skip the else block."
+          },
+          {
+            "l": 13,
+            "vars": {
+              "year": 2024,
+              "isLeap": true
+            },
+            "out": [
+              "2024 is a leap year"
+            ],
+            "expl": "2024 is a leap year! February has 29 days.",
+            "console": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "arrays",
+    "name": "Arrays",
+    "icon": "fa-layer-group",
+    "desc": "Arrays store multiple values in an ordered list. Access items by index (starting at 0), and use loops to iterate through them.",
+    "examples": [
+      {
+        "name": "Push and Pop",
+        "code": [
+          "let fruits = [\"Apple\", \"Banana\"];",
+          "",
+          "fruits.push(\"Cherry\");",
+          "console.log(fruits);",
+          "",
+          "let removed = fruits.pop();",
+          "console.log(\"Removed:\", removed);",
+          "console.log(fruits);"
+        ],
+        "steps": [
+          {
+            "l": 0,
+            "vars": {
+              "fruits": [
+                "Apple",
+                "Banana"
+              ]
+            },
+            "out": [],
+            "expl": "Create an array with 2 fruits.",
+            "changed": [
+              "fruits"
+            ]
+          },
+          {
+            "l": 2,
+            "vars": {
+              "fruits": [
+                "Apple",
+                "Banana",
+                "Cherry"
+              ]
+            },
+            "out": [],
+            "expl": "push(\"Cherry\") adds \"Cherry\" to the end of the array.",
+            "changed": [
+              "fruits"
+            ]
+          },
+          {
+            "l": 3,
+            "vars": {
+              "fruits": [
+                "Apple",
+                "Banana",
+                "Cherry"
+              ]
+            },
+            "out": [
+              "Apple,Banana,Cherry"
+            ],
+            "expl": "Print the array: 3 items now.",
+            "console": true
+          },
+          {
+            "l": 5,
+            "vars": {
+              "fruits": [
+                "Apple",
+                "Banana"
+              ],
+              "removed": "Cherry"
+            },
+            "out": [
+              "Apple,Banana,Cherry"
+            ],
+            "expl": "pop() removes the last item and returns it. removed = \"Cherry\".",
+            "changed": [
+              "fruits",
+              "removed"
+            ]
+          },
+          {
+            "l": 6,
+            "vars": {
+              "fruits": [
+                "Apple",
+                "Banana"
+              ],
+              "removed": "Cherry"
+            },
+            "out": [
+              "Apple,Banana,Cherry",
+              "Removed: Cherry"
+            ],
+            "expl": "Print what was removed.",
+            "console": true
+          },
+          {
+            "l": 7,
+            "vars": {
+              "fruits": [
+                "Apple",
+                "Banana"
+              ],
+              "removed": "Cherry"
+            },
+            "out": [
+              "Apple,Banana,Cherry",
+              "Removed: Cherry",
+              "Apple,Banana"
+            ],
+            "expl": "Back to 2 fruits. push adds, pop removes — like a stack!",
+            "console": true
+          }
+        ]
+      },
+      {
+        "name": "Sum All Elements",
+        "code": [
+          "let nums = [4, 7, 2, 9, 5];",
+          "let sum = 0;",
+          "",
+          "for (let i = 0; i < nums.length; i++) {",
+          "  sum = sum + nums[i];",
+          "  console.log(\"+\", nums[i], \"=\", sum);",
+          "}",
+          "",
+          "console.log(\"Total:\", sum);"
+        ],
+        "steps": [
+          {
+            "l": 0,
+            "vars": {
+              "nums": [
+                4,
+                7,
+                2,
+                9,
+                5
+              ],
+              "sum": 0
+            },
+            "out": [],
+            "expl": "Create array and initialize sum to 0.",
+            "changed": [
+              "nums",
+              "sum"
+            ]
+          },
+          {
+            "l": 3,
+            "vars": {
+              "nums": [
+                4,
+                7,
+                2,
+                9,
+                5
+              ],
+              "sum": 0,
+              "i": 0
+            },
+            "out": [],
+            "expl": "Start loop: i = 0.",
+            "changed": [
+              "i"
+            ]
+          },
+          {
+            "l": 3,
+            "vars": {
+              "nums": [
+                4,
+                7,
+                2,
+                9,
+                5
+              ],
+              "sum": 0,
+              "i": 0
+            },
+            "out": [],
+            "expl": "Check: i (0) < 5? Yes."
+          },
+          {
+            "l": 4,
+            "vars": {
+              "nums": [
+                4,
+                7,
+                2,
+                9,
+                5
+              ],
+              "sum": 4,
+              "i": 0
+            },
+            "out": [],
+            "expl": "sum = 0 + nums[0] = 0 + 4 = 4.",
+            "changed": [
+              "sum"
+            ],
+            "arrIdx": 0
+          },
+          {
+            "l": 5,
+            "vars": {
+              "nums": [
+                4,
+                7,
+                2,
+                9,
+                5
+              ],
+              "sum": 4,
+              "i": 0
+            },
+            "out": [
+              "+ 4 = 4"
+            ],
+            "expl": "Print intermediate result.",
+            "console": true
+          },
+          {
+            "l": 3,
+            "vars": {
+              "nums": [
+                4,
+                7,
+                2,
+                9,
+                5
+              ],
+              "sum": 4,
+              "i": 1
+            },
+            "out": [
+              "+ 4 = 4"
+            ],
+            "expl": "i++ → 1.",
+            "changed": [
+              "i"
+            ]
+          },
+          {
+            "l": 3,
+            "vars": {
+              "nums": [
+                4,
+                7,
+                2,
+                9,
+                5
+              ],
+              "sum": 4,
+              "i": 1
+            },
+            "out": [
+              "+ 4 = 4"
+            ],
+            "expl": "Check: 1 < 5? Yes."
+          },
+          {
+            "l": 4,
+            "vars": {
+              "nums": [
+                4,
+                7,
+                2,
+                9,
+                5
+              ],
+              "sum": 11,
+              "i": 1
+            },
+            "out": [
+              "+ 4 = 4"
+            ],
+            "expl": "sum = 4 + nums[1] = 4 + 7 = 11.",
+            "changed": [
+              "sum"
+            ],
+            "arrIdx": 1
+          },
+          {
+            "l": 5,
+            "vars": {
+              "nums": [
+                4,
+                7,
+                2,
+                9,
+                5
+              ],
+              "sum": 11,
+              "i": 1
+            },
+            "out": [
+              "+ 4 = 4",
+              "+ 7 = 11"
+            ],
+            "expl": "Print progress.",
+            "console": true
+          },
+          {
+            "l": 3,
+            "vars": {
+              "nums": [
+                4,
+                7,
+                2,
+                9,
+                5
+              ],
+              "sum": 11,
+              "i": 2
+            },
+            "out": [
+              "+ 4 = 4",
+              "+ 7 = 11"
+            ],
+            "expl": "i++ → 2.",
+            "changed": [
+              "i"
+            ]
+          },
+          {
+            "l": 4,
+            "vars": {
+              "nums": [
+                4,
+                7,
+                2,
+                9,
+                5
+              ],
+              "sum": 13,
+              "i": 2
+            },
+            "out": [
+              "+ 4 = 4",
+              "+ 7 = 11"
+            ],
+            "expl": "sum = 11 + nums[2] = 11 + 2 = 13.",
+            "changed": [
+              "sum"
+            ],
+            "arrIdx": 2
+          },
+          {
+            "l": 5,
+            "vars": {
+              "nums": [
+                4,
+                7,
+                2,
+                9,
+                5
+              ],
+              "sum": 13,
+              "i": 2
+            },
+            "out": [
+              "+ 4 = 4",
+              "+ 7 = 11",
+              "+ 2 = 13"
+            ],
+            "expl": "Print progress.",
+            "console": true
+          },
+          {
+            "l": 3,
+            "vars": {
+              "nums": [
+                4,
+                7,
+                2,
+                9,
+                5
+              ],
+              "sum": 13,
+              "i": 3
+            },
+            "out": [
+              "+ 4 = 4",
+              "+ 7 = 11",
+              "+ 2 = 13"
+            ],
+            "expl": "i++ → 3.",
+            "changed": [
+              "i"
+            ]
+          },
+          {
+            "l": 4,
+            "vars": {
+              "nums": [
+                4,
+                7,
+                2,
+                9,
+                5
+              ],
+              "sum": 22,
+              "i": 3
+            },
+            "out": [
+              "+ 4 = 4",
+              "+ 7 = 11",
+              "+ 2 = 13"
+            ],
+            "expl": "sum = 13 + nums[3] = 13 + 9 = 22.",
+            "changed": [
+              "sum"
+            ],
+            "arrIdx": 3
+          },
+          {
+            "l": 5,
+            "vars": {
+              "nums": [
+                4,
+                7,
+                2,
+                9,
+                5
+              ],
+              "sum": 22,
+              "i": 3
+            },
+            "out": [
+              "+ 4 = 4",
+              "+ 7 = 11",
+              "+ 2 = 13",
+              "+ 9 = 22"
+            ],
+            "expl": "Print progress.",
+            "console": true
+          },
+          {
+            "l": 3,
+            "vars": {
+              "nums": [
+                4,
+                7,
+                2,
+                9,
+                5
+              ],
+              "sum": 22,
+              "i": 4
+            },
+            "out": [
+              "+ 4 = 4",
+              "+ 7 = 11",
+              "+ 2 = 13",
+              "+ 9 = 22"
+            ],
+            "expl": "i++ → 4.",
+            "changed": [
+              "i"
+            ]
+          },
+          {
+            "l": 4,
+            "vars": {
+              "nums": [
+                4,
+                7,
+                2,
+                9,
+                5
+              ],
+              "sum": 27,
+              "i": 4
+            },
+            "out": [
+              "+ 4 = 4",
+              "+ 7 = 11",
+              "+ 2 = 13",
+              "+ 9 = 22"
+            ],
+            "expl": "sum = 22 + nums[4] = 22 + 5 = 27.",
+            "changed": [
+              "sum"
+            ],
+            "arrIdx": 4
+          },
+          {
+            "l": 5,
+            "vars": {
+              "nums": [
+                4,
+                7,
+                2,
+                9,
+                5
+              ],
+              "sum": 27,
+              "i": 4
+            },
+            "out": [
+              "+ 4 = 4",
+              "+ 7 = 11",
+              "+ 2 = 13",
+              "+ 9 = 22",
+              "+ 5 = 27"
+            ],
+            "expl": "Print progress.",
+            "console": true
+          },
+          {
+            "l": 3,
+            "vars": {
+              "nums": [
+                4,
+                7,
+                2,
+                9,
+                5
+              ],
+              "sum": 27,
+              "i": 5
+            },
+            "out": [
+              "+ 4 = 4",
+              "+ 7 = 11",
+              "+ 2 = 13",
+              "+ 9 = 22",
+              "+ 5 = 27"
+            ],
+            "expl": "i++ → 5.",
+            "changed": [
+              "i"
+            ]
+          },
+          {
+            "l": 7,
+            "vars": {
+              "nums": [
+                4,
+                7,
+                2,
+                9,
+                5
+              ],
+              "sum": 27,
+              "i": 5
+            },
+            "out": [
+              "+ 4 = 4",
+              "+ 7 = 11",
+              "+ 2 = 13",
+              "+ 9 = 22",
+              "+ 5 = 27"
+            ],
+            "expl": "Check: 5 < 5? No — exit loop."
+          },
+          {
+            "l": 8,
+            "vars": {
+              "nums": [
+                4,
+                7,
+                2,
+                9,
+                5
+              ],
+              "sum": 27,
+              "i": 5
+            },
+            "out": [
+              "+ 4 = 4",
+              "+ 7 = 11",
+              "+ 2 = 13",
+              "+ 9 = 22",
+              "+ 5 = 27",
+              "Total: 27"
+            ],
+            "expl": "Final sum is 27! 4+7+2+9+5 = 27.",
+            "console": true
+          }
+        ]
+      },
+      {
+        "name": "Find Maximum",
+        "code": [
+          "let nums = [3, 8, 2, 11, 6];",
+          "let max = nums[0];",
+          "",
+          "for (let i = 1; i < nums.length; i++) {",
+          "  if (nums[i] > max) {",
+          "    max = nums[i];",
+          "  }",
+          "}",
+          "",
+          "console.log(\"Max:\", max);"
+        ],
+        "steps": [
+          {
+            "l": 0,
+            "vars": {
+              "nums": [
+                3,
+                8,
+                2,
+                11,
+                6
+              ]
+            },
+            "out": [],
+            "expl": "Create the array.",
+            "changed": [
+              "nums"
+            ]
+          },
+          {
+            "l": 1,
+            "vars": {
+              "nums": [
+                3,
+                8,
+                2,
+                11,
+                6
+              ],
+              "max": 3
+            },
+            "out": [],
+            "expl": "Assume the first element (3) is the maximum.",
+            "changed": [
+              "max"
+            ]
+          },
+          {
+            "l": 3,
+            "vars": {
+              "nums": [
+                3,
+                8,
+                2,
+                11,
+                6
+              ],
+              "max": 3,
+              "i": 1
+            },
+            "out": [],
+            "expl": "Start loop from i = 1 (we already checked index 0).",
+            "changed": [
+              "i"
+            ]
+          },
+          {
+            "l": 3,
+            "vars": {
+              "nums": [
+                3,
+                8,
+                2,
+                11,
+                6
+              ],
+              "max": 3,
+              "i": 1
+            },
+            "out": [],
+            "expl": "Check: i (1) < 5? Yes."
+          },
+          {
+            "l": 4,
+            "vars": {
+              "nums": [
+                3,
+                8,
+                2,
+                11,
+                6
+              ],
+              "max": 3,
+              "i": 1
+            },
+            "out": [],
+            "expl": "Is nums[1] (8) > max (3)? Yes!",
+            "arrIdx": 1
+          },
+          {
+            "l": 5,
+            "vars": {
+              "nums": [
+                3,
+                8,
+                2,
+                11,
+                6
+              ],
+              "max": 8,
+              "i": 1
+            },
+            "out": [],
+            "expl": "Update max to 8. New maximum found!",
+            "changed": [
+              "max"
+            ]
+          },
+          {
+            "l": 3,
+            "vars": {
+              "nums": [
+                3,
+                8,
+                2,
+                11,
+                6
+              ],
+              "max": 8,
+              "i": 2
+            },
+            "out": [],
+            "expl": "i++ → 2.",
+            "changed": [
+              "i"
+            ]
+          },
+          {
+            "l": 4,
+            "vars": {
+              "nums": [
+                3,
+                8,
+                2,
+                11,
+                6
+              ],
+              "max": 8,
+              "i": 2
+            },
+            "out": [],
+            "expl": "Is nums[2] (2) > max (8)? No — keep 8.",
+            "arrIdx": 2
+          },
+          {
+            "l": 3,
+            "vars": {
+              "nums": [
+                3,
+                8,
+                2,
+                11,
+                6
+              ],
+              "max": 8,
+              "i": 3
+            },
+            "out": [],
+            "expl": "i++ → 3.",
+            "changed": [
+              "i"
+            ]
+          },
+          {
+            "l": 4,
+            "vars": {
+              "nums": [
+                3,
+                8,
+                2,
+                11,
+                6
+              ],
+              "max": 8,
+              "i": 3
+            },
+            "out": [],
+            "expl": "Is nums[3] (11) > max (8)? Yes!",
+            "arrIdx": 3
+          },
+          {
+            "l": 5,
+            "vars": {
+              "nums": [
+                3,
+                8,
+                2,
+                11,
+                6
+              ],
+              "max": 11,
+              "i": 3
+            },
+            "out": [],
+            "expl": "Update max to 11. New maximum!",
+            "changed": [
+              "max"
+            ]
+          },
+          {
+            "l": 3,
+            "vars": {
+              "nums": [
+                3,
+                8,
+                2,
+                11,
+                6
+              ],
+              "max": 11,
+              "i": 4
+            },
+            "out": [],
+            "expl": "i++ → 4.",
+            "changed": [
+              "i"
+            ]
+          },
+          {
+            "l": 4,
+            "vars": {
+              "nums": [
+                3,
+                8,
+                2,
+                11,
+                6
+              ],
+              "max": 11,
+              "i": 4
+            },
+            "out": [],
+            "expl": "Is nums[4] (6) > max (11)? No — keep 11.",
+            "arrIdx": 4
+          },
+          {
+            "l": 3,
+            "vars": {
+              "nums": [
+                3,
+                8,
+                2,
+                11,
+                6
+              ],
+              "max": 11,
+              "i": 5
+            },
+            "out": [],
+            "expl": "i++ → 5.",
+            "changed": [
+              "i"
+            ]
+          },
+          {
+            "l": 7,
+            "vars": {
+              "nums": [
+                3,
+                8,
+                2,
+                11,
+                6
+              ],
+              "max": 11,
+              "i": 5
+            },
+            "out": [],
+            "expl": "Check: 5 < 5? No — exit loop."
+          },
+          {
+            "l": 8,
+            "vars": {
+              "nums": [
+                3,
+                8,
+                2,
+                11,
+                6
+              ],
+              "max": 11,
+              "i": 5
+            },
+            "out": [
+              "Max: 11"
+            ],
+            "expl": "The maximum value is 11!",
+            "console": true
+          }
+        ]
+      }
+    ]
+  }
+]

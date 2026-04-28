@@ -1,0 +1,232 @@
+.root {
+  position: relative;
+  z-index: 1;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.overline {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.desc {
+  margin: 0;
+  max-width: 48rem;
+  color: var(--color-fg-muted);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.pill {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: var(--space-2) var(--space-3);
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-fg-muted);
+  cursor: pointer;
+}
+
+.pill:hover {
+  border-color: rgb(0 212 170 / 35%);
+  color: var(--color-fg);
+}
+
+.pillActive {
+  border-color: rgb(0 212 170 / 45%);
+  background: rgb(0 212 170 / 10%);
+  color: var(--color-accent);
+}
+
+.runSummary {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-fg-muted);
+}
+
+.restoreStarter {
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-fg-muted);
+  text-decoration: underline;
+  cursor: pointer;
+  align-self: flex-start;
+}
+
+.restoreStarter:hover {
+  color: var(--color-accent);
+}
+
+.restoreStarter:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+.editor {
+  width: 100%;
+  min-height: 14rem;
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  background: rgb(5 8 18 / 92%);
+  color: var(--color-fg);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.editor:focus {
+  outline: none;
+  border-color: rgb(0 212 170 / 45%);
+  box-shadow: 0 0 0 1px rgb(0 212 170 / 25%);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.run {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  background: var(--color-accent);
+  color: var(--color-bg-base);
+}
+
+.run:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.secondary {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-fg-muted);
+  cursor: pointer;
+}
+
+.secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.meta {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-fg-muted);
+}
+
+.badgeOk {
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+.badgeWarn {
+  color: rgb(255 176 120);
+  font-weight: 700;
+}
+
+.duration {
+  opacity: 0.85;
+}
+
+.caseCounts {
+  opacity: 0.9;
+}
+
+.errorCard {
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgb(255 107 107 / 35%);
+  background: rgb(40 18 18 / 35%);
+}
+
+.errorSummary {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+
+.errorDetails {
+  margin-top: var(--space-3);
+  font-size: 0.8125rem;
+}
+
+.errorDetails summary {
+  cursor: pointer;
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+}
+
+.errorPre {
+  margin: var(--space-2) 0 0;
+  padding: var(--space-2);
+  overflow: auto;
+  max-height: 12rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  line-height: 1.4;
+  background: rgb(5 8 18 / 90%);
+  border-radius: var(--radius-sm);
+}
+
+.emptySheet {
+  border-radius: var(--radius-lg);
+  border: 1px dashed rgb(0 212 170 / 35%);
+  background: linear-gradient(135deg, rgb(22 32 51 / 80%), rgb(8 13 26 / 60%));
+  padding: clamp(var(--space-5), 4vw, var(--space-6));
+}
+
+.emptyTitle {
+  margin: 0 0 var(--space-3);
+  font-size: 1.25rem;
+}

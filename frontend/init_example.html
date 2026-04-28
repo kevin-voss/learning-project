@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- Legacy static prototype retained for historical reference. Prefer the Vite React app: `cd frontend && bun run dev` (see frontend/README.md). -->
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CodeStep — Interactive Code Learner</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script>
+tailwind.config={theme:{extend:{fontFamily:{mono:['JetBrains Mono','monospace'],sans:['Space Grotesk','sans-serif']}}}}
+</script>
+<style>
+:root {
+  --bg:#080d1a;--bg2:#0f1729;--bg3:#162033;--fg:#e2e8f0;--muted:#5a6b82;
+  --accent:#00d4aa;--accent2:#ff6b35;--highlight:rgba(0,212,170,0.1);
+  --line-hl:rgba(0,212,170,0.08);--border:#1a2744;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--fg);font-family:'Space Grotesk',sans-serif;overflow-x:hidden}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--muted);border-radius:3px}
+
+/* Ambient background */
+.bg-orb{position:fixed;border-radius:50%;filter:blur(100px);opacity:0.12;pointer-events:none;z-index:0}
+.bg-orb-1{width:500px;height:500px;background:var(--accent);top:-150px;left:-150px;animation:orbFloat1 25s ease-in-out infinite}
+.bg-orb-2{width:400px;height:400px;background:var(--accent2);bottom:-100px;right:-100px;animation:orbFloat2 30s ease-in-out infinite}
+.bg-orb-3{width:300px;height:300px;background:#6366f1;top:50%;left:50%;animation:orbFloat3 20s ease-in-out infinite}
+@keyframes orbFloat1{0%,100%{transform:translate(0,0)}50%{transform:translate(80px,60px)}}
+@keyframes orbFloat2{0%,100%{transform:translate(0,0)}50%{transform:translate(-60px,-80px)}}
+@keyframes orbFloat3{0%,100%{transform:translate(-50%,-50%)}50%{transform:translate(-30%,-40%)}}
+
+/* Topic tabs */
+.topic-tab{position:relative;padding:10px 20px;cursor:pointer;font-weight:600;font-size:14px;color:var(--muted);transition:all .25s;border-radius:8px 8px 0 0;background:transparent;border:none;outline:none}
+.topic-tab:hover{color:var(--fg);background:rgba(255,255,255,0.03)}
+.topic-tab.active{color:var(--accent);background:var(--bg3)}
+.topic-tab.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--accent);border-radius:2px}
+
+/* Example pills */
+.example-pill{padding:6px 16px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;background:var(--bg2);color:var(--muted);border:1px solid var(--border);transition:all .2s;outline:none}
+.example-pill:hover{color:var(--fg);border-color:var(--muted)}
+.example-pill.active{background:var(--accent);color:#080d1a;border-color:var(--accent)}
+
+/* Code block */
+.code-container{background:#060a14;border:1px solid var(--border);border-radius:12px;overflow:hidden;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.7}
+.code-line{display:flex;align-items:stretch;transition:background .3s,box-shadow .3s;min-height:28px}
+.code-line.highlighted{background:var(--line-hl);box-shadow:inset 3px 0 0 var(--accent)}
+.line-num{width:44px;text-align:right;padding-right:12px;color:#2d3f58;user-select:none;display:flex;align-items:center;justify-content:flex-end;flex-shrink:0}
+.code-line.highlighted .line-num{color:var(--accent)}
+.line-code{padding-right:16px;white-space:pre;display:flex;align-items:center;flex:1}
+
+/* Syntax colors */
+.syn-kw{color:#c792ea;font-weight:700}
+.syn-str{color:#c3e88d}
+.syn-num{color:#f78c6c}
+.syn-cmt{color:#546e7a;font-style:italic}
+.syn-fn{color:#82aaff}
+.syn-op{color:#89ddff}
+.syn-pn{color:#89ddff}
+.syn-var{color:#eeffff}
+
+/* Variable cards */
+.var-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px;transition:all .35s;position:relative;overflow:hidden}
+.var-card.changed{border-color:var(--accent);box-shadow:0 0 16px rgba(0,212,170,0.15)}
+.var-card.changed::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent);animation:varFlash .6s ease}
+.var-card .var-name{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent);font-weight:700}
+.var-card .var-val{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:var(--fg);margin-top:4px}
+.var-card .var-type{font-size:11px;color:var(--muted);margin-top:2px}
+
+/* Array items */
+.arr-item{display:inline-flex;align-items:center;justify-content:center;min-width:40px;height:40px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:15px;border:1px solid var(--border);background:var(--bg2);transition:all .3s;margin:3px;padding:0 10px}
+.arr-item.changed{border-color:var(--accent);background:rgba(0,212,170,0.12);color:var(--accent);transform:scale(1.1)}
+.arr-item.idx-highlight{border-color:var(--accent2);background:rgba(255,107,53,0.12);color:var(--accent2);transform:scale(1.1)}
+.arr-item .arr-idx{font-size:9px;color:var(--muted);margin-right:4px;font-weight:400}
+
+@keyframes varFlash{0%{opacity:0}30%{opacity:1}100%{opacity:0}}
+
+/* Console */
+.console-line{font-family:'JetBrains Mono',monospace;font-size:12px;color:#a8d8a8;padding:2px 0;animation:consoleIn .3s ease}
+.console-line::before{content:'> ';color:var(--muted)}
+@keyframes consoleIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+/* Control buttons */
+.ctrl-btn{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:10px;border:1px solid var(--border);background:var(--bg2);color:var(--fg);cursor:pointer;transition:all .2s;font-size:16px;outline:none}
+.ctrl-btn:hover{background:var(--bg3);border-color:var(--muted);transform:translateY(-1px)}
+.ctrl-btn:active{transform:translateY(0)}
+.ctrl-btn.primary{background:var(--accent);color:#080d1a;border-color:var(--accent);font-size:18px}
+.ctrl-btn.primary:hover{background:#00e8bb;box-shadow:0 0 20px rgba(0,212,170,0.3)}
+.ctrl-btn:disabled{opacity:0.3;cursor:not-allowed;transform:none}
+
+/* Speed slider */
+.speed-slider{-webkit-appearance:none;width:100px;height:4px;border-radius:2px;background:var(--border);outline:none}
+.speed-slider::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--accent);cursor:pointer}
+
+/* Progress bar */
+.progress-track{height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .3s}
+
+/* Explanation */
+.explanation-text{font-size:14px;line-height:1.6;color:var(--fg);padding:14px 18px;background:rgba(0,212,170,0.05);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;animation:explIn .3s ease}
+@keyframes explIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;right:24px;padding:12px 20px;border-radius:10px;font-size:14px;font-weight:600;z-index:1000;transform:translateY(100px);opacity:0;transition:all .4s cubic-bezier(.34,1.56,.64,1)}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.success{background:var(--accent);color:#080d1a}
+.toast.info{background:var(--bg3);color:var(--fg);border:1px solid var(--border)}
+
+/* Completion celebration */
+.celebration{position:fixed;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:999}
+.confetti{position:absolute;width:8px;height:8px;border-radius:2px;animation:confettiFall 2s ease-in forwards}
+@keyframes confettiFall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+
+@media(max-width:900px){
+  .main-grid{grid-template-columns:1fr!important}
+  .sidebar{max-height:350px;overflow-y:auto}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:0.01ms!important;transition-duration:0.01ms!important}
+}
+</style>
+</head>
+<body class="min-h-screen">
+<!-- Background orbs -->
+<div class="bg-orb bg-orb-1"></div>
+<div class="bg-orb bg-orb-2"></div>
+<div class="bg-orb bg-orb-3"></div>
+
+<div class="relative z-10 max-w-7xl mx-auto px-4 py-6">
+  <!-- Header -->
+  <header class="flex items-center justify-between mb-6">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background:var(--accent)">
+        <i class="fa-solid fa-code" style="color:#080d1a;font-size:18px"></i>
+      </div>
+      <div>
+        <h1 class="text-xl font-extrabold tracking-tight" style="color:var(--fg)">CodeStep</h1>
+        <p class="text-xs" style="color:var(--muted)">Interactive Code Learner</p>
+      </div>
+    </div>
+    <button id="sound-toggle" class="ctrl-btn" title="Toggle Sound" aria-label="Toggle sound">
+      <i class="fa-solid fa-volume-high"></i>
+    </button>
+  </header>
+
+  <!-- Topic tabs -->
+  <nav id="topic-tabs" class="flex gap-1 mb-0 overflow-x-auto pb-0" role="tablist" aria-label="Topics"></nav>
+  <div style="height:1px;background:var(--border)"></div>
+
+  <!-- Example pills + description -->
+  <div class="flex flex-wrap items-center gap-3 mt-4 mb-2">
+    <span class="text-xs font-semibold uppercase tracking-wider" style="color:var(--muted)">Examples</span>
+    <div id="example-pills" class="flex flex-wrap gap-2"></div>
+  </div>
+  <p id="topic-desc" class="text-sm mb-4" style="color:var(--muted)"></p>
+
+  <!-- Main content grid -->
+  <div class="main-grid grid gap-5" style="grid-template-columns:1fr 340px">
+    <!-- Left: Code + Controls -->
+    <div class="flex flex-col gap-4">
+      <!-- Code panel -->
+      <div class="code-container" id="code-panel" role="region" aria-label="Code viewer">
+        <div class="flex items-center gap-2 px-4 py-2" style="background:rgba(255,255,255,0.02);border-bottom:1px solid var(--border)">
+          <span style="width:10px;height:10px;border-radius:50%;background:#ff5f57"></span>
+          <span style="width:10px;height:10px;border-radius:50%;background:#febc2e"></span>
+          <span style="width:10px;height:10px;border-radius:50%;background:#28c840"></span>
+          <span class="ml-3 text-xs" style="color:var(--muted)" id="code-filename">script.js</span>
+        </div>
+        <div id="code-lines" class="py-2 overflow-x-auto"></div>
+      </div>
+
+      <!-- Controls -->
+      <div class="flex items-center gap-3 flex-wrap">
+        <button id="btn-reset" class="ctrl-btn" title="Reset" aria-label="Reset"><i class="fa-solid fa-rotate-left"></i></button>
+        <button id="btn-back" class="ctrl-btn" title="Step Back" aria-label="Step back"><i class="fa-solid fa-backward-step"></i></button>
+        <button id="btn-play" class="ctrl-btn primary" title="Play / Pause" aria-label="Play or Pause"><i class="fa-solid fa-play"></i></button>
+        <button id="btn-next" class="ctrl-btn" title="Step Forward" aria-label="Step forward"><i class="fa-solid fa-forward-step"></i></button>
+        <div class="flex items-center gap-2 ml-2">
+          <span class="text-xs" style="color:var(--muted)"><i class="fa-solid fa-gauge"></i></span>
+          <input type="range" id="speed-slider" class="speed-slider" min="200" max="2000" value="800" step="100" aria-label="Speed">
+        </div>
+        <div class="ml-auto flex items-center gap-3">
+          <span id="step-counter" class="text-xs font-mono" style="color:var(--muted)">0 / 0</span>
+          <div class="progress-track" style="width:120px"><div id="progress-fill" class="progress-fill" style="width:0%"></div></div>
+        </div>
+      </div>
+
+      <!-- Explanation -->
+      <div id="explanation-box" class="explanation-text" style="min-height:50px">
+        Press Play or Step Forward to begin executing the code.
+      </div>
+    </div>
+
+    <!-- Right sidebar -->
+    <aside class="sidebar flex flex-col gap-4">
+      <!-- Variables -->
+      <section>
+        <h2 class="text-xs font-semibold uppercase tracking-wider mb-3" style="color:var(--muted)">
+          <i class="fa-solid fa-cube mr-1"></i> Variables
+        </h2>
+        <div id="var-panel" class="flex flex-col gap-2"></div>
+        <p id="var-empty" class="text-xs italic" style="color:var(--muted)">No variables yet</p>
+      </section>
+
+      <!-- Console output -->
+      <section class="flex-1">
+        <h2 class="text-xs font-semibold uppercase tracking-wider mb-3" style="color:var(--muted)">
+          <i class="fa-solid fa-terminal mr-1"></i> Console
+        </h2>
+        <div id="console-panel" class="p-3 rounded-lg overflow-y-auto" style="background:#060a14;border:1px solid var(--border);min-height:120px;max-height:300px">
+          <p class="text-xs italic" style="color:#2d3f58">Output appears here...</p>
+        </div>
+      </section>
+
+      <!-- Keyboard shortcuts -->
+      <div class="text-xs p-3 rounded-lg" style="background:var(--bg2);border:1px solid var(--border);color:var(--muted)">
+        <span class="font-semibold" style="color:var(--fg)">Shortcuts</span><br>
+        <kbd class="px-1 rounded" style="background:var(--bg)">Space</kbd> Play/Pause &nbsp;
+        <kbd class="px-1 rounded" style="background:var(--bg)">→</kbd> Step &nbsp;
+        <kbd class="px-1 rounded" style="background:var(--bg)">←</kbd> Back &nbsp;
+        <kbd class="px-1 rounded" style="background:var(--bg)">R</kbd> Reset
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- Toast container -->
+<div id="toast" class="toast"></div>
+
+<script>
+// ===== SOUND ENGINE =====
+const SoundEngine = {
+  ctx: null,
+  enabled: true,
+  init() {
+    if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+  },
+  play(type) {
+    if (!this.enabled) return;
+    this.init();
+    const c = this.ctx, t = c.currentTime;
+    const o = c.createOscillator(), g = c.createGain();
+    o.connect(g); g.connect(c.destination);
+    switch(type) {
+      case 'step':
+        o.type='sine'; o.frequency.value=520; g.gain.setValueAtTime(0.06,t);
+        g.gain.exponentialRampToValueAtTime(0.001,t+0.07); o.start(t); o.stop(t+0.07); break;
+      case 'change':
+        o.type='triangle'; o.frequency.value=880; g.gain.setValueAtTime(0.07,t);
+        o.frequency.exponentialRampToValueAtTime(1200,t+0.08);
+        g.gain.exponentialRampToValueAtTime(0.001,t+0.15); o.start(t); o.stop(t+0.15); break;
+      case 'output':
+        o.type='sine'; o.frequency.value=660; g.gain.setValueAtTime(0.05,t);
+        g.gain.exponentialRampToValueAtTime(0.001,t+0.12); o.start(t); o.stop(t+0.12); break;
+      case 'complete':
+        o.type='sine'; o.frequency.value=523; g.gain.setValueAtTime(0.08,t);
+        g.gain.exponentialRampToValueAtTime(0.001,t+0.15); o.start(t); o.stop(t+0.15);
+        const o2=c.createOscillator(),g2=c.createGain(); o2.connect(g2); g2.connect(c.destination);
+        o2.type='sine'; o2.frequency.value=659; g2.gain.setValueAtTime(0.08,t+0.12);
+        g2.gain.exponentialRampToValueAtTime(0.001,t+0.27); o2.start(t+0.12); o2.stop(t+0.27);
+        const o3=c.createOscillator(),g3=c.createGain(); o3.connect(g3); g3.connect(c.destination);
+        o3.type='sine'; o3.frequency.value=784; g3.gain.setValueAtTime(0.08,t+0.24);
+        g3.gain.exponentialRampToValueAtTime(0.001,t+0.5); o3.start(t+0.24); o3.stop(t+0.5);
+        break;
+      case 'back':
+        o.type='sine'; o.frequency.value=380; g.gain.setValueAtTime(0.04,t);
+        g.gain.exponentialRampToValueAtTime(0.001,t+0.06); o.start(t); o.stop(t+0.06); break;
+    }
+  }
+};
+
+// ===== TOPICS & EXAMPLES DATA =====
+const TOPICS = [
+  {
+    id:'for-loop', name:'For Loop', icon:'fa-rotate',
+    desc:'A for loop repeats code a specific number of times. It has three parts: initialization, condition, and update.',
+    examples:[
+      {
+        name:'Count 1 to 5',
+        code:[
+          'for (let i = 1; i <= 5; i++) {',
+          '  console.log(i);',
+          '}'
+        ],
+        steps:[
+          {l:0,vars:{i:1},out:[],expl:'Initialize i to 1. This runs once before the loop starts.',changed:['i']},
+          {l:0,vars:{i:1},out:[],expl:'Check condition: is i (1) <= 5? Yes — enter the loop body.'},
+          {l:1,vars:{i:1},out:['1'],expl:'Print the current value of i, which is 1.',console:true},
+          {l:0,vars:{i:2},out:['1'],expl:'i++ increments i from 1 to 2. Then re-check the condition.',changed:['i']},
+          {l:0,vars:{i:2},out:['1'],expl:'Check condition: is i (2) <= 5? Yes — continue looping.'},
+          {l:1,vars:{i:2},out:['1','2'],expl:'Print the current value of i, which is 2.',console:true},
+          {l:0,vars:{i:3},out:['1','2'],expl:'i++ increments i from 2 to 3.',changed:['i']},
+          {l:0,vars:{i:3},out:['1','2'],expl:'Check condition: is i (3) <= 5? Yes — continue.'},
+          {l:1,vars:{i:3},out:['1','2','3'],expl:'Print i = 3.',console:true},
+          {l:0,vars:{i:4},out:['1','2','3'],expl:'i++ increments i from 3 to 4.',changed:['i']},
+          {l:0,vars:{i:4},out:['1','2','3'],expl:'Check condition: is i (4) <= 5? Yes — continue.'},
+          {l:1,vars:{i:4},out:['1','2','3','4'],expl:'Print i = 4.',console:true},
+          {l:0,vars:{i:5},out:['1','2','3','4'],expl:'i++ increments i from 4 to 5.',changed:['i']},
+          {l:0,vars:{i:5},out:['1','2','3','4'],expl:'Check condition: is i (5) <= 5? Yes — continue.'},
+          {l:1,vars:{i:5},out:['1','2','3','4','5'],expl:'Print i = 5.',console:true},
+          {l:0,vars:{i:6},out:['1','2','3','4','5'],expl:'i++ increments i from 5 to 6.',changed:['i']},
+          {l:2,vars:{i:6},out:['1','2','3','4','5'],expl:'Check condition: is i (6) <= 5? No — exit the loop. Done!'}
+        ]
+      },
+      {
+        name:'Sum 1 to 5',
+        code:[
+          'let sum = 0;',
+          '',
+          'for (let i = 1; i <= 5; i++) {',
+          '  sum = sum + i;',
+          '}',
+          '',
+          'console.log("Total:", sum);'
+        ],
+        steps:[
+          {l:0,vars:{sum:0},out:[],expl:'Initialize sum to 0. This will accumulate the total.',changed:['sum']},
+          {l:2,vars:{sum:0,i:1},out:[],expl:'Start the loop: initialize i to 1.',changed:['i']},
+          {l:2,vars:{sum:0,i:1},out:[],expl:'Check: i (1) <= 5? Yes.'},
+          {l:3,vars:{sum:1,i:1},out:[],expl:'sum = 0 + 1 = 1. First number added!',changed:['sum']},
+          {l:2,vars:{sum:1,i:2},out:[],expl:'i++ → i becomes 2.',changed:['i']},
+          {l:2,vars:{sum:1,i:2},out:[],expl:'Check: i (2) <= 5? Yes.'},
+          {l:3,vars:{sum:3,i:2},out:[],expl:'sum = 1 + 2 = 3.',changed:['sum']},
+          {l:2,vars:{sum:3,i:3},out:[],expl:'i++ → i becomes 3.',changed:['i']},
+          {l:2,vars:{sum:3,i:3},out:[],expl:'Check: i (3) <= 5? Yes.'},
+          {l:3,vars:{sum:6,i:3},out:[],expl:'sum = 3 + 3 = 6.',changed:['sum']},
+          {l:2,vars:{sum:6,i:4},out:[],expl:'i++ → i becomes 4.',changed:['i']},
+          {l:2,vars:{sum:6,i:4},out:[],expl:'Check: i (4) <= 5? Yes.'},
+          {l:3,vars:{sum:10,i:4},out:[],expl:'sum = 6 + 4 = 10.',changed:['sum']},
+          {l:2,vars:{sum:10,i:5},out:[],expl:'i++ → i becomes 5.',changed:['i']},
+          {l:2,vars:{sum:10,i:5},out:[],expl:'Check: i (5) <= 5? Yes.'},
+          {l:3,vars:{sum:15,i:5},out:[],expl:'sum = 10 + 5 = 15.',changed:['sum']},
+          {l:2,vars:{sum:15,i:6},out:[],expl:'i++ → i becomes 6.',changed:['i']},
+          {l:5,vars:{sum:15,i:6},out:[],expl:'Check: i (6) <= 5? No — exit loop.'},
+          {l:6,vars:{sum:15,i:6},out:['Total: 15'],expl:'Print the final result: the sum of 1+2+3+4+5 = 15.',console:true}
+        ]
+      },
+      {
+        name:'Countdown',
+        code:[
+          'for (let i = 5; i > 0; i--) {',
+          '  console.log(i);',
+          '}',
+          'console.log("Go!");'
+        ],
+        steps:[
+          {l:0,vars:{i:5},out:[],expl:'Initialize i to 5. Counting down this time!',changed:['i']},
+          {l:0,vars:{i:5},out:[],expl:'Check: i (5) > 0? Yes — enter loop.'},
+          {l:1,vars:{i:5},out:['5'],expl:'Print i = 5.',console:true},
+          {l:0,vars:{i:4},out:['5'],expl:'i-- decrements i from 5 to 4.',changed:['i']},
+          {l:0,vars:{i:4},out:['5'],expl:'Check: i (4) > 0? Yes.'},
+          {l:1,vars:{i:4},out:['5','4'],expl:'Print i = 4.',console:true},
+          {l:0,vars:{i:3},out:['5','4'],expl:'i-- → i becomes 3.',changed:['i']},
+          {l:0,vars:{i:3},out:['5','4'],expl:'Check: i (3) > 0? Yes.'},
+          {l:1,vars:{i:3},out:['5','4','3'],expl:'Print i = 3.',console:true},
+          {l:0,vars:{i:2},out:['5','4','3'],expl:'i-- → i becomes 2.',changed:['i']},
+          {l:0,vars:{i:2},out:['5','4','3'],expl:'Check: i (2) > 0? Yes.'},
+          {l:1,vars:{i:2},out:['5','4','3','2'],expl:'Print i = 2.',console:true},
+          {l:0,vars:{i:1},out:['5','4','3','2'],expl:'i-- → i becomes 1.',changed:['i']},
+          {l:0,vars:{i:1},out:['5','4','3','2'],expl:'Check: i (1) > 0? Yes.'},
+          {l:1,vars:{i:1},out:['5','4','3','2','1'],expl:'Print i = 1.',console:true},
+          {l:0,vars:{i:0},out:['5','4','3','2','1'],expl:'i-- → i becomes 0.',changed:['i']},
+          {l:2,vars:{i:0},out:['5','4','3','2','1'],expl:'Check: i (0) > 0? No — exit loop.'},
+          {l:3,vars:{i:0},out:['5','4','3','2','1','Go!'],expl:'After the loop, print "Go!" — countdown complete!',console:true}
+        ]
+      }
+    ]
+  },
+  {
+    id:'while-loop', name:'While Loop', icon:'fa-arrows-spin',
+    desc:'A while loop keeps running as long as its condition is true. Use it when you don\'t know exactly how many iterations you need.',
+    examples:[
+      {
+        name:'Double Until 100',
+        code:[
+          'let n = 3;',
+          '',
+          'while (n < 100) {',
+          '  console.log(n);',
+          '  n = n * 2;',
+          '}',
+          '',
+          'console.log("Final:", n);'
+        ],
+        steps:[
+          {l:0,vars:{n:3},out:[],expl:'Initialize n to 3.',changed:['n']},
+          {l:2,vars:{n:3},out:[],expl:'Check: n (3) < 100? Yes — enter loop.'},
+          {l:3,vars:{n:3},out:['3'],expl:'Print n = 3.',console:true},
+          {l:4,vars:{n:6},out:['3'],expl:'Double n: 3 × 2 = 6.',changed:['n']},
+          {l:2,vars:{n:6},out:['3'],expl:'Check: n (6) < 100? Yes.'},
+          {l:3,vars:{n:6},out:['3','6'],expl:'Print n = 6.',console:true},
+          {l:4,vars:{n:12},out:['3','6'],expl:'Double n: 6 × 2 = 12.',changed:['n']},
+          {l:2,vars:{n:12},out:['3','6'],expl:'Check: n (12) < 100? Yes.'},
+          {l:3,vars:{n:12},out:['3','6','12'],expl:'Print n = 12.',console:true},
+          {l:4,vars:{n:24},out:['3','6','12'],expl:'Double n: 12 × 2 = 24.',changed:['n']},
+          {l:2,vars:{n:24},out:['3','6','12'],expl:'Check: n (24) < 100? Yes.'},
+          {l:3,vars:{n:24},out:['3','6','12','24'],expl:'Print n = 24.',console:true},
+          {l:4,vars:{n:48},out:['3','6','12','24'],expl:'Double n: 24 × 2 = 48.',changed:['n']},
+          {l:2,vars:{n:48},out:['3','6','12','24'],expl:'Check: n (48) < 100? Yes.'},
+          {l:3,vars:{n:48},out:['3','6','12','24','48'],expl:'Print n = 48.',console:true},
+          {l:4,vars:{n:96},out:['3','6','12','24','48'],expl:'Double n: 48 × 2 = 96.',changed:['n']},
+          {l:2,vars:{n:96},out:['3','6','12','24','48'],expl:'Check: n (96) < 100? Yes — one more!'},
+          {l:3,vars:{n:96},out:['3','6','12','24','48','96'],expl:'Print n = 96.',console:true},
+          {l:4,vars:{n:192},out:['3','6','12','24','48','96'],expl:'Double n: 96 × 2 = 192.',changed:['n']},
+          {l:6,vars:{n:192},out:['3','6','12','24','48','96'],expl:'Check: n (192) < 100? No — exit loop.'},
+          {l:7,vars:{n:192},out:['3','6','12','24','48','96','Final: 192'],expl:'Print the final value of n: 192. Exponential growth in action!',console:true}
+        ]
+      },
+      {
+        name:'Digit Counter',
+        code:[
+          'let num = 4287;',
+          'let digits = 0;',
+          '',
+          'while (num > 0) {',
+          '  num = Math.floor(num / 10);',
+          '  digits++;',
+          '}',
+          '',
+          'console.log("Digits:", digits);'
+        ],
+        steps:[
+          {l:0,vars:{num:4287,digits:0},out:[],expl:'Start with num = 4287 and digits = 0.',changed:['num','digits']},
+          {l:3,vars:{num:4287,digits:0},out:[],expl:'Check: num (4287) > 0? Yes.'},
+          {l:4,vars:{num:428,digits:0},out:[],expl:'Divide by 10 and floor: 4287/10 = 428.7 → 428. Removes last digit!',changed:['num']},
+          {l:5,vars:{num:428,digits:1},out:[],expl:'digits++ → 1. We counted one digit.',changed:['digits']},
+          {l:3,vars:{num:428,digits:1},out:[],expl:'Check: num (428) > 0? Yes.'},
+          {l:4,vars:{num:42,digits:1},out:[],expl:'428/10 = 42.8 → 42. Another digit removed.',changed:['num']},
+          {l:5,vars:{num:42,digits:2},out:[],expl:'digits++ → 2.',changed:['digits']},
+          {l:3,vars:{num:42,digits:2},out:[],expl:'Check: num (42) > 0? Yes.'},
+          {l:4,vars:{num:4,digits:2},out:[],expl:'42/10 = 4.2 → 4.',changed:['num']},
+          {l:5,vars:{num:4,digits:3},out:[],expl:'digits++ → 3.',changed:['digits']},
+          {l:3,vars:{num:4,digits:3},out:[],expl:'Check: num (4) > 0? Yes.'},
+          {l:4,vars:{num:0,digits:3},out:[],expl:'4/10 = 0.4 → 0. Last digit removed.',changed:['num']},
+          {l:5,vars:{num:0,digits:4},out:[],expl:'digits++ → 4.',changed:['digits']},
+          {l:7,vars:{num:0,digits:4},out:[],expl:'Check: num (0) > 0? No — exit loop.'},
+          {l:8,vars:{num:0,digits:4},out:['Digits: 4'],expl:'4287 has 4 digits!',console:true}
+        ]
+      },
+      {
+        name:'Collatz Sequence',
+        code:[
+          'let n = 6;',
+          'let steps = 0;',
+          '',
+          'while (n !== 1) {',
+          '  console.log(n);',
+          '  if (n % 2 === 0) {',
+          '    n = n / 2;',
+          '  } else {',
+          '    n = 3 * n + 1;',
+          '  }',
+          '  steps++;',
+          '}',
+          '',
+          'console.log("Reached 1 in", steps, "steps");'
+        ],
+        steps:[
+          {l:0,vars:{n:6,steps:0},out:[],expl:'Start with n = 6, steps = 0.',changed:['n','steps']},
+          {l:3,vars:{n:6,steps:0},out:[],expl:'Check: n (6) !== 1? Yes — enter loop.'},
+          {l:4,vars:{n:6,steps:0},out:['6'],expl:'Print n = 6.',console:true},
+          {l:5,vars:{n:6,steps:0},out:['6'],expl:'Is n (6) even? 6 % 2 === 0? Yes!'},
+          {l:6,vars:{n:3,steps:0},out:['6'],expl:'n is even: divide by 2 → 6/2 = 3.',changed:['n']},
+          {l:10,vars:{n:3,steps:1},out:['6'],expl:'steps++ → 1.',changed:['steps']},
+          {l:3,vars:{n:3,steps:1},out:['6'],expl:'Check: n (3) !== 1? Yes.'},
+          {l:4,vars:{n:3,steps:1},out:['6','3'],expl:'Print n = 3.',console:true},
+          {l:5,vars:{n:3,steps:1},out:['6','3'],expl:'Is 3 even? No — go to else branch.'},
+          {l:8,vars:{n:10,steps:1},out:['6','3'],expl:'n is odd: 3×3+1 = 10.',changed:['n']},
+          {l:10,vars:{n:10,steps:2},out:['6','3'],expl:'steps++ → 2.',changed:['steps']},
+          {l:3,vars:{n:10,steps:2},out:['6','3'],expl:'Check: n (10) !== 1? Yes.'},
+          {l:4,vars:{n:10,steps:2},out:['6','3','10'],expl:'Print n = 10.',console:true},
+          {l:5,vars:{n:10,steps:2},out:['6','3','10'],expl:'Is 10 even? Yes!'},
+          {l:6,vars:{n:5,steps:2},out:['6','3','10'],expl:'10/2 = 5.',changed:['n']},
+          {l:10,vars:{n:5,steps:3},out:['6','3','10'],expl:'steps++ → 3.',changed:['steps']},
+          {l:3,vars:{n:5,steps:3},out:['6','3','10'],expl:'Check: n (5) !== 1? Yes.'},
+          {l:4,vars:{n:5,steps:3},out:['6','3','10','5'],expl:'Print n = 5.',console:true},
+          {l:5,vars:{n:5,steps:3},out:['6','3','10','5'],expl:'Is 5 even? No.'},
+          {l:8,vars:{n:16,steps:3},out:['6','3','10','5'],expl:'3×5+1 = 16.',changed:['n']},
+          {l:10,vars:{n:16,steps:4},out:['6','3','10','5'],expl:'steps++ → 4.',changed:['steps']},
+          {l:3,vars:{n:16,steps:4},out:['6','3','10','5'],expl:'Check: n (16) !== 1? Yes.'},
+          {l:4,vars:{n:16,steps:4},out:['6','3','10','5','16'],expl:'Print n = 16.',console:true},
+          {l:5,vars:{n:16,steps:4},out:['6','3','10','5','16'],expl:'Is 16 even? Yes!'},
+          {l:6,vars:{n:8,steps:4},out:['6','3','10','5','16'],expl:'16/2 = 8.',changed:['n']},
+          {l:10,vars:{n:8,steps:5},out:['6','3','10','5','16'],expl:'steps++ → 5.',changed:['steps']},
+          {l:3,vars:{n:8,steps:5},out:['6','3','10','5','16'],expl:'Check: n (8) !== 1? Yes — continuing...'},
+          {l:4,vars:{n:8,steps:5},out:['6','3','10','5','16','8'],expl:'Print n = 8.',console:true},
+          {l:6,vars:{n:4,steps:5},out:['6','3','10','5','16','8'],expl:'8/2 = 4.',changed:['n']},
+          {l:10,vars:{n:4,steps:6},out:['6','3','10','5','16','8'],expl:'steps++ → 6.',changed:['steps']},
+          {l:3,vars:{n:4,steps:6},out:['6','3','10','5','16','8'],expl:'n (4) !== 1? Yes.'},
+          {l:4,vars:{n:4,steps:6},out:['6','3','10','5','16','8','4'],expl:'Print 4.',console:true},
+          {l:6,vars:{n:2,steps:6},out:['6','3','10','5','16','8','4'],expl:'4/2 = 2.',changed:['n']},
+          {l:10,vars:{n:2,steps:7},out:['6','3','10','5','16','8','4'],expl:'steps++ → 7.',changed:['steps']},
+          {l:3,vars:{n:2,steps:7},out:['6','3','10','5','16','8','4'],expl:'n (2) !== 1? Yes.'},
+          {l:4,vars:{n:2,steps:7},out:['6','3','10','5','16','8','4','2'],expl:'Print 2.',console:true},
+          {l:6,vars:{n:1,steps:7},out:['6','3','10','5','16','8','4','2'],expl:'2/2 = 1.',changed:['n']},
+          {l:10,vars:{n:1,steps:8},out:['6','3','10','5','16','8','4','2'],expl:'steps++ → 8.',changed:['steps']},
+          {l:12,vars:{n:1,steps:8},out:['6','3','10','5','16','8','4','2'],expl:'Check: n (1) !== 1? No — exit loop!'},
+          {l:13,vars:{n:1,steps:8},out:['6','3','10','5','16','8','4','2','Reached 1 in 8 steps'],expl:'The Collatz sequence from 6 reaches 1 in 8 steps. Every starting number eventually reaches 1 — or so we think!',console:true}
+        ]
+      }
+    ]
+  },
+  {
+    id:'if-else', name:'If / Else', icon:'fa-code-branch',
+    desc:'Conditional statements let your code make decisions. If a condition is true, run one block; otherwise, run another.',
+    examples:[
+      {
+        name:'Grade Classifier',
+        code:[
+          'let score = 85;',
+          'let grade;',
+          '',
+          'if (score >= 90) {',
+          '  grade = "A";',
+          '} else if (score >= 80) {',
+          '  grade = "B";',
+          '} else if (score >= 70) {',
+          '  grade = "C";',
+          '} else {',
+          '  grade = "F";',
+          '}',
+          '',
+          'console.log("Grade:", grade);'
+        ],
+        steps:[
+          {l:0,vars:{score:85},out:[],expl:'Set score to 85.',changed:['score']},
+          {l:1,vars:{score:85,grade:'undefined'},out:[],expl:'Declare grade without a value — it\'s undefined for now.',changed:['grade']},
+          {l:3,vars:{score:85,grade:'undefined'},out:[],expl:'Check: score (85) >= 90? No — skip this branch.'},
+          {l:5,vars:{score:85,grade:'undefined'},out:[],expl:'Check: score (85) >= 80? Yes! Enter this branch.'},
+          {l:6,vars:{score:85,grade:'B'},out:[],expl:'grade = "B". Score 85 falls in the B range (80-89).',changed:['grade']},
+          {l:12,vars:{score:85,grade:'B'},out:[],expl:'Skip remaining else-if and else blocks since we found a match.'},
+          {l:13,vars:{score:85,grade:'B'},out:['Grade: B'],expl:'Print the result: Grade B.',console:true}
+        ]
+      },
+      {
+        name:'Number Analyzer',
+        code:[
+          'let x = -7;',
+          '',
+          'if (x > 0) {',
+          '  console.log(x, "is positive");',
+          '} else if (x < 0) {',
+          '  console.log(x, "is negative");',
+          '} else {',
+          '  console.log(x, "is zero");',
+          '}',
+          '',
+          'if (x % 2 === 0) {',
+          '  console.log(x, "is even");',
+          '} else {',
+          '  console.log(x, "is odd");',
+          '}'
+        ],
+        steps:[
+          {l:0,vars:{x:-7},out:[],expl:'Set x to -7.',changed:['x']},
+          {l:2,vars:{x:-7},out:[],expl:'Check: x (-7) > 0? No.'},
+          {l:4,vars:{x:-7},out:[],expl:'Check: x (-7) < 0? Yes!'},
+          {l:5,vars:{x:-7},out:['-7 is negative'],expl:'Print "-7 is negative".',console:true},
+          {l:10,vars:{x:-7},out:['-7 is negative'],expl:'Now check even/odd. Is x % 2 === 0?'},
+          {l:10,vars:{x:-7},out:['-7 is negative'],expl:'-7 % 2 = -1. Not === 0, so no.'},
+          {l:13,vars:{x:-7},out:['-7 is negative','-7 is odd'],expl:'x is odd. Print "-7 is odd".',console:true}
+        ]
+      },
+      {
+        name:'Leap Year Check',
+        code:[
+          'let year = 2024;',
+          'let isLeap;',
+          '',
+          'if (year % 400 === 0) {',
+          '  isLeap = true;',
+          '} else if (year % 100 === 0) {',
+          '  isLeap = false;',
+          '} else if (year % 4 === 0) {',
+          '  isLeap = true;',
+          '} else {',
+          '  isLeap = false;',
+          '}',
+          '',
+          'console.log(year, isLeap ? "is a leap year" : "is not a leap year");'
+        ],
+        steps:[
+          {l:0,vars:{year:2024},out:[],expl:'Set year to 2024.',changed:['year']},
+          {l:1,vars:{year:2024,isLeap:'undefined'},out:[],expl:'Declare isLeap.',changed:['isLeap']},
+          {l:3,vars:{year:2024,isLeap:'undefined'},out:[],expl:'Check: 2024 % 400 === 0? 2024/400 = 5.06 → No.'},
+          {l:5,vars:{year:2024,isLeap:'undefined'},out:[],expl:'Check: 2024 % 100 === 0? 2024/100 = 20.24 → No.'},
+          {l:7,vars:{year:2024,isLeap:'undefined'},out:[],expl:'Check: 2024 % 4 === 0? 2024/4 = 506 → Yes!'},
+          {l:8,vars:{year:2024,isLeap:true},out:[],expl:'isLeap = true. Divisible by 4 but not 100 → leap year!',changed:['isLeap']},
+          {l:12,vars:{year:2024,isLeap:true},out:[],expl:'Skip the else block.'},
+          {l:13,vars:{year:2024,isLeap:true},out:['2024 is a leap year'],expl:'2024 is a leap year! February has 29 days.',console:true}
+        ]
+      }
+    ]
+  },
+  {
+    id:'arrays', name:'Arrays', icon:'fa-layer-group',
+    desc:'Arrays store multiple values in an ordered list. Access items by index (starting at 0), and use loops to iterate through them.',
+    examples:[
+      {
+        name:'Push and Pop',
+        code:[
+          'let fruits = ["Apple", "Banana"];',
+          '',
+          'fruits.push("Cherry");',
+          'console.log(fruits);',
+          '',
+          'let removed = fruits.pop();',
+          'console.log("Removed:", removed);',
+          'console.log(fruits);'
+        ],
+        steps:[
+          {l:0,vars:{fruits:['Apple','Banana']},out:[],expl:'Create an array with 2 fruits.',changed:['fruits']},
+          {l:2,vars:{fruits:['Apple','Banana','Cherry']},out:[],expl:'push("Cherry") adds "Cherry" to the end of the array.',changed:['fruits']},
+          {l:3,vars:{fruits:['Apple','Banana','Cherry']},out:['Apple,Banana,Cherry'],expl:'Print the array: 3 items now.',console:true},
+          {l:5,vars:{fruits:['Apple','Banana'],removed:'Cherry'},out:['Apple,Banana,Cherry'],expl:'pop() removes the last item and returns it. removed = "Cherry".',changed:['fruits','removed']},
+          {l:6,vars:{fruits:['Apple','Banana'],removed:'Cherry'},out:['Apple,Banana,Cherry','Removed: Cherry'],expl:'Print what was removed.',console:true},
+          {l:7,vars:{fruits:['Apple','Banana'],removed:'Cherry'},out:['Apple,Banana,Cherry','Removed: Cherry','Apple,Banana'],expl:'Back to 2 fruits. push adds, pop removes — like a stack!',console:true}
+        ]
+      },
+      {
+        name:'Sum All Elements',
+        code:[
+          'let nums = [4, 7, 2, 9, 5];',
+          'let sum = 0;',
+          '',
+          'for (let i = 0; i < nums.length; i++) {',
+          '  sum = sum + nums[i];',
+          '  console.log("+", nums[i], "=", sum);',
+          '}',
+          '',
+          'console.log("Total:", sum);'
+        ],
+        steps:[
+          {l:0,vars:{nums:[4,7,2,9,5],sum:0},out:[],expl:'Create array and initialize sum to 0.',changed:['nums','sum']},
+          {l:3,vars:{nums:[4,7,2,9,5],sum:0,i:0},out:[],expl:'Start loop: i = 0.',changed:['i']},
+          {l:3,vars:{nums:[4,7,2,9,5],sum:0,i:0},out:[],expl:'Check: i (0) < 5? Yes.'},
+          {l:4,vars:{nums:[4,7,2,9,5],sum:4,i:0},out:[],expl:'sum = 0 + nums[0] = 0 + 4 = 4.',changed:['sum'],arrIdx:0},
+          {l:5,vars:{nums:[4,7,2,9,5],sum:4,i:0},out:['+ 4 = 4'],expl:'Print intermediate result.',console:true},
+          {l:3,vars:{nums:[4,7,2,9,5],sum:4,i:1},out:['+ 4 = 4'],expl:'i++ → 1.',changed:['i']},
+          {l:3,vars:{nums:[4,7,2,9,5],sum:4,i:1},out:['+ 4 = 4'],expl:'Check: 1 < 5? Yes.'},
+          {l:4,vars:{nums:[4,7,2,9,5],sum:11,i:1},out:['+ 4 = 4'],expl:'sum = 4 + nums[1] = 4 + 7 = 11.',changed:['sum'],arrIdx:1},
+          {l:5,vars:{nums:[4,7,2,9,5],sum:11,i:1},out:['+ 4 = 4','+ 7 = 11'],expl:'Print progress.',console:true},
+          {l:3,vars:{nums:[4,7,2,9,5],sum:11,i:2},out:['+ 4 = 4','+ 7 = 11'],expl:'i++ → 2.',changed:['i']},
+          {l:4,vars:{nums:[4,7,2,9,5],sum:13,i:2},out:['+ 4 = 4','+ 7 = 11'],expl:'sum = 11 + nums[2] = 11 + 2 = 13.',changed:['sum'],arrIdx:2},
+          {l:5,vars:{nums:[4,7,2,9,5],sum:13,i:2},out:['+ 4 = 4','+ 7 = 11','+ 2 = 13'],expl:'Print progress.',console:true},
+          {l:3,vars:{nums:[4,7,2,9,5],sum:13,i:3},out:['+ 4 = 4','+ 7 = 11','+ 2 = 13'],expl:'i++ → 3.',changed:['i']},
+          {l:4,vars:{nums:[4,7,2,9,5],sum:22,i:3},out:['+ 4 = 4','+ 7 = 11','+ 2 = 13'],expl:'sum = 13 + nums[3] = 13 + 9 = 22.',changed:['sum'],arrIdx:3},
+          {l:5,vars:{nums:[4,7,2,9,5],sum:22,i:3},out:['+ 4 = 4','+ 7 = 11','+ 2 = 13','+ 9 = 22'],expl:'Print progress.',console:true},
+          {l:3,vars:{nums:[4,7,2,9,5],sum:22,i:4},out:['+ 4 = 4','+ 7 = 11','+ 2 = 13','+ 9 = 22'],expl:'i++ → 4.',changed:['i']},
+          {l:4,vars:{nums:[4,7,2,9,5],sum:27,i:4},out:['+ 4 = 4','+ 7 = 11','+ 2 = 13','+ 9 = 22'],expl:'sum = 22 + nums[4] = 22 + 5 = 27.',changed:['sum'],arrIdx:4},
+          {l:5,vars:{nums:[4,7,2,9,5],sum:27,i:4},out:['+ 4 = 4','+ 7 = 11','+ 2 = 13','+ 9 = 22','+ 5 = 27'],expl:'Print progress.',console:true},
+          {l:3,vars:{nums:[4,7,2,9,5],sum:27,i:5},out:['+ 4 = 4','+ 7 = 11','+ 2 = 13','+ 9 = 22','+ 5 = 27'],expl:'i++ → 5.',changed:['i']},
+          {l:7,vars:{nums:[4,7,2,9,5],sum:27,i:5},out:['+ 4 = 4','+ 7 = 11','+ 2 = 13','+ 9 = 22','+ 5 = 27'],expl:'Check: 5 < 5? No — exit loop.'},
+          {l:8,vars:{nums:[4,7,2,9,5],sum:27,i:5},out:['+ 4 = 4','+ 7 = 11','+ 2 = 13','+ 9 = 22','+ 5 = 27','Total: 27'],expl:'Final sum is 27! 4+7+2+9+5 = 27.',console:true}
+        ]
+      },
+      {
+        name:'Find Maximum',
+        code:[
+          'let nums = [3, 8, 2, 11, 6];',
+          'let max = nums[0];',
+          '',
+          'for (let i = 1; i < nums.length; i++) {',
+          '  if (nums[i] > max) {',
+          '    max = nums[i];',
+          '  }',
+          '}',
+          '',
+          'console.log("Max:", max);'
+        ],
+        steps:[
+          {l:0,vars:{nums:[3,8,2,11,6]},out:[],expl:'Create the array.',changed:['nums']},
+          {l:1,vars:{nums:[3,8,2,11,6],max:3},out:[],expl:'Assume the first element (3) is the maximum.',changed:['max']},
+          {l:3,vars:{nums:[3,8,2,11,6],max:3,i:1},out:[],expl:'Start loop from i = 1 (we already checked index 0).',changed:['i']},
+          {l:3,vars:{nums:[3,8,2,11,6],max:3,i:1},out:[],expl:'Check: i (1) < 5? Yes.'},
+          {l:4,vars:{nums:[3,8,2,11,6],max:3,i:1},out:[],expl:'Is nums[1] (8) > max (3)? Yes!',arrIdx:1},
+          {l:5,vars:{nums:[3,8,2,11,6],max:8,i:1},out:[],expl:'Update max to 8. New maximum found!',changed:['max']},
+          {l:3,vars:{nums:[3,8,2,11,6],max:8,i:2},out:[],expl:'i++ → 2.',changed:['i']},
+          {l:4,vars:{nums:[3,8,2,11,6],max:8,i:2},out:[],expl:'Is nums[2] (2) > max (8)? No — keep 8.',arrIdx:2},
+          {l:3,vars:{nums:[3,8,2,11,6],max:8,i:3},out:[],expl:'i++ → 3.',changed:['i']},
+          {l:4,vars:{nums:[3,8,2,11,6],max:8,i:3},out:[],expl:'Is nums[3] (11) > max (8)? Yes!',arrIdx:3},
+          {l:5,vars:{nums:[3,8,2,11,6],max:11,i:3},out:[],expl:'Update max to 11. New maximum!',changed:['max']},
+          {l:3,vars:{nums:[3,8,2,11,6],max:11,i:4},out:[],expl:'i++ → 4.',changed:['i']},
+          {l:4,vars:{nums:[3,8,2,11,6],max:11,i:4},out:[],expl:'Is nums[4] (6) > max (11)? No — keep 11.',arrIdx:4},
+          {l:3,vars:{nums:[3,8,2,11,6],max:11,i:5},out:[],expl:'i++ → 5.',changed:['i']},
+          {l:7,vars:{nums:[3,8,2,11,6],max:11,i:5},out:[],expl:'Check: 5 < 5? No — exit loop.'},
+          {l:8,vars:{nums:[3,8,2,11,6],max:11,i:5},out:['Max: 11'],expl:'The maximum value is 11!',console:true}
+        ]
+      }
+    ]
+  }
+];
+
+// ===== SYNTAX HIGHLIGHTER =====
+function stringPh(i) {
+  return '\uE000STR' + i + '\uE001';
+}
+function highlightCode(line) {
+  if (!line.trim()) return '<span class="syn-cmt">&nbsp;</span>';
+  let result = escapeHtml(line);
+  var strings = [];
+  result = result.replace(/(["'`])(?:(?!\1).)*?\1/g, function (lit) {
+    strings.push(lit);
+    return stringPh(strings.length - 1);
+  });
+  result = result.replace(/(\/\/.*)$/, '<span class="syn-cmt">$1</span>');
+  result = result.replace(/\b(let|const|var|for|while|if|else|return|true|false|function)\b/g, '<span class="syn-kw">$1</span>');
+  result = result.replace(/\b(\d+)\b/g, '<span class="syn-num">$1</span>');
+  result = result.replace(/\b(Math\.\w+|console\.\w+|parseInt|parseFloat|isNaN)\b/g, '<span class="syn-fn">$1</span>');
+  for (var i = 0; i < strings.length; i++) {
+    result = result.replace(stringPh(i), '<span class="syn-str">' + strings[i] + '</span>');
+  }
+  return result;
+}
+function escapeHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ===== APP STATE =====
+let currentTopic = 0;
+let currentExample = 0;
+let currentStep = -1; // -1 = not started
+let isPlaying = false;
+let playTimer = null;
+let prevVars = {};
+
+// ===== DOM REFS =====
+const $tabs = document.getElementById('topic-tabs');
+const $pills = document.getElementById('example-pills');
+const $desc = document.getElementById('topic-desc');
+const $codeLines = document.getElementById('code-lines');
+const $varPanel = document.getElementById('var-panel');
+const $varEmpty = document.getElementById('var-empty');
+const $console = document.getElementById('console-panel');
+const $explanation = document.getElementById('explanation-box');
+const $stepCounter = document.getElementById('step-counter');
+const $progressFill = document.getElementById('progress-fill');
+const $btnPlay = document.getElementById('btn-play');
+const $btnNext = document.getElementById('btn-next');
+const $btnBack = document.getElementById('btn-back');
+const $btnReset = document.getElementById('btn-reset');
+const $speedSlider = document.getElementById('speed-slider');
+const $soundToggle = document.getElementById('sound-toggle');
+const $toast = document.getElementById('toast');
+
+// ===== RENDER FUNCTIONS =====
+function renderTabs() {
+  $tabs.innerHTML = TOPICS.map((t, i) =>
+    `<button class="topic-tab ${i===currentTopic?'active':''}" data-idx="${i}" role="tab" aria-selected="${i===currentTopic}">
+      <i class="fa-solid ${t.icon} mr-1"></i>${t.name}
+    </button>`
+  ).join('');
+}
+
+function renderPills() {
+  const topic = TOPICS[currentTopic];
+  $pills.innerHTML = topic.examples.map((e, i) =>
+    `<button class="example-pill ${i===currentExample?'active':''}" data-idx="${i}">${e.name}</button>`
+  ).join('');
+  $desc.textContent = topic.desc;
+}
+
+function renderCode() {
+  const example = TOPICS[currentTopic].examples[currentExample];
+  $codeLines.innerHTML = example.code.map((line, i) =>
+    `<div class="code-line" data-line="${i}">
+      <span class="line-num">${i + 1}</span>
+      <span class="line-code">${highlightCode(line)}</span>
+    </div>`
+  ).join('');
+}
+
+function getStepData() {
+  const example = TOPICS[currentTopic].examples[currentExample];
+  if (currentStep < 0 || currentStep >= example.steps.length) return null;
+  return example.steps[currentStep];
+}
+
+function renderState() {
+  const example = TOPICS[currentTopic].examples[currentExample];
+  const step = getStepData();
+  const totalSteps = example.steps.length;
+
+  // Code line highlighting
+  document.querySelectorAll('.code-line').forEach(el => el.classList.remove('highlighted'));
+  if (step) {
+    const lineEl = document.querySelector(`.code-line[data-line="${step.l}"]`);
+    if (lineEl) lineEl.classList.add('highlighted');
+  }
+
+  // Variables
+  $varEmpty.style.display = (step && Object.keys(step.vars).length) ? 'none' : 'block';
+  if (step) {
+    const changedSet = new Set(step.changed || []);
+    // Detect what changed vs prevVars
+    let html = '';
+    for (const [name, val] of Object.entries(step.vars)) {
+      const isChanged = changedSet.has(name);
+      const isArr = Array.isArray(val);
+      const type = isArr ? 'array' : typeof val;
+
+      if (isArr) {
+        // Render array visualization
+        const arrIdx = step.arrIdx;
+        html += `<div class="var-card ${isChanged?'changed':''}">
+          <div class="var-name">${name}</div>
+          <div class="flex flex-wrap gap-1 mt-1">
+            ${val.map((item, idx) =>
+              `<span class="arr-item ${idx===arrIdx?'idx-highlight':''} ${isChanged?'changed':''}">
+                <span class="arr-idx">${idx}</span>${item}
+              </span>`
+            ).join('')}
+          </div>
+          <div class="var-type">Array [${val.length}]</div>
+        </div>`;
+      } else {
+        const displayVal = val === 'undefined' ? 'undefined' : val;
+        html += `<div class="var-card ${isChanged?'changed':''}">
+          <div class="var-name">${name}</div>
+          <div class="var-val">${displayVal}</div>
+          <div class="var-type">${type}</div>
+        </div>`;
+      }
+    }
+    $varPanel.innerHTML = html;
+    prevVars = JSON.parse(JSON.stringify(step.vars));
+  } else {
+    $varPanel.innerHTML = '';
+    prevVars = {};
+  }
+
+  // Console
+  if (step && step.out.length > 0) {
+    $console.innerHTML = step.out.map(line => `<div class="console-line">${escapeHtml(line)}</div>`).join('');
+    $console.scrollTop = $console.scrollHeight;
+  } else {
+    $console.innerHTML = '<p class="text-xs italic" style="color:#2d3f58">Output appears here...</p>';
+  }
+
+  // Explanation
+  if (step) {
+    $explanation.innerHTML = step.expl;
+  } else {
+    $explanation.innerHTML = 'Press Play or Step Forward to begin executing the code.';
+  }
+
+  // Progress
+  const progress = totalSteps > 0 ? ((currentStep + 1) / totalSteps) * 100 : 0;
+  $progressFill.style.width = (currentStep >= 0 ? progress : 0) + '%';
+  $stepCounter.textContent = `${Math.max(0, currentStep + 1)} / ${totalSteps}`;
+
+  // Button states
+  $btnBack.disabled = currentStep <= 0;
+  $btnNext.disabled = currentStep >= totalSteps - 1;
+  $btnPlay.querySelector('i').className = isPlaying ? 'fa-solid fa-pause' : 'fa-solid fa-play';
+}
+
+// ===== NAVIGATION =====
+function selectTopic(idx) {
+  if (idx === currentTopic) return;
+  stopPlaying();
+  currentTopic = idx;
+  currentExample = 0;
+  currentStep = -1;
+  renderTabs();
+  renderPills();
+  renderCode();
+  renderState();
+}
+
+function selectExample(idx) {
+  if (idx === currentExample) return;
+  stopPlaying();
+  currentExample = idx;
+  currentStep = -1;
+  renderPills();
+  renderCode();
+  renderState();
+}
+
+function stepForward() {
+  const example = TOPICS[currentTopic].examples[currentExample];
+  if (currentStep >= example.steps.length - 1) {
+    stopPlaying();
+    return;
+  }
+  currentStep++;
+  const step = getStepData();
+  if (step) {
+    if (step.changed && step.changed.length) SoundEngine.play('change');
+    else if (step.console) SoundEngine.play('output');
+    else SoundEngine.play('step');
+  }
+  renderState();
+  // Check completion
+  if (currentStep >= example.steps.length - 1) {
+    stopPlaying();
+    SoundEngine.play('complete');
+    showToast('Execution complete!', 'success');
+    celebrate();
+  }
+}
+
+function stepBack() {
+  if (currentStep <= 0) return;
+  currentStep--;
+  SoundEngine.play('back');
+  renderState();
+}
+
+function resetExecution() {
+  stopPlaying();
+  currentStep = -1;
+  SoundEngine.play('back');
+  renderState();
+}
+
+function togglePlay() {
+  if (isPlaying) {
+    stopPlaying();
+  } else {
+    startPlaying();
+  }
+  renderState();
+}
+
+function startPlaying() {
+  const example = TOPICS[currentTopic].examples[currentExample];
+  if (currentStep >= example.steps.length - 1) {
+    currentStep = -1; // restart if at end
+  }
+  isPlaying = true;
+  renderState();
+  tick();
+}
+
+function tick() {
+  if (!isPlaying) return;
+  const example = TOPICS[currentTopic].examples[currentExample];
+  if (currentStep >= example.steps.length - 1) {
+    stopPlaying();
+    SoundEngine.play('complete');
+    showToast('Execution complete!', 'success');
+    celebrate();
+    renderState();
+    return;
+  }
+  stepForward();
+  const speed = parseInt($speedSlider.value);
+  playTimer = setTimeout(tick, speed);
+}
+
+function stopPlaying() {
+  isPlaying = false;
+  if (playTimer) { clearTimeout(playTimer); playTimer = null; }
+  renderState();
+}
+
+// ===== TOAST =====
+function showToast(msg, type='info') {
+  $toast.textContent = msg;
+  $toast.className = `toast ${type} show`;
+  setTimeout(() => $toast.classList.remove('show'), 2500);
+}
+
+// ===== CELEBRATION =====
+function celebrate() {
+  const container = document.createElement('div');
+  container.className = 'celebration';
+  document.body.appendChild(container);
+  const colors = ['#00d4aa','#ff6b35','#c792ea','#c3e88d','#82aaff','#f78c6c'];
+  for (let i = 0; i < 50; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + '%';
+    c.style.background = colors[Math.floor(Math.random() * colors.length)];
+    c.style.animationDelay = Math.random() * 0.8 + 's';
+    c.style.animationDuration = (1.5 + Math.random()) + 's';
+    container.appendChild(c);
+  }
+  setTimeout(() => container.remove(), 3000);
+}
+
+// ===== EVENT LISTENERS =====
+// Topic tabs
+ $tabs.addEventListener('click', e => {
+  const btn = e.target.closest('.topic-tab');
+  if (btn) selectTopic(parseInt(btn.dataset.idx));
+});
+
+// Example pills
+ $pills.addEventListener('click', e => {
+  const btn = e.target.closest('.example-pill');
+  if (btn) selectExample(parseInt(btn.dataset.idx));
+});
+
+// Control buttons
+ $btnPlay.addEventListener('click', togglePlay);
+ $btnNext.addEventListener('click', () => { stopPlaying(); stepForward(); });
+ $btnBack.addEventListener('click', () => { stopPlaying(); stepBack(); });
+ $btnReset.addEventListener('click', resetExecution);
+
+// Sound toggle
+ $soundToggle.addEventListener('click', () => {
+  SoundEngine.enabled = !SoundEngine.enabled;
+  $soundToggle.querySelector('i').className = SoundEngine.enabled
+    ? 'fa-solid fa-volume-high' : 'fa-solid fa-volume-xmark';
+  showToast(SoundEngine.enabled ? 'Sound on' : 'Sound off', 'info');
+});
+
+// Keyboard shortcuts
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT') return;
+  switch(e.key) {
+    case ' ': e.preventDefault(); togglePlay(); break;
+    case 'ArrowRight': e.preventDefault(); stopPlaying(); stepForward(); break;
+    case 'ArrowLeft': e.preventDefault(); stopPlaying(); stepBack(); break;
+    case 'r': case 'R': resetExecution(); break;
+  }
+});
+
+// ===== INIT =====
+renderTabs();
+renderPills();
+renderCode();
+renderState();
+</script>
+</body>
+</html>

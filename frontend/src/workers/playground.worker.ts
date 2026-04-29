@@ -1,6 +1,7 @@
 /// <reference lib="webworker" />
 
 import { bindingMatches, deepEqual, normalizeLogLine } from '@/engine/assertions'
+import { instrumentPlaygroundConsoleLogs } from '@/engine/playgroundInstrument'
 import { buildPlaygroundSteps } from '@/engine/playgroundSteps'
 import type {
   PlaygroundResult,
@@ -33,9 +34,12 @@ function captureConsole(): { log: (...args: unknown[]) => void; lines: string[] 
 function finalize(
   task: PlaygroundTask,
   userCode: string,
-  res: Omit<PlaygroundResult, 'steps'> & { received?: Record<string, unknown> },
+  res: Omit<PlaygroundResult, 'steps'> & {
+    received?: Record<string, unknown>
+    logSiteHits?: number[]
+  },
 ): PlaygroundResult {
-  const { received, ...rest } = res
+  const { received, logSiteHits, ...rest } = res
   return {
     ...rest,
     steps: buildPlaygroundSteps({
@@ -46,6 +50,7 @@ function finalize(
       error: rest.error,
       cases: rest.cases,
       ...(received !== undefined ? { received } : {}),
+      ...(logSiteHits !== undefined ? { logSiteHits } : {}),
     }),
   }
 }
@@ -62,14 +67,23 @@ function errorInfo(err: unknown): { message: string; stack?: string } {
 
 function runBindings(task: PlaygroundTask & { mode: 'bindings' }, userCode: string): PlaygroundResult {
   const { log, lines: logs } = captureConsole()
+  const logSiteHits: number[] = []
+  const __pgLog = (siteId: number, ...args: unknown[]) => {
+    logSiteHits.push(siteId)
+    log(...args)
+  }
   const names = task.bindings
   const prelude = names.map((n) => `var ${n};`).join('\n')
   const retKeys = names.join(', ')
-  const body = `"use strict";\n${prelude}\n${userCode}\nreturn { ${retKeys} };`
+  const { code: instrumented } = instrumentPlaygroundConsoleLogs(userCode)
+  const body = `"use strict";\n${prelude}\n${instrumented}\nreturn { ${retKeys} };`
   let received: Record<string, unknown>
   try {
-    const fn = new Function('console', body) as (c: { log: typeof log }) => Record<string, unknown>
-    received = fn({ log })
+    const fn = new Function('console', '__pgLog', body) as (
+      c: { log: typeof log },
+      pg: typeof __pgLog,
+    ) => Record<string, unknown>
+    received = fn({ log }, __pgLog)
   } catch (e) {
     const err = errorInfo(e)
     return finalize(task, userCode, {
@@ -101,15 +115,25 @@ function runBindings(task: PlaygroundTask & { mode: 'bindings' }, userCode: stri
     logs,
     cases,
     received,
+    logSiteHits,
   })
 }
 
 function runConsole(task: PlaygroundTask & { mode: 'console' }, userCode: string): PlaygroundResult {
   const { log, lines: logs } = captureConsole()
-  const body = `"use strict";\n${userCode}`
+  const logSiteHits: number[] = []
+  const __pgLog = (siteId: number, ...args: unknown[]) => {
+    logSiteHits.push(siteId)
+    log(...args)
+  }
+  const { code: instrumented } = instrumentPlaygroundConsoleLogs(userCode)
+  const body = `"use strict";\n${instrumented}`
   try {
-    const fn = new Function('console', body) as (c: { log: typeof log }) => void
-    fn({ log })
+    const fn = new Function('console', '__pgLog', body) as (
+      c: { log: typeof log },
+      pg: typeof __pgLog,
+    ) => void
+    fn({ log }, __pgLog)
   } catch (e) {
     const err = errorInfo(e)
     return finalize(task, userCode, {
@@ -132,6 +156,7 @@ function runConsole(task: PlaygroundTask & { mode: 'console' }, userCode: string
     ok: pass,
     durationMs: 0,
     logs,
+    logSiteHits,
     cases: [
       {
         id: 'console:all',
@@ -150,6 +175,11 @@ function runFunctionTask(
   userCode: string,
 ): PlaygroundResult {
   const { log, lines: logs } = captureConsole()
+  const logSiteHits: number[] = []
+  const __pgLog = (siteId: number, ...args: unknown[]) => {
+    logSiteHits.push(siteId)
+    log(...args)
+  }
   const name = task.functionName
   if (!/^[$A-Za-z_][$0-9A-Za-z_]*$/.test(name)) {
     return finalize(task, userCode, {
@@ -160,11 +190,15 @@ function runFunctionTask(
       error: { message: 'Invalid function name in task configuration.' },
     })
   }
-  const body = `"use strict";\n${userCode}\nreturn typeof ${name} === 'function' ? ${name} : null;`
+  const { code: instrumented } = instrumentPlaygroundConsoleLogs(userCode)
+  const body = `"use strict";\n${instrumented}\nreturn typeof ${name} === 'function' ? ${name} : null;`
   let callable: (...args: unknown[]) => unknown
   try {
-    const factory = new Function('console', body) as (c: { log: typeof log }) => unknown
-    const ref = factory({ log })
+    const factory = new Function('console', '__pgLog', body) as (
+      c: { log: typeof log },
+      pg: typeof __pgLog,
+    ) => unknown
+    const ref = factory({ log }, __pgLog)
     if (typeof ref !== 'function') {
       return finalize(task, userCode, {
         ok: false,
@@ -225,6 +259,7 @@ function runFunctionTask(
     durationMs: 0,
     logs,
     cases,
+    logSiteHits,
   })
 }
 

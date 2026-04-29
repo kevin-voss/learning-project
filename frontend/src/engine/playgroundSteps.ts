@@ -1,3 +1,4 @@
+import { filterSteppableLinesForIfBranches } from '@/engine/playgroundBranchFilter'
 import type { ExecutionStep, VariableSnapshot, VariableValue } from '@/types/curriculum'
 import type {
   PlaygroundTask,
@@ -119,6 +120,11 @@ type BuildOpts = {
   cases: TestCaseResult[]
   /** bindings mode — values read from learner code */
   received?: Record<string, unknown>
+  /**
+   * Parallel to `logs`: which `console.log` site fired (same order as
+   * {@link enumerateConsoleLogLineIndices}). When set, branch-aware line replay and log timing use a real run trace.
+   */
+  logSiteHits?: number[]
 }
 
 /**
@@ -129,10 +135,16 @@ export function buildPlaygroundSteps(opts: BuildOpts): ExecutionStep[] {
   const lines = splitLines(opts.code)
   const lastLine = lastMeaningfulLineIndex(lines)
   const sites = enumerateConsoleLogLineIndices(lines)
+  const siteToLine = sites
   const steppable = steppableLineIndices(lines)
-  const walkedLines = steppable.length > 0 ? steppable : [Math.max(0, lastLine)]
+  const walkedLinesRaw = steppable.length > 0 ? steppable : [Math.max(0, lastLine)]
+  const walkedLines =
+    opts.logSiteHits !== undefined
+      ? filterSteppableLinesForIfBranches(walkedLinesRaw, opts.code, opts.logSiteHits, siteToLine)
+      : walkedLinesRaw
 
-  const { logs, task, error, ok, cases, received } = opts
+  const { logs, task, error, ok, cases, received, logSiteHits } = opts
+  const useHitOrdering = logSiteHits !== undefined
 
   if (error) {
     const st: ExecutionStep = {
@@ -159,16 +171,29 @@ export function buildPlaygroundSteps(opts: BuildOpts): ExecutionStep[] {
   })
 
   let siteCursor = 0
+  let logCursor = 0
   const consoleLines: string[] = []
   for (const lineIdx of walkedLines) {
     const lineNo = lineIdx + 1
     let pushed = 0
-    while (siteCursor < sites.length && lineForConsoleStep(siteCursor, sites, lastLine) === lineIdx) {
-      if (logs[siteCursor] !== undefined) {
-        consoleLines.push(logs[siteCursor]!)
+    if (useHitOrdering) {
+      while (
+        logCursor < logs.length &&
+        logCursor < logSiteHits!.length &&
+        siteToLine[logSiteHits![logCursor]!] === lineIdx
+      ) {
+        consoleLines.push(logs[logCursor]!)
         pushed++
+        logCursor++
       }
-      siteCursor++
+    } else {
+      while (siteCursor < sites.length && lineForConsoleStep(siteCursor, sites, lastLine) === lineIdx) {
+        if (logs[siteCursor] !== undefined) {
+          consoleLines.push(logs[siteCursor]!)
+          pushed++
+        }
+        siteCursor++
+      }
     }
 
     const explanation =

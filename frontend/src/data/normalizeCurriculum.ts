@@ -1,3 +1,4 @@
+import { omitGuidedFillerLinesForDeadBranches } from '@/engine/guidedIfChain'
 import type {
   CodeLine,
   ExecutionStep,
@@ -368,6 +369,9 @@ function expandToSequentialLines(
   const visited = new Set<number>()
   for (const s of normalized) visited.add(s.lineIndex)
 
+  /** Do not auto-insert filler steps on dead if / else-if arms */
+  const omitFillerForLines = omitGuidedFillerLinesForDeadBranches(code, visited)
+
   const fillerExpl = (lineIdx: number): string => {
     const raw = code[lineIdx] ?? ''
     const t = raw.trim()
@@ -398,6 +402,7 @@ function expandToSequentialLines(
   function emitFillersBefore(nextLineIndex: number): void {
     for (const m of missingSorted) {
       if (insertedMissing.has(m) || m >= nextLineIndex) continue
+      if (omitFillerForLines.has(m)) continue
       const snap = fillerSnap()
       const f: ExecutionStep = {
         lineIndex: m,

@@ -347,9 +347,9 @@ function normalizeRawStep(step: RawStep, lineCount: number): ExecutionStep {
 }
 
 /**
- * One walkthrough pass top-to-bottom: every source line gets at least one step. Authored
- * substeps for the same line keep curriculum order; missing lines get short filler steps
- * that carry variable/console state forward.
+ * Keeps authored **execution order** (required for loops: header substeps → body → repeat).
+ * Lines that never appear in authored steps get a single filler step, inserted immediately
+ * before the first executed line after that gap (e.g. blank lines between statements).
  */
 function expandToSequentialLines(
   lines: CodeLine[],
@@ -360,11 +360,13 @@ function expandToSequentialLines(
   if (n === 0) return []
   const clamp = (l: number) => clampLineIndex(l, n)
 
-  const atLine = (i: number) =>
-    authored.filter((s) => clamp(s.lineIndex) === i).map((s) => ({ ...s, lineIndex: i }))
+  const normalized = authored.map((s) => ({
+    ...s,
+    lineIndex: clamp(s.lineIndex),
+  }))
 
-  const out: ExecutionStep[] = []
-  let prev: ExecutionStep | undefined
+  const visited = new Set<number>()
+  for (const s of normalized) visited.add(s.lineIndex)
 
   const fillerExpl = (lineIdx: number): string => {
     const raw = code[lineIdx] ?? ''
@@ -374,26 +376,47 @@ function expandToSequentialLines(
     return `Line ${lineIdx + 1}: ${preview}`
   }
 
+  /** Lines that never occur in authored steps — ordered ascending */
+  const missingSorted: number[] = []
   for (let i = 0; i < n; i++) {
-    const stepsHere = atLine(i)
-    if (stepsHere.length > 0) {
-      for (const s of stepsHere) {
-        out.push(s)
-        prev = s
-      }
-    } else {
-      const snapVars = prev ? { ...prev.variables } : {}
-      const snapOut = prev ? [...prev.consoleLines] : []
+    if (!visited.has(i)) missingSorted.push(i)
+  }
+
+  const out: ExecutionStep[] = []
+  let prev: ExecutionStep | undefined
+  const insertedMissing = new Set<number>()
+
+  function fillerSnap(): Pick<ExecutionStep, 'variables' | 'consoleLines'> {
+    if (!prev) return { variables: {}, consoleLines: [] }
+    return {
+      variables: { ...prev.variables },
+      consoleLines: [...prev.consoleLines],
+    }
+  }
+
+  /** Emit filler steps for source gaps strictly before `nextLineIndex`. */
+  function emitFillersBefore(nextLineIndex: number): void {
+    for (const m of missingSorted) {
+      if (insertedMissing.has(m) || m >= nextLineIndex) continue
+      const snap = fillerSnap()
       const f: ExecutionStep = {
-        lineIndex: i,
-        variables: snapVars,
-        consoleLines: snapOut,
-        explanation: fillerExpl(i),
+        lineIndex: m,
+        ...snap,
+        explanation: fillerExpl(m),
       }
       out.push(f)
+      insertedMissing.add(m)
       prev = f
     }
   }
+
+  for (const s of normalized) {
+    emitFillersBefore(s.lineIndex)
+    out.push(s)
+    prev = s
+  }
+
+  emitFillersBefore(n)
 
   return out
 }

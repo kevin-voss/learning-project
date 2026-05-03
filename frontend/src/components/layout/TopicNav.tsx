@@ -1,8 +1,8 @@
 import { ChevronRight } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
-import { playgroundTasksForTopic } from '@/data/playground'
-import { buildLessonSteps, formatStepCue, type LessonStep } from '@/engine/lessonRoadmap'
+import { playgroundTasksForTopic } from '@/domains/topics/playground'
+import { buildLessonSteps, formatStepCue, type LessonStep } from '@/domains/walkthroughs/lessonRoadmap'
 import type { Topic } from '@/types/curriculum'
 
 import styles from './TopicNav.module.css'
@@ -51,7 +51,9 @@ export function TopicNav({
   )
 
   useEffect(() => {
-    setManualExpanded((prev) => ({ ...prev, [selectedId]: true }))
+    queueMicrotask(() =>
+      setManualExpanded((prev) => ({ ...prev, [selectedId]: true })),
+    )
   }, [selectedId])
 
   const toggleExpanded = useCallback((topicId: string) => {

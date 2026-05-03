@@ -6,7 +6,7 @@ import { ExplanationPanel } from '@/components/learn/ExplanationPanel'
 import { PlaybackControls } from '@/components/learn/PlaybackControls'
 import { Toast } from '@/components/learn/Toast'
 import { VariableInspector } from '@/components/learn/VariableInspector'
-import { canStepBack, canStepForward } from '@/engine/playback'
+import { canStepBack, canStepForward } from '@/domains/walkthroughs/playback'
 import {
   loadSoundEnabled,
   saveLearnExampleIdx,
@@ -46,7 +46,9 @@ export function GuidedExamplePanel({ topic, exampleIndex }: Props) {
 
   useEffect(() => {
     pb.setSpeedMs(PLAYBACK_SPEED_MS.medium)
-  }, [topic.id, exampleIdx, pb.setSpeedMs])
+    // pb changes identity each render; only reset speed when switching example.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [topic.id, exampleIdx])
   const soundRef = useRef(sound)
 
   useEffect(() => {

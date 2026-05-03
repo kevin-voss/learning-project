@@ -1,4 +1,4 @@
-import type { RawTopic } from '@/data/normalizeCurriculum'
+import type { RawTopic } from './rawTopicTypes'
 
 /** New guided topics (Phase 04) — intros + ≥2 examples each */
 export const variablesTopic: RawTopic = {

@@ -1,5 +1,5 @@
 import legacyPack from './examples/_topics_raw.json' with { type: 'json' }
-import type { RawTopic } from './normalizeCurriculum'
+import type { RawTopic } from './rawTopicTypes'
 
 import {
   variablesTopic,
@@ -13,8 +13,8 @@ import {
   errorsTopic,
   modulesTopic,
   classesTopic,
-} from '@/data/syntheticTopics'
-import { customerLoyaltyExample } from '@/data/topics/customerLoyaltyExample'
+} from './syntheticTopics'
+import { customerLoyaltyExample } from './content/customerLoyaltyExample'
 
 const legacy = legacyPack as RawTopic[]
 

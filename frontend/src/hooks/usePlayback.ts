@@ -4,7 +4,7 @@ import {
   canStepBack,
   canStepForward,
   progressFraction,
-} from '@/engine/playback'
+} from '@/domains/walkthroughs/playback'
 
 export type PlaybackActions = {
   play: () => void

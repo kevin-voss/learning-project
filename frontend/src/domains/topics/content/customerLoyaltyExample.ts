@@ -1,4 +1,4 @@
-import type { RawExample } from '@/data/normalizeCurriculum'
+import type { RawExample } from '../rawTopicTypes'
 
 const customers = [
   { name: 'Ana', savings: 15 },

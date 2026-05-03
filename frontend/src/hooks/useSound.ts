@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 
-import { playSoundCue, resumeAudioIfNeeded, type SoundCue } from '@/engine/sound'
+import { playSoundCue, resumeAudioIfNeeded, type SoundCue } from '@/domains/walkthroughs/sound'
 
 export function useSound(initialEnabled = true) {
   const [enabled, setEnabled] = useState(initialEnabled)

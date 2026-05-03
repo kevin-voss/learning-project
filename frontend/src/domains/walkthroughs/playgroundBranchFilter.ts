@@ -3,7 +3,7 @@
  * using console.log site hits from an instrumented run.
  */
 
-import { findClosingParen } from '@/engine/playgroundInstrument'
+import { findClosingParen } from './playgroundInstrument'
 
 export type IfElseRegion = {
   /** 0-based line index of the line containing `if (` */

@@ -1,8 +1,8 @@
 /// <reference lib="webworker" />
 
-import { bindingMatches, deepEqual, normalizeLogLine } from '@/engine/assertions'
-import { instrumentPlaygroundConsoleLogs } from '@/engine/playgroundInstrument'
-import { buildPlaygroundSteps } from '@/engine/playgroundSteps'
+import { bindingMatches, deepEqual, normalizeLogLine } from '@/domains/walkthroughs/assertions'
+import { instrumentPlaygroundConsoleLogs } from '@/domains/walkthroughs/playgroundInstrument'
+import { buildPlaygroundSteps } from '@/domains/walkthroughs/playgroundSteps'
 import type {
   PlaygroundResult,
   PlaygroundRunMessage,

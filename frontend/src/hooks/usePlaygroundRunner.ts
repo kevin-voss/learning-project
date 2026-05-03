@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-import { runPlaygroundTask } from '@/engine/playgroundRunner'
+import { runPlaygroundTask } from '@/domains/walkthroughs/playgroundRunner'
 import type { PlaygroundResult, PlaygroundTask } from '@/types/playground'
 
 export type PlaygroundRunStatus = 'idle' | 'running' | 'done'

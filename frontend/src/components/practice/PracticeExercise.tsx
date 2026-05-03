@@ -16,7 +16,7 @@ import { PlaygroundCodeEditor } from '@/components/practice/PlaygroundCodeEditor
 import { PracticeTaskBrief } from '@/components/practice/PracticeTaskBrief'
 import { TestResults } from '@/components/practice/TestResults'
 import { VariableInspector } from '@/components/learn/VariableInspector'
-import { canStepBack, canStepForward } from '@/engine/playback'
+import { canStepBack, canStepForward } from '@/domains/walkthroughs/playback'
 import {
   loadSoundEnabled,
   saveSoundEnabled,

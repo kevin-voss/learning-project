@@ -19,4 +19,10 @@ export default defineConfig([
       globals: globals.browser,
     },
   },
+  {
+    files: ['src/domains/topics/playground/**/*.ts', 'src/domains/topics/content/**/*.ts'],
+    rules: {
+      'no-useless-escape': 'off',
+    },
+  },
 ])

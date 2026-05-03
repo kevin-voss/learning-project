@@ -15,7 +15,7 @@ export function runPlaygroundTask(task: PlaygroundTask, code: string): Promise<P
   const cap = task.timeoutMs ?? DEFAULT_TIMEOUT_MS
 
   return new Promise((resolve) => {
-    const worker = new Worker(new URL('../workers/playground.worker.ts', import.meta.url), {
+    const worker = new Worker(new URL('../../workers/playground.worker.ts', import.meta.url), {
       type: 'module',
     })
     const started = performance.now()

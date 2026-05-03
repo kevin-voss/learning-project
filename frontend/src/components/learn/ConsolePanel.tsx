@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 
-import { syntaxTintHtml } from '@/engine/highlight'
+import { syntaxTintHtml } from '@/domains/line-highlights/syntaxTint'
 
 import styles from './ConsolePanel.module.css'
 

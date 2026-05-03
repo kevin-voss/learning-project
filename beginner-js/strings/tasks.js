@@ -19,8 +19,7 @@
  * @example containsText("hallo", "x") // → false
  */
 export function containsText(text, fragment) {
-  // TODO: Implementiere die Logik hier
-  return false;
+  return text.includes(fragment); 
 }
 
 /**
@@ -36,8 +35,7 @@ export function containsText(text, fragment) {
  * @example startsWithText("Hallo", "Hal") // → true
  */
 export function startsWithText(text, prefix) {
-  // TODO: Implementiere die Logik hier
-  return false;
+  return text.startsWith(prefix);
 }
 
 /**
@@ -53,8 +51,7 @@ export function startsWithText(text, prefix) {
  * @example endsWithText("Hallo", "llo") // → true
  */
 export function endsWithText(text, suffix) {
-  // TODO: Implementiere die Logik hier
-  return false;
+  return text.endsWith(suffix);
 }
 
 /**
@@ -70,8 +67,7 @@ export function endsWithText(text, suffix) {
  * @example toLowerCaseCopy("Hi") // → "hi"
  */
 export function toLowerCaseCopy(text) {
-  // TODO: Implementiere die Logik hier
-  return "";
+  return text.toLowerCase();
 }
 
 /**
@@ -87,8 +83,7 @@ export function toLowerCaseCopy(text) {
  * @example toUpperCaseCopy("hi") // → "HI"
  */
 export function toUpperCaseCopy(text) {
-  // TODO: Implementiere die Logik hier
-  return "";
+  return text.toUperCase();
 }
 
 /**
@@ -104,8 +99,7 @@ export function toUpperCaseCopy(text) {
  * @example trimWhitespace("  a  ") // → "a"
  */
 export function trimWhitespace(text) {
-  // TODO: Implementiere die Logik hier
-  return "";
+  return text.trim();
 }
 
 /**
@@ -121,8 +115,7 @@ export function trimWhitespace(text) {
  * @example dashInsteadOfSpaces("a b c") // → "a-b-c"
  */
 export function dashInsteadOfSpaces(text) {
-  // TODO: Implementiere die Logik hier
-  return "";
+  return text.replaceAll(" ", "-" );
 }
 
 /**
@@ -138,8 +131,7 @@ export function dashInsteadOfSpaces(text) {
  * @example characterCount("abc") // → 3
  */
 export function characterCount(text) {
-  // TODO: Implementiere die Logik hier
-  return 0;
+  return text.length;
 }
 
 /**
@@ -156,8 +148,7 @@ export function characterCount(text) {
  * @example firstThreeChars("ab") // → "ab"
  */
 export function firstThreeChars(text) {
-  // TODO: Implementiere die Logik hier
-  return "";
+return text.slice(0, 3); //1. pos. definiert den Start, 2. pos das Ende -> also anfang ist der 1. Parameter der String/ Ende der 3. Parameter der String
 }
 
 /**
@@ -174,6 +165,8 @@ export function firstThreeChars(text) {
  * @example isPalindromeText("hallo") // → false
  */
 export function isPalindromeText(text) {
-  // TODO: Implementiere die Logik hier
-  return false;
+  let array = text.split("");
+  let turnAround = array.reverse();
+  let together = turnAround.join("");
+  return (together == text);
 }

@@ -4,7 +4,7 @@ Interactive JavaScript learning tooling for guided walkthroughs and in-browser p
 
 ## CodeStep app (main UI)
 
-The **CodeStep** learner experience (guided examples + playground) is the Vite + React app under **`frontend/`**.
+The **CodeStep** learner experience (guided examples + playground) is the Vite + React app under **`frontend/`**. Course content, walkthrough execution, and code highlighting live in **`frontend/src/domains/`** (each subdomain has a short `README.md`).
 
 ```bash
 cd frontend

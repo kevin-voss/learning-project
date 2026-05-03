@@ -1,4 +1,4 @@
-import { syntaxTintHtml } from '@/engine/highlight'
+import { syntaxTintHtml } from '@/domains/line-highlights/syntaxTint'
 import type { CodeLine as CodeLineModel } from '@/types/curriculum'
 
 import styles from './CodeViewer.module.css'

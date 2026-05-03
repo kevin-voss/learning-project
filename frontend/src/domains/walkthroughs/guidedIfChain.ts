@@ -3,7 +3,7 @@
  * authored guided traces never execute (e.g. Grade Classifier dead branches).
  */
 
-import { findClosingParen } from '@/engine/playgroundInstrument'
+import { findClosingParen } from './playgroundInstrument'
 
 function lineOfIndex(code: string, idx: number): number {
   let line = 0

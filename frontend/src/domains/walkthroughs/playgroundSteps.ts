@@ -1,44 +1,11 @@
-import { filterSteppableLinesForIfBranches } from '@/engine/playgroundBranchFilter'
+import { filterSteppableLinesForIfBranches } from './playgroundBranchFilter'
+import {
+  enumerateConsoleLogLineIndices,
+  splitSourceLines,
+  steppableSourceLineIndices,
+} from './playgroundSourceLines'
 import type { ExecutionStep, VariableSnapshot, VariableValue } from '@/types/curriculum'
-import type {
-  PlaygroundTask,
-  TestCaseResult,
-} from '@/types/playground'
-
-function splitLines(code: string): string[] {
-  return code.split(/\r\n|\r|\n/)
-}
-
-function isSteppableLine(text: string): boolean {
-  const t = text.trim()
-  if (!t) return false
-  if (t.startsWith('//')) return false
-  if (t.startsWith('/*') || t.startsWith('*') || t.startsWith('*/')) return false
-  if (t === '{' || t === '}' || t === '};') return false
-  return true
-}
-
-function steppableLineIndices(lines: readonly string[]): number[] {
-  const out: number[] = []
-  for (let i = 0; i < lines.length; i++) {
-    if (isSteppableLine(lines[i]!)) out.push(i)
-  }
-  return out
-}
-
-/** 0-based line index of each console.log(...) site in source order */
-export function enumerateConsoleLogLineIndices(lines: readonly string[]): number[] {
-  const sites: number[] = []
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i]!
-    const matches = line.match(/console\.log\s*\(/g)
-    if (!matches) continue
-    matches.forEach(() => {
-      sites.push(i)
-    })
-  }
-  return sites
-}
+import type { PlaygroundTask, TestCaseResult } from '@/types/playground'
 
 function lastMeaningfulLineIndex(lines: readonly string[]): number {
   for (let i = lines.length - 1; i >= 0; i--) {
@@ -56,7 +23,7 @@ function lineForConsoleStep(
   return sites[Math.min(logIndex, sites.length - 1)]!
 }
 
-/** Matches {@link codeStringToCodeLines} segment ids for replay highlighting */
+/** Matches {@link codeStringToCodeLines} segment ids in `@/domains/line-highlights/codeLines`. */
 function segmentIdForLine(lineIndex: number): string {
   return `pg-${lineIndex}-0`
 }
@@ -132,11 +99,11 @@ type BuildOpts = {
  * Uses static line cues (console.log sites, function declarations); not full interpreter stepping.
  */
 export function buildPlaygroundSteps(opts: BuildOpts): ExecutionStep[] {
-  const lines = splitLines(opts.code)
+  const lines = splitSourceLines(opts.code)
   const lastLine = lastMeaningfulLineIndex(lines)
   const sites = enumerateConsoleLogLineIndices(lines)
   const siteToLine = sites
-  const steppable = steppableLineIndices(lines)
+  const steppable = steppableSourceLineIndices(lines)
   const walkedLinesRaw = steppable.length > 0 ? steppable : [Math.max(0, lastLine)]
   const walkedLines =
     opts.logSiteHits !== undefined

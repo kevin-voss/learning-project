@@ -1,0 +1,24 @@
+---
+description: Monorepo layout, stacks, and where to edit for learning-project (CodeStep + drills)
+globs:
+alwaysApply: true
+---
+
+# learning-project (monorepo)
+
+Canonical human overview: [README.md](../../README.md). Agent entry doc: [AGENTS.md](../../AGENTS.md).
+
+## Packages and stacks
+
+- **`frontend/`** — CodeStep app: **Vite, React 19, TypeScript, Tailwind v4**. Course domains and walkthrough logic live under `frontend/src/domains/` (each subdomain may have a short `README.md`). Prefer matching existing patterns there for learner-facing UI and examples.
+- **`beginner-js/`** — Topic folders with `tasks.js` / `tasks.test.js`. Root **`Makefile`** wraps **`bun test`** for topics and single-task targets (see Makefile comments).
+- **`docs/codestep/`** — Product overview and phased specs (`overview.md`, `01.md`–`04.md`); use when changing CodeStep behavior or roadmap-shaped work.
+- **`system-design/`** — Standalone static HTML/CSS/JS viewer; not part of the Vite app. Treat as a separate mini-site unless the task is explicitly there.
+
+## Conventions
+
+- **TypeScript** in `frontend/`; **plain JS** in `beginner-js/` unless a file already uses something else.
+- **Docs:** Prefer updating the closest `README.md` or `docs/codestep/` when behavior or learner-facing flows change.
+- **Legacy:** `frontend/init_example.html` is reference-only; the maintained surface is the React app.
+
+When scope spans more than one top-level directory, say which areas you touched and keep cross-links (README, domain READMEs) in sync when behavior changes.

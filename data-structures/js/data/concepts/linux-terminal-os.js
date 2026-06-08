@@ -68,6 +68,7 @@ cat notes.txt        # print a small file to the terminal`,
     'Error messages are often terse until you learn the vocabulary',
     'Different Linux distributions and shells can have small differences',
   ],
+  keywords: ['linux', 'terminal', 'shell', 'kernel', 'command', 'permissions', 'process', 'pipe', 'sudo', 'ssh', 'grep', 'chmod', 'signal'],
   checklist: [
     'Explain the difference between terminal, shell, OS, and kernel.',
     'Navigate folders with pwd, ls, and cd.',

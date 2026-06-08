@@ -19,6 +19,6 @@ DS.curriculum.push({
   ],
   demoType: 'binary-encoding',
   relatedIds: ['memory-model', 'compiler-runtime'],
-  keywords: ['binary', 'hex', 'utf-8', 'encoding'],
+  keywords: ['binary', 'hex', 'ascii', 'utf-8', 'encoding', 'bit', 'byte', 'mojibake'],
   checklist: ['Convert a character to its byte value.', 'Explain why UTF-8 is common on the web.', 'Describe what mojibake means.'],
 });

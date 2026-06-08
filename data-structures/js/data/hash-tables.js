@@ -118,5 +118,6 @@ cache.<span class="fn">delete</span>(<span class="str">'user:123'</span>);  <spa
       'Hash function quality matters — poor hashing = many collisions = slow',
     ],
     demoType: 'hashtable',
+    keywords: ['hash table', 'hash function', 'collision', 'bucket', 'key-value', 'lookup'],
   },
 );

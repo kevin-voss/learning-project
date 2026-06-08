@@ -95,5 +95,6 @@ tags.<span class="fn">forEach</span>(tag <span class="op">=></span> console.<spa
       'Set operations aren\'t built-in — must implement union/intersection manually',
     ],
     demoType: 'set',
+    keywords: ['set', 'membership', 'duplicate', 'hash table'],
   },
 );

@@ -134,5 +134,6 @@ list.<span class="fn">delete</span>(<span class="num">10</span>);
       'More complex code — pointer bugs (dangling references, cycles) are common',
     ],
     demoType: 'linkedlist',
+    keywords: ['linked list', 'node', 'pointer', 'head', 'null', 'traversal', 'singly linked list'],
   },
 );

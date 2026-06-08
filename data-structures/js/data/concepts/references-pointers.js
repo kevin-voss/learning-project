@@ -55,4 +55,5 @@ console.<span class="fn">log</span>(userA.score); <span class="cm">// 20, becaus
 <span class="kw">const</span> node2 <span class="op">=</span> { value: <span class="num">20</span>, next: <span class="kw">null</span> };
 node1.next <span class="op">=</span> node2;`,
   demoType: 'pointer',
+  keywords: ['pointer', 'reference', 'variable', 'address', 'heap memory', 'null'],
 });

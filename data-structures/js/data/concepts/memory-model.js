@@ -58,7 +58,7 @@ DS.curriculum.push({
   demoTitle: 'Memory layout explorer',
   demoHint: 'Compare stack vs heap and see why arrays are cache-friendly but linked lists scatter in memory.',
   relatedIds: ['references-pointers', 'arrays', 'linked-lists', 'stack-heap-gc'],
-  keywords: ['ram', 'cpu cache', 'memory address', 'stack memory', 'heap memory', 'cache-friendly'],
+  keywords: ['bit', 'byte', 'ram', 'cpu cache', 'memory address', 'stack memory', 'heap memory', 'cache-friendly', 'cache locality'],
   checklist: [
     'Explain bit, byte, RAM, and memory address in plain language.',
     'Describe why looping an array is usually cache-friendly.',

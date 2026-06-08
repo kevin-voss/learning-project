@@ -92,5 +92,6 @@ fruits.<span class="fn">slice</span>(<span class="num">1</span>, <span class="nu
       'Wastes space if over-allocated, crashes if under-allocated (in static arrays)',
     ],
     demoType: 'array',
+    keywords: ['array', 'index', 'contiguous memory', 'random access', 'zero-based', 'amortized', 'binary search'],
   },
 );

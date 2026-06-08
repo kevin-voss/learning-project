@@ -21,6 +21,6 @@ DS.curriculum.push({
   demoTitle: 'Stack, heap, and garbage collection',
   demoHint: 'Switch between call-stack frames, heap objects, and a GC sweep when references drop.',
   relatedIds: ['memory-model', 'compiler-runtime', 'recursion-call-stack'],
-  keywords: ['stack memory', 'heap memory', 'garbage collection'],
+  keywords: ['stack memory', 'heap memory', 'garbage collection', 'call stack', 'stack overflow', 'memory leak', 'v8'],
   checklist: ['Contrast stack vs heap lifetimes.', 'Explain what keeps an object alive.', 'Name one symptom of a memory leak.'],
 });

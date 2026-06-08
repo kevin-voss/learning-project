@@ -127,5 +127,6 @@ console.<span class="fn">log</span>(bst.<span class="fn">find</span>(<span class
       'Deletion logic is tricky — especially with two-child nodes',
     ],
     demoType: 'tree',
+    keywords: ['tree', 'binary search tree', 'root', 'leaf', 'traversal', 'unbalanced', 'subtree'],
   },
 );

@@ -119,5 +119,6 @@ console.<span class="fn">log</span>(g.<span class="fn">dfs</span>(<span class="s
       'Hard to visualize — large graphs become tangled webs',
     ],
     demoType: 'graph',
+    keywords: ['graph', 'vertex', 'edge', 'adjacency list', 'bfs', 'dfs', 'directed', 'undirected', 'weighted'],
   },
 );

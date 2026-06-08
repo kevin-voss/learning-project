@@ -175,7 +175,7 @@ DS.curriculum.push({
   ],
   demoType: 'sorting',
   relatedIds: ['big-o-notation', 'arrays', 'heaps-priority-queues'],
-  keywords: ['stability', 'in-place sort', 'merge sort', 'heap sort'],
+  keywords: ['stability', 'in-place sort', 'merge sort', 'heap sort', 'quick sort'],
   checklist: [
     'Define compare, swap, and write in sorting context.',
     'Contrast O(n²) simple sorts with O(n log n) merge/heap/quick.',

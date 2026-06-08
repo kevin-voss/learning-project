@@ -68,4 +68,5 @@ DS.curriculum.push({
     'Every call uses stack memory',
   ],
   demoType: 'recursion',
+  keywords: ['recursion', 'base case', 'call stack', 'unwinding', 'stack overflow'],
 });

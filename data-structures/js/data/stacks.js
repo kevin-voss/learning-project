@@ -115,5 +115,6 @@ console.<span class="fn">log</span>(<span class="fn">isValid</span>(<span class=
       'No searching — to find an element you must pop everything above it',
     ],
     demoType: 'stack',
+    keywords: ['stack', 'lifo', 'push', 'pop', 'call stack', 'backtracking'],
   },
 );

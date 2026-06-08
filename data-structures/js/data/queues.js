@@ -105,5 +105,6 @@ tasks.<span class="fn">enqueue</span>(<span class="str">'Backup database'</span>
       'Searching requires dequeuing and re-enqueuing everything',
     ],
     demoType: 'queue',
+    keywords: ['queue', 'fifo', 'enqueue', 'dequeue', 'breadth-first search'],
   },
 );

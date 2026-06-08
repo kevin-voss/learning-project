@@ -617,6 +617,19 @@
     font-size: 12px;
     padding: 4px 12px;
   }
+  .glossary-hint {
+    color: var(--fg2);
+    font-size: 13px;
+    line-height: 1.5;
+    margin-top: 10px;
+  }
+  .glossary-hint i {
+    color: var(--accent);
+    margin-right: 6px;
+  }
+  .glossary-hint-demo {
+    font-size: inherit;
+  }
   .related-lessons {
     display: flex;
     flex-wrap: wrap;

@@ -51,7 +51,7 @@ DS.curriculum.push({
   demoTitle: 'Min-heap visualizer',
   demoHint: 'Insert and extract-min to see bubble up and bubble down restore the heap property.',
   relatedIds: ['queues', 'trees', 'sorting-algorithms', 'graph-algorithms'],
-  keywords: ['heap', 'priority queue', 'bubble up', 'bubble down'],
+  keywords: ['heap', 'priority queue', 'bubble up', 'bubble down', 'heap sort', 'min-heap', 'max-heap', 'heap property'],
   codeExample: `<span class="cm">// Min-heap in array (index 0 unused for simpler parent math)</span>
 <span class="kw">const</span> heap <span class="op">=</span> [<span class="kw">null</span>, <span class="num">10</span>, <span class="num">15</span>, <span class="num">20</span>, <span class="num">25</span>];
 

@@ -1,6 +1,6 @@
 # Core CS Concepts Roadmap
 
-Static interactive learner for beginner-friendly computer science concepts that support data structures: memory, references, recursion, logic, Big-O, core data structures, algorithms, buffers, compiler/runtime basics, and OS/kernel queues. Open `index.html` in a browser (or serve the folder locally).
+Static interactive learner for beginner-friendly computer science concepts: memory, references, recursion, logic, Big-O, core data structures, algorithms, buffers, compiler/runtime basics, OS/kernel queues, and practical web/infra foundations like client-server, IPv4/IPv6 networks, requests, HTTP/DNS/TLS, SQL databases with indexes/keys/relations/scaling, Git, deployment, Docker, CI/CD, encryption, auth, and security. Open `index.html` in a browser (or serve the folder locally).
 
 ## Layout
 

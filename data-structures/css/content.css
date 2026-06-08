@@ -214,6 +214,80 @@
   }
   .block-text strong { color: var(--fg); font-weight: 600; }
 
+  .section-subnav {
+    align-items: center;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: -18px 0 28px;
+    padding: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+  .section-subnav span {
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-right: 6px;
+    text-transform: uppercase;
+  }
+  .section-subnav a {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--fg2);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 10px;
+    text-decoration: none;
+  }
+  .section-subnav a:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .mermaid-wrap {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow-x: auto;
+    padding: 18px;
+  }
+  .mermaid-wrap .mermaid {
+    display: flex;
+    justify-content: center;
+    min-height: 160px;
+  }
+
+  .lesson-checklist {
+    list-style: none;
+    display: grid;
+    gap: 10px;
+  }
+  .lesson-checklist li {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--fg2);
+    line-height: 1.6;
+    padding: 12px 14px 12px 38px;
+    position: relative;
+  }
+  .lesson-checklist li::before {
+    color: var(--green);
+    content: '\f00c';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    left: 14px;
+    position: absolute;
+    top: 13px;
+  }
+
   .concept-section-grid {
     display: grid;
     gap: 14px;

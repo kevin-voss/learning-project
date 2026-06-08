@@ -20,6 +20,6 @@ Prefer the README’s project table and phase docs over duplicating long structu
 | `frontend/` | Vite, React, TypeScript, Tailwind; Vitest/ESLint per `frontend/package.json` |
 | `beginner-js/` | Bun-driven tests via `Makefile` |
 | `system-design/` | Static HTML/CSS/JS |
-| `data-structures/` | Static HTML/CSS/JS — curriculum + interactive demos |
+| `data-structures/` | Static HTML/CSS/JS — CS roadmap with data structures, algorithms, web/infra foundations, and interactive demos |
 
 Match existing style and file layout in the subtree you edit; domain logic for CodeStep belongs under `frontend/src/domains/`.

@@ -126,6 +126,87 @@ DS.glossaryTerms = {
   'bfs': 'Breadth-First Search: visit closest neighbors first using a queue.',
   'dfs': 'Depth-First Search: go deep along one path, then backtrack.',
   'map': 'A key-value collection, often implemented with a hash table.',
+  'api': 'Application Programming Interface: rules and URLs a client uses to ask another program for data or actions.',
+  'authorization': 'Checking what an authenticated user or system is allowed to do.',
+  'authentication': 'Proving who a user or system is.',
+  'body': 'The main content sent inside a network request or response.',
+  'branch': 'A separate line of Git work where changes can happen without immediately affecting main.',
+  'build': 'A step that turns source files into something ready to run, test, or serve.',
+  'cd': 'Continuous Delivery or Deployment: preparing or releasing checked code automatically.',
+  'ci': 'Continuous Integration: automatically checking code with tests and builds when changes are pushed.',
+  'client': 'The app or device making a request, often a browser or mobile app.',
+  'commit': 'A saved snapshot of changes in Git with a message.',
+  'container': 'A running isolated environment created from a Docker image.',
+  'cookie': 'Small data stored by the browser and sent with matching requests.',
+  'cors': 'Cross-Origin Resource Sharing: browser rules for allowing or blocking cross-origin API calls.',
+  'deployment': 'Publishing code so users can access it.',
+  'dns': 'Domain Name System: the internet address book that maps names to IP addresses.',
+  'docker': 'A tool for building, sharing, and running containerized applications.',
+  'dockerfile': 'A text file with instructions for building a Docker image.',
+  'domain': 'A human-friendly website name, such as example.com.',
+  'environment': 'A place where code runs, such as local, staging, or production.',
+  'git': 'A version control tool that tracks project changes over time.',
+  'hash': 'A one-way transformation used to verify data without storing the original value.',
+  'header': 'Extra metadata sent with a network request or response.',
+  'http': 'The request-and-response protocol used by the web.',
+  'https': 'HTTP protected with TLS encryption.',
+  'image': 'A Docker template used to create containers.',
+  'ip': 'A numeric address computers use to find each other on a network.',
+  'ip address': 'A numeric address computers use to find each other on a network.',
+  'ipv4': 'Internet Protocol version 4: addresses written as four decimal numbers, such as 192.168.1.20.',
+  'ipv6': 'Internet Protocol version 6: longer addresses written in hexadecimal groups, such as 2001:db8::1.',
+  'jwt': 'JSON Web Token: a signed token containing claims such as user ID and expiration.',
+  'log': 'A recorded message from an app that explains what happened.',
+  'merge': 'Combining changes from one Git branch into another.',
+  'monitoring': 'Watching app health with metrics, dashboards, and alerts.',
+  'normalization': 'Organizing database tables to reduce duplicated data and keep relationships clear.',
+  'oauth': 'A protocol for delegated access between apps and services.',
+  'octet': 'One 8-bit number in an IPv4 address, from 0 to 255.',
+  'partition': 'A slice of a larger dataset stored separately, often by range, time, tenant, or hash.',
+  'partitioning': 'Splitting a large table or dataset into smaller pieces that can be managed separately.',
+  'origin': 'The scheme, host, and port of a web address, such as https://app.example.com.',
+  'port': 'A numbered network doorway where traffic arrives.',
+  'production': 'The live environment used by real users.',
+  'pull request': 'A request for teammates to review and merge a Git branch.',
+  'repository': 'A project folder tracked by Git, often called a repo.',
+  'request': 'A message asking another system for data or an action.',
+  'response': 'The reply sent back after a request is handled.',
+  'secret': 'A private value like an API key, database password, or signing key.',
+  'server': 'A program or computer that receives requests and sends responses.',
+  'session': 'Server-side login state, usually connected to the browser by a cookie.',
+  'status code': 'A number in an HTTP response that summarizes what happened, such as 200, 404, or 500.',
+  'tls': 'Encryption used to protect HTTPS connections.',
+  'url': 'A full web address that tells the browser where and how to request a resource.',
+  'volume': 'Storage shared with or persisted outside a Docker container.',
+  'asymmetric encryption': 'Encryption that uses a public key and private key pair.',
+  'certificate': 'A digital document that helps prove a server belongs to a domain.',
+  'ciphertext': 'Encrypted text that should look unreadable without the right key.',
+  'column': 'One named field in a database table, such as email or created_at.',
+  'encryption': 'Turning readable data into unreadable ciphertext so only someone with the right key can read it.',
+  'foreign key': 'A database field that points to a row in another table.',
+  'packet': 'A small chunk of network data sent between computers.',
+  'packets': 'Small chunks of network data sent between computers.',
+  'plaintext': 'Readable data before it is encrypted.',
+  'primary key': 'A database value that uniquely identifies one row.',
+  'private key': 'A secret key kept private, often used to decrypt data or prove identity.',
+  'public key': 'A key that can be shared publicly, often used to encrypt data or verify signatures.',
+  'query': 'A request for data from a database, often written in SQL.',
+  'read replica': 'A copy of a database used to handle read traffic without overloading the primary database.',
+  'relation': 'A connection between tables, often represented with foreign keys.',
+  'relations': 'Connections between tables, often represented with foreign keys.',
+  'replication': 'Copying data from one database server to another for scale, availability, or backups.',
+  'row': 'One record in a database table.',
+  'router': 'A device that forwards network traffic toward its destination.',
+  'scaling': 'Increasing a system’s ability to handle more traffic, data, or users.',
+  'shard': 'One piece of a horizontally split dataset, often stored on a separate database server.',
+  'sharding': 'Splitting data across multiple database servers, often by tenant, region, or hash.',
+  'sql': 'Structured Query Language: a language for reading and changing relational database data.',
+  'subnet': 'A smaller network range inside a larger IP network.',
+  'symmetric encryption': 'Encryption where the same secret key encrypts and decrypts data.',
+  'table': 'A database structure made of rows and columns.',
+  'tcp': 'Transmission Control Protocol: a reliable connection protocol used by many web requests.',
+  'transaction': 'A group of database operations that should succeed or fail together.',
+  'udp': 'User Datagram Protocol: a faster connectionless protocol often used when occasional loss is acceptable.',
 };
 
 DS.escHtml = function (value) {
@@ -243,13 +324,79 @@ DS.renderConceptFlow = function (flow = []) {
     </div>`;
 };
 
+DS.renderSectionSubnav = function (ds, anchors = []) {
+  if (!anchors.length) return '';
+  return `
+    <nav class="section-subnav" aria-label="${DS.escHtml(ds.title)} section navigation">
+      <span><i class="fas fa-list"></i> In this lesson</span>
+      ${anchors.map(anchor => `<a href="#${anchor.id}">${DS.escHtml(anchor.label)}</a>`).join('')}
+    </nav>`;
+};
+
+DS.renderMermaidDiagram = function (diagram) {
+  if (!diagram) return '';
+  return `
+    <div class="block" id="diagram">
+      <h3 class="block-title"><i class="fas fa-chart-diagram"></i> Mermaid Diagram</h3>
+      <div class="mermaid-wrap">
+        <pre class="mermaid">${DS.escHtml(diagram)}</pre>
+      </div>
+    </div>`;
+};
+
+DS.renderChecklist = function (items = []) {
+  if (!items.length) return '';
+  return `
+    <div class="block" id="checklist">
+      <h3 class="block-title"><i class="fas fa-list-check"></i> You Understand This When</h3>
+      <ul class="lesson-checklist">
+        ${items.map(item => `<li>${DS.explainTerms(item)}</li>`).join('')}
+      </ul>
+    </div>`;
+};
+
+DS.renderMermaid = function () {
+  if (!window.mermaid) return;
+  window.mermaid.initialize({
+    startOnLoad: false,
+    theme: 'dark',
+    securityLevel: 'loose',
+    themeVariables: {
+      background: '#0d120f',
+      primaryColor: '#17231d',
+      primaryTextColor: '#e8ede9',
+      primaryBorderColor: '#f0b429',
+      lineColor: '#4cc9f0',
+      secondaryColor: '#111a15',
+      tertiaryColor: '#0f1712',
+    },
+  });
+  window.mermaid.run({ querySelector: '.mermaid' });
+};
+
 DS.renderContent = function () {
   const ds = DS.curriculum[DS.currentSection];
   const area = document.getElementById('contentArea');
   const hasDemo = Boolean(ds.demoType);
-  const hasCode = Boolean(ds.codeExample);
+  const hasCode = Boolean(ds.codeExample || ds.codeText);
   const hasComplexity = Array.isArray(ds.complexity) && ds.complexity.length > 0;
   const hasProsCons = Array.isArray(ds.pros) && Array.isArray(ds.cons);
+  const hasDiagram = Boolean(ds.mermaidDiagram);
+  const anchors = [
+    ['analogy', 'Analogy', true],
+    ['real-world', 'Real World', Boolean(ds.realWorldExample)],
+    ['what-is-it', 'What Is It', Boolean(ds.whatIsIt)],
+    ['why-use-it', 'Why Use It', Boolean(ds.whyUse)],
+    ['breakdown', 'Breakdown', Array.isArray(ds.conceptSections) && ds.conceptSections.length > 0],
+    ['flow', 'Flow', Array.isArray(ds.conceptFlow) && ds.conceptFlow.length > 0],
+    ['diagram', 'Mermaid', hasDiagram],
+    ['when-to-use', 'When To Use', Array.isArray(ds.whenToUse) && ds.whenToUse.length > 0],
+    ['demo-block', 'Demo', hasDemo],
+    ['code', 'Code', hasCode],
+    ['complexity', 'Complexity', hasComplexity],
+    ['pros-cons', 'Pros / Cons', hasProsCons],
+    ['checklist', 'Checklist', Array.isArray(ds.checklist) && ds.checklist.length > 0],
+  ].filter(([, , show]) => show).map(([id, label]) => ({ id, label }));
 
   area.innerHTML = `
     <section class="ds-section active">
@@ -260,15 +407,17 @@ DS.renderContent = function () {
         <p class="ds-subtitle">${ds.subtitle}</p>
       </div>
 
+      ${DS.renderSectionSubnav(ds, anchors)}
+
       <!-- Real World Analogy -->
-      <div class="analogy-card">
+      <div class="analogy-card" id="analogy">
         <div class="analogy-label"><i class="fas fa-lightbulb"></i> Real-World Analogy</div>
         <p class="analogy-text">${DS.explainTerms(ds.analogy)}</p>
       </div>
 
       <!-- Real World Example -->
       ${ds.realWorldExample ? `
-      <div class="example-card">
+      <div class="example-card" id="real-world">
         <div class="example-label"><i class="fas fa-location-dot"></i> Real-World Example</div>
         <h3>${DS.explainTerms(ds.realWorldExample.title)}</h3>
         <p>${DS.explainTerms(ds.realWorldExample.desc)}</p>
@@ -286,23 +435,25 @@ DS.renderContent = function () {
       </div>` : ''}
 
       <!-- What Is It -->
-      <div class="block">
+      <div class="block" id="what-is-it">
         <h3 class="block-title"><i class="fas fa-circle-info"></i> What Is It?</h3>
         <p class="block-text">${DS.explainTerms(ds.whatIsIt)}</p>
       </div>
 
       <!-- Why Use It -->
-      <div class="block">
+      <div class="block" id="why-use-it">
         <h3 class="block-title"><i class="fas fa-arrow-up-right-dots"></i> Why Use It?</h3>
         <p class="block-text">${DS.explainTerms(ds.whyUse)}</p>
       </div>
 
-      ${DS.renderConceptSections(ds.conceptSections)}
+      <div id="breakdown">${DS.renderConceptSections(ds.conceptSections)}</div>
 
-      ${DS.renderConceptFlow(ds.conceptFlow)}
+      <div id="flow">${DS.renderConceptFlow(ds.conceptFlow)}</div>
+
+      ${DS.renderMermaidDiagram(ds.mermaidDiagram)}
 
       <!-- When To Use -->
-      <div class="block">
+      <div class="block" id="when-to-use">
         <h3 class="block-title"><i class="fas fa-clock"></i> When To Use?</h3>
         <div class="info-grid">
           ${ds.whenToUse.map((w, i) => `
@@ -317,7 +468,7 @@ DS.renderContent = function () {
 
       <!-- Interactive Visualization -->
       ${hasDemo ? `
-      <div class="block">
+      <div class="block" id="demo-block">
         <h3 class="block-title"><i class="fas fa-play-circle"></i> Interactive Demo</h3>
         <div class="visual-demo" id="demo-${ds.id}">
           <!-- Populated by demo rendering logic -->
@@ -326,20 +477,20 @@ DS.renderContent = function () {
 
       <!-- Code Example -->
       ${hasCode ? `
-      <div class="block">
-        <h3 class="block-title"><i class="fas fa-code"></i> JavaScript Implementation</h3>
+      <div class="block" id="code">
+        <h3 class="block-title"><i class="fas fa-code"></i> ${DS.escHtml(ds.codeTitle || 'Code Example')}</h3>
         <div class="code-block" id="code-${ds.id}">
           <div class="code-header">
-            <span class="code-lang">JavaScript</span>
+            <span class="code-lang">${DS.escHtml(ds.codeLanguage || 'JavaScript')}</span>
             <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
           </div>
-          <div class="code-body">${ds.codeExample}</div>
+          <div class="code-body">${ds.codeExample || DS.escHtml(ds.codeText)}</div>
         </div>
       </div>` : ''}
 
       <!-- Time Complexity -->
       ${hasComplexity ? `
-      <div class="block">
+      <div class="block" id="complexity">
         <h3 class="block-title"><i class="fas fa-gauge-high"></i> Time Complexity</h3>
         ${DS.complexityGuide()}
         <table class="complexity-table">
@@ -359,7 +510,7 @@ DS.renderContent = function () {
 
       <!-- Pros & Cons -->
       ${hasProsCons ? `
-      <div class="block">
+      <div class="block" id="pros-cons">
         <h3 class="block-title"><i class="fas fa-scale-balanced"></i> Pros and Cons</h3>
         <div class="pros-cons">
           <div class="pc-card pc-pros">
@@ -376,6 +527,8 @@ DS.renderContent = function () {
           </div>
         </div>
       </div>` : ''}
+
+      ${DS.renderChecklist(ds.checklist)}
 
       <!-- Mark Complete -->
       <div class="complete-section">
@@ -395,6 +548,8 @@ DS.renderContent = function () {
 
   // Initialize interactive demo
   if (hasDemo) DS.initDemo(ds.id);
+
+  DS.renderMermaid();
 
   // Scroll to top
   window.scrollTo({ top: 0, behavior: 'smooth' });

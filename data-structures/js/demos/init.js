@@ -18,6 +18,16 @@ DS.initDemo = function (id) {
     'sets': DS.demos.set,
     'searching-algorithms': DS.demos.search,
     'sorting-algorithms': DS.demos.sorting,
+    'web-big-picture': DS.demos.webFoundations,
+    'client-server': DS.demos.webFoundations,
+    'networks-ips-requests': DS.demos.webFoundations,
+    'networking-http': DS.demos.webFoundations,
+    'database-sql': DS.demos.databaseSql,
+    'git-collaboration': DS.demos.webFoundations,
+    'servers-deployment-devops': DS.demos.webFoundations,
+    'docker-containers': DS.demos.webFoundations,
+    'encryption-concepts': DS.demos.encryption,
+    'auth-security': DS.demos.webFoundations,
   };
   const run = runners[id];
   if (run) run(container);

@@ -47,6 +47,30 @@ DS.curriculum.push({
       desc: 'A frame is one visual step in the animation. More frames usually means more visible work for learners to inspect.',
       example: 'The demo counts each compare or swap step as the visualization advances.',
     },
+    {
+      icon: 'fa-arrow-down-wide-short',
+      title: 'Bubble sort',
+      desc: 'Repeatedly swap neighbors that are out of order. Simple to see, slow for large n.',
+      example: 'O(n²) compares/swaps in typical cases.',
+    },
+    {
+      icon: 'fa-arrow-right',
+      title: 'Insertion sort',
+      desc: 'Build a sorted left side by inserting each new item into place.',
+      example: 'Efficient for small or nearly sorted arrays.',
+    },
+    {
+      icon: 'fa-mountain',
+      title: 'Heap sort',
+      desc: 'Build a heap, repeatedly extract the extremum to sort in O(n log n).',
+      example: 'Connects to the heaps lesson — in-place with O(1) extra space.',
+    },
+    {
+      icon: 'fa-scale-balanced',
+      title: 'Stability and space',
+      desc: 'Stable sorts keep equal items in original order. Some algorithms need O(n) extra memory.',
+      example: 'Merge sort is stable; heap sort is not.',
+    },
   ],
   conceptFlow: ['Compare values', 'Move / swap / write', 'Shrink unsorted work', 'Finish ordered array'],
   whenToUse: [
@@ -150,4 +174,12 @@ DS.curriculum.push({
     'Fast average case and safe worst case are not always the same',
   ],
   demoType: 'sorting',
+  relatedIds: ['big-o-notation', 'arrays', 'heaps-priority-queues'],
+  keywords: ['stability', 'in-place sort', 'merge sort', 'heap sort'],
+  checklist: [
+    'Define compare, swap, and write in sorting context.',
+    'Contrast O(n²) simple sorts with O(n log n) merge/heap/quick.',
+    'Explain stability with an example of equal keys.',
+    'Use the demo step mode and read each step caption.',
+  ],
 });

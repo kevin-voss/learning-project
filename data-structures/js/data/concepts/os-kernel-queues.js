@@ -48,4 +48,15 @@ DS.curriculum.push({
     },
   ],
   conceptFlow: ['Process has threads', 'Scheduler queues ready work', 'Kernel gives CPU time', 'Events and buffers wait', 'Memory maps through page tables'],
+  demoType: 'os-kernel-queues',
+  demoTitle: 'OS ready queue',
+  demoHint: 'Simulate the scheduler dequeuing runnable processes onto the CPU.',
+  relatedIds: ['linux-terminal-os', 'queues', 'heaps-priority-queues', 'buffers-ring-buffers'],
+  keywords: ['kernel', 'scheduler', 'process', 'thread', 'virtual memory'],
+  checklist: [
+    'Define process vs thread.',
+    'Explain the ready queue role in scheduling.',
+    'Name kernel structures: queues, page tables, buffers.',
+    'Connect to the Linux terminal lesson for hands-on process commands.',
+  ],
 });

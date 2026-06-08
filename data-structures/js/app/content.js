@@ -50,6 +50,27 @@ DS.glossaryTerms = {
   'frames': 'Individual visualization steps, or call-stack records depending on context.',
   'heap': 'A tree-like structure often stored in an array, useful for priority queues.',
   'heap memory': 'Memory area used for objects that can live beyond one function call.',
+  'stack memory': 'Memory used for function call frames and local variables; grows and shrinks with calls.',
+  'garbage collection': 'Automatic reclaim of heap objects that are no longer reachable from running code.',
+  'jit': 'Just-in-time compilation: optimize hot code while the program is already running.',
+  'bytecode': 'Intermediate instruction format between source code and machine code.',
+  'ring buffer': 'Fixed-size circular buffer where head and tail indices wrap around.',
+  'buffer': 'Temporary memory area holding data between a producer and consumer.',
+  'syscall': 'System call: how a program asks the operating system kernel for a privileged service.',
+  'in-place sort': 'Sorting that uses only O(1) extra memory beyond the input array.',
+  'utf-8': 'Variable-length text encoding common on the web; backward-compatible with ASCII.',
+  'encoding': 'Rules that map characters or values to bytes.',
+  'memoization': 'Caching subproblem answers to avoid recomputation in dynamic programming.',
+  'dynamic programming': 'Technique that stores overlapping subproblem results for efficient reuse.',
+  'greedy': 'Algorithm that makes the locally best choice at each step without backtracking.',
+  'dijkstra': 'Shortest-path algorithm for graphs with non-negative edge weights.',
+  'event loop': 'Mechanism that schedules async callbacks after I/O completes (common in JavaScript).',
+  'concurrency': 'Multiple tasks making progress; not always at the exact same instant.',
+  'nosql': 'Database style that relaxes rigid relational tables for flexible or scaled storage.',
+  'document database': 'NoSQL store where records look like JSON documents with flexible fields.',
+  'ssrf': 'Server-Side Request Forgery: tricking your server to fetch attacker-chosen URLs.',
+  'idor': 'Insecure Direct Object Reference: accessing another user\'s resource by guessing IDs.',
+  'cache-control': 'HTTP header that tells browsers and CDNs how long to cache a response.',
   'hash function': 'A function that turns a key into a bucket number.',
   'hash table': 'A key-value structure that uses hashing for fast lookup.',
   'index': 'A numbered position in an array. JavaScript arrays start at index 0.',
@@ -501,9 +522,9 @@ DS.resolveLessonView = function (lesson) {
       mermaidDiagram: pick('mermaidDiagram'),
       whenToUse: pick('whenToUse'),
       demoType: pick('demoType'),
-      demoTitle: lesson.demoTitle,
-      demoHint: lesson.demoHint,
-      demoSteps: lesson.demoSteps,
+      demoTitle: pick('demoTitle') ?? lesson.demoTitle,
+      demoHint: pick('demoHint') ?? lesson.demoHint,
+      demoSteps: pick('demoSteps') ?? lesson.demoSteps,
       codeTitle: pick('codeTitle') ?? lesson.codeTitle,
       codeLanguage: pick('codeLanguage') ?? lesson.codeLanguage,
       codeText: pick('codeText'),
@@ -514,8 +535,45 @@ DS.resolveLessonView = function (lesson) {
       pros: pick('pros'),
       cons: pick('cons'),
       checklist: pick('checklist'),
+      relatedIds: pick('relatedIds') ?? lesson.relatedIds,
+      keywords: pick('keywords') ?? lesson.keywords,
     },
   };
+};
+
+DS.findLessonIndex = function (id) {
+  return DS.curriculum.findIndex(l => l.id === id);
+};
+
+DS.goToLessonId = function (id) {
+  const idx = DS.findLessonIndex(id);
+  if (idx >= 0) DS.goTo(idx);
+};
+
+DS.renderRelatedLessons = function (relatedIds = []) {
+  if (!relatedIds?.length) return '';
+  const links = relatedIds
+    .map(rid => {
+      const idx = DS.findLessonIndex(rid);
+      if (idx < 0) return null;
+      const l = DS.curriculum[idx];
+      return `<button type="button" class="related-lesson-btn" onclick="goTo(${idx})"><i class="fas ${l.icon || 'fa-book'}"></i> ${DS.escHtml(l.title)}</button>`;
+    })
+    .filter(Boolean);
+  if (!links.length) return '';
+  return `
+    <div class="block" id="related-lessons">
+      <h3 class="block-title"><i class="fas fa-link"></i> Related Lessons</h3>
+      <div class="related-lessons">${links.join('')}</div>
+    </div>`;
+};
+
+DS.renderKeywordChips = function (keywords = []) {
+  if (!keywords?.length) return '';
+  return `
+    <div class="keyword-chips" aria-label="Terms in this lesson">
+      ${keywords.map(k => `<span class="keyword-chip" title="Glossary term">${DS.explainTerms(k)}</span>`).join('')}
+    </div>`;
 };
 
 DS.renderDualCodeExamples = function (view) {
@@ -610,6 +668,7 @@ DS.renderContent = function () {
         <h1 class="ds-title">${view.title}</h1>
         ${view.subPageTitle ? `<h2 class="ds-subpage-title">${DS.explainTerms(view.subPageTitle)}</h2>` : ''}
         <p class="ds-subtitle">${view.subtitle}</p>
+        ${DS.renderKeywordChips(view.keywords)}
       </div>
 
       ${DS.renderLessonSubnav(lesson, subPages, activeIndex)}
@@ -740,6 +799,8 @@ DS.renderContent = function () {
       </div>` : ''}
 
       ${DS.renderChecklist(view.checklist || [])}
+
+      ${DS.renderRelatedLessons(view.relatedIds)}
 
       <!-- Mark Complete -->
       <div class="complete-section">

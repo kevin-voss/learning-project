@@ -42,4 +42,15 @@ DS.curriculum.push({
     },
   ],
   conceptFlow: ['Source code', 'Parse into structure', 'Compile / interpret', 'Runtime manages memory', 'CPU runs instructions'],
+  demoType: 'compiler-runtime',
+  demoTitle: 'Run a program — step by step',
+  demoHint: 'Walk through parse, compile/JIT, execute, and garbage collection when you run node app.js.',
+  relatedIds: ['memory-model', 'stack-heap-gc', 'recursion-call-stack'],
+  keywords: ['compiler', 'parse', 'jit', 'bytecode', 'garbage collection', 'machine code'],
+  checklist: [
+    'Trace what happens from source code to CPU instructions.',
+    'Explain parsing and why runtimes build an AST.',
+    'Describe JIT as optimize-while-running.',
+    'Connect runtime to stack, heap, and garbage collection.',
+  ],
 });

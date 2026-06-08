@@ -96,7 +96,7 @@ DS.demoUI = {
           <span class="controls-label"><i class="fas fa-hand-pointer"></i> Try it yourself</span>
           <div class="demo-controls">${controls}</div>
         </div>
-        <div class="demo-msg" id="${msgId}"></div>
+        <div class="demo-msg" id="${msgId}" ${msgId ? 'aria-live="polite"' : ''}></div>
       </div>`;
   },
 };

@@ -4,7 +4,8 @@ DS.demos = DS.demos || {};
 DS.demos.webFoundations = function (container) {
   const UI = DS.demoUI;
   const topic = DS.curriculum[DS.currentSection];
-  const steps = topic.demoSteps || [];
+  const { view } = DS.resolveLessonView(topic);
+  const steps = view.demoSteps || topic.demoSteps || [];
   let stepIndex = 0;
 
   const renderStage = () => `
@@ -22,16 +23,16 @@ DS.demos.webFoundations = function (container) {
     const step = steps[stepIndex] || {};
     return [
       ['Current step', step.label || 'Start', 'The part of the flow currently highlighted'],
-      ['Lesson', topic.title, 'The roadmap topic this demo belongs to'],
-      ['Why it matters', step.result || topic.subtitle, 'The beginner takeaway for this step'],
+      ['Lesson', view.title || topic.title, 'The roadmap topic this demo belongs to'],
+      ['Why it matters', step.result || view.subtitle || topic.subtitle, 'The beginner takeaway for this step'],
     ];
   };
 
   const render = () => {
     const step = steps[stepIndex] || {};
     container.innerHTML = UI.shell({
-      title: topic.demoTitle || `${topic.title} flow`,
-      hint: topic.demoHint || 'Step through the real-world flow and connect each keyword to the system doing the work.',
+      title: view.demoTitle || topic.demoTitle || `${view.title || topic.title} flow`,
+      hint: view.demoHint || topic.demoHint || 'Step through the real-world flow and connect each keyword to the system doing the work.',
       stage: renderStage(),
       inspector: UI.inspector('Flow details', inspectorRows()),
       stats: [

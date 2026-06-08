@@ -40,6 +40,12 @@ DS.curriculum.push({
       desc: 'BFS and DFS search relationships instead of sorted positions. They need a visited set to avoid looping forever.',
       example: 'BFS can find the fewest friendship hops between two people.',
     },
+    {
+      icon: 'fa-hashtag',
+      title: 'Hash lookup',
+      desc: 'Hash tables map keys to buckets for average O(1) exact lookup when collisions are rare.',
+      example: 'Find user by email without scanning every row — see hash-tables lesson.',
+    },
   ],
   conceptFlow: ['Pick search strategy', 'Check current item', 'Decide where to look next', 'Stop when found or impossible'],
   whenToUse: [
@@ -84,4 +90,12 @@ DS.curriculum.push({
     'Hash lookup is fast for exact keys, not range questions',
   ],
   demoType: 'search',
+  relatedIds: ['hash-tables', 'trees', 'graphs', 'graph-algorithms'],
+  keywords: ['linear search', 'binary search', 'breadth-first search', 'depth-first search'],
+  checklist: [
+    'State when linear search is acceptable.',
+    'Explain why binary search needs sorted data.',
+    'Describe BFS vs DFS in one sentence each.',
+    'Explain when hash lookup beats tree search.',
+  ],
 });

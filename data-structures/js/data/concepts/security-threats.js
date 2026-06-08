@@ -148,7 +148,54 @@ await db.query('SELECT * FROM users WHERE email = $1', [email]);`,
 const allowed = /^[a-z0-9.-]+$/i;
 if (!allowed.test(userHost)) throw new Error('Invalid host');
 // use a vetted network library instead of shell ping`,
+      demoType: 'security-threats',
+      demoScenario: 'command-injection',
       checklist: ['Explain why shell string concatenation is dangerous.', 'Name one safer alternative to shelling out.', 'Connect command injection to least privilege on servers.'],
+    },
+    {
+      label: 'SSRF',
+      title: 'Server-Side Request Forgery (SSRF)',
+      subtitle: 'Do not let users pick arbitrary URLs your server will fetch.',
+      whatIsIt: 'SSRF tricks your server into requesting internal URLs (metadata services, admin panels) the attacker cannot reach directly. Validate outbound hosts, block private IP ranges, and use allowlists.',
+      demoType: 'security-threats',
+      demoScenario: 'ssrf',
+      checklist: ['Explain why server-side fetches are sensitive.', 'Name one internal target attackers seek.', 'Describe allowlist validation for URLs.'],
+    },
+    {
+      label: 'Path Traversal',
+      title: 'Path Traversal',
+      subtitle: 'Reject ../ and absolute paths in file parameters.',
+      whatIsIt: 'Path traversal uses ../ sequences to escape intended directories and read or write files like /etc/passwd. Canonicalize paths, chroot to allowed roots, and never pass raw user strings to open().',
+      demoType: 'security-threats',
+      demoScenario: 'path-traversal',
+      checklist: ['Show how ../ walks up directories.', 'Explain canonical path checks.', 'Keep uploads outside web root.'],
+    },
+    {
+      label: 'IDOR',
+      title: 'Insecure Direct Object Reference (IDOR)',
+      subtitle: 'IDs in URLs must be authorized, not just guessed.',
+      whatIsIt: 'IDOR exposes objects when apps check authentication but skip authorization — user 5 can open /invoice/99 belonging to user 2. Always verify resource ownership server-side.',
+      demoType: 'security-threats',
+      demoScenario: 'idor',
+      checklist: ['Contrast authentication vs authorization.', 'Give an IDOR example with numeric IDs.', 'State the server-side ownership check pattern.'],
+    },
+    {
+      label: 'Session Fixation',
+      title: 'Session Fixation',
+      subtitle: 'Issue a new session ID after login.',
+      whatIsIt: 'Session fixation attacks trick users into using an attacker-known session ID before login. Regenerate session identifiers on privilege change and mark cookies HttpOnly and Secure.',
+      demoType: 'security-threats',
+      demoScenario: 'session-fixation',
+      checklist: ['Explain when to rotate session IDs.', 'Name two safe cookie flags.', 'Link to authentication-sessions lesson.'],
+    },
+    {
+      label: 'Open Redirect',
+      title: 'Open Redirect',
+      subtitle: 'Validate redirect targets — do not forward users to arbitrary URLs.',
+      whatIsIt: 'Open redirects in ?next= parameters enable phishing: your trusted domain sends users to a fake login. Allow only relative paths or an allowlist of hosts.',
+      demoType: 'security-threats',
+      demoScenario: 'open-redirect',
+      checklist: ['Show a malicious next= URL example.', 'Prefer relative redirects.', 'Reject protocol-relative //evil URLs.'],
     },
     {
       label: 'Rate Limiting',
@@ -197,6 +244,8 @@ if (!allowed.test(userHost)) throw new Error('Invalid host');
 Content-Security-Policy: default-src 'self'; frame-ancestors 'none'
 X-Content-Type-Options: nosniff
 Referrer-Policy: strict-origin-when-cross-origin`,
+      demoType: 'security-threats',
+      demoScenario: 'headers',
       checklist: ['Name two security headers and what they do.', 'Explain why CSP helps after an XSS mistake.', 'Note that headers complement—not replace—secure coding.'],
     },
     {

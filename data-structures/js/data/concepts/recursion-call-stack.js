@@ -57,11 +57,6 @@ DS.curriculum.push({
 }
 
 <span class="fn">countDown</span>(<span class="num">3</span>); <span class="cm">// 3, 2, 1</span>`,
-  complexity: [
-    { op: 'One recursive call', time: 'O(1)', badge: 'fast' },
-    { op: 'n recursive calls', time: 'O(n)', badge: 'slow' },
-    { op: 'Balanced divide recursion', time: 'O(log n)', badge: 'mid' },
-  ],
   pros: [
     'Very clear for trees and nested data',
     'Matches DFS and divide-and-conquer algorithms',

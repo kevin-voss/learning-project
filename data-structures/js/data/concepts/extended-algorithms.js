@@ -1,0 +1,53 @@
+window.DS = window.DS || {};
+DS.curriculum = DS.curriculum || [];
+
+DS.curriculum.push(
+  {
+    id: 'graph-algorithms',
+    category: 'Algorithms',
+    title: 'Graph Algorithms',
+    icon: 'fa-route',
+    number: '17',
+    subtitle: 'Weighted paths, shortest routes, and dependency ordering on graphs.',
+    analogy: 'Dijkstra is like spreading water from a source — it reaches nearest puddles first. Topological sort is like putting on socks before shoes when tasks depend on each other.',
+    realWorldExample: { title: 'Maps navigation', desc: 'GPS uses shortest-path algorithms on road networks with travel time weights.' },
+    whatIsIt: 'Beyond BFS/DFS: Dijkstra finds shortest paths with non-negative weights (often with a priority queue). Topological sort orders DAG nodes when edges mean "before".',
+    whyUse: 'Routing, build systems, prerequisites, and network flow all use graph algorithms.',
+    demoType: 'graph-algorithms',
+    relatedIds: ['graphs', 'heaps-priority-queues', 'searching-algorithms'],
+    keywords: ['dijkstra', 'topological sort', 'weighted graph'],
+    checklist: ['Explain when Dijkstra needs a priority queue.', 'Describe a DAG and why cycles break topological sort.', 'Connect to heaps lesson for extract-min.'],
+  },
+  {
+    id: 'dynamic-programming-intro',
+    category: 'Algorithms',
+    title: 'Dynamic Programming Intro',
+    icon: 'fa-table-cells',
+    number: '18',
+    subtitle: 'Solve big problems by storing answers to smaller overlapping subproblems.',
+    analogy: 'DP is like memoizing a recipe: once you know frosting cost for 12 cupcakes, reuse it when calculating a two-tier cake.',
+    realWorldExample: { title: 'Spell-check suggestions', desc: 'Edit distance between words reuses distances for prefixes — classic DP table.' },
+    whatIsIt: 'Dynamic programming applies when optimal substructure and overlapping subproblems exist. Build a table or array bottom-up (or top-down with memo) instead of exponential recursion.',
+    whyUse: 'Turns intractable recursion into polynomial time for problems like Fibonacci, knapsack, and path counts.',
+    demoType: 'dynamic-programming-intro',
+    relatedIds: ['recursion-call-stack', 'big-o-notation'],
+    keywords: ['dynamic programming', 'memoization', 'subproblem'],
+    checklist: ['Define overlapping subproblems.', 'Contrast DP with naive recursion on Fibonacci.', 'Fill a small table by hand.'],
+  },
+  {
+    id: 'greedy-algorithms',
+    category: 'Algorithms',
+    title: 'Greedy Algorithms',
+    icon: 'fa-coins',
+    number: '19',
+    subtitle: 'Make the locally best choice at each step — works when greedy choice property holds.',
+    analogy: 'Giving change with biggest coins first is greedy — works for US coins but not every coin system.',
+    realWorldExample: { title: 'Activity selection', desc: 'Pick the meeting that ends earliest to fit more meetings in a room.' },
+    whatIsIt: 'Greedy algorithms commit without backtracking. They are fast and simple when proof shows local optimum leads to global optimum.',
+    whyUse: 'Scheduling, Huffman coding, minimum spanning tree (Kruskal/Prim) use greedy ideas.',
+    demoType: 'greedy-algorithms',
+    relatedIds: ['sorting-algorithms', 'big-o-notation'],
+    keywords: ['greedy', 'local optimum', 'coin change'],
+    checklist: ['Explain greedy vs backtracking.', 'Give a case where greedy fails.', 'Run coin change on a sample amount.'],
+  }
+);

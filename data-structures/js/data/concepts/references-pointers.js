@@ -54,10 +54,5 @@ console.<span class="fn">log</span>(userA.score); <span class="cm">// 20, becaus
 <span class="kw">const</span> node1 <span class="op">=</span> { value: <span class="num">10</span>, next: <span class="kw">null</span> };
 <span class="kw">const</span> node2 <span class="op">=</span> { value: <span class="num">20</span>, next: <span class="kw">null</span> };
 node1.next <span class="op">=</span> node2;`,
-  complexity: [
-    { op: 'Follow one reference', time: 'O(1)', badge: 'fast' },
-    { op: 'Follow a chain of n nodes', time: 'O(n)', badge: 'slow' },
-    { op: 'Rewire a known pointer', time: 'O(1)', badge: 'fast' },
-  ],
   demoType: 'pointer',
 });

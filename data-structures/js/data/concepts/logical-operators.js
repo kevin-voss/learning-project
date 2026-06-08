@@ -40,7 +40,21 @@ DS.curriculum.push({
       desc: 'XOR means exactly one side is true. If both are true or both are false, the result is false.',
       example: 'A simple toggle can think in XOR terms: current state differs from requested state.',
     },
+    {
+      icon: 'fa-table',
+      title: 'Truth tables',
+      desc: 'A truth table lists every combination of inputs and the resulting output — the fastest way to learn AND/OR/NOT/XOR.',
+      example: 'AND: only row (true, true) → true. OR: any true input → true.',
+    },
   ],
   conceptFlow: ['Start with facts', 'Combine with logical operator', 'Get one true/false answer', 'Choose what the program does next'],
   demoType: 'logic',
+  relatedIds: ['cs-foundations', 'testing-debugging'],
+  keywords: ['logical operators', 'truth table', 'boolean'],
+  checklist: [
+    'Fill a truth table for AND with two inputs.',
+    'Explain NOT as flipping true/false.',
+    'Describe XOR as exactly-one-true.',
+    'Use the demo toggles to match the truth table.',
+  ],
 });

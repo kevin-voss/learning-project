@@ -7,6 +7,13 @@ DS.demos.securityThreats = function (container, initialScenario) {
     xss: { label: 'XSS', icon: 'fa-code' },
     csrf: { label: 'CSRF', icon: 'fa-cookie-bite' },
     sql: { label: 'SQL Injection', icon: 'fa-database' },
+    'command-injection': { label: 'Command Injection', icon: 'fa-terminal' },
+    ssrf: { label: 'SSRF', icon: 'fa-server' },
+    'path-traversal': { label: 'Path Traversal', icon: 'fa-folder-open' },
+    idor: { label: 'IDOR', icon: 'fa-id-card' },
+    'session-fixation': { label: 'Session Fixation', icon: 'fa-fingerprint' },
+    'open-redirect': { label: 'Open Redirect', icon: 'fa-arrow-right' },
+    headers: { label: 'Secure Headers', icon: 'fa-file-shield' },
     'rate-limit': { label: 'Rate Limiting', icon: 'fa-gauge-high' },
     secrets: { label: 'Secrets Leak', icon: 'fa-key' },
   };
@@ -146,12 +153,75 @@ DS.demos.securityThreats = function (container, initialScenario) {
       </div>`;
   };
 
+  const renderGeneric = (unsafe, safe, unsafeTitle, safeTitle) => `
+    <div class="security-compare">
+      <div class="security-panels">
+        <div class="security-panel ${mode === 'unsafe' ? 'is-active unsafe' : ''}">
+          <strong><i class="fas fa-triangle-exclamation"></i> ${esc(unsafeTitle)}</strong>
+          <p>${esc(unsafe)}</p>
+        </div>
+        <div class="security-panel ${mode === 'safe' ? 'is-active safe' : ''}">
+          <strong><i class="fas fa-shield"></i> ${esc(safeTitle)}</strong>
+          <p>${esc(safe)}</p>
+        </div>
+      </div>
+    </div>`;
+
   const renderStage = () => {
     switch (scenario) {
       case 'csrf': return renderCsrf();
       case 'sql': return renderSql();
       case 'rate-limit': return renderRateLimit();
       case 'secrets': return renderSecrets();
+      case 'command-injection':
+        return renderGeneric(
+          'exec("convert " + userFilename) — attacker adds ; rm -rf /',
+          'Use library API with argument array; never invoke shell with user strings.',
+          'Shell with user input',
+          'Safe API call'
+        );
+      case 'ssrf':
+        return renderGeneric(
+          'Server fetches any URL from user — attacker requests http://169.254.169.254/',
+          'Allowlist hosts; block private IP ranges; no raw user URLs.',
+          'Open fetch proxy',
+          'Validated outbound requests'
+        );
+      case 'path-traversal':
+        return renderGeneric(
+          'open("/uploads/" + userPath) with ../../../etc/passwd',
+          'Canonicalize path; reject ..; jail to upload root.',
+          'Relative path concat',
+          'Chrooted file access'
+        );
+      case 'idor':
+        return renderGeneric(
+          'GET /invoice/99 — logged in as user 5, no ownership check',
+          'Server verifies invoice.userId === session.userId before respond.',
+          'ID only in URL',
+          'Authorization check'
+        );
+      case 'session-fixation':
+        return renderGeneric(
+          'Attacker sets session=evil before victim logs in; same ID after login',
+          'regenerateSessionId() after successful authentication.',
+          'Fixed session ID',
+          'Rotate on login'
+        );
+      case 'open-redirect':
+        return renderGeneric(
+          '/login?next=https://evil.example/phish — trusted domain forwards user',
+          'Allow only relative paths like /dashboard or allowlisted hosts.',
+          'Arbitrary next= URL',
+          'Relative redirect only'
+        );
+      case 'headers':
+        return renderGeneric(
+          'No CSP — one XSS mistake runs any script origin.',
+          "Content-Security-Policy: default-src 'self'; frame-ancestors 'none'",
+          'Missing headers',
+          'Helmet / CSP defaults'
+        );
       default: return renderXss();
     }
   };

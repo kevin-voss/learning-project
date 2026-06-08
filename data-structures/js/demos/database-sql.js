@@ -266,11 +266,26 @@ const result = await db.query(
     ];
   };
 
+  const runPlayground = (raw) => {
+    const q = raw.trim().toLowerCase();
+    if (q.startsWith('select * from users')) return users;
+    if (q.startsWith('select * from lessons')) return lessons;
+    if (q.startsWith('select * from completions')) return completions;
+    if (q.startsWith('select name from users')) return users.map(u => ({ name: u.name }));
+    return null;
+  };
+
   const render = () => {
     container.innerHTML = UI.shell({
       title: 'SQL example runner',
-      hint: 'Choose a query idea. The demo shows the SQL, what the database did, and a pretend result table.',
-      stage: renderStage(),
+      hint: 'Choose a preset query or type a simple SELECT in the playground (users, lessons, completions tables).',
+      stage: `${renderStage()}
+        <div class="sql-playground">
+          <label>Playground: <input type="text" class="demo-input wide" id="sqlPgIn" placeholder="SELECT * FROM users" aria-label="SQL playground query"
+            onkeydown="if(event.key==='Enter')sqlPlaygroundRun()"></label>
+          <button type="button" class="demo-btn success" onclick="sqlPlaygroundRun()">Run SELECT</button>
+          <div id="sqlPgOut" class="playground-output" aria-live="polite"></div>
+        </div>`,
       inspector: UI.inspector('SQL details', inspectorRows()),
       stats: [
         UI.statChip('Tables', 3),
@@ -292,6 +307,18 @@ const result = await db.query(
     if (!examples[key]) return;
     selected = key;
     render();
+  };
+
+  window.sqlPlaygroundRun = () => {
+    const q = document.getElementById('sqlPgIn')?.value || '';
+    const rows = runPlayground(q);
+    const out = document.getElementById('sqlPgOut');
+    if (!out) return;
+    if (!rows) {
+      out.textContent = 'Try: SELECT * FROM users | lessons | completions';
+      return;
+    }
+    out.textContent = JSON.stringify(rows, null, 2);
   };
 
   render();

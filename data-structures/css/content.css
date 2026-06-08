@@ -602,3 +602,41 @@
   }
   .pc-pros .pc-list li::before { content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: var(--green); }
   .pc-cons .pc-list li::before { content: '\f00d'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: var(--red); }
+
+  .keyword-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .keyword-chip {
+    background: var(--accent-dim);
+    border: 1px solid rgba(240, 180, 41, 0.25);
+    border-radius: 999px;
+    color: var(--fg2);
+    font-size: 12px;
+    padding: 4px 12px;
+  }
+  .related-lessons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .related-lesson-btn {
+    align-items: center;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--fg2);
+    cursor: pointer;
+    display: inline-flex;
+    font-family: inherit;
+    font-size: 13px;
+    gap: 8px;
+    padding: 10px 14px;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .related-lesson-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }

@@ -517,8 +517,8 @@ Content-Type: application/json
       { icon: 'fa-flask', title: 'Experiment safely', desc: 'Try an idea on a branch without breaking the main version.' },
       { icon: 'fa-triangle-exclamation', title: 'Recover from mistakes', desc: 'Use history to inspect or undo changes when something goes wrong.' },
     ],
-    demoType: 'web-foundations',
-    demoTitle: 'Branch and merge playground',
+    demoType: 'git-playground',
+    demoTitle: 'Git command playground',
     demoHint: 'Move from local edits to reviewed work.',
     demoSteps: [
       { label: 'Branch', detail: 'Create a branch so unfinished work stays separate.', result: 'You have a safe workspace.' },

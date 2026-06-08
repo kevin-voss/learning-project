@@ -36,11 +36,6 @@ DS.curriculum.push({
   head <span class="op">=</span> (head <span class="op">+</span> <span class="num">1</span>) <span class="op">%</span> buffer.length;
   <span class="kw">return</span> value;
 }`,
-  complexity: [
-    { op: 'Write one item', time: 'O(1)', badge: 'fast' },
-    { op: 'Read one item', time: 'O(1)', badge: 'fast' },
-    { op: 'Scan buffer contents', time: 'O(n)', badge: 'slow' },
-  ],
   pros: [
     'Avoids shifting items in memory',
     'Uses fixed memory, which is useful near hardware',
@@ -50,5 +45,36 @@ DS.curriculum.push({
     'Fixed size means it can overflow',
     'Head and tail wraparound can be confusing',
     'Needs careful handling when full or empty',
+  ],
+  conceptSections: [
+    {
+      icon: 'fa-inbox',
+      title: 'Full vs empty',
+      desc: 'Track count or sacrifice one slot to distinguish full from empty when head equals tail.',
+      example: 'Producer blocks or drops when full; consumer waits when empty.',
+    },
+    {
+      icon: 'fa-rotate',
+      title: 'Wrap-around',
+      desc: 'When tail reaches the end, the next write goes to index 0 — no shifting required.',
+      example: 'tail = (tail + 1) % capacity',
+    },
+    {
+      icon: 'fa-industry',
+      title: 'Producer / consumer',
+      desc: 'One side writes events; another reads at its own pace — classic decoupling pattern.',
+      example: 'Keyboard driver produces key events; your app consumes them.',
+    },
+  ],
+  demoType: 'buffers-ring-buffers',
+  demoTitle: 'Ring buffer visualizer',
+  demoHint: 'Enqueue and dequeue to see head/tail wrap in fixed memory.',
+  relatedIds: ['queues', 'os-kernel-queues'],
+  keywords: ['ring buffer', 'buffer', 'producer', 'consumer'],
+  checklist: [
+    'Explain why buffers exist between fast and slow parts.',
+    'Describe head, tail, and wrap-around with modulo.',
+    'State what happens when the buffer is full.',
+    'Name one real use: audio, network, or keyboard input.',
   ],
 });

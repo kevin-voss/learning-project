@@ -41,7 +41,7 @@ DS.demos.securityThreats = function (container, initialScenario) {
     return `
       <div class="security-compare">
         <label class="security-field">
-          <span>User comment (try plain text or a toy &lt;script&gt; tag)</span>
+          <span>User comment (try plain text or a toy &lt;script&gt. Tag)</span>
           <input class="demo-input wide" value="${esc(input)}" oninput="securityThreatsSetInput(this.value)" aria-label="User comment">
         </label>
         <div class="security-panels">
@@ -52,7 +52,7 @@ DS.demos.securityThreats = function (container, initialScenario) {
           </div>
           <div class="security-panel ${mode === 'safe' ? 'is-active safe' : ''}">
             <strong><i class="fas fa-shield"></i> Safe: escaped text</strong>
-            <p>Shows characters literally—script tags display as text.</p>
+            <p>Shows characters literally, script tags display as text.</p>
             <div class="security-preview safe-preview">${safeHtml}</div>
           </div>
         </div>
@@ -65,8 +65,8 @@ DS.demos.securityThreats = function (container, initialScenario) {
   const renderCsrf = () => {
     const hasToken = mode === 'safe';
     const outcome = hasToken
-      ? 'Blocked — CSRF token missing or invalid on forged request.'
-      : 'Accepted — server trusted the session cookie alone.';
+      ? 'Blocked: CSRF token missing or invalid on forged request.'
+      : 'Accepted: server trusted the session cookie alone.';
     return `
       <div class="security-compare">
         <div class="security-panels">
@@ -102,7 +102,7 @@ DS.demos.securityThreats = function (container, initialScenario) {
           <div class="security-panel ${mode === 'unsafe' ? 'is-active unsafe' : ''}">
             <strong><i class="fas fa-link"></i> Unsafe string query</strong>
             <code class="security-code">${esc(unsafeQuery)}</code>
-            ${injectionHint && mode === 'unsafe' ? '<p class="security-warn">Query shape changed — user input became SQL code.</p>' : ''}
+            ${injectionHint && mode === 'unsafe' ? '<p class="security-warn">Query shape changed: user input became SQL code.</p>' : ''}
           </div>
           <div class="security-panel ${mode === 'safe' ? 'is-active safe' : ''}">
             <strong><i class="fas fa-database"></i> Parameterized query</strong>
@@ -126,7 +126,7 @@ DS.demos.securityThreats = function (container, initialScenario) {
         </div>
         <div class="security-verdict ${blocked ? 'unsafe' : 'safe'}">
           ${blocked
-            ? `429 Too Many Requests — blocked after ${rateLimit} attempts.`
+            ? `429 Too Many Requests: blocked after ${rateLimit} attempts.`
             : `Attempt ${requestCount} of ${rateLimit} allowed.`}
         </div>
         <button class="demo-btn" onclick="securityThreatsSendRequest()"><i class="fas fa-paper-plane"></i> Send login attempt</button>
@@ -175,49 +175,49 @@ DS.demos.securityThreats = function (container, initialScenario) {
       case 'secrets': return renderSecrets();
       case 'command-injection':
         return renderGeneric(
-          'exec("convert " + userFilename) — attacker adds ; rm -rf /',
-          'Use library API with argument array; never invoke shell with user strings.',
+          'exec("convert " + userFilename): attacker adds . Rm -rf /',
+          'Use library API with argument array. Never invoke shell with user strings.',
           'Shell with user input',
           'Safe API call'
         );
       case 'ssrf':
         return renderGeneric(
-          'Server fetches any URL from user — attacker requests http://169.254.169.254/',
-          'Allowlist hosts; block private IP ranges; no raw user URLs.',
+          'Server fetches any URL from user: attacker requests http://169.254.169.254/',
+          'Allowlist hosts. Block private IP ranges. No raw user URLs.',
           'Open fetch proxy',
           'Validated outbound requests'
         );
       case 'path-traversal':
         return renderGeneric(
           'open("/uploads/" + userPath) with ../../../etc/passwd',
-          'Canonicalize path; reject ..; jail to upload root.',
+          'Canonicalize path. Reject ... Jail to upload root.',
           'Relative path concat',
           'Chrooted file access'
         );
       case 'idor':
         return renderGeneric(
-          'GET /invoice/99 — logged in as user 5, no ownership check',
+          'GET /invoice/99: logged in as user 5, no ownership check',
           'Server verifies invoice.userId === session.userId before respond.',
           'ID only in URL',
           'Authorization check'
         );
       case 'session-fixation':
         return renderGeneric(
-          'Attacker sets session=evil before victim logs in; same ID after login',
+          'Attacker sets session=evil before victim logs in. Same ID after login',
           'regenerateSessionId() after successful authentication.',
           'Fixed session ID',
           'Rotate on login'
         );
       case 'open-redirect':
         return renderGeneric(
-          '/login?next=https://evil.example/phish — trusted domain forwards user',
+          '/login?next=https://evil.example/phish: trusted domain forwards user',
           'Allow only relative paths like /dashboard or allowlisted hosts.',
           'Arbitrary next= URL',
           'Relative redirect only'
         );
       case 'headers':
         return renderGeneric(
-          'No CSP — one XSS mistake runs any script origin.',
+          'No CSP: one XSS mistake runs any script origin.',
           "Content-Security-Policy: default-src 'self'; frame-ancestors 'none'",
           'Missing headers',
           'Helmet / CSP defaults'
@@ -238,12 +238,12 @@ DS.demos.securityThreats = function (container, initialScenario) {
     return rows;
   };
 
-  const frameworkWarning = 'Real apps use trusted libraries and framework protections (React escaping, ORM parameters, CSRF middleware, Helmet headers, rate-limit packages). This demo is a visual model only—never test attacks on systems you do not own.';
+  const frameworkWarning = 'Real apps use trusted libraries and framework protections (React escaping, ORM parameters, CSRF middleware, Helmet headers, rate-limit packages). This demo is a visual model only, never test attacks on systems you do not own.';
 
   const render = () => {
     const showModeToggle = scenario !== 'rate-limit';
     container.innerHTML = UI.shell({
-      title: 'Security threats — safe vs risky patterns',
+      title: 'Security threats: safe vs risky patterns',
       hint: 'Pick a scenario, toggle unsafe vs safe, and see how defenses change outcomes. Toy examples only.',
       stage: `
         <div class="security-scenario-tabs">

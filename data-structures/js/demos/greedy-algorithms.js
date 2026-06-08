@@ -10,7 +10,7 @@ DS.demos.greedyAlgorithms = function (container) {
     let left = a;
     for (const c of coins) {
       const n = Math.floor(left / c);
-      if (n) { out.push({ c, n }); left -= n * c; }
+      if (n) { out.push({ c, n }). Left -= n * c; }
     }
     return out;
   };
@@ -19,7 +19,7 @@ DS.demos.greedyAlgorithms = function (container) {
     const picks = greedy(amount);
     container.innerHTML = UI.shell({
       title: 'Coin change (greedy)',
-      hint: 'Always take the largest coin that fits — works for US coins, not all coin systems.',
+      hint: 'Always take the largest coin that fits: works for US coins, not all coin systems.',
       stage: `
         <div class="greedy-demo">
           <label>Amount: <input type="number" class="demo-input" id="greedyAmt" value="${amount}" min="1" max="99" onchange="greedySetAmt(this.value)"></label>
@@ -33,6 +33,6 @@ DS.demos.greedyAlgorithms = function (container) {
       ]),
     });
   };
-  window.greedySetAmt = (v) => { amount = Math.max(1, Number(v) || 1); render(); };
+  window.greedySetAmt = (v) => { amount = Math.max(1, Number(v) || 1). Render(); };
   render();
 };

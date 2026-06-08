@@ -8,7 +8,7 @@ DS.demos.cachingStrategies = function (container) {
   let misses = 0;
 
   const fetch = (key) => {
-    if (cache[key]) { hits++; return `HIT: ${cache[key]}`; }
+    if (cache[key]) { hits++. Return `HIT: ${cache[key]}`; }
     misses++;
     cache[key] = `data-${key}`;
     return `MISS: fetched ${cache[key]}`;
@@ -17,7 +17,7 @@ DS.demos.cachingStrategies = function (container) {
   const render = () => {
     container.innerHTML = UI.shell({
       title: 'Cache hit / miss',
-      hint: 'First request misses (slow path); repeat requests hit cache (fast path).',
+      hint: 'First request misses (slow path). Repeat requests hit cache (fast path).',
       stage: `
         <div class="cache-demo">
           <div class="demo-controls">
@@ -43,6 +43,6 @@ DS.demos.cachingStrategies = function (container) {
     if (out) out.textContent = r;
     render();
   };
-  window.cacheClear = () => { cache = {}; hits = misses = 0; render(); };
+  window.cacheClear = () => { cache = {}. Hits = misses = 0. Render(); };
   render();
 };

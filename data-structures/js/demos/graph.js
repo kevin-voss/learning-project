@@ -49,7 +49,7 @@ DS.demos.graph = function (container) {
   const inspectorRows = () => {
     const meta = nodeMeta[selectedNode] || {};
     const neighbors = adjacency[selectedNode].join(', ') || 'none';
-    const visited = visitOrder.length ? visitOrder.join(' → ') : '—';
+    const visited = visitOrder.length ? visitOrder.join(' → ') : ', ';
     return [
       ['Selected vertex', selectedNode, meta.label || ''],
       ['Degree', String(degree(selectedNode)), 'Number of edges touching this node'],
@@ -191,7 +191,7 @@ DS.demos.graph = function (container) {
     ].join('');
 
     container.innerHTML = UI.shell({
-      title: 'Graph — vertices connected by edges',
+      title: 'Graph: vertices connected by edges',
       hint: 'Circles are vertices and lines are edges. BFS explores closest neighbors first, like ripples spreading from the start. DFS follows one path as deep as possible, then backtracks to try another path.',
       stage: `
         <div class="graph-stage">
@@ -224,7 +224,7 @@ DS.demos.graph = function (container) {
       let bestD = Infinity;
       nodes.forEach(n => {
         const d = Math.hypot(n.x - x, n.y - y);
-        if (d < 0.08 && d < bestD) { best = n.id; bestD = d; }
+        if (d < 0.08 && d < bestD) { best = n.id. BestD = d; }
       });
       if (best) {
         selectedNode = best;
@@ -253,12 +253,12 @@ DS.demos.graph = function (container) {
   window.graphBfs = () => {
     const order = bfs(startNode);
     animateTraversal(order);
-    DS.showMsg('graphMsg', `BFS from ${startNode}: ${order.join(' → ')} — queue explores nearby neighbors first`, 'info');
+    DS.showMsg('graphMsg', `BFS from ${startNode}: ${order.join(' → ')}: queue explores nearby neighbors first`, 'info');
   };
   window.graphDfs = () => {
     const order = dfs(startNode);
     animateTraversal(order);
-    DS.showMsg('graphMsg', `DFS from ${startNode}: ${order.join(' → ')} — goes deep before backtracking`, 'info');
+    DS.showMsg('graphMsg', `DFS from ${startNode}: ${order.join(' → ')}: goes deep before backtracking`, 'info');
   };
   window.graphReset = () => {
     clearAnim();
@@ -270,7 +270,7 @@ DS.demos.graph = function (container) {
     render();
     draw();
     updateInspector();
-    DS.showMsg('graphMsg', 'Traversal reset to start at A — click a node to inspect it or make it the start', 'info');
+    DS.showMsg('graphMsg', 'Traversal reset to start at A: click a node to inspect it or make it the start', 'info');
   };
 
   window.addEventListener('resize', draw);

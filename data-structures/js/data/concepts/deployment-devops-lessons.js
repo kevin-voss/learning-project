@@ -50,7 +50,7 @@ docker compose up`,
         id: 'services',
         label: 'Services',
         title: 'Services',
-        body: 'In Compose, a service is one logical piece of your app — usually one container image plus its settings. A compose file lists each service by name. Those names become hostnames on the default network.',
+        body: 'In Compose, a service is one logical piece of your app: usually one container image plus its settings. A compose file lists each service by name. Those names become hostnames on the default network.',
         realWorldExample: {
           title: 'Naming services for clarity',
           desc: 'A compose file defines services named web, api, and db. Developers and code can refer to http://api:3000 instead of guessing container IDs.',
@@ -159,7 +159,7 @@ volumes:
         body: 'Compose creates a default network so services on the same project can reach each other by service name. Custom networks isolate groups of containers or mimic production topology in advanced setups.',
         realWorldExample: {
           title: 'Internal-only database',
-          desc: 'Only api joins the backend network with db. The web container reaches the API through published ports, not direct database access — a safer default for beginners.',
+          desc: 'Only api joins the backend network with db. The web container reaches the API through published ports, not direct database access: a safer default for beginners.',
         },
         mermaidDiagram: `flowchart TB
   subgraph frontend_net [frontend network]
@@ -214,7 +214,7 @@ networks:
         id: 'logs-exec',
         label: 'Logs and Exec',
         title: 'Logs and Exec',
-        body: 'docker compose logs shows stdout/stderr from services — essential for debugging. docker compose exec opens a shell or command inside a running container, like connecting to psql inside db.',
+        body: 'docker compose logs shows stdout/stderr from services: essential for debugging. docker compose exec opens a shell or command inside a running container, like connecting to psql inside db.',
         realWorldExample: {
           title: 'Debugging a failed migration',
           desc: 'The API crashes on boot. docker compose logs api shows the stack trace. docker compose exec db psql -U postgres helps verify tables exist.',
@@ -420,7 +420,7 @@ process_cpu_usage 0.62`,
         body: 'Dashboards combine metrics (and sometimes logs) into charts humans can scan quickly: error rate, traffic, latency, saturation, and business KPIs. Good dashboards answer "Is the system healthy right now?"',
         realWorldExample: {
           title: 'Release night watch',
-          desc: 'During a deploy, the team watches dashboards for error rate, p95 latency, and active users. A green dashboard builds confidence; red charts trigger investigation.',
+          desc: 'During a deploy, the team watches dashboards for error rate, p95 latency, and active users. A green dashboard builds confidence. Red charts trigger investigation.',
         },
         mermaidDiagram: `flowchart TB
   Metrics[Metrics store] --> Panel1[Error rate chart]
@@ -479,7 +479,7 @@ Action: if budget < 10%, freeze deploys and fix reliability`,
         id: 'incident-response',
         label: 'Incident Response',
         title: 'Incident Response',
-        body: 'Incident response is the structured way teams handle outages: detect, triage, mitigate, communicate, fix root cause, and learn. The first goal is restore service; deep fixes can follow.',
+        body: 'Incident response is the structured way teams handle outages: detect, triage, mitigate, communicate, fix root cause, and learn. The first goal is restore service. Deep fixes can follow.',
         realWorldExample: {
           title: 'API outage playbook',
           desc: 'Alerts fire. An incident commander coordinates. One engineer rolls back the deploy while another checks database connectivity and posts status updates.',
@@ -564,7 +564,7 @@ Weekly review: which alerts fired but needed no action?`,
         id: 'vm-container-serverless',
         label: 'VM vs Container vs Serverless',
         title: 'VM vs Container vs Serverless',
-        body: 'VMs give full machines you manage. Containers package apps with dependencies and often run on orchestrators or managed platforms. Serverless runs functions or apps per request with the provider managing servers — strong scale-to-zero, with cold starts and runtime limits.',
+        body: 'VMs give full machines you manage. Containers package apps with dependencies and often run on orchestrators or managed platforms. Serverless runs functions or apps per request with the provider managing servers: strong scale-to-zero, with cold starts and runtime limits.',
         realWorldExample: {
           title: 'Choosing compute for a startup API',
           desc: 'They start with a container on a managed platform for predictable always-on traffic. Batch image processing moves to serverless functions to save money when idle.',
@@ -583,7 +583,7 @@ Serverless: pay per use, watch cold starts and timeouts`,
         id: 'regions-az',
         label: 'Regions and Availability Zones',
         title: 'Regions and Availability Zones',
-        body: 'A region is a geographic area (us-east-1, eu-west-1). Availability zones (AZs) are isolated data centers within a region. Multi-AZ designs survive single-building failures; multi-region designs survive larger outages but cost more.',
+        body: 'A region is a geographic area (us-east-1, eu-west-1). Availability zones (AZs) are isolated data centers within a region. Multi-AZ designs survive single-building failures. Multi-region designs survive larger outages but cost more.',
         realWorldExample: {
           title: 'Database in two AZs',
           desc: 'Production Postgres runs primary in AZ-a with a standby in AZ-b. If AZ-a fails, DNS or the managed service fails over to the standby.',
@@ -706,7 +706,7 @@ Optional read replicas`,
         id: 'env-secrets',
         label: 'Environment Variables and Secrets',
         title: 'Environment Variables and Secrets',
-        body: 'Environment variables configure apps per environment. Secrets are sensitive env vars — API keys, database passwords, signing keys — stored in a secrets manager, not committed to Git.',
+        body: 'Environment variables configure apps per environment. Secrets are sensitive env vars: API keys, database passwords, signing keys: stored in a secrets manager, not committed to Git.',
         realWorldExample: {
           title: 'Stripe keys in production',
           desc: 'Production containers read STRIPE_SECRET_KEY from the cloud secrets manager. Developers use test keys locally via .env files that never get pushed.',

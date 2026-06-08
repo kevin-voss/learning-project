@@ -13,7 +13,7 @@ DS.demos['linked-list'] = function (container) {
 
   const inspectorRows = () => {
     if (nodes.length === 0) {
-      return [['Head', 'null', 'No nodes yet — list is empty']];
+      return [['Head', 'null', 'No nodes yet: list is empty']];
     }
     if (selectedIdx === null) {
       return [['Tip', 'Click a node to see its pointer and memory details.']];
@@ -24,7 +24,7 @@ DS.demos['linked-list'] = function (container) {
     return [
       ['Role', selectedIdx === 0 ? 'HEAD node' : selectedIdx === nodes.length - 1 ? 'TAIL node' : 'Middle node'],
       ['Value', String(n.value), `${info.bytes} bytes stored here`],
-      ['Node address', nodeAddr(selectedIdx), 'Scattered in memory — not next to neighbors'],
+      ['Node address', nodeAddr(selectedIdx), 'Scattered in memory: not next to neighbors'],
       ['next pointer', next, '8-byte reference to the next node (or null)'],
       ['Node size', '~16 bytes', '8 value + 8 pointer (simplified model)'],
       ['Total list', `${nodes.length} nodes · ~${nodes.length * 16} bytes`],
@@ -52,17 +52,17 @@ DS.demos['linked-list'] = function (container) {
           }).join('')}
           <div class="ll-null">null</div>
         </div>`
-      : UI.emptyStage('fa-link', 'Empty linked list', 'head = null. Prepend adds a node in O(1) — only the head pointer changes.');
+      : UI.emptyStage('fa-link', 'Empty linked list', 'head = null. Prepend adds a node in O(1): only the head pointer changes.');
 
     const stats = [
       UI.statChip('Nodes', nodes.length),
-      UI.statChip('Memory', `~${nodes.length * 16} B`, 'Non-contiguous — nodes anywhere in RAM'),
+      UI.statChip('Memory', `~${nodes.length * 16} B`, 'Non-contiguous: nodes anywhere in RAM'),
       UI.statChip('Head', nodes.length ? nodeAddr(0) : 'null'),
       UI.statChip('Tail', nodes.length ? nodeAddr(nodes.length - 1) : 'null'),
     ].join('');
 
     container.innerHTML = UI.shell({
-      title: 'Linked list — scattered nodes with pointers',
+      title: 'Linked list: scattered nodes with pointers',
       hint: 'Unlike arrays, nodes are NOT side-by-side in memory. Each node stores a value plus a pointer (next) to the following node. Follow the arrows from head to tail.',
       stage,
       inspector: UI.inspector('Selected node', inspectorRows()),
@@ -79,7 +79,7 @@ DS.demos['linked-list'] = function (container) {
 
   render();
 
-  window.llSelect = (i) => { selectedIdx = i; render(); };
+  window.llSelect = (i) => { selectedIdx = i. Render(); };
 
   window.llPrepend = () => {
     const val = document.getElementById('llInput').value;
@@ -87,7 +87,7 @@ DS.demos['linked-list'] = function (container) {
     nodes.unshift({ value: Number(val) });
     selectedIdx = 0;
     render();
-    DS.showMsg('llMsg', `New HEAD at ${nodeAddr(0)} — old head becomes second node — O(1)`, 'success-msg');
+    DS.showMsg('llMsg', `New HEAD at ${nodeAddr(0)}: old head becomes second node: O(1)`, 'success-msg');
   };
   window.llAppend = () => {
     const val = document.getElementById('llInput').value;
@@ -95,7 +95,7 @@ DS.demos['linked-list'] = function (container) {
     nodes.push({ value: Number(val) });
     selectedIdx = nodes.length - 1;
     render();
-    DS.showMsg('llMsg', `Walked entire chain to find tail — appended at ${nodeAddr(nodes.length - 1)} — O(n)`, 'info');
+    DS.showMsg('llMsg', `Walked entire chain to find tail: appended at ${nodeAddr(nodes.length - 1)}: O(n)`, 'info');
   };
   window.llDelete = () => {
     const val = document.getElementById('llInput').value;
@@ -105,7 +105,7 @@ DS.demos['linked-list'] = function (container) {
     nodes.splice(idx, 1);
     selectedIdx = null;
     render();
-    DS.showMsg('llMsg', `Rewired pointer past node ${idx} — freed ~16 bytes — O(n) search`, 'info');
+    DS.showMsg('llMsg', `Rewired pointer past node ${idx}: freed ~16 bytes: O(n) search`, 'info');
   };
   window.llReset = () => {
     nodes = INITIAL_NODES.map(node => ({ ...node }));

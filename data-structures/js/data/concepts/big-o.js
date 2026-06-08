@@ -20,7 +20,7 @@ DS.curriculum.push({
       icon: 'fa-chart-line',
       title: 'Growth, not milliseconds',
       desc: 'Big-O describes how steps scale as n grows. It is not a stopwatch measurement on your laptop.',
-      example: 'O(n) might be 1 ms or 1 s depending on hardware — but doubling n roughly doubles work.',
+      example: 'O(n) might be 1 ms or 1 s depending on hardware: but doubling n roughly doubles work.',
     },
     {
       icon: 'fa-layer-group',
@@ -31,7 +31,7 @@ DS.curriculum.push({
     {
       icon: 'fa-hard-drive',
       title: 'Space complexity',
-      desc: 'Memory use also grows. Merge sort needs O(n) extra space; heap sort can be O(1) extra if in-place.',
+      desc: 'Memory use also grows. Merge sort needs O(n) extra space. Heap sort can be O(1) extra if in-place.',
       example: 'Recursion uses O(depth) stack space for call frames.',
     },
     {

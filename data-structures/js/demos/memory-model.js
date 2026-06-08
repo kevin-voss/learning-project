@@ -29,7 +29,7 @@ DS.demos.memoryModel = function (container) {
               <span class="mem-addr">${UI.memAddr(0x1000, i)}</span>
             </div>`).join('')}
         </div>
-        <p class="mem-note">Contiguous — cache-friendly when looping</p>
+        <p class="mem-note">Contiguous: cache-friendly when looping</p>
       </div>`;
     const linkedHtml = `
       <div class="mem-layout mem-linked-view">
@@ -38,7 +38,7 @@ DS.demos.memoryModel = function (container) {
         <div class="ll-node"><span>20</span><small>0x3090</small></div>
         <span class="ll-arrow">→</span>
         <div class="ll-node"><span>30</span><small>0x1120</small></div>
-        <p class="mem-note">Scattered nodes — flexible insert, less cache-friendly</p>
+        <p class="mem-note">Scattered nodes: flexible insert, less cache-friendly</p>
       </div>`;
 
     container.innerHTML = UI.shell({
@@ -57,11 +57,11 @@ DS.demos.memoryModel = function (container) {
         ['View', view, 'Current memory visualization'],
         ['Stack', 'LIFO frames', 'Local variables and return addresses'],
         ['Heap', 'Shared objects', 'Data that outlives one function call'],
-        ['Cache', view === 'array' ? 'Friendly' : view === 'linked' ? 'Less friendly' : '—', 'CPU prefetch behavior'],
+        ['Cache', view === 'array' ? 'Friendly' : view === 'linked' ? 'Less friendly' : ', ', 'CPU prefetch behavior'],
       ]),
     });
   };
 
-  window.memSetView = (v) => { view = v; render(); };
+  window.memSetView = (v) => { view = v. Render(); };
   render();
 };

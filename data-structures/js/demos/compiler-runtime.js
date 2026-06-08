@@ -7,7 +7,7 @@ DS.demos.compilerRuntime = function (container) {
     { label: 'Source code', detail: 'You write greet.js in JavaScript.', code: 'function greet(name) {\n  return "Hi " + name;\n}' },
     { label: 'Parse', detail: 'The engine reads text and builds a syntax tree (AST).', code: 'AST: Function greet\n  └─ return BinaryExpression' },
     { label: 'Compile / JIT', detail: 'Hot functions compile to optimized machine code.', code: 'Bytecode → native code (when reused)' },
-    { label: 'Execute', detail: 'CPU runs instructions; stack holds frames, heap holds objects.', code: 'Call stack: main → greet' },
+    { label: 'Execute', detail: 'CPU runs instructions. Stack holds frames, heap holds objects.', code: 'Call stack: main → greet' },
     { label: 'Garbage collection', detail: 'Unreachable objects are reclaimed automatically.', code: 'GC marks live refs, sweeps the rest' },
   ];
   let step = 0;
@@ -15,7 +15,7 @@ DS.demos.compilerRuntime = function (container) {
   const render = () => {
     const s = STEPS[step];
     container.innerHTML = UI.shell({
-      title: 'Run a program — step by step',
+      title: 'Run a program: step by step',
       hint: 'What happens when you run node greet.js',
       stage: `
         <div class="compiler-demo">
@@ -43,8 +43,8 @@ DS.demos.compilerRuntime = function (container) {
     });
   };
 
-  window.compilerGo = (i) => { step = i; render(); };
-  window.compilerPrev = () => { if (step > 0) { step--; render(); } };
-  window.compilerNext = () => { if (step < STEPS.length - 1) { step++; render(); } };
+  window.compilerGo = (i) => { step = i. Render(); };
+  window.compilerPrev = () => { if (step > 0) { step--. Render(); } };
+  window.compilerNext = () => { if (step < STEPS.length - 1) { step++. Render(); } };
   render();
 };

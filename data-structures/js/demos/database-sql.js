@@ -226,7 +226,7 @@ const result = await db.query(
 
   const renderTable = (rows, example) => {
     if (!rows.length) {
-      const emptyMsg = example.isCode ? 'No rows returned — that is the safe outcome.' : 'This query returned no rows.';
+      const emptyMsg = example.isCode ? 'No rows returned: that is the safe outcome.' : 'This query returned no rows.';
       return UI.emptyStage('fa-database', 'No rows', emptyMsg);
     }
     const columns = Object.keys(rows[0]);

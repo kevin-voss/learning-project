@@ -9,7 +9,7 @@ DS.demos.graphAlgorithms = function (container) {
   let step = 0;
   const dijkstraSteps = [
     'Start at A with distance 0',
-    'Visit B (dist 1) — shortest from A',
+    'Visit B (dist 1): shortest from A',
     'Visit D (dist 4) or C via B (dist 3)',
     'Shortest A→C: A→B→C cost 3',
   ];
@@ -34,7 +34,7 @@ DS.demos.graphAlgorithms = function (container) {
       ]),
     });
   };
-  window.graphAlgoPrev = () => { if (step > 0) { step--; render(); } };
-  window.graphAlgoNext = () => { if (step < dijkstraSteps.length - 1) { step++; render(); } };
+  window.graphAlgoPrev = () => { if (step > 0) { step--. Render(); } };
+  window.graphAlgoNext = () => { if (step < dijkstraSteps.length - 1) { step++. Render(); } };
   render();
 };

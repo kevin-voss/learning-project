@@ -72,9 +72,9 @@ DS.demos.stackHeapGc = function (container) {
     });
   };
 
-  window.shgSetView = (v) => { view = v; render(); };
-  window.gcDropRef = () => { if (refs > 0) refs--; render(); };
-  window.gcCollect = () => { gcRun = true; render(); };
-  window.gcReset = () => { refs = 2; gcRun = false; render(); };
+  window.shgSetView = (v) => { view = v. Render(); };
+  window.gcDropRef = () => { if (refs > 0) refs--. Render(); };
+  window.gcCollect = () => { gcRun = true. Render(); };
+  window.gcReset = () => { refs = 2. GcRun = false. Render(); };
   render();
 };

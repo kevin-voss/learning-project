@@ -7,14 +7,14 @@ DS.curriculum.push(
     title: 'Arrays',
     icon: 'fa-layer-group',
     number: '01',
-    subtitle: 'The foundation of all data structures — contiguous blocks of memory accessed by index.',
+    subtitle: 'The foundation of all data structures. Contiguous blocks of memory accessed by index.',
     analogy: 'Imagine a row of numbered lockers in a school hallway. Each locker has a number (index) and can hold one item. You can instantly open locker #5 without checking lockers 1-4 first. That random-access speed is what makes arrays special. But if you need to add a locker in the middle, every later locker must move one position to the right. Programmers call that shifting, and it is slower because many items have to move.',
     realWorldExample: {
       title: 'Shopping cart item list',
       desc: 'An online store can keep the items in your cart in an array: item 0 is the first product, item 1 is the second, and so on. Showing the cart is easy because the app loops from the first item to the last. If the app already knows "change the quantity of item 2", it can jump straight to index 2.',
     },
-    whatIsIt: 'An array is a collection of elements stored at contiguous memory locations. The idea is to store multiple items of the same type together using a single name. Elements are accessed by their index — a zero-based position number. In JavaScript, arrays are dynamic (they can grow/shrink), but conceptually, a traditional array has a fixed size determined at creation time.',
-    whyUse: 'Arrays are the default go-to data structure because they provide O(1) constant-time access to any element by index. If you know the position, you get the element instantly — no searching, no traversal. This makes arrays ideal for scenarios where you read data more than you modify it. CPUs also love arrays because contiguous memory means cache-friendly access patterns — the CPU can prefetch adjacent elements, making iteration blazing fast.',
+    whatIsIt: 'An array is a collection of elements stored at contiguous memory locations. The idea is to store multiple items of the same type together using a single name. Elements are accessed by their index: a zero-based position number. In JavaScript, arrays are dynamic (they can grow/shrink), but conceptually, a traditional array has a fixed size determined at creation time.',
+    whyUse: 'Arrays are the default go-to data structure because they provide O(1) constant-time access to any element by index. If you know the position, you get the element instantly: no searching, no traversal. This makes arrays ideal for scenarios where you read data more than you modify it. CPUs also love arrays because contiguous memory means cache-friendly access patterns: the CPU can prefetch adjacent elements, making iteration blazing fast.',
     whenToUse: [
       { icon: 'fa-list-ol', title: 'Ordered collections', desc: 'When elements have a natural sequence and you need to preserve order.' },
       { icon: 'fa-bolt', title: 'Fast random access', desc: 'When you frequently need to read/write at specific positions by index.' },
@@ -33,27 +33,27 @@ console.<span class="fn">log</span>(fruits[<span class="num">2</span>]);  <span 
 fruits[<span class="num">1</span>] <span class="op">=</span> <span class="str">'blueberry'</span>;
 <span class="cm">// ['apple', 'blueberry', 'cherry']</span>
 
-<span class="cm">// === Adding to End — push (O(1) amortized) ===</span>
+<span class="cm">// === Adding to End: push (O(1) amortized) ===</span>
 fruits.<span class="fn">push</span>(<span class="str">'date'</span>);
 <span class="cm">// ['apple', 'blueberry', 'cherry', 'date']</span>
 
-<span class="cm">// === Removing from End — pop (O(1)) ===</span>
+<span class="cm">// === Removing from End: pop (O(1)) ===</span>
 <span class="kw">const</span> last <span class="op">=</span> fruits.<span class="fn">pop</span>();
 <span class="cm">// last = 'date', fruits = ['apple', 'blueberry', 'cherry']</span>
 
-<span class="cm">// === Adding to Start — unshift (O(n)) — SLOW! ===</span>
+<span class="cm">// === Adding to Start: unshift (O(n)): SLOW! ===</span>
 fruits.<span class="fn">unshift</span>(<span class="str">'avocado'</span>);
 <span class="cm">// All elements shift right by one position</span>
 
-<span class="cm">// === Removing from Start — shift (O(n)) — SLOW! ===</span>
+<span class="cm">// === Removing from Start: shift (O(n)): SLOW! ===</span>
 <span class="kw">const</span> first <span class="op">=</span> fruits.<span class="fn">shift</span>();
 <span class="cm">// All elements shift left by one position</span>
 
-<span class="cm">// === Insert at Index — splice (O(n)) ===</span>
+<span class="cm">// === Insert at Index: splice (O(n)) ===</span>
 fruits.<span class="fn">splice</span>(<span class="num">1</span>, <span class="num">0</span>, <span class="str">'apricot'</span>);
 <span class="cm">// Insert 'apricot' at index 1, delete 0 items</span>
 
-<span class="cm">// === Searching — indexOf (O(n)) ===</span>
+<span class="cm">// === Searching: indexOf (O(n)) ===</span>
 <span class="kw">const</span> idx <span class="op">=</span> fruits.<span class="fn">indexOf</span>(<span class="str">'cherry'</span>);
 
 <span class="cm">// === Iteration ===</span>
@@ -78,17 +78,17 @@ fruits.<span class="fn">slice</span>(<span class="num">1</span>, <span class="nu
       { op: 'Insert/Remove at index', time: 'O(n)', badge: 'slow' },
     ],
     pros: [
-      'Random access in O(1) — instant reads by index',
-      'Cache-friendly — contiguous memory means fast iteration',
-      'Simple and intuitive — every language has them built-in',
-      'Minimal memory overhead — no pointers, just data',
+      'Random access in O(1): instant reads by index',
+      'Cache-friendly: contiguous memory means fast iteration',
+      'Simple and intuitive: every language has them built-in',
+      'Minimal memory overhead: no pointers, just data',
       'Great for sorted data and binary search',
     ],
     cons: [
-      'Fixed size in low-level languages — must allocate ahead of time',
-      'Inserting/deleting in the middle is O(n) — elements must shift',
-      'Adding at the start is O(n) — everything shifts right',
-      'Memory must be contiguous — large arrays may fail to allocate',
+      'Fixed size in low-level languages: must allocate ahead of time',
+      'Inserting/deleting in the middle is O(n): elements must shift',
+      'Adding at the start is O(n): everything shifts right',
+      'Memory must be contiguous: large arrays may fail to allocate',
       'Wastes space if over-allocated, crashes if under-allocated (in static arrays)',
     ],
     demoType: 'array',

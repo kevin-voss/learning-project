@@ -163,7 +163,7 @@ less notes/today.txt         # page through a larger file, press q to quit
 cp notes/today.txt notes/backup.txt
 mv notes/backup.txt notes/yesterday.txt
 rm -i notes/yesterday.txt    # safer delete: ask before removing
-rm -r old-folder             # recursive delete; double-check path first`,
+rm -r old-folder             # recursive delete. Double-check path first`,
       checklist: ['Create and inspect a folder safely.', 'Explain why rm -r deserves caution.', 'Use less for larger files instead of dumping everything at once.'],
     },
     {
@@ -235,7 +235,7 @@ chmod +x deploy.sh    # add executable permission
 chown maya app.log    # change owner, usually needs sudo
 groups                # show groups for current user
 sudo -v               # refresh sudo authentication without running another command
-sudo !!               # rerun previous command with sudo; inspect it first`,
+sudo !!               # rerun previous command with sudo. Inspect it first`,
       checklist: ['Read rwxr-xr-x as user/group/other permissions.', 'Explain why sudo should be used sparingly.', 'Know that chmod 777 is usually a bad fix.'],
     },
     {
@@ -256,7 +256,7 @@ sudo !!               # rerun previous command with sudo; inspect it first`,
 ps aux | grep node             # search for node processes
 top                            # live process viewer, press q to quit
 kill 12345                     # ask process to terminate
-kill -9 12345                  # force kill; use only when normal kill fails
+kill -9 12345                  # force kill. Use only when normal kill fails
 jobs                           # jobs started from current shell
 fg                             # bring background job to foreground
 systemctl status nginx         # service status on systemd Linux`,
@@ -328,7 +328,7 @@ ls                           # inspect current folder
 ls *.log                     # preview matches before deleting
 rm -i old.log                # ask before delete
 mv important.txt backup.txt  # rename instead of deleting when unsure
-chmod -R u+rw project        # recursive permission change; verify target first
+chmod -R u+rw project        # recursive permission change. Verify target first
 curl -fsSL https://example.com/install.sh -o install.sh
 less install.sh              # inspect downloaded script before running it`,
       checklist: ['Pause before sudo, rm -rf, chmod -R, and curl | sh.', 'Preview wildcard matches before changing files.', 'Inspect downloaded scripts before running them.'],

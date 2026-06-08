@@ -19,7 +19,7 @@ DS.curriculum.push({
     {
       icon: 'fa-table-cells',
       title: 'Array indexing',
-      desc: 'For a 1-based heap array: parent of i is floor(i/2); left child is 2i; right child is 2i+1.',
+      desc: 'For a 1-based heap array: parent of i is floor(i/2), left child is 2i, and right child is 2i+1.',
       example: 'Index 3 has parent at 1 and children at 6 and 7.',
     },
     {

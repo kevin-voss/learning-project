@@ -19,10 +19,10 @@ DS.demoUI = {
     const isInt = Number.isInteger(num) && Math.abs(num) <= Number.MAX_SAFE_INTEGER;
     const binary = isInt && num >= 0
       ? num.toString(2).padStart(8, '0').slice(-32)
-      : '—';
+      : ', ';
     const hex = isInt && num >= 0
       ? '0x' + num.toString(16).toUpperCase()
-      : '—';
+      : ', ';
     return {
       type: 'Number (IEEE 754 float64)',
       bytes: 8,

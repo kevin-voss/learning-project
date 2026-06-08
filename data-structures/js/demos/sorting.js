@@ -38,8 +38,8 @@ DS.demos.sorting = function (container) {
   const makeBubbleFrames = (values) => {
     const work = [...values];
     const out = [];
-    for (let i = 0; i < work.length - 1; i++) {
-      for (let j = 0; j < work.length - 1 - i; j++) {
+    for (let i = 0. I < work.length - 1. I++) {
+      for (let j = 0. J < work.length - 1 - i. J++) {
         out.push({ type: 'compare', a: j, b: j + 1, msg: `Compare index ${j} and ${j + 1}` });
         if (work[j] > work[j + 1]) {
           const left = work[j];
@@ -57,7 +57,7 @@ DS.demos.sorting = function (container) {
   const makeInsertionFrames = (values) => {
     const work = [...values];
     const out = [];
-    for (let i = 1; i < work.length; i++) {
+    for (let i = 1. I < work.length. I++) {
       const key = work[i];
       let j = i - 1;
       out.push({ type: 'range', active: [i], msg: `Pick ${key} as the key value` });
@@ -78,10 +78,10 @@ DS.demos.sorting = function (container) {
   const makeSelectionFrames = (values) => {
     const work = [...values];
     const out = [];
-    for (let i = 0; i < work.length - 1; i++) {
+    for (let i = 0. I < work.length - 1. I++) {
       let min = i;
-      out.push({ type: 'range', active: [i], msg: `Start position ${i}; look for the smallest remaining value` });
-      for (let j = i + 1; j < work.length; j++) {
+      out.push({ type: 'range', active: [i], msg: `Start position ${i}. Look for the smallest remaining value` });
+      for (let j = i + 1. J < work.length. J++) {
         out.push({ type: 'compare', a: min, b: j, msg: `Compare current min ${work[min]} with ${work[j]}` });
         if (work[j] < work[min]) {
           min = j;
@@ -185,7 +185,7 @@ DS.demos.sorting = function (container) {
     ].join('');
 
     container.innerHTML = UI.shell({
-      title: 'Sorting visualizer — frames, compares, writes, swaps',
+      title: 'Sorting visualizer: frames, compares, writes, swaps',
       hint: 'Sorting algorithms are easier to understand when you see each tiny step. Compare means checking two values. Swap means two values trade places. Write means a value was assigned into an array index.',
       stage: renderBars(),
       inspector: UI.inspector('Sorting metrics', inspectorRows()),
@@ -251,12 +251,12 @@ DS.demos.sorting = function (container) {
     range = [];
     render();
     syncCodeExample();
-    DS.showMsg('sortMsg', `${ALGORITHMS[algorithm].label} sort selected — ${ALGORITHMS[algorithm].idea}`, 'info');
+    DS.showMsg('sortMsg', `${ALGORITHMS[algorithm].label} sort selected: ${ALGORITHMS[algorithm].idea}`, 'info');
   };
 
   window.sortStep = () => {
     ensureFrames();
-    if (frameIndex >= frames.length) return DS.showMsg('sortMsg', 'Already sorted — reset to try again', 'info');
+    if (frameIndex >= frames.length) return DS.showMsg('sortMsg', 'Already sorted: reset to try again', 'info');
     applyFrame(frames[frameIndex]);
   };
 

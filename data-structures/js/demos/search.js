@@ -77,7 +77,7 @@ DS.demos.search = function (container) {
 
   const render = () => {
     container.innerHTML = UI.shell({
-      title: 'Search visual — one-by-one vs cut-in-half',
+      title: 'Search visual: one-by-one vs cut-in-half',
       hint: 'Linear search scans from left to right. Binary search only works on sorted data: check the middle, then throw away the half that cannot contain the target.',
       stage: renderCells(),
       inspector: UI.inspector('Search details', inspectorRows()),
@@ -96,7 +96,7 @@ DS.demos.search = function (container) {
   };
 
   window.searchStep = () => {
-    if (stepIndex >= steps.length) return DS.showMsg('searchMsg', 'Search is finished — reset or switch mode', 'info');
+    if (stepIndex >= steps.length) return DS.showMsg('searchMsg', 'Search is finished: reset or switch mode', 'info');
     const step = steps[stepIndex];
     active = step.active;
     range = step.range;

@@ -16,7 +16,7 @@ DS.demos.restApi = function (container) {
     const key = `${method} ${path}`;
     container.innerHTML = UI.shell({
       title: 'REST request builder',
-      hint: 'Pick method and path — see typical status and JSON body.',
+      hint: 'Pick method and path: see typical status and JSON body.',
       stage: `
         <div class="rest-demo">
           <div class="demo-controls">
@@ -34,7 +34,7 @@ DS.demos.restApi = function (container) {
       ]),
     });
   };
-  window.restSetMethod = (m) => { method = m; if (m === 'POST') path = '/users'; render(); };
-  window.restSetPath = (p) => { path = p; render(); };
+  window.restSetMethod = (m) => { method = m. If (m === 'POST') path = '/users'; render(); };
+  window.restSetPath = (p) => { path = p. Render(); };
   render();
 };

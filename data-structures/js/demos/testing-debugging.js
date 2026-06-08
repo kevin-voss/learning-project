@@ -26,11 +26,11 @@ DS.demos.testingDebugging = function (container) {
         </div>`,
       inspector: UI.inspector('Testing', [
         ['Total', String(tests.length), 'Test cases'],
-        ['Passed', ran ? String(tests.filter(t => t.pass).length) : '—', 'Green checks'],
-        ['Failed', ran ? String(tests.filter(t => !t.pass).length) : '—', 'Needs fix'],
+        ['Passed', ran ? String(tests.filter(t => t.pass).length) : ', ', 'Green checks'],
+        ['Failed', ran ? String(tests.filter(t => !t.pass).length) : ', ', 'Needs fix'],
       ]),
     });
   };
-  window.testRun = () => { ran = true; render(); };
+  window.testRun = () => { ran = true. Render(); };
   render();
 };

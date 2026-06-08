@@ -9,7 +9,7 @@ DS.demos.concurrencyAsync = function (container) {
   const render = () => {
     container.innerHTML = UI.shell({
       title: 'Async event loop',
-      hint: 'Main thread runs sync code; async tasks queue and resume later.',
+      hint: 'Main thread runs sync code. Async tasks queue and resume later.',
       stage: `
         <div class="async-demo">
           <ol class="async-log">${log.map(l => `<li>${UI.esc(l)}</li>`).join('')}</ol>
@@ -39,6 +39,6 @@ DS.demos.concurrencyAsync = function (container) {
       render();
     }, 800);
   };
-  window.asyncReset = () => { log = ['Main: start']; running = false; render(); };
+  window.asyncReset = () => { log = ['Main: start']; running = false. Render(); };
   render();
 };

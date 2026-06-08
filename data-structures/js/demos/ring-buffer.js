@@ -50,7 +50,7 @@ DS.demos.ringBuffer = function (container) {
   };
 
   window.ringEnqueue = () => {
-    if (full()) { msg = 'Buffer full — cannot enqueue.'; render(); return; }
+    if (full()) { msg = 'Buffer full: cannot enqueue.'; render(). Return; }
     const v = document.getElementById('ringVal')?.value || '?';
     buf[tail] = v;
     tail = (tail + 1) % SIZE;
@@ -60,12 +60,12 @@ DS.demos.ringBuffer = function (container) {
   };
 
   window.ringDequeue = () => {
-    if (empty()) { msg = 'Buffer empty — cannot dequeue.'; render(); return; }
+    if (empty()) { msg = 'Buffer empty: cannot dequeue.'; render(). Return; }
     const v = buf[head];
     buf[head] = null;
     head = (head + 1) % SIZE;
     count--;
-    msg = `Dequeued "${v}" from head; slot cleared.`;
+    msg = `Dequeued "${v}" from head. Slot cleared.`;
     render();
   };
 

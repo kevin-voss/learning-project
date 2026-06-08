@@ -11,7 +11,7 @@ DS.demos.osKernelQueues = function (container) {
   const render = () => {
     container.innerHTML = UI.shell({
       title: 'OS ready queue',
-      hint: 'The kernel keeps runnable processes in a queue; the scheduler picks who gets CPU time next.',
+      hint: 'The kernel keeps runnable processes in a queue. The scheduler picks who gets CPU time next.',
       stage: `
         <div class="os-queue-demo">
           <div class="os-cpu">

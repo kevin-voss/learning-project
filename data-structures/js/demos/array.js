@@ -17,13 +17,13 @@ DS.demos.array = function (container) {
     const v = arr[selectedIdx];
     const info = UI.numberInfo(v);
     return [
-      ['Index', `[${selectedIdx}]`, 'Zero-based position — O(1) access'],
+      ['Index', `[${selectedIdx}]`, 'Zero-based position: O(1) access'],
       ['Value', String(v)],
       ['Memory address', UI.memAddr(BASE, selectedIdx, ELEM_BYTES), 'Contiguous: each slot is 8 bytes apart'],
       ['Storage', `${info.bytes} bytes · ${info.bits} bits`, info.type],
       ['Binary', info.binary, 'Bit pattern (integers only)'],
       ['Hex', info.hex],
-      ['Access cost', 'O(1)', 'CPU jumps directly — no scanning'],
+      ['Access cost', 'O(1)', 'CPU jumps directly: no scanning'],
     ];
   };
 
@@ -49,18 +49,18 @@ DS.demos.array = function (container) {
               </button>`;
           }).join('<span class="mem-connector">→</span>')}
         </div>`
-      : UI.emptyStage('fa-layer-group', 'Empty array', 'Push a number — it will land at index 0 in contiguous memory.');
+      : UI.emptyStage('fa-layer-group', 'Empty array', 'Push a number: it will land at index 0 in contiguous memory.');
 
     const stats = [
       UI.statChip('Length', arr.length, 'Number of elements'),
       UI.statChip('Memory used', `~${totalBytes} bytes`, `${arr.length} × ${ELEM_BYTES} bytes per Number`),
       UI.statChip('Layout', 'Contiguous', 'All elements sit next to each other in RAM'),
-      UI.statChip('.length', arr.length, 'Array property — O(1) to read'),
+      UI.statChip('.length', arr.length, 'Array property: O(1) to read'),
     ].join('');
 
     container.innerHTML = UI.shell({
-      title: 'Array — contiguous memory lockers',
-      hint: 'Each box is one slot in RAM. Numbers in JavaScript use 8 bytes (64 bits). Click a cell to inspect it. Try Push/Pop at the end (fast) vs Shift/Unshift at the start (slow — everything moves).',
+      title: 'Array: contiguous memory lockers',
+      hint: 'Each box is one slot in RAM. Numbers in JavaScript use 8 bytes (64 bits). Click a cell to inspect it. Try Push/Pop at the end (fast) vs Shift/Unshift at the start (slow: everything moves).',
       stage,
       inspector: UI.inspector('Selected cell', inspectorRows()),
       stats,
@@ -77,7 +77,7 @@ DS.demos.array = function (container) {
 
   render();
 
-  window.arrSelect = (i) => { selectedIdx = i; render(); };
+  window.arrSelect = (i) => { selectedIdx = i. Render(); };
 
   window.arrPush = () => {
     const val = document.getElementById('arrInput').value;
@@ -85,14 +85,14 @@ DS.demos.array = function (container) {
     arr.push(Number(val));
     selectedIdx = arr.length - 1;
     render();
-    DS.showMsg('arrMsg', `Pushed ${val} → index [${arr.length - 1}] at ${UI.memAddr(BASE, arr.length - 1, ELEM_BYTES)} — O(1)`, 'success-msg');
+    DS.showMsg('arrMsg', `Pushed ${val} → index [${arr.length - 1}] at ${UI.memAddr(BASE, arr.length - 1, ELEM_BYTES)}: O(1)`, 'success-msg');
   };
   window.arrPop = () => {
     if (!arr.length) return DS.showMsg('arrMsg', 'Array is empty!', 'error');
     const val = arr.pop();
     selectedIdx = arr.length ? arr.length - 1 : null;
     render();
-    DS.showMsg('arrMsg', `Popped ${val} from end — freed 8 bytes — O(1)`, 'info');
+    DS.showMsg('arrMsg', `Popped ${val} from end: freed 8 bytes: O(1)`, 'info');
   };
   window.arrUnshift = () => {
     const val = document.getElementById('arrInput').value;
@@ -100,14 +100,14 @@ DS.demos.array = function (container) {
     arr.unshift(Number(val));
     selectedIdx = 0;
     render();
-    DS.showMsg('arrMsg', `Unshifted ${val} → every index shifted right (+8 bytes each moved) — O(n)`, 'info');
+    DS.showMsg('arrMsg', `Unshifted ${val} → every index shifted right (+8 bytes each moved): O(n)`, 'info');
   };
   window.arrShift = () => {
     if (!arr.length) return DS.showMsg('arrMsg', 'Array is empty!', 'error');
     const val = arr.shift();
     selectedIdx = 0;
     render();
-    DS.showMsg('arrMsg', `Shifted ${val} off index [0] — remaining cells slid left — O(n)`, 'info');
+    DS.showMsg('arrMsg', `Shifted ${val} off index [0]: remaining cells slid left: O(n)`, 'info');
   };
   window.arrReset = () => {
     arr = [...INITIAL_ARRAY];

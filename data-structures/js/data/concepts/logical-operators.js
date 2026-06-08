@@ -43,7 +43,7 @@ DS.curriculum.push({
     {
       icon: 'fa-table',
       title: 'Truth tables',
-      desc: 'A truth table lists every combination of inputs and the resulting output — the fastest way to learn AND/OR/NOT/XOR.',
+      desc: 'A truth table lists every combination of inputs and the resulting output: the fastest way to learn AND/OR/NOT/XOR.',
       example: 'AND: only row (true, true) → true. OR: any true input → true.',
     },
   ],

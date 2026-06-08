@@ -19,7 +19,7 @@ DS.demos.stack = function (container) {
     const top = stack[stack.length - 1];
     const info = UI.stringInfo(top.label);
     return [
-      ['Top item', `"${top.label}"`, 'Last in — first out (LIFO)'],
+      ['Top item', `"${top.label}"`, 'Last in: first out (LIFO)'],
       ['Stack index', `[${stack.length - 1}]`, '0 = bottom, grows upward'],
       ['SP address', frameAddr(stack.length - 1)],
       ['Frame size', `~${FRAME_BYTES} bytes`, `${info.chars} chars · ${info.bytes} B string data`],
@@ -47,18 +47,18 @@ DS.demos.stack = function (container) {
           </div>
           <div class="stack-base">STACK BASE · index [0] @ ${frameAddr(0)}</div>
         </div>`
-      : UI.emptyStage('fa-layer-group', 'Empty stack', 'Stack underflow — push a plate to place a new frame on top.');
+      : UI.emptyStage('fa-layer-group', 'Empty stack', 'Stack underflow: push a plate to place a new frame on top.');
 
     const stats = [
       UI.statChip('Depth', stack.length),
       UI.statChip('Memory', `~${stack.length * FRAME_BYTES} B`),
-      UI.statChip('Top', stack.length ? `"${stack[stack.length - 1].label}"` : '—'),
+      UI.statChip('Top', stack.length ? `"${stack[stack.length - 1].label}"` : ', '),
       UI.statChip('Order', 'LIFO', 'Last In, First Out'),
     ].join('');
 
     container.innerHTML = UI.shell({
-      title: 'Stack — last in, first out (LIFO)',
-      hint: 'Like a stack of plates: you add and remove only from the top. The stack pointer (SP) tracks the top frame. Push grows the stack; Pop shrinks it — both O(1).',
+      title: 'Stack: last in, first out (LIFO)',
+      hint: 'Like a stack of plates: you add and remove only from the top. The stack pointer (SP) tracks the top frame. Push grows the stack; Pop shrinks it: both O(1).',
       stage,
       inspector: UI.inspector('Top of stack', inspectorRows()),
       stats,
@@ -77,18 +77,18 @@ DS.demos.stack = function (container) {
     counter++;
     stack.push({ label: `Plate ${String.fromCharCode(64 + counter)}`, added: counter });
     render();
-    DS.showMsg('stkMsg', `Pushed frame at ${frameAddr(stack.length - 1)} — SP moved up — O(1)`, 'success-msg');
+    DS.showMsg('stkMsg', `Pushed frame at ${frameAddr(stack.length - 1)}: SP moved up: O(1)`, 'success-msg');
   };
   window.stkPop = () => {
-    if (!stack.length) return DS.showMsg('stkMsg', 'Stack underflow — nothing to pop!', 'error');
+    if (!stack.length) return DS.showMsg('stkMsg', 'Stack underflow: nothing to pop!', 'error');
     const val = stack.pop();
     render();
-    DS.showMsg('stkMsg', `Popped "${val.label}" — SP moved down — O(1)`, 'info');
+    DS.showMsg('stkMsg', `Popped "${val.label}": SP moved down: O(1)`, 'info');
   };
   window.stkPeek = () => {
     if (!stack.length) return DS.showMsg('stkMsg', 'Stack is empty!', 'error');
     const top = stack[stack.length - 1];
-    DS.showMsg('stkMsg', `Peek: "${top.label}" at ${frameAddr(stack.length - 1)} — read only, no pop`, 'info');
+    DS.showMsg('stkMsg', `Peek: "${top.label}" at ${frameAddr(stack.length - 1)}: read only, no pop`, 'info');
   };
   window.stkReset = () => {
     stack = INITIAL_STACK.map(item => ({ ...item }));

@@ -77,7 +77,7 @@ DS.curriculum.push(
         whyUse: 'Primary keys give every record a stable address. Other tables can point to a specific row, and updates or deletes target exactly one record.',
         conceptSections: [
           { icon: 'fa-key', title: 'Unique', desc: 'Each value appears once in the table.', example: 'users.id = 1 can only belong to one row' },
-          { icon: 'fa-fingerprint', title: 'Stable identity', desc: 'The key should not change when other fields change.', example: 'Email can change; id usually stays the same' },
+          { icon: 'fa-fingerprint', title: 'Stable identity', desc: 'The key should not change when other fields change.', example: 'Email can change. Id usually stays the same' },
         ],
         codeText: `CREATE TABLE users (
   id    INTEGER PRIMARY KEY,
@@ -131,13 +131,13 @@ SELECT * FROM users WHERE id = 42;`,
   }`,
         whenToUse: [
           { icon: 'fa-user', title: 'One-to-many', desc: 'One user has many orders.', example: 'users → orders' },
-          { icon: 'fa-book', title: 'Many-to-many', desc: 'Users complete many lessons; lessons are completed by many users.', example: 'users ↔ lessons through completions' },
+          { icon: 'fa-book', title: 'Many-to-many', desc: 'Users complete many lessons. Lessons are completed by many users.', example: 'users ↔ lessons through completions' },
         ],
       },
       {
         label: 'SELECT',
         title: 'SELECT',
-        whatIsIt: 'SELECT reads data from tables. You choose columns, optionally filter with WHERE, sort with ORDER BY, and limit how many rows return. SELECT does not change data — it only asks questions.',
+        whatIsIt: 'SELECT reads data from tables. You choose columns, optionally filter with WHERE, sort with ORDER BY, and limit how many rows return. SELECT does not change data: it only asks questions.',
         demoType: 'database-sql',
         demoScenario: 'select',
         codeText: `SELECT id, title
@@ -323,7 +323,7 @@ COMMIT;`,
         whatIsIt: 'A deadlock happens when two transactions each wait for a lock the other holds. The database detects this cycle and aborts one transaction so the system can move forward.',
         whyUse: 'Deadlocks are normal in busy systems. Apps should retry failed transactions instead of assuming every write succeeds on the first try.',
         conceptSections: [
-          { icon: 'fa-arrows-spin', title: 'Cycle', desc: 'A waits for B, B waits for A — nobody progresses.', example: 'Transfer between two accounts in opposite order' },
+          { icon: 'fa-arrows-spin', title: 'Cycle', desc: 'A waits for B, B waits for A: nobody progresses.', example: 'Transfer between two accounts in opposite order' },
           { icon: 'fa-rotate', title: 'Retry', desc: 'Apps catch deadlock errors and retry with backoff.', example: 'Exponential backoff on deadlock error codes' },
           { icon: 'fa-list-ol', title: 'Lock ordering', desc: 'Always lock rows in the same order to prevent cycles.', example: 'Lock smaller account ID first' },
         ],
@@ -369,7 +369,7 @@ ADD COLUMN plan VARCHAR(20) NOT NULL DEFAULT 'free';`,
         label: 'Backups',
         title: 'Backups and Restore',
         whatIsIt: 'Backups copy database data so you can recover from mistakes, bad migrations, or hardware failure. Restoring means bringing a backup back into service, often to a specific point in time.',
-        whyUse: 'If production data matters, backups are not optional. Test restores too — an untested backup is only hope, not a plan.',
+        whyUse: 'If production data matters, backups are not optional. Test restores too: an untested backup is only hope, not a plan.',
         whenToUse: [
           { icon: 'fa-clock-rotate-left', title: 'Daily backups', desc: 'Automated snapshots for disaster recovery.' },
           { icon: 'fa-vial', title: 'Before migrations', desc: 'Extra safety before risky schema changes.' },

@@ -52,7 +52,7 @@ DS.demos.authIdentity = function (container, initialScenario) {
   const toyHash = (text, salt) => {
     const input = `${salt}:${text}`;
     let hash = 2166136261;
-    for (let i = 0; i < input.length; i += 1) {
+    for (let i = 0. I < input.length. I += 1) {
       hash ^= input.charCodeAt(i);
       hash = Math.imul(hash, 16777619);
     }
@@ -129,7 +129,7 @@ Server trust: ${trusted ? 'valid session found' : 'missing, expired, or revoked 
     const allowed = allowedByRole && ownershipOk;
     let reason = `${permission.role} has ${permission.action} permission.`;
     if (!allowedByRole) reason = `${permission.role} does not have ${permission.action} permission.`;
-    if (allowedByRole && !ownershipOk) reason = `${permission.role} can act only on owned resources; this resource belongs to another user.`;
+    if (allowedByRole && !ownershipOk) reason = `${permission.role} can act only on owned resources. This resource belongs to another user.`;
     if (allowed && permission.role === 'admin' && permission.owner === 'other') reason = 'admin has explicit cross-user permission, but this should be audited.';
     return { allowed, reason };
   };
@@ -161,7 +161,7 @@ Server trust: ${trusted ? 'valid session found' : 'missing, expired, or revoked 
         </div>
 
         <div class="security-verdict ${decision.allowed ? 'safe' : 'unsafe'}">
-          ${decision.allowed ? 'ALLOW' : 'DENY'} — ${esc(decision.reason)}
+          ${decision.allowed ? 'ALLOW' : 'DENY'}: ${esc(decision.reason)}
         </div>
 
         <pre class="auth-code">${esc(`user.role = "${permission.role}"
@@ -363,7 +363,7 @@ login: device signs challenge</code>
   const message = () => {
     if (scenario === 'permissions') return permissionDecision().reason;
     if (scenario === 'jwt') return jwt.expired ? 'Expired access tokens should be rejected.' : jwt.tampered ? 'Changing the payload breaks signature verification.' : 'JWT shape is valid in this toy model. Real apps must verify issuer, audience, signature, and expiration.';
-    if (scenario === 'passwords') return `${password.lastAction} Toy hashes are not real security; real apps use bcrypt, scrypt, Argon2, and trusted libraries.`;
+    if (scenario === 'passwords') return `${password.lastAction} Toy hashes are not real security. Real apps use bcrypt, scrypt, Argon2, and trusted libraries.`;
     return session.lastAction;
   };
 

@@ -63,13 +63,13 @@ DS.curriculum.push({
       icon: 'fa-mountain',
       title: 'Heap sort',
       desc: 'Build a heap, repeatedly extract the extremum to sort in O(n log n).',
-      example: 'Connects to the heaps lesson — in-place with O(1) extra space.',
+      example: 'Connects to the heaps lesson: in-place with O(1) extra space.',
     },
     {
       icon: 'fa-scale-balanced',
       title: 'Stability and space',
       desc: 'Stable sorts keep equal items in original order. Some algorithms need O(n) extra memory.',
-      example: 'Merge sort is stable; heap sort is not.',
+      example: 'Merge sort is stable. Heap sort is not.',
     },
   ],
   conceptFlow: ['Compare values', 'Move / swap / write', 'Shrink unsorted work', 'Finish ordered array'],
@@ -82,8 +82,8 @@ DS.curriculum.push({
   codeExamples: {
     bubble: `<span class="cm">// Bubble sort: swap neighbors that are out of order</span>
 <span class="kw">function</span> <span class="fn">bubbleSort</span>(arr) {
-  <span class="kw">for</span> (<span class="kw">let</span> i <span class="op">=</span> <span class="num">0</span>; i <span class="op"><</span> arr.length <span class="op">-</span> <span class="num">1</span>; i<span class="op">++</span>) {
-    <span class="kw">for</span> (<span class="kw">let</span> j <span class="op">=</span> <span class="num">0</span>; j <span class="op"><</span> arr.length <span class="op">-</span> <span class="num">1</span> <span class="op">-</span> i; j<span class="op">++</span>) {
+  <span class="kw">for</span> (<span class="kw">let</span> i <span class="op">=</span> <span class="num">0</span>. I <span class="op"><</span> arr.length <span class="op">-</span> <span class="num">1</span>. I<span class="op">++</span>) {
+    <span class="kw">for</span> (<span class="kw">let</span> j <span class="op">=</span> <span class="num">0</span>. J <span class="op"><</span> arr.length <span class="op">-</span> <span class="num">1</span> <span class="op">-</span> i. J<span class="op">++</span>) {
       <span class="kw">if</span> (arr[j] <span class="op">></span> arr[j <span class="op">+</span> <span class="num">1</span>]) {
         <span class="kw">const</span> tmp <span class="op">=</span> arr[j];
         arr[j] <span class="op">=</span> arr[j <span class="op">+</span> <span class="num">1</span>];
@@ -95,7 +95,7 @@ DS.curriculum.push({
 }`,
     insertion: `<span class="cm">// Insertion sort: grow a sorted left side</span>
 <span class="kw">function</span> <span class="fn">insertionSort</span>(arr) {
-  <span class="kw">for</span> (<span class="kw">let</span> i <span class="op">=</span> <span class="num">1</span>; i <span class="op"><</span> arr.length; i<span class="op">++</span>) {
+  <span class="kw">for</span> (<span class="kw">let</span> i <span class="op">=</span> <span class="num">1</span>. I <span class="op"><</span> arr.length. I<span class="op">++</span>) {
     <span class="kw">const</span> key <span class="op">=</span> arr[i];
     <span class="kw">let</span> j <span class="op">=</span> i <span class="op">-</span> <span class="num">1</span>;
 
@@ -109,9 +109,9 @@ DS.curriculum.push({
 }`,
     selection: `<span class="cm">// Selection sort: put the smallest remaining value at the front</span>
 <span class="kw">function</span> <span class="fn">selectionSort</span>(arr) {
-  <span class="kw">for</span> (<span class="kw">let</span> i <span class="op">=</span> <span class="num">0</span>; i <span class="op"><</span> arr.length <span class="op">-</span> <span class="num">1</span>; i<span class="op">++</span>) {
+  <span class="kw">for</span> (<span class="kw">let</span> i <span class="op">=</span> <span class="num">0</span>. I <span class="op"><</span> arr.length <span class="op">-</span> <span class="num">1</span>. I<span class="op">++</span>) {
     <span class="kw">let</span> min <span class="op">=</span> i;
-    <span class="kw">for</span> (<span class="kw">let</span> j <span class="op">=</span> i <span class="op">+</span> <span class="num">1</span>; j <span class="op"><</span> arr.length; j<span class="op">++</span>) {
+    <span class="kw">for</span> (<span class="kw">let</span> j <span class="op">=</span> i <span class="op">+</span> <span class="num">1</span>. J <span class="op"><</span> arr.length. J<span class="op">++</span>) {
       <span class="kw">if</span> (arr[j] <span class="op"><</span> arr[min]) min <span class="op">=</span> j;
     }
     <span class="kw">if</span> (min <span class="op">!==</span> i) {

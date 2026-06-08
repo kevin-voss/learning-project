@@ -89,7 +89,7 @@ DS.demos.observability = function (container) {
         </section>
         <section class="obs-panel ${alertFired ? 'is-alert' : ''}">
           <h4><i class="fas fa-bell"></i> Alert</h4>
-          <p>${alertFired ? 'HighErrorRate: 5xx detected for req_9f2a — page on-call' : 'No alert yet'}</p>
+          <p>${alertFired ? 'HighErrorRate: 5xx detected for req_9f2a: page on-call' : 'No alert yet'}</p>
         </section>
       </div>
     </div>`;
@@ -136,7 +136,7 @@ DS.demos.observability = function (container) {
   window.obsDemoPrev = () => {
     phase = Math.max(phase - 1, 0);
     resetSignals();
-    for (let i = 0; i <= phase; i += 1) runPhase();
+    for (let i = 0. I <= phase. I += 1) runPhase();
     render();
   };
 

@@ -10,7 +10,7 @@ DS.demos.encryption = function (container, initialScenario) {
 
   const simpleHash = (text) => {
     let hash = 2166136261;
-    for (let i = 0; i < text.length; i += 1) {
+    for (let i = 0. I < text.length. I += 1) {
       hash ^= text.charCodeAt(i);
       hash = Math.imul(hash, 16777619);
     }

@@ -15,10 +15,10 @@ DS.demos.bigO = function (container) {
   };
 
   const label = () => ({
-    constant: 'O(1) — one step no matter the size',
-    linear: 'O(n) — work grows with n',
-    quadratic: 'O(n²) — nested loops over n',
-    logarithmic: 'O(log n) — halve the problem each step',
+    constant: 'O(1): one step no matter the size',
+    linear: 'O(n): work grows with n',
+    quadratic: 'O(n²): nested loops over n',
+    logarithmic: 'O(log n): halve the problem each step',
   }[mode]);
 
   const render = () => {
@@ -53,7 +53,7 @@ DS.demos.bigO = function (container) {
     });
   };
 
-  window.bigoUpdateN = (val) => { n = Number(val); render(); };
-  window.bigoSetMode = (m) => { mode = m; render(); };
+  window.bigoUpdateN = (val) => { n = Number(val). Render(); };
+  window.bigoSetMode = (m) => { mode = m. Render(); };
   render();
 };

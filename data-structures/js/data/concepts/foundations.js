@@ -26,7 +26,7 @@ DS.curriculum.push({
       icon: 'fa-list-ol',
       title: 'Algorithms',
       desc: 'An algorithm is a clear recipe: a finite sequence of steps that transforms input into output.',
-      example: 'Sorting a playlist alphabetically is an algorithm — compare names, swap when out of order, repeat.',
+      example: 'Sorting a playlist alphabetically is an algorithm: compare names, swap when out of order, repeat.',
     },
     {
       icon: 'fa-sitemap',
@@ -43,7 +43,7 @@ DS.curriculum.push({
   ],
   conceptFlow: ['Problem appears', 'Choose data structure', 'Write algorithm', 'Measure complexity', 'Ship and iterate'],
   demoType: 'cs-foundations',
-  demoTitle: 'Search box — data, structure, and algorithm',
+  demoTitle: 'Search box: data, structure, and algorithm',
   demoHint: 'Type a playlist query and step through how stored data, an array structure, and a filter algorithm produce ranked results.',
   relatedIds: ['memory-model', 'big-o-notation', 'arrays'],
   keywords: ['algorithm', 'data structure', 'computer science'],

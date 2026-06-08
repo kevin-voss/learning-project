@@ -16,9 +16,9 @@ DS.demos.csFoundations = function (container) {
 
   const phases = [
     { key: 'problem', label: 'Problem', detail: 'A user types into a search box. The app must find matching items.' },
-    { key: 'structure', label: 'Data structure', detail: 'Songs live in an array — ordered, easy to display, scanned for search.' },
-    { key: 'algorithm', label: 'Algorithm', detail: 'Compare each song title and artist to the query; collect matches.' },
-    { key: 'complexity', label: 'Complexity', detail: 'Each comparison is one step — about n checks for n songs (O(n) scan).' },
+    { key: 'structure', label: 'Data structure', detail: 'Songs live in an array: ordered, easy to display, scanned for search.' },
+    { key: 'algorithm', label: 'Algorithm', detail: 'Compare each song title and artist to the query. Collect matches.' },
+    { key: 'complexity', label: 'Complexity', detail: 'Each comparison is one step: about n checks for n songs (O(n) scan).' },
     { key: 'ship', label: 'Ship', detail: 'Rank matches and show results. Real apps also cache, index, or use hash tables for speed.' },
   ];
 
@@ -82,7 +82,7 @@ DS.demos.csFoundations = function (container) {
   const renderStructure = () => `
     <div class="cs-pillar ${pillarClass('structure')}">
       <h4><i class="fas fa-sitemap"></i> Data structure</h4>
-      <p class="cs-pillar-note">Array of objects — contiguous list, index access</p>
+      <p class="cs-pillar-note">Array of objects: contiguous list, index access</p>
       <pre class="cs-code-snippet">const playlist = [
   { title: "Blinding Lights", artist: "The Weeknd" },
   // ...more songs in order
@@ -133,7 +133,7 @@ sort matches by relevance;` : `// Waiting for query...
     const phase = phases[phaseIndex];
     return [
       ['Phase', `${phaseIndex + 1} / ${phases.length}`, phase?.label || ''],
-      ['Query', query.trim() || '(empty)', 'User input — the problem to solve'],
+      ['Query', query.trim() || '(empty)', 'User input: the problem to solve'],
       ['Structure', 'Array', 'How data is organized'],
       ['Comparisons', String(comparisons), 'Steps the scan took'],
       ['Matches', String(matches.length), 'Algorithm output before display'],
@@ -144,7 +144,7 @@ sort matches by relevance;` : `// Waiting for query...
   const render = () => {
     const phase = phases[phaseIndex];
     container.innerHTML = UI.shell({
-      title: 'Search box — data, structure, and algorithm',
+      title: 'Search box: data, structure, and algorithm',
       hint: 'Walk through the same idea as the lesson: stored songs, an array structure, a filter-and-rank algorithm, and ranked results.',
       stage: `
         <div class="cs-demo">
@@ -206,7 +206,7 @@ sort matches by relevance;` : `// Waiting for query...
         runScan(q);
         scanIndex = -1;
         render();
-        DS.showMsg('csFoundationsMsg', `Scan complete — ${matches.length} match(es), ${comparisons} comparison(s)`, 'success');
+        DS.showMsg('csFoundationsMsg', `Scan complete: ${matches.length} match(es), ${comparisons} comparison(s)`, 'success');
         onDone();
         return;
       }
@@ -239,7 +239,7 @@ sort matches by relevance;` : `// Waiting for query...
 
   window.csNextPhase = () => {
     if (phaseIndex >= phases.length - 1) {
-      return DS.showMsg('csFoundationsMsg', 'Walkthrough complete — try another query or reset', 'info');
+      return DS.showMsg('csFoundationsMsg', 'Walkthrough complete: try another query or reset', 'info');
     }
     phaseIndex += 1;
     if (phases[phaseIndex].key === 'algorithm') {
@@ -279,7 +279,7 @@ sort matches by relevance;` : `// Waiting for query...
     comparisons = 0;
     matches = [];
     render();
-    DS.showMsg('csFoundationsMsg', 'Reset — type a query and step through data, structure, and algorithm', 'info');
+    DS.showMsg('csFoundationsMsg', 'Reset: type a query and step through data, structure, and algorithm', 'info');
   };
 
   render();

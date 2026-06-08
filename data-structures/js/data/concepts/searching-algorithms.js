@@ -44,7 +44,7 @@ DS.curriculum.push({
       icon: 'fa-hashtag',
       title: 'Hash lookup',
       desc: 'Hash tables map keys to buckets for average O(1) exact lookup when collisions are rare.',
-      example: 'Find user by email without scanning every row — see hash-tables lesson.',
+      example: 'Find user by email without scanning every row: see hash-tables lesson.',
     },
   ],
   conceptFlow: ['Pick search strategy', 'Check current item', 'Decide where to look next', 'Stop when found or impossible'],

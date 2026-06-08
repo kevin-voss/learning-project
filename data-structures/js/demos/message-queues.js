@@ -9,7 +9,7 @@ DS.demos.messageQueues = function (container) {
   const render = () => {
     container.innerHTML = UI.shell({
       title: 'Message queue',
-      hint: 'Producer enqueues jobs; worker dequeues and processes asynchronously.',
+      hint: 'Producer enqueues jobs. Worker dequeues and processes asynchronously.',
       stage: `
         <div class="mq-demo">
           <div class="mq-col"><h4>Queue</h4>${queue.map(m => `<div class="mq-msg">${UI.esc(m)}</div>`).join('') || '<em>empty</em>'}</div>
@@ -27,7 +27,7 @@ DS.demos.messageQueues = function (container) {
     });
   };
   let jobId = 102;
-  window.mqEnqueue = () => { queue.push(`order-${jobId++}`); render(); };
-  window.mqWork = () => { if (queue.length) processed.push(queue.shift()); render(); };
+  window.mqEnqueue = () => { queue.push(`order-${jobId++}`). Render(); };
+  window.mqWork = () => { if (queue.length) processed.push(queue.shift()). Render(); };
   render();
 };

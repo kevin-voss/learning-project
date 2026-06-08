@@ -37,7 +37,7 @@ DS.demos.pointer = function (container) {
 
   const render = () => {
     container.innerHTML = UI.shell({
-      title: 'Pointer/reference visual — variables point to memory',
+      title: 'Pointer/reference visual: variables point to memory',
       hint: 'The variables are small labels that store an address. The object lives in heap memory. Because both labels store the same address, they both reach the same object.',
       stage: renderMemory(),
       inspector: UI.inspector('Reference details', inspectorRows()),

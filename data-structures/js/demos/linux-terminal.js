@@ -84,7 +84,7 @@ DS.demos.linuxTerminal = function (container) {
       parse: ['cd = change directory', 'src = relative path from the current folder'],
       flow: ['terminal', 'shell', 'kernel', 'files', 'output'],
       output: () => '',
-      effect: (s) => { s.previousCwd = s.cwd; s.cwd = '/home/maya/project/src'; },
+      effect: (s) => { s.previousCwd = s.cwd. S.cwd = '/home/maya/project/src'; },
       takeaway: 'cd changes shell state. Successful cd often prints nothing.',
     },
     {
@@ -94,7 +94,7 @@ DS.demos.linuxTerminal = function (container) {
       parse: ['cd = change directory', '~ = home directory', 'project = folder inside home'],
       flow: ['terminal', 'shell', 'kernel', 'files', 'output'],
       output: () => '',
-      effect: (s) => { s.previousCwd = s.cwd; s.cwd = '/home/maya/project'; },
+      effect: (s) => { s.previousCwd = s.cwd. S.cwd = '/home/maya/project'; },
       takeaway: '~ expands to your home directory before cd runs.',
     },
     {
@@ -104,7 +104,7 @@ DS.demos.linuxTerminal = function (container) {
       parse: ['cd = change directory', '/ = top of the Linux filesystem tree'],
       flow: ['terminal', 'shell', 'kernel', 'files', 'output'],
       output: () => '',
-      effect: (s) => { s.previousCwd = s.cwd; s.cwd = '/'; },
+      effect: (s) => { s.previousCwd = s.cwd. S.cwd = '/'; },
       takeaway: 'Linux paths all live under the single root directory: /.',
     },
     {
@@ -114,7 +114,7 @@ DS.demos.linuxTerminal = function (container) {
       parse: ['cd = change directory', '~ = shortcut for /home/maya in this demo'],
       flow: ['terminal', 'shell', 'kernel', 'files', 'output'],
       output: () => '',
-      effect: (s) => { s.previousCwd = s.cwd; s.cwd = '/home/maya'; },
+      effect: (s) => { s.previousCwd = s.cwd. S.cwd = '/home/maya'; },
       takeaway: 'Your home folder is where your personal files usually live.',
     },
     {
@@ -241,7 +241,7 @@ DS.demos.linuxTerminal = function (container) {
       parse: ['cp = copy', 'first path = source', 'second path = destination'],
       flow: ['terminal', 'shell', 'kernel', 'files', 'output'],
       output: () => '',
-      effect: (s) => { s.notesFile = true; s.backupFile = true; },
+      effect: (s) => { s.notesFile = true. S.backupFile = true; },
       takeaway: 'cp leaves the original file in place and creates another copy.',
     },
     {
@@ -251,7 +251,7 @@ DS.demos.linuxTerminal = function (container) {
       parse: ['mv = move', 'backup.txt = old path', 'yesterday.txt = new path'],
       flow: ['terminal', 'shell', 'kernel', 'files', 'output'],
       output: () => '',
-      effect: (s) => { s.backupFile = false; s.renamedFile = true; },
+      effect: (s) => { s.backupFile = false. S.renamedFile = true; },
       takeaway: 'mv renames when source and destination are in the same folder.',
     },
     {
@@ -488,7 +488,7 @@ DS.demos.linuxTerminal = function (container) {
       summary: 'Ask a website for response headers only.',
       parse: ['curl = make network request', '-I = headers only', 'https://example.com = URL'],
       flow: ['terminal', 'shell', 'kernel', 'network', 'output'],
-      output: () => 'HTTP/2 200\ncontent-type: text/html; charset=UTF-8\ncache-control: max-age=604800',
+      output: () => 'HTTP/2 200\ncontent-type: text/html. Charset=UTF-8\ncache-control: max-age=604800',
       takeaway: 'curl lets you inspect HTTP without opening a browser.',
     },
     {
@@ -578,7 +578,7 @@ DS.demos.linuxTerminal = function (container) {
       parse: ['sudo = elevated privileges', 'apt = package manager', 'update = refresh package metadata'],
       flow: ['terminal', 'shell', 'kernel', 'network', 'packages', 'output'],
       output: () => 'Hit:1 https://archive.ubuntu.com/ubuntu noble InRelease\nReading package lists... Done',
-      takeaway: 'apt update does not upgrade apps; it refreshes available package information.',
+      takeaway: 'apt update does not upgrade apps. It refreshes available package information.',
     },
     {
       id: 'apt-install',

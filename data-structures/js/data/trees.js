@@ -7,7 +7,7 @@ DS.curriculum.push(
     title: 'Trees',
     icon: 'fa-sitemap',
     number: '06',
-    subtitle: 'Hierarchical data with roots, branches, and leaves — from file systems to DOM to databases.',
+    subtitle: 'Hierarchical data with roots, branches, and leaves: from file systems to DOM to databases.',
     analogy: 'Think of a company org chart. There is one CEO at the top (root). Each person below has exactly one manager (parent), and may manage other people (children). People with no reports are leaves. A tree is this same top-down shape in code: one starting point, branches below it, and no loops back upward.',
     realWorldExample: {
       title: 'File explorer folders',
@@ -17,7 +17,7 @@ DS.curriculum.push(
     whyUse: 'Trees are useful when data naturally has levels or when sorted search matters. File systems are trees. HTML pages are DOM trees. A BST can search in O(log n) when it stays balanced because each comparison chooses left or right and discards the other side. If values are inserted in sorted order, the tree can become a long chain and slow down to O(n), which is why production systems often use balanced trees like AVL, Red-Black, or B-trees.',
     whenToUse: [
       { icon: 'fa-folder-tree', title: 'Hierarchical data', desc: 'File systems, org charts, DOM, category trees.' },
-      { icon: 'fa-magnifying-glass-chart', title: 'Fast search & sorting', desc: 'BST gives O(log n) search — used in databases and indexing.' },
+      { icon: 'fa-magnifying-glass-chart', title: 'Fast search & sorting', desc: 'BST gives O(log n) search: used in databases and indexing.' },
       { icon: 'fa-spell-check', title: 'Autocomplete & prefixes', desc: 'Tries (prefix trees) power search suggestions and spell checkers.' },
       { icon: 'fa-code-branch', title: 'Decision logic', desc: 'Decision trees, game AI, expression parsing.' },
     ],
@@ -36,7 +36,7 @@ DS.curriculum.push(
     <span class="kw">this</span>.root <span class="op">=</span> <span class="kw">null</span>;
   }
 
-  <span class="cm">// Insert — O(log n) average, O(n) worst</span>
+  <span class="cm">// Insert: O(log n) average, O(n) worst</span>
   <span class="fn">insert</span>(value) {
     <span class="kw">const</span> newNode <span class="op">=</span> <span class="kw">new</span> <span class="cls">TreeNode</span>(value);
     <span class="kw">if</span> (<span class="op">!</span><span class="kw">this</span>.root) {
@@ -56,7 +56,7 @@ DS.curriculum.push(
     }
   }
 
-  <span class="cm">// Search — O(log n) average</span>
+  <span class="cm">// Search: O(log n) average</span>
   <span class="fn">find</span>(value) {
     <span class="kw">let</span> current <span class="op">=</span> <span class="kw">this</span>.root;
     <span class="kw">while</span> (current) {
@@ -102,7 +102,7 @@ DS.curriculum.push(
 <span class="cm">// Usage</span>
 <span class="kw">const</span> bst <span class="op">=</span> <span class="kw">new</span> <span class="cls">BST</span>();
 bst.<span class="fn">insert</span>(<span class="num">15</span>).<span class="fn">insert</span>(<span class="num">10</span>).<span class="fn">insert</span>(<span class="num">20</span>).<span class="fn">insert</span>(<span class="num">8</span>).<span class="fn">insert</span>(<span class="num">12</span>);
-console.<span class="fn">log</span>(bst.<span class="fn">inOrder</span>());  <span class="cm">// [8, 10, 12, 15, 20] — sorted!</span>
+console.<span class="fn">log</span>(bst.<span class="fn">inOrder</span>());  <span class="cm">// [8, 10, 12, 15, 20]: sorted!</span>
 console.<span class="fn">log</span>(bst.<span class="fn">find</span>(<span class="num">10</span>));   <span class="cm">// TreeNode { value: 10, left, right }</span>`,
     complexity: [
       { op: 'Search (balanced)', time: 'O(log n)', badge: 'mid' },
@@ -113,18 +113,18 @@ console.<span class="fn">log</span>(bst.<span class="fn">find</span>(<span class
       { op: 'Find min/max', time: 'O(log n)', badge: 'mid' },
     ],
     pros: [
-      'Hierarchical structure — naturally models parent-child relationships',
-      'O(log n) search in balanced trees — much faster than O(n) linear scan',
-      'In-order traversal gives sorted data — BST is a living sorted structure',
-      'Dynamic size — grows as needed, no pre-allocation',
-      'Foundation for many advanced structures — heaps, tries, B-trees',
+      'Hierarchical structure: naturally models parent-child relationships',
+      'O(log n) search in balanced trees: much faster than O(n) linear scan',
+      'In-order traversal gives sorted data: BST is a living sorted structure',
+      'Dynamic size: grows as needed, no pre-allocation',
+      'Foundation for many advanced structures: heaps, tries, B-trees',
     ],
     cons: [
-      'Can become unbalanced — worst case degrades to O(n) (like a linked list)',
+      'Can become unbalanced: worst case degrades to O(n) (like a linked list)',
       'Self-balancing trees (AVL, Red-Black) are complex to implement',
-      'More memory than arrays — each node stores value + two pointers minimum',
-      'No constant-time access — must traverse from root',
-      'Deletion logic is tricky — especially with two-child nodes',
+      'More memory than arrays: each node stores value + two pointers minimum',
+      'No constant-time access: must traverse from root',
+      'Deletion logic is tricky: especially with two-child nodes',
     ],
     demoType: 'tree',
     keywords: ['tree', 'binary search tree', 'root', 'leaf', 'traversal', 'unbalanced', 'subtree'],

@@ -6,16 +6,16 @@ DS.demos.abstractionApis = function (container) {
   let layer = 'app';
 
   const layers = {
-    app: { title: 'Your app', detail: 'Calls fetch("/api/users") — hides HTTP details.' },
+    app: { title: 'Your app', detail: 'Calls fetch("/api/users"): hides HTTP details.' },
     api: { title: 'API layer', detail: 'Validates input, returns JSON, hides database.' },
-    db: { title: 'Database', detail: 'Stores rows; app never talks to SQL directly.' },
+    db: { title: 'Database', detail: 'Stores rows. App never talks to SQL directly.' },
   };
 
   const render = () => {
     const l = layers[layer];
     container.innerHTML = UI.shell({
       title: 'Abstraction layers',
-      hint: 'Each layer hides complexity below — change database without rewriting UI.',
+      hint: 'Each layer hides complexity below: change database without rewriting UI.',
       stage: `
         <div class="abstract-demo">
           <div class="demo-controls">
@@ -32,6 +32,6 @@ DS.demos.abstractionApis = function (container) {
       ]),
     });
   };
-  window.absSet = (x) => { layer = x; render(); };
+  window.absSet = (x) => { layer = x. Render(); };
   render();
 };

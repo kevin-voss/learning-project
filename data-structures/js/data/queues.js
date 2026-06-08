@@ -7,13 +7,13 @@ DS.curriculum.push(
     title: 'Queues',
     icon: 'fa-people-line',
     number: '04',
-    subtitle: 'First In, First Out — like a line at the store, the first person in is the first served.',
-    analogy: 'Think of a line at a ticket counter. The first person to join the line is the first person to get their ticket and leave. New people join at the back, and service happens at the front. This First In, First Out (FIFO) order is the essence of a queue. Whether it\'s print jobs waiting for a printer, tasks waiting for a CPU, or messages waiting to be processed — queues ensure fairness and order.',
+    subtitle: 'First In, First Out, like a line at the store where the first person in is the first served.',
+    analogy: 'Think of a line at a ticket counter. The first person to join the line is the first person to get their ticket and leave. New people join at the back, and service happens at the front. This First In, First Out (FIFO) order is the essence of a queue. Whether it\'s print jobs waiting for a printer, tasks waiting for a CPU, or messages waiting to be processed, queues ensure fairness and order.',
     realWorldExample: {
       title: 'Customer support tickets',
       desc: 'A support tool can put new tickets at the back of a queue and let agents take the oldest ticket from the front. This keeps the system fair: the customer who waited longest gets helped first.',
     },
-    whatIsIt: 'A queue is a linear data structure that follows the FIFO (First In, First Out) principle. Elements are added (enqueued) at the rear/tail and removed (dequeued) from the front/head. Unlike a stack where you access the most recent item, a queue gives you the oldest item first. This models any fair waiting system — first come, first served.',
+    whatIsIt: 'A queue is a linear data structure that follows the FIFO (First In, First Out) principle. Elements are added (enqueued) at the rear/tail and removed (dequeued) from the front/head. Unlike a stack where you access the most recent item, a queue gives you the oldest item first. This models any fair waiting system: first come, first served.',
     whyUse: 'Queues are essential whenever you need to process things in the order they arrive. Operating systems use queues for task scheduling, printers use queues for print jobs, web servers use queues for incoming requests, and message systems use queues for reliable delivery. Any system that must serve requests in order needs a queue. Priority queues (a variant) let you jump the line based on urgency.',
     whenToUse: [
       { icon: 'fa-print', title: 'Task scheduling', desc: 'Print queue, CPU scheduling, background job processing.' },
@@ -28,15 +28,15 @@ DS.curriculum.push(
     <span class="kw">this</span>.items <span class="op">=</span> [];
   }
 
-  <span class="cm">// Add to the back — O(1) with proper impl</span>
+  <span class="cm">// Add to the back: O(1) with proper impl</span>
   <span class="fn">enqueue</span>(element) {
     <span class="kw">this</span>.items.<span class="fn">push</span>(element);
   }
 
-  <span class="cm">// Remove from the front — O(n) with array!</span>
+  <span class="cm">// Remove from the front: O(n) with array!</span>
   <span class="fn">dequeue</span>() {
     <span class="kw">if</span> (<span class="kw">this</span>.<span class="fn">isEmpty</span>()) <span class="kw">return</span> <span class="str">'Queue is empty'</span>;
-    <span class="kw">return this</span>.items.<span class="fn">shift</span>(); <span class="cm">// O(n) — problem!</span>
+    <span class="kw">return this</span>.items.<span class="fn">shift</span>(); <span class="cm">// O(n): problem!</span>
   }
 
   <span class="fn">front</span>() {
@@ -92,16 +92,16 @@ tasks.<span class="fn">enqueue</span>(<span class="str">'Backup database'</span>
       { op: 'Access by position', time: 'O(n)', badge: 'slow' },
     ],
     pros: [
-      'Fair ordering — first in, first out ensures no item waits forever',
+      'Fair ordering: first in, first out ensures no item waits forever',
       'O(1) enqueue and dequeue with proper implementation',
       'Natural model for real-world waiting systems',
       'Simple to implement and understand',
       'Essential for BFS and many graph algorithms',
     ],
     cons: [
-      'Array-based dequeue is O(n) due to shift — need custom implementation for O(1)',
-      'No random access — can only interact with front and back',
-      'No priority — all items treated equally (unless using priority queue)',
+      'Array-based dequeue is O(n) due to shift: need custom implementation for O(1)',
+      'No random access: can only interact with front and back',
+      'No priority: all items treated equally (unless using priority queue)',
       'Searching requires dequeuing and re-enqueuing everything',
     ],
     demoType: 'queue',

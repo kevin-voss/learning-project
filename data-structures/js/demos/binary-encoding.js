@@ -10,7 +10,7 @@ DS.demos.binaryEncoding = function (container) {
   const render = () => {
     container.innerHTML = UI.shell({
       title: 'Text to bits',
-      hint: 'Characters map to numbers (Unicode); numbers map to binary and hex.',
+      hint: 'Characters map to numbers (Unicode). Numbers map to binary and hex.',
       stage: `
         <div class="binary-demo">
           <input type="text" class="demo-input" id="binText" value="${UI.esc(text)}" maxlength="8" oninput="binUpdate(this.value)" aria-label="Text to encode">

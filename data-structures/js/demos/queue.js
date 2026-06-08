@@ -21,7 +21,7 @@ DS.demos.queue = function (container) {
     const rear = queue[queue.length - 1];
     const fInfo = UI.stringInfo(front.label);
     return [
-      ['Front (dequeue)', `"${front.label}"`, 'Next item served — O(1)'],
+      ['Front (dequeue)', `"${front.label}"`, 'Next item served: O(1)'],
       ['Front address', slotAddr(0)],
       ['Rear (enqueue)', `"${rear.label}"`, 'Last item added'],
       ['Rear address', slotAddr(queue.length - 1)],
@@ -57,12 +57,12 @@ DS.demos.queue = function (container) {
     const stats = [
       UI.statChip('Length', queue.length),
       UI.statChip('Memory', `~${queue.length * SLOT_BYTES} B`),
-      UI.statChip('Front', queue.length ? queue[0].label : '—'),
-      UI.statChip('Rear', queue.length ? queue[queue.length - 1].label : '—'),
+      UI.statChip('Front', queue.length ? queue[0].label : ', '),
+      UI.statChip('Rear', queue.length ? queue[queue.length - 1].label : ', '),
     ].join('');
 
     container.innerHTML = UI.shell({
-      title: 'Queue — first in, first out (FIFO)',
+      title: 'Queue: first in, first out (FIFO)',
       hint: 'Like a line at a store: join at the rear, leave from the front. Each slot has an index and memory address. Enqueue and Dequeue are O(1) with head/tail pointers.',
       stage,
       inspector: UI.inspector('Queue ends', inspectorRows()),
@@ -82,17 +82,17 @@ DS.demos.queue = function (container) {
     taskNum++;
     queue.push({ label: `Task ${taskNum}`, enqueued: taskNum });
     render();
-    DS.showMsg('qMsg', `Enqueued at rear [${queue.length - 1}] · ${slotAddr(queue.length - 1)} — O(1)`, 'success-msg');
+    DS.showMsg('qMsg', `Enqueued at rear [${queue.length - 1}] · ${slotAddr(queue.length - 1)}: O(1)`, 'success-msg');
   };
   window.qDequeue = () => {
-    if (!queue.length) return DS.showMsg('qMsg', 'Queue empty — no one to serve!', 'error');
+    if (!queue.length) return DS.showMsg('qMsg', 'Queue empty: no one to serve!', 'error');
     const val = queue.shift();
     render();
-    DS.showMsg('qMsg', `Dequeued "${val.label}" from front — remaining items shifted — O(1)*`, 'info');
+    DS.showMsg('qMsg', `Dequeued "${val.label}" from front: remaining items shifted: O(1)*`, 'info');
   };
   window.qPeek = () => {
     if (!queue.length) return DS.showMsg('qMsg', 'Queue is empty!', 'error');
-    DS.showMsg('qMsg', `Front: "${queue[0].label}" at ${slotAddr(0)} — next to be served`, 'info');
+    DS.showMsg('qMsg', `Front: "${queue[0].label}" at ${slotAddr(0)}: next to be served`, 'info');
   };
   window.qReset = () => {
     queue = INITIAL_QUEUE.map(item => ({ ...item }));

@@ -69,8 +69,8 @@ DS.demos.tree = function (container) {
     }
     const node = findNode(root, selectedVal);
     const info = UI.numberInfo(selectedVal);
-    const left = node?.left?.val ?? '—';
-    const right = node?.right?.val ?? '—';
+    const left = node?.left?.val ?? ', ';
+    const right = node?.right?.val ?? ', ';
     const path = searchPath(root, selectedVal).join(' → ');
     return [
       ['Value', String(selectedVal), `${info.bytes} B · ${info.binary}`],
@@ -94,7 +94,7 @@ DS.demos.tree = function (container) {
             <span><i class="fas fa-code-branch"></i> Left &lt; Parent &lt; Right</span>
           </div>
         </div>`
-      : UI.emptyStage('fa-tree', 'Empty tree', 'Insert values — each node stores a number and two child pointers.');
+      : UI.emptyStage('fa-tree', 'Empty tree', 'Insert values: each node stores a number and two child pointers.');
 
     const stats = [
       UI.statChip('Nodes', treeValues.length),
@@ -104,7 +104,7 @@ DS.demos.tree = function (container) {
     ].join('');
 
     container.innerHTML = UI.shell({
-      title: 'Binary search tree — sorted hierarchy',
+      title: 'Binary search tree: sorted hierarchy',
       hint: 'Each node has at most two children. Smaller values go left, larger values go right. Searching starts at the root and discards half the remaining tree each step when the tree is balanced.',
       stage,
       inspector: UI.inspector('Selected node', inspectorRows(root)),
@@ -120,21 +120,21 @@ DS.demos.tree = function (container) {
 
   render();
 
-  window.treeSelect = (v) => { selectedVal = v; render(); };
+  window.treeSelect = (v) => { selectedVal = v. Render(); };
 
   window.treeInsert = () => {
     const val = document.getElementById('treeInput').value;
     if (val === '') return DS.showMsg('treeMsg', 'Enter a value first', 'error');
     const num = Number(val);
-    if (treeValues.includes(num)) return DS.showMsg('treeMsg', `${val} already exists — BST rejects duplicates`, 'error');
+    if (treeValues.includes(num)) return DS.showMsg('treeMsg', `${val} already exists: BST rejects duplicates`, 'error');
     treeValues.push(num);
     selectedVal = num;
     render();
-    DS.showMsg('treeMsg', `Inserted ${val} at ${UI.memAddr(BASE, num, NODE_BYTES)} — O(log n) average`, 'success-msg');
+    DS.showMsg('treeMsg', `Inserted ${val} at ${UI.memAddr(BASE, num, NODE_BYTES)}: O(log n) average`, 'success-msg');
   };
   window.treeInOrder = () => {
     const sorted = [...treeValues].sort((a, b) => a - b);
-    DS.showMsg('treeMsg', `In-order traversal: [${sorted.join(' → ')}] — always ascending!`, 'info');
+    DS.showMsg('treeMsg', `In-order traversal: [${sorted.join(' → ')}]: always ascending!`, 'info');
   };
   window.treeReset = () => {
     treeValues = [...INITIAL_TREE];

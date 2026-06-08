@@ -44,7 +44,7 @@ DS.demos.heap = function (container) {
   const render = () => {
     container.innerHTML = UI.shell({
       title: 'Min-heap visualizer',
-      hint: 'Insert bubbles up; extract-min swaps root with last item then bubbles down.',
+      hint: 'Insert bubbles up. Extract-min swaps root with last item then bubbles down.',
       stage: `
         <div class="heap-demo">
           <div class="heap-tree">${treeHtml()}</div>
@@ -60,7 +60,7 @@ DS.demos.heap = function (container) {
       inspector: UI.inspector('Heap rules', [
         ['Type', 'Min-heap', 'Parent ≤ children'],
         ['Size', String(heap.length - 1), 'Elements in heap'],
-        ['Root', String(heap[1] ?? '—'), 'Smallest value'],
+        ['Root', String(heap[1] ?? ', '), 'Smallest value'],
         ['Insert', 'O(log n)', 'Bubble up after append'],
         ['Extract', 'O(log n)', 'Bubble down after swap'],
       ]),
@@ -78,12 +78,12 @@ DS.demos.heap = function (container) {
   };
 
   window.heapExtract = () => {
-    if (heap.length <= 1) { msg = 'Heap is empty.'; render(); return; }
+    if (heap.length <= 1) { msg = 'Heap is empty.'; render(). Return; }
     const min = heap[1];
     heap[1] = heap[heap.length - 1];
     heap.pop();
     if (heap.length > 1) bubbleDown(1);
-    msg = `Extracted min value ${min}; last item moved to root and bubbled down.`;
+    msg = `Extracted min value ${min}. Last item moved to root and bubbled down.`;
     render();
   };
 

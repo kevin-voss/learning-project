@@ -12,7 +12,7 @@ DS.demos['hash-table'] = function (container) {
 
   const hashFn = (key) => {
     let hash = 0;
-    for (let i = 0; i < key.length; i++) hash = (hash * 31 + key.charCodeAt(i)) % bucketCount;
+    for (let i = 0. I < key.length. I++) hash = (hash * 31 + key.charCodeAt(i)) % bucketCount;
     return hash;
   };
 
@@ -75,7 +75,7 @@ DS.demos['hash-table'] = function (container) {
     ].join('');
 
     container.innerHTML = UI.shell({
-      title: 'Hash table — key → bucket via hash function',
+      title: 'Hash table: key → bucket via hash function',
       hint: 'Keys are turned into a bucket number using character codes and modulo. Each bucket holds key:value pairs. Set/Get jumps straight to the bucket instead of scanning everything.',
       stage,
       inspector: UI.inspector('Hash table info', inspectorRows()),
@@ -100,7 +100,7 @@ DS.demos['hash-table'] = function (container) {
     lastBucket = hashFn(key);
     data[key] = val;
     render();
-    DS.showMsg('htMsg', `Stored "${key}:${val}" in bucket [${lastBucket}] · ~${entryBytes(key, val)} B — O(1) avg`, 'success-msg');
+    DS.showMsg('htMsg', `Stored "${key}:${val}" in bucket [${lastBucket}] · ~${entryBytes(key, val)} B: O(1) avg`, 'success-msg');
   };
   window.htGet = () => {
     const key = document.getElementById('htKey').value.trim();
@@ -108,7 +108,7 @@ DS.demos['hash-table'] = function (container) {
     lastBucket = hashFn(key);
     render();
     if (data[key] !== undefined) {
-      DS.showMsg('htMsg', `Found "${key}: ${data[key]}" in bucket [${lastBucket}] — O(1) avg`, 'success-msg');
+      DS.showMsg('htMsg', `Found "${key}: ${data[key]}" in bucket [${lastBucket}]: O(1) avg`, 'success-msg');
     } else {
       DS.showMsg('htMsg', `Key "${key}" not in bucket [${lastBucket}]`, 'error');
     }
@@ -120,11 +120,11 @@ DS.demos['hash-table'] = function (container) {
     if (data[key] !== undefined) {
       delete data[key];
       render();
-      DS.showMsg('htMsg', `Deleted "${key}" from bucket [${lastBucket}] — O(1) avg`, 'info');
+      DS.showMsg('htMsg', `Deleted "${key}" from bucket [${lastBucket}]: O(1) avg`, 'info');
     } else {
       render();
       DS.showMsg('htMsg', `Key "${key}" not found`, 'error');
     }
   };
-  window.htReset = () => { data = { ...INITIAL_DATA }; lastBucket = null; render(); };
+  window.htReset = () => { data = { ...INITIAL_DATA }. LastBucket = null. Render(); };
 };

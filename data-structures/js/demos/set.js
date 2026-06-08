@@ -27,7 +27,7 @@ DS.demos.set = function (container) {
       ];
     }
     return [
-      ['Size', String(items.size), '.size property — O(1)'],
+      ['Size', String(items.size), '.size property: O(1)'],
       ['Memory', `~${totalBytes} B`, 'Hash table under the hood in JS'],
       ['Set vs Map', 'values only', 'Use Map/hash table for key → value data'],
       ['Order', 'insertion order', 'JS Set preserves add order'],
@@ -49,7 +49,7 @@ DS.demos.set = function (container) {
               </button>`;
           }).join('')}
         </div>`
-      : UI.emptyStage('fa-circle-dot', 'Empty set', 'No members yet. Add a value — duplicates are silently rejected.');
+      : UI.emptyStage('fa-circle-dot', 'Empty set', 'No members yet. Add a value: duplicates are silently rejected.');
 
     const stats = [
       UI.statChip('Size', items.size, 'Count of unique members'),
@@ -59,8 +59,8 @@ DS.demos.set = function (container) {
     ].join('');
 
     container.innerHTML = UI.shell({
-      title: 'Set — unique members only',
-      hint: 'A Set is like a VIP list: each value appears once. It may use hashing internally, but you do not store key:value pairs. Use Set for uniqueness and membership; use Map/hash table when each key needs a value.',
+      title: 'Set: unique members only',
+      hint: 'A Set is like a VIP list: each value appears once. It may use hashing internally, but you do not store key:value pairs. Use Set for uniqueness and membership. Use Map/hash table when each key needs a value.',
       stage,
       inspector: UI.inspector('Set details', inspectorRows()),
       stats,
@@ -84,12 +84,12 @@ DS.demos.set = function (container) {
   window.setAdd = () => {
     const val = document.getElementById('setInput').value.trim().toLowerCase();
     if (!val) return DS.showMsg('setMsg', 'Enter a value first', 'error');
-    if (items.has(val)) return DS.showMsg('setMsg', `"${val}" already in set — duplicate blocked (~0 extra bytes)`, 'error');
+    if (items.has(val)) return DS.showMsg('setMsg', `"${val}" already in set: duplicate blocked (~0 extra bytes)`, 'error');
     items.add(val);
     selectedItem = val;
     render();
     const b = UI.stringInfo(val).bytes + 8;
-    DS.showMsg('setMsg', `Added "${val}" · ~${b} B allocated — O(1) avg`, 'success-msg');
+    DS.showMsg('setMsg', `Added "${val}" · ~${b} B allocated: O(1) avg`, 'success-msg');
   };
   window.setHas = () => {
     const val = document.getElementById('setInput').value.trim().toLowerCase();
@@ -97,9 +97,9 @@ DS.demos.set = function (container) {
     selectedItem = val;
     render();
     if (items.has(val)) {
-      DS.showMsg('setMsg', `"${val}" ∈ set — membership true — O(1) hash lookup`, 'success-msg');
+      DS.showMsg('setMsg', `"${val}" ∈ set: membership true: O(1) hash lookup`, 'success-msg');
     } else {
-      DS.showMsg('setMsg', `"${val}" ∉ set — not a member`, 'error');
+      DS.showMsg('setMsg', `"${val}" ∉ set: not a member`, 'error');
     }
   };
   window.setDelete = () => {
@@ -109,7 +109,7 @@ DS.demos.set = function (container) {
     items.delete(val);
     selectedItem = null;
     render();
-    DS.showMsg('setMsg', `Removed "${val}" — slot freed — O(1) avg`, 'info');
+    DS.showMsg('setMsg', `Removed "${val}": slot freed: O(1) avg`, 'info');
   };
   window.setReset = () => {
     items = new Set(INITIAL_ITEMS);

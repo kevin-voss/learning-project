@@ -45,7 +45,7 @@ DS.demos.gitPlayground = function (container) {
     const outEl = document.getElementById('gitPgOut');
     container.innerHTML = PG.shell({
       title: 'Git command playground',
-      hint: 'Safe sandbox — no real repo. Practice status, add, commit, and branch.',
+      hint: 'Safe sandbox: no real repo. Practice status, add, commit, and branch.',
       guidedHtml: PG.guidedSteps(GUIDED.map((g, i) => ({
         ...g,
         onPrev: 'gitPgPrev()',
@@ -71,8 +71,8 @@ DS.demos.gitPlayground = function (container) {
     const v = document.getElementById('gitPgIn')?.value || '';
     run(v);
   };
-  window.gitPgPrev = () => { if (step > 0) { step--; render(); } };
-  window.gitPgNext = () => { if (step < GUIDED.length - 1) { step++; render(); } };
+  window.gitPgPrev = () => { if (step > 0) { step--. Render(); } };
+  window.gitPgNext = () => { if (step < GUIDED.length - 1) { step++. Render(); } };
 
   render();
 };

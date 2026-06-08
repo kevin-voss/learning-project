@@ -127,6 +127,54 @@
     color: #27c484;
   }
 
+  .nav-sublist {
+    border-left: 1px solid var(--border);
+    display: grid;
+    gap: 2px;
+    margin: -2px 18px 10px 40px;
+    padding: 4px 0 4px 12px;
+  }
+
+  .nav-subitem {
+    align-items: center;
+    border-radius: 8px;
+    color: var(--muted);
+    cursor: pointer;
+    display: flex;
+    gap: 8px;
+    padding: 7px 10px;
+    transition: all 0.2s ease;
+  }
+
+  .nav-subitem:hover {
+    background: rgba(255,255,255,0.03);
+    color: var(--fg2);
+  }
+
+  .nav-subitem.active {
+    background: rgba(76,201,240,0.1);
+    color: var(--blue);
+  }
+
+  .nav-subdot {
+    background: var(--border);
+    border-radius: 999px;
+    flex: 0 0 auto;
+    height: 6px;
+    width: 6px;
+  }
+
+  .nav-subitem.active .nav-subdot {
+    background: var(--blue);
+    box-shadow: 0 0 0 3px rgba(76,201,240,0.12);
+  }
+
+  .nav-subtext {
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+
   /* Main content */
   .main {
     margin-left: 280px;

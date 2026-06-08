@@ -15,12 +15,6 @@ DS.curriculum.push({
   },
   whatIsIt: 'Time complexity is a way to describe how much work an operation does. Big-O ignores tiny details and focuses on growth. O(1) means roughly constant work. O(log n) means the work grows slowly because each step cuts the problem down. O(n) means work grows with the number of items. O(n squared) means nested work, like comparing every item with every other item.',
   whyUse: 'Big-O helps beginners compare choices. Searching an array by scanning is O(n). Searching a balanced binary search tree is O(log n). Looking up a key in a hash table is O(1) on average. The notation is not exact time, but it is a useful warning system for growth.',
-  whenToUse: [
-    { icon: 'fa-magnifying-glass', title: 'Choosing searches', desc: 'Compare linear search, binary search, tree search, BFS, and DFS.' },
-    { icon: 'fa-layer-group', title: 'Choosing storage', desc: 'Pick structures based on the operations you do most.' },
-    { icon: 'fa-chart-line', title: 'Predicting growth', desc: 'Ask what happens when 10 items becomes 10,000.' },
-    { icon: 'fa-triangle-exclamation', title: 'Finding slow paths', desc: 'Nested loops and repeated scans are often performance hotspots.' },
-  ],
   codeExample: `<span class="cm">// O(1): one direct lookup</span>
 names[<span class="num">0</span>];
 
@@ -40,15 +34,5 @@ names[<span class="num">0</span>];
     { op: 'Divide search space', time: 'O(log n)', badge: 'mid' },
     { op: 'Scan all items', time: 'O(n)', badge: 'slow' },
     { op: 'Nested pair checks', time: 'O(n squared)', badge: 'slow' },
-  ],
-  pros: [
-    'Gives beginners vocabulary for speed',
-    'Helps choose between data structures',
-    'Focuses on growth instead of machine-specific timing',
-  ],
-  cons: [
-    'Does not show every real-world performance detail',
-    'Can hide memory usage and CPU cache effects',
-    'Average and worst case can be different',
   ],
 });

@@ -42,19 +42,4 @@ DS.curriculum.push({
     },
   ],
   conceptFlow: ['CPU asks for data', 'CPU cache checks nearby fast memory', 'RAM returns data if cache missed', 'CPU runs instruction'],
-  whenToUse: [
-    { icon: 'fa-layer-group', title: 'Arrays', desc: 'Great when nearby items are read together because memory is contiguous.' },
-    { icon: 'fa-link', title: 'Linked structures', desc: 'Useful for flexible inserts, but references can jump around RAM.' },
-    { icon: 'fa-box', title: 'Buffers', desc: 'Temporary memory areas for keyboard input, audio, files, and network packets.' },
-    { icon: 'fa-gauge', title: 'Performance thinking', desc: 'Cache locality can explain speed differences Big-O does not show.' },
-  ],
-  pros: [
-    'Explains why arrays are fast to loop over',
-    'Makes pointers, references, and nodes easier to understand',
-    'Connects data structures to real hardware behavior',
-  ],
-  cons: [
-    'Real memory is more complex than beginner diagrams',
-    'JavaScript hides many low-level details from you',
-  ],
 });

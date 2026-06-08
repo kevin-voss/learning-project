@@ -42,12 +42,6 @@ DS.curriculum.push({
     },
   ],
   conceptFlow: ['Variable name', 'Reference / address', 'Object in heap memory', 'Properties and values'],
-  whenToUse: [
-    { icon: 'fa-link', title: 'Linked lists', desc: 'Each node points to the next node.' },
-    { icon: 'fa-sitemap', title: 'Trees', desc: 'Each parent node points to child nodes.' },
-    { icon: 'fa-circle-nodes', title: 'Graphs', desc: 'Each vertex points to its neighbors.' },
-    { icon: 'fa-copy', title: 'Avoiding big copies', desc: 'References let code share large objects without copying every field.' },
-  ],
   codeExample: `<span class="cm">// Both variables reference the same object</span>
 <span class="kw">const</span> userA <span class="op">=</span> { name: <span class="str">'Ada'</span>, score: <span class="num">10</span> };
 <span class="kw">const</span> userB <span class="op">=</span> userA;
@@ -64,16 +58,6 @@ node1.next <span class="op">=</span> node2;`,
     { op: 'Follow one reference', time: 'O(1)', badge: 'fast' },
     { op: 'Follow a chain of n nodes', time: 'O(n)', badge: 'slow' },
     { op: 'Rewire a known pointer', time: 'O(1)', badge: 'fast' },
-  ],
-  pros: [
-    'Makes dynamic structures possible',
-    'Avoids copying large objects unnecessarily',
-    'Explains how linked lists, trees, and graphs connect nodes',
-  ],
-  cons: [
-    'Shared references can surprise beginners',
-    'Changing one reference can affect other code using the same object',
-    'Null references cause bugs if code expects a real object',
   ],
   demoType: 'pointer',
 });

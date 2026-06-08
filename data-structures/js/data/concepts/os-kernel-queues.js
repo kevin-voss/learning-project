@@ -48,20 +48,4 @@ DS.curriculum.push({
     },
   ],
   conceptFlow: ['Process has threads', 'Scheduler queues ready work', 'Kernel gives CPU time', 'Events and buffers wait', 'Memory maps through page tables'],
-  whenToUse: [
-    { icon: 'fa-list-check', title: 'Scheduler queues', desc: 'Runnable tasks wait until the CPU can run them.' },
-    { icon: 'fa-folder-tree', title: 'File system trees', desc: 'Folders and files form a hierarchy.' },
-    { icon: 'fa-keyboard', title: 'Event queues', desc: 'Keyboard, mouse, and device events wait for handling.' },
-    { icon: 'fa-table', title: 'Page tables', desc: 'Virtual memory maps program addresses to real memory.' },
-  ],
-  pros: [
-    'Connects beginner data structures to real operating systems',
-    'Shows why queues, buffers, trees, and maps matter',
-    'Introduces hardware and kernel concepts without going too deep',
-  ],
-  cons: [
-    'Real kernels are much more complex',
-    'Low-level details vary between operating systems',
-    'Some concepts are simplified for beginner understanding',
-  ],
 });

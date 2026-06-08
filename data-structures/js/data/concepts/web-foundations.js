@@ -4,7 +4,7 @@ DS.curriculum = DS.curriculum || [];
 DS.curriculum.push(
   {
     id: 'web-big-picture',
-    category: 'Web & Infrastructure Foundations',
+    category: 'Web Basics',
     title: 'How the Web Fits Together',
     icon: 'fa-map',
     number: '20',
@@ -31,12 +31,6 @@ DS.curriculum.push(
   Server --> API[API response]
   API --> Browser
   Browser --> Screen[Updated screen]`,
-    whenToUse: [
-      { icon: 'fa-route', title: 'Learning roadmaps', desc: 'Use the big picture before diving into specific tools.' },
-      { icon: 'fa-bug', title: 'Debugging', desc: 'Ask which part failed: browser, network, server, database, or deployment.' },
-      { icon: 'fa-comments', title: 'Explaining apps', desc: 'Use this map to talk through any web feature.' },
-      { icon: 'fa-layer-group', title: 'Connecting lessons', desc: 'Git, Docker, HTTP, auth, and CI/CD all fit into this system.' },
-    ],
     demoType: 'web-foundations',
     demoTitle: 'Follow the app path',
     demoHint: 'Step through the high-level journey from browser to server and back.',
@@ -46,13 +40,11 @@ DS.curriculum.push(
       { label: 'Read data', detail: 'The server may ask a database for saved information.', result: 'Long-term data is loaded on the backend.' },
       { label: 'Render UI', detail: 'The response returns and the browser updates the screen.', result: 'The user sees a page, list, profile, or error.' },
     ],
-    pros: ['Gives every later tool a place in the system', 'Helps beginners debug by location', 'Connects frontend, backend, network, and data'],
-    cons: ['Real systems have more layers', 'Some details are intentionally simplified', 'The map is a starting point, not the whole territory'],
     checklist: ['Explain the job of a browser, server, and database.', 'Describe a request and response in your own words.', 'Point to where deployment fits in the app journey.'],
   },
   {
     id: 'client-server',
-    category: 'Web & Infrastructure Foundations',
+    category: 'Web Basics',
     title: 'Client and Server',
     icon: 'fa-laptop-code',
     number: '21',
@@ -110,8 +102,318 @@ DS.curriculum.push(
     checklist: ['Identify the client and server in a web app.', 'Explain why the browser should not connect directly to a private database.', 'Read a small fetch example and describe the request.'],
   },
   {
+    id: 'http-requests-responses',
+    category: 'Web Basics',
+    title: 'HTTP Requests and Responses',
+    icon: 'fa-arrows-left-right',
+    number: '22',
+    subtitle: 'HTTP is the language browsers and servers use to ask for data, send updates, and report what happened.',
+    analogy: 'An HTTP conversation is like ordering at a counter. The method is what you want to do. Headers are notes on the order slip. The body is the actual payload. The status code is the cashier telling you whether it worked.',
+    realWorldExample: {
+      title: 'Saving a profile change',
+      desc: 'You edit your display name and click Save. The browser sends a PATCH request with JSON in the body. The server checks your session cookie, updates the database, and replies with 200 OK plus the updated profile JSON.',
+    },
+    whatIsIt: 'HTTP is a request-and-response protocol. The client sends a request with a method, path, headers, and sometimes a body. The server sends back a status code, headers, and often a body. Browsers, mobile apps, and backend services all speak HTTP when they call APIs or load pages.',
+    whyUse: 'Every web feature you build eventually shows up as HTTP: loading pages, logging in, uploading files, handling errors, caching assets, and calling APIs from JavaScript. Understanding requests and responses helps you debug DevTools, write fetch code, and read server logs.',
+    conceptSections: [
+      { icon: 'fa-paper-plane', title: 'Request', desc: 'A message the client sends to a server.', example: 'PATCH /api/profile with JSON in the body.' },
+      { icon: 'fa-reply', title: 'Response', desc: 'The server reply with a status code, headers, and optional body.', example: '200 OK with updated profile JSON.' },
+      { icon: 'fa-list-ol', title: 'Status code', desc: 'A three-digit summary of the result.', example: '404 means the resource was not found.' },
+      { icon: 'fa-tags', title: 'Headers', desc: 'Metadata that travels with the message.', example: 'Content-Type tells the receiver how to read the body.' },
+    ],
+    conceptFlow: ['Client chooses method and URL', 'Client adds headers and optional body', 'Server receives request', 'Server runs logic and builds response', 'Client reads status, headers, and body', 'Client updates UI or handles error'],
+    mermaidDiagram: `sequenceDiagram
+  participant Browser
+  participant Server
+  Browser->>Server: PATCH /api/profile
+  Note over Browser,Server: Headers: Cookie, Content-Type
+  Note over Browser,Server: Body: {"name":"Maya"}
+  Server-->>Browser: 200 OK
+  Note over Browser,Server: Body: {"id":42,"name":"Maya"}`,
+    whenToUse: [
+      { icon: 'fa-code', title: 'Calling APIs', desc: 'Use HTTP methods and headers when frontend code talks to backend services.' },
+      { icon: 'fa-bug', title: 'Debugging', desc: 'Read status codes and response bodies in DevTools when something fails.' },
+      { icon: 'fa-lock', title: 'Auth flows', desc: 'Cookies, bearer tokens, and CORS rules all ride on HTTP messages.' },
+      { icon: 'fa-gauge-high', title: 'Performance', desc: 'Cache-Control and redirects shape how fast pages and assets load.' },
+    ],
+    subPages: [
+      { id: 'overview', label: 'Overview' },
+      {
+        id: 'request-anatomy',
+        label: 'Request Anatomy',
+        title: 'Request Anatomy',
+        body: 'A raw HTTP request has four main parts: a request line, headers, a blank line, and an optional body.',
+        conceptSections: [
+          { icon: 'fa-file-lines', title: 'Request line', desc: 'METHOD path HTTP/version', example: 'GET /api/tasks HTTP/1.1' },
+          { icon: 'fa-tags', title: 'Headers', desc: 'Name: value metadata lines', example: 'Host, Content-Type, Cookie' },
+          { icon: 'fa-minus', title: 'Blank line', desc: 'Separates headers from the body', example: 'One empty line before body text' },
+          { icon: 'fa-box', title: 'Body', desc: 'Optional payload', example: 'JSON for POST, PUT, and PATCH' },
+        ],
+        codeHttp: `PATCH /api/profile HTTP/1.1
+Host: api.example.com
+Content-Type: application/json
+Cookie: session=abc123
+
+{"name":"Maya"}`,
+        codeFetch: `const response = await fetch('/api/profile', {
+  method: 'PATCH',
+  headers: { 'Content-Type': 'application/json' },
+  credentials: 'include',
+  body: JSON.stringify({ name: 'Maya' }),
+});`,
+      },
+      {
+        id: 'http-methods',
+        label: 'HTTP Methods',
+        title: 'HTTP Methods',
+        body: 'The method says what action the client wants. GET reads, POST creates, PUT replaces, PATCH updates part of a resource, and DELETE removes.',
+        conceptSections: [
+          { icon: 'fa-download', title: 'GET', desc: 'Fetch data without changing server state', example: 'GET /api/profile' },
+          { icon: 'fa-plus', title: 'POST', desc: 'Create a resource or submit data', example: 'POST /api/tasks' },
+          { icon: 'fa-arrows-rotate', title: 'PUT', desc: 'Replace a whole resource at a URL', example: 'PUT /api/profile/42' },
+          { icon: 'fa-pen', title: 'PATCH', desc: 'Change only some fields', example: 'PATCH /api/profile' },
+          { icon: 'fa-trash', title: 'DELETE', desc: 'Remove a resource', example: 'DELETE /api/tasks/42' },
+        ],
+        codeHttp: `POST /api/tasks HTTP/1.1
+Host: api.example.com
+Content-Type: application/json
+
+{"title":"Read HTTP lesson"}`,
+        codeFetch: `await fetch('/api/tasks', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ title: 'Read HTTP lesson' }),
+});`,
+      },
+      {
+        id: 'status-codes',
+        label: 'Status Codes',
+        title: 'Status Codes',
+        body: 'Status codes group results into families. 2xx success, 3xx redirect, 4xx client mistake, 5xx server problem.',
+        conceptSections: [
+          { icon: 'fa-circle-check', title: '2xx', desc: 'Success', example: '200 OK, 201 Created' },
+          { icon: 'fa-share', title: '3xx', desc: 'Redirect', example: '301 Moved Permanently, 302 Found' },
+          { icon: 'fa-user-xmark', title: '4xx', desc: 'Client error', example: '400 Bad Request, 401 Unauthorized, 404 Not Found' },
+          { icon: 'fa-server', title: '5xx', desc: 'Server error', example: '500 Internal Server Error' },
+        ],
+        codeHttp: `HTTP/1.1 404 Not Found
+Content-Type: application/json
+
+{"error":"Task not found"}`,
+        codeFetch: `const response = await fetch('/api/tasks/999');
+if (!response.ok) {
+  console.error('Failed:', response.status, response.statusText);
+}`,
+      },
+      {
+        id: 'headers',
+        label: 'Headers',
+        title: 'Headers',
+        body: 'Headers carry metadata: who you are, what format the body uses, caching rules, and security instructions.',
+        conceptSections: [
+          { icon: 'fa-server', title: 'Host', desc: 'Which server the request is for', example: 'Host: api.example.com' },
+          { icon: 'fa-key', title: 'Authorization', desc: 'Bearer token or other credentials', example: 'Authorization: Bearer <token>' },
+          { icon: 'fa-file-code', title: 'Accept', desc: 'Preferred response formats', example: 'Accept: application/json' },
+          { icon: 'fa-cookie-bite', title: 'Set-Cookie', desc: 'Server tells the browser to store a cookie', example: 'Set-Cookie: session=abc123; HttpOnly' },
+        ],
+        codeHttp: `GET /api/profile HTTP/1.1
+Host: api.example.com
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9...`,
+        codeFetch: `await fetch('/api/profile', {
+  headers: {
+    Accept: 'application/json',
+    Authorization: 'Bearer ' + token,
+  },
+});`,
+      },
+      {
+        id: 'body-content-type',
+        label: 'Body and Content-Type',
+        title: 'Body and Content-Type',
+        body: 'When a message has a body, Content-Type tells both sides how to encode and decode it.',
+        conceptSections: [
+          { icon: 'fa-brackets-curly', title: 'application/json', desc: 'JavaScript objects as JSON text', example: '{"name":"Maya"}' },
+          { icon: 'fa-keyboard', title: 'form-urlencoded', desc: 'HTML form fields', example: 'email=maya%40example.com' },
+          { icon: 'fa-paperclip', title: 'multipart/form-data', desc: 'File uploads with mixed parts', example: 'Upload avatar + text fields' },
+          { icon: 'fa-code', title: 'text/html', desc: 'Web page markup in responses', example: '<!DOCTYPE html>...' },
+        ],
+        codeHttp: `POST /api/upload HTTP/1.1
+Host: api.example.com
+Content-Type: application/json
+
+{"fileName":"notes.txt"}`,
+        codeFetch: `await fetch('/api/upload', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ fileName: 'notes.txt' }),
+});`,
+      },
+      {
+        id: 'cookies-storage',
+        label: 'Cookies and Browser Storage',
+        title: 'Cookies and Browser Storage',
+        body: 'Cookies are small pieces of data the browser stores and sends back on matching requests. localStorage and sessionStorage stay in the browser and are not sent automatically.',
+        conceptSections: [
+          { icon: 'fa-cookie', title: 'Set-Cookie', desc: 'Response header that creates or updates a cookie', example: 'Set-Cookie: session=abc123' },
+          { icon: 'fa-paper-plane', title: 'Cookie header', desc: 'Browser sends stored cookies on later requests', example: 'Cookie: session=abc123' },
+          { icon: 'fa-lock', title: 'HttpOnly', desc: 'Keeps session IDs out of JavaScript', example: 'Set-Cookie: ...; HttpOnly' },
+          { icon: 'fa-database', title: 'localStorage', desc: 'Persists in the browser until cleared', example: 'Not sent with every HTTP request' },
+        ],
+        codeHttp: `HTTP/1.1 200 OK
+Set-Cookie: session=abc123; HttpOnly; Secure; Path=/
+Content-Type: application/json
+
+{"ok":true}`,
+        codeFetch: `await fetch('/api/login', {
+  method: 'POST',
+  credentials: 'include',
+  body: JSON.stringify({ email, password }),
+});`,
+      },
+      {
+        id: 'redirects',
+        label: 'Redirects',
+        title: 'Redirects',
+        body: 'A redirect response tells the client to request a different URL. Temporary redirects use 302; permanent moves often use 301.',
+        conceptSections: [
+          { icon: 'fa-location-arrow', title: 'Location', desc: 'Header naming the new URL', example: 'Location: https://example.com/dashboard' },
+          { icon: 'fa-route', title: 'Auto-follow', desc: 'Browsers usually follow redirects automatically', example: 'fetch with redirect: "follow"' },
+          { icon: 'fa-bookmark', title: '301', desc: 'Permanent move for SEO and bookmarks', example: 'Old URL should update references' },
+          { icon: 'fa-clock', title: '302', desc: 'Temporary redirect for now', example: 'Try another URL this time' },
+        ],
+        codeHttp: `HTTP/1.1 302 Found
+Location: https://example.com/dashboard
+Content-Length: 0`,
+        codeFetch: `const response = await fetch('/old-dashboard', { redirect: 'follow' });
+console.log('Final URL:', response.url);`,
+      },
+      {
+        id: 'caching-headers',
+        label: 'Caching Headers',
+        title: 'Caching Headers',
+        body: 'Cache-Control and related headers tell browsers and CDNs whether to reuse a response or fetch a fresh copy.',
+        conceptSections: [
+          { icon: 'fa-hourglass', title: 'max-age', desc: 'How long a cached copy may be reused', example: 'Cache-Control: max-age=3600' },
+          { icon: 'fa-ban', title: 'no-store', desc: 'Do not save the response', example: 'Use for private or sensitive data' },
+          { icon: 'fa-fingerprint', title: 'ETag', desc: 'Supports conditional requests', example: 'If-None-Match: "v42"' },
+          { icon: 'fa-bolt', title: 'Performance', desc: 'Good caching speeds repeat visits', example: 'Static assets cache longer than API JSON' },
+        ],
+        codeHttp: `HTTP/1.1 200 OK
+Cache-Control: public, max-age=3600
+ETag: "v42"
+Content-Type: application/json
+
+{"lessons":[]}`,
+        codeFetch: `const response = await fetch('/api/lessons');
+console.log(response.headers.get('cache-control'));`,
+      },
+      {
+        id: 'cors-preflight',
+        label: 'CORS and Preflight',
+        title: 'CORS and Preflight',
+        body: 'Browsers block many cross-origin requests unless the server explicitly allows them. Some requests trigger a preflight OPTIONS check first.',
+        conceptSections: [
+          { icon: 'fa-globe', title: 'Origin', desc: 'Where the JavaScript page came from', example: 'Origin: https://app.example.com' },
+          { icon: 'fa-check', title: 'Allow-Origin', desc: 'Server lists permitted origins', example: 'Access-Control-Allow-Origin: https://app.example.com' },
+          { icon: 'fa-plane-departure', title: 'Preflight', desc: 'OPTIONS check before the real request', example: 'PATCH with custom headers may preflight' },
+          { icon: 'fa-shield', title: 'Browser rule', desc: 'Servers must answer preflight before the real call proceeds', example: 'Missing CORS headers block the response' },
+        ],
+        codeHttp: `OPTIONS /api/profile HTTP/1.1
+Host: api.example.com
+Origin: https://app.example.com
+Access-Control-Request-Method: PATCH`,
+        codeFetch: `await fetch('https://api.example.com/profile', {
+  method: 'PATCH',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ name: 'Maya' }),
+});`,
+      },
+      {
+        id: 'idempotency',
+        label: 'Idempotency',
+        title: 'Idempotency',
+        body: 'An idempotent request can be sent more than once without changing the result beyond the first successful call. GET, PUT, and DELETE are idempotent; POST usually is not.',
+        conceptSections: [
+          { icon: 'fa-download', title: 'GET', desc: 'Safe to repeat; reads the same resource', example: 'GET /api/profile' },
+          { icon: 'fa-arrows-rotate', title: 'PUT', desc: 'Same body replaces the same resource', example: 'PUT /api/profile/42' },
+          { icon: 'fa-trash', title: 'DELETE', desc: 'First call removes; later calls may 404', example: 'DELETE /api/tasks/42' },
+          { icon: 'fa-plus', title: 'POST', desc: 'Usually creates a new resource each time', example: 'POST /api/tasks' },
+        ],
+        codeHttp: `PUT /api/profile/42 HTTP/1.1
+Host: api.example.com
+Content-Type: application/json
+
+{"name":"Maya","theme":"dark"}`,
+        codeFetch: `await fetch('/api/profile/42', {
+  method: 'PUT',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ name: 'Maya', theme: 'dark' }),
+});`,
+      },
+    ],
+    demoType: 'http',
+    demoTitle: 'HTTP request inspector',
+    demoHint: 'Pick a method, toggle headers, body, and cookies, then see the raw request and example response.',
+    checklist: ['Read a raw HTTP request and name its parts.', 'Match GET, POST, PUT, PATCH, and DELETE to common use cases.', 'Explain what 2xx, 3xx, 4xx, and 5xx mean.', 'Describe when a cookie is sent vs when localStorage is used.'],
+  },
+  {
+    id: 'networking-http',
+    category: 'Web Basics',
+    title: 'URLs, DNS, HTTP, and HTTPS',
+    icon: 'fa-globe',
+    number: '23',
+    subtitle: 'The web works by finding servers, sending requests, receiving responses, and protecting data in transit.',
+    analogy: 'Opening a website is like mailing a letter. The URL is the written address, DNS is the address book, HTTP is the message format, and HTTPS is the sealed envelope.',
+    realWorldExample: {
+      title: 'Typing a website URL',
+      desc: 'When you type https://example.com, the browser parses the URL, asks DNS for an IP address, opens a connection, completes TLS, sends an HTTP request, and receives an HTTP response containing the page.',
+    },
+    whatIsIt: 'A URL tells the browser what you want. DNS finds the server address. HTTP is the request and response language. HTTPS uses TLS so other people on the network cannot easily read or change the conversation.',
+    whyUse: 'Networking basics help beginners debug broken links, failed API calls, bad certificates, 404 pages, redirects, slow pages, and site cannot be reached errors.',
+    conceptSections: [
+      { icon: 'fa-link', title: 'URL', desc: 'A URL contains parts like protocol, domain, path, query string, and fragment.', example: 'https://shop.example.com/products?id=42#reviews' },
+      { icon: 'fa-address-book', title: 'DNS', desc: 'DNS is the internet address book. It finds an IP for a domain.', example: 'example.com resolves to an IP address.' },
+      { icon: 'fa-file-lines', title: 'HTTP', desc: 'HTTP messages have methods, headers, status codes, and sometimes a body.', example: 'GET /products asks for data. POST /login sends data.' },
+      { icon: 'fa-lock', title: 'HTTPS', desc: 'HTTPS wraps HTTP in TLS encryption.', example: 'Passwords and tokens should travel over HTTPS.' },
+    ],
+    conceptFlow: ['User enters URL', 'Browser parses URL', 'DNS finds server IP', 'Browser opens connection', 'TLS secures HTTPS', 'Browser sends HTTP request', 'Server sends HTTP response', 'Browser renders page'],
+    mermaidDiagram: `flowchart LR
+  A[User enters URL] --> B[Browser parses URL]
+  B --> C[DNS lookup]
+  C --> D[Server IP]
+  D --> E[Open connection]
+  E --> F[TLS handshake]
+  F --> G[HTTP request]
+  G --> H[Web server]
+  H --> I[HTTP response]
+  I --> J[Browser displays page]`,
+    demoType: 'web-foundations',
+    demoTitle: 'Follow a website request',
+    demoHint: 'Connect each network keyword to the browser journey.',
+    demoSteps: [
+      { label: 'URL', detail: 'The URL says use HTTPS, ask this domain, and request this path.', result: 'The browser knows what resource to ask for.' },
+      { label: 'DNS', detail: 'DNS translates the domain into an IP address.', result: 'The browser knows where to connect.' },
+      { label: 'TLS', detail: 'TLS creates an encrypted HTTPS channel.', result: 'The request is protected in transit.' },
+      { label: 'HTTP', detail: 'The browser sends an HTTP request and reads the status, headers, and body.', result: 'The page or API data arrives.' },
+    ],
+    codeTitle: 'API Request Example',
+    codeLanguage: 'JavaScript',
+    codeText: `async function loadUser() {
+  const response = await fetch('https://api.example.com/users/42');
+
+  if (!response.ok) {
+    throw new Error('Request failed: ' + response.status);
+  }
+
+  const user = await response.json();
+  console.log(user.name);
+}`,
+    checklist: ['Break a URL into protocol, domain, path, query, and fragment.', 'Explain why DNS exists.', 'Describe why HTTPS matters for private data.'],
+  },
+  {
     id: 'networks-ips-requests',
-    category: 'Web & Infrastructure Foundations',
+    category: 'Networking',
     title: 'Networks, IPs, Ports, and Requests',
     icon: 'fa-network-wired',
     number: '22',
@@ -148,12 +450,6 @@ DS.curriculum.push(
   I --> J[Server process]
   J --> K[Response packets]
   K --> A`,
-    whenToUse: [
-      { icon: 'fa-bug', title: 'Connection errors', desc: 'Check whether the server is running and the client is using the right host and port.' },
-      { icon: 'fa-laptop-code', title: 'Local development', desc: 'Use localhost and ports to run frontend and backend apps side by side.' },
-      { icon: 'fa-server', title: 'Deploying servers', desc: 'Servers must listen on a port and be reachable through networking rules.' },
-      { icon: 'fa-gauge-high', title: 'Performance debugging', desc: 'Packets, latency, and timeouts explain why requests may feel slow.' },
-    ],
     demoType: 'web-foundations',
     demoTitle: 'Packet route simulator',
     demoHint: 'Follow a request from browser to IP address, port, server process, and back.',
@@ -184,148 +480,11 @@ Content-Type: application/json
   "email": "maya@example.com",
   "password": "demo-password"
 }`,
-    pros: ['Explains localhost, ports, and server listening', 'Helps debug failed API calls', 'Connects browser requests to real network movement'],
-    cons: ['Actual routing is more complex', 'Firewalls and cloud networking add more layers', 'Beginners do not need every protocol detail at once'],
     checklist: ['Explain IP address vs port.', 'Describe IPv4 octets and IPv6 hexadecimal groups.', 'Describe what packets and routers do.', 'Read a simple HTTP request and identify method, path, headers, and body.'],
   },
   {
-    id: 'networking-http',
-    category: 'Web & Infrastructure Foundations',
-    title: 'URLs, DNS, HTTP, and HTTPS',
-    icon: 'fa-globe',
-    number: '23',
-    subtitle: 'The web works by finding servers, sending requests, receiving responses, and protecting data in transit.',
-    analogy: 'Opening a website is like mailing a letter. The URL is the written address, DNS is the address book, HTTP is the message format, and HTTPS is the sealed envelope.',
-    realWorldExample: {
-      title: 'Typing a website URL',
-      desc: 'When you type https://example.com, the browser parses the URL, asks DNS for an IP address, opens a connection, completes TLS, sends an HTTP request, and receives an HTTP response containing the page.',
-    },
-    whatIsIt: 'A URL tells the browser what you want. DNS finds the server address. HTTP is the request and response language. HTTPS uses TLS so other people on the network cannot easily read or change the conversation.',
-    whyUse: 'Networking basics help beginners debug broken links, failed API calls, bad certificates, 404 pages, redirects, slow pages, and site cannot be reached errors.',
-    conceptSections: [
-      { icon: 'fa-link', title: 'URL', desc: 'A URL contains parts like protocol, domain, path, query string, and fragment.', example: 'https://shop.example.com/products?id=42#reviews' },
-      { icon: 'fa-address-book', title: 'DNS', desc: 'DNS is the internet address book. It finds an IP for a domain.', example: 'example.com resolves to an IP address.' },
-      { icon: 'fa-file-lines', title: 'HTTP', desc: 'HTTP messages have methods, headers, status codes, and sometimes a body.', example: 'GET /products asks for data. POST /login sends data.' },
-      { icon: 'fa-lock', title: 'HTTPS', desc: 'HTTPS wraps HTTP in TLS encryption.', example: 'Passwords and tokens should travel over HTTPS.' },
-    ],
-    conceptFlow: ['User enters URL', 'Browser parses URL', 'DNS finds server IP', 'Browser opens connection', 'TLS secures HTTPS', 'Browser sends HTTP request', 'Server sends HTTP response', 'Browser renders page'],
-    mermaidDiagram: `flowchart LR
-  A[User enters URL] --> B[Browser parses URL]
-  B --> C[DNS lookup]
-  C --> D[Server IP]
-  D --> E[Open connection]
-  E --> F[TLS handshake]
-  F --> G[HTTP request]
-  G --> H[Web server]
-  H --> I[HTTP response]
-  I --> J[Browser displays page]`,
-    whenToUse: [
-      { icon: 'fa-bug', title: 'Debugging web errors', desc: 'Use URLs, DNS, and status codes to understand why a page or API call failed.' },
-      { icon: 'fa-code', title: 'Calling APIs', desc: 'Use HTTP methods, headers, and bodies when frontend code talks to backend services.' },
-      { icon: 'fa-lock', title: 'Protecting users', desc: 'Use HTTPS so passwords, tokens, and private data are encrypted in transit.' },
-      { icon: 'fa-gauge-high', title: 'Improving performance', desc: 'Understand DNS, connections, caching, and redirects when pages load slowly.' },
-    ],
-    demoType: 'web-foundations',
-    demoTitle: 'Follow a website request',
-    demoHint: 'Connect each network keyword to the browser journey.',
-    demoSteps: [
-      { label: 'URL', detail: 'The URL says use HTTPS, ask this domain, and request this path.', result: 'The browser knows what resource to ask for.' },
-      { label: 'DNS', detail: 'DNS translates the domain into an IP address.', result: 'The browser knows where to connect.' },
-      { label: 'TLS', detail: 'TLS creates an encrypted HTTPS channel.', result: 'The request is protected in transit.' },
-      { label: 'HTTP', detail: 'The browser sends an HTTP request and reads the status, headers, and body.', result: 'The page or API data arrives.' },
-    ],
-    codeTitle: 'API Request Example',
-    codeLanguage: 'JavaScript',
-    codeText: `async function loadUser() {
-  const response = await fetch('https://api.example.com/users/42');
-
-  if (!response.ok) {
-    throw new Error('Request failed: ' + response.status);
-  }
-
-  const user = await response.json();
-  console.log(user.name);
-}`,
-    pros: ['Explains what happens when a website loads', 'Helps debug browser and API problems', 'Connects URLs, DNS, HTTP, and HTTPS into one flow'],
-    cons: ['Real networking has more layers', 'Browser security adds more rules later', 'TLS details are simplified for beginners'],
-    checklist: ['Break a URL into protocol, domain, path, query, and fragment.', 'Explain why DNS exists.', 'Describe why HTTPS matters for private data.'],
-  },
-  {
-    id: 'database-sql',
-    category: 'Web & Infrastructure Foundations',
-    title: 'Databases and SQL',
-    icon: 'fa-database',
-    number: '24',
-    subtitle: 'SQL databases store app data in tables so servers can query, change, and protect long-term information.',
-    analogy: 'A SQL database is like a set of organized spreadsheets with rules. Each table stores one kind of thing, each row is one record, each column is one field, and relationships connect records together.',
-    realWorldExample: {
-      title: 'Saving lessons and progress',
-      desc: 'A learning app might store users in one table, lessons in another, and completed lessons in a join table. When a user opens the dashboard, the server runs SQL queries to find the lessons and completion status.',
-    },
-    whatIsIt: 'A relational database stores structured data in tables. SQL is the language used to read and change that data. Tables contain rows and columns. Primary keys identify rows. Foreign keys connect rows across tables. Indexes speed up lookups. Partitioning, replication, and sharding help databases handle more data and traffic.',
-    whyUse: 'Most real apps need durable data. SQL helps developers ask precise questions, enforce relationships, update records safely, and keep data consistent even when many users are active. As apps grow, indexes and scaling patterns keep common queries fast.',
-    conceptSections: [
-      { icon: 'fa-table', title: 'Table', desc: 'A table groups one kind of record.', example: 'A users table stores one row per user.' },
-      { icon: 'fa-grip-lines', title: 'Row', desc: 'A row is one record in a table.', example: 'One user row may contain id, email, and created_at.' },
-      { icon: 'fa-columns', title: 'Column', desc: 'A column is one named field on every row.', example: 'email is a column in the users table.' },
-      { icon: 'fa-key', title: 'Primary key', desc: 'A primary key uniquely identifies one row.', example: 'users.id can identify a specific user.' },
-      { icon: 'fa-link', title: 'Foreign key', desc: 'A foreign key points from one table to another.', example: 'orders.user_id points to users.id.' },
-      { icon: 'fa-diagram-project', title: 'Relations', desc: 'Relations connect tables so data can stay organized instead of duplicated everywhere.', example: 'completions.user_id connects a completion row to one users.id row.' },
-      { icon: 'fa-book-open-reader', title: 'Query examples', desc: 'SQL can read, insert, update, delete, join, group, and sort data.', example: 'SELECT title FROM lessons WHERE published = true ORDER BY title;' },
-      { icon: 'fa-gauge-high', title: 'Indexes', desc: 'An index is a helper structure that speeds up common lookups, filters, and joins.', example: 'CREATE INDEX idx_lessons_published ON lessons(published);' },
-      { icon: 'fa-lock', title: 'Transactions', desc: 'A transaction groups operations so they succeed or fail together.', example: 'Create an order and order items together, or roll back both.' },
-      { icon: 'fa-chart-pie', title: 'Partitioning', desc: 'Partitioning splits one large table into smaller pieces, often by time, tenant, or region.', example: 'A logs table can be partitioned by month.' },
-      { icon: 'fa-copy', title: 'Replication', desc: 'Replication copies data to other database servers for reads, backups, or failover.', example: 'A read replica can handle dashboard queries.' },
-      { icon: 'fa-layer-group', title: 'Sharding', desc: 'Sharding splits data across multiple database servers when one server cannot hold or serve everything.', example: 'Users A-M go to shard 1 and N-Z go to shard 2.' },
-    ],
-    conceptFlow: ['Design tables and relations', 'Choose primary and foreign keys', 'Write SQL queries', 'Add indexes for common lookups', 'Use transactions for safe writes', 'Partition or replicate when data grows', 'Shard only when one database is no longer enough'],
-    mermaidDiagram: `erDiagram
-  USERS ||--o{ COMPLETIONS : has
-  LESSONS ||--o{ COMPLETIONS : includes
-  USERS {
-    int id PK
-    string email
-  }
-  LESSONS {
-    int id PK
-    string title
-  }
-  COMPLETIONS {
-    int user_id FK
-    int lesson_id FK
-    datetime completed_at
-  }`,
-    whenToUse: [
-      { icon: 'fa-user', title: 'User accounts', desc: 'Store profiles, settings, and account state.' },
-      { icon: 'fa-cart-shopping', title: 'Orders and payments', desc: 'Store structured business records with relationships.' },
-      { icon: 'fa-list-check', title: 'Progress tracking', desc: 'Connect users to lessons, tasks, or achievements.' },
-      { icon: 'fa-lock', title: 'Consistent updates', desc: 'Use transactions when multiple writes must succeed together.' },
-    ],
-    demoType: 'database-sql',
-    codeTitle: 'SQL Query Examples',
-    codeLanguage: 'SQL',
-    codeText: `SELECT
-  users.email,
-  lessons.title,
-  completions.completed_at
-FROM completions
-JOIN users ON users.id = completions.user_id
-JOIN lessons ON lessons.id = completions.lesson_id
-WHERE users.id = 42
-ORDER BY completions.completed_at DESC;`,
-    complexity: [
-      { op: 'Read by primary key', time: 'O(log n)', badge: 'mid' },
-      { op: 'Scan table without index', time: 'O(n)', badge: 'slow' },
-      { op: 'Insert one row', time: 'O(log n)', badge: 'mid' },
-      { op: 'Join with useful indexes', time: 'O(n log n)', badge: 'mid' },
-    ],
-    pros: ['Great for structured data and relationships', 'SQL is widely used across real apps', 'Indexes and transactions help keep apps fast and consistent', 'Replication and partitioning provide growth paths'],
-    cons: ['Schema design takes planning', 'Bad queries can be slow', 'Too many indexes slow down writes', 'Sharding adds serious operational complexity', 'Apps must avoid SQL injection by using parameters'],
-    checklist: ['Explain table, row, and column.', 'Describe primary key vs foreign key.', 'Read SELECT, INSERT, UPDATE, JOIN, and GROUP BY examples.', 'Explain when an index helps.', 'Describe partitioning, replication, and sharding at a high level.'],
-  },
-  {
     id: 'git-collaboration',
-    category: 'Web & Infrastructure Foundations',
+    category: 'Developer Workflow',
     title: 'Git and Collaboration',
     icon: 'fa-code-branch',
     number: '25',
@@ -383,7 +542,7 @@ git pull origin main`,
   },
   {
     id: 'servers-deployment-devops',
-    category: 'Web & Infrastructure Foundations',
+    category: 'Deployment & DevOps',
     title: 'Servers, Deployment, and CI/CD',
     icon: 'fa-server',
     number: '26',
@@ -451,7 +610,7 @@ jobs:
   },
   {
     id: 'docker-containers',
-    category: 'Web & Infrastructure Foundations',
+    category: 'Deployment & DevOps',
     title: 'Docker and Containers',
     icon: 'fa-box',
     number: '27',
@@ -461,8 +620,8 @@ jobs:
       title: 'Web app plus database',
       desc: 'A Node app can run in one container and PostgreSQL in another. New developers do not manually install exact Node and database versions. They run one command and get the same setup as the team.',
     },
-    whatIsIt: 'Docker builds images and runs containers. An image is a packaged template. A container is a running copy of that template. Containers help developers, CI systems, and servers run apps with consistent dependencies.',
-    whyUse: 'Docker helps solve "it works on my machine." If every developer, test server, and production server runs the same container image, the app is more likely to behave consistently everywhere.',
+    whatIsIt: 'Docker builds images and runs containers. An image is a packaged template. A container is a running copy of that template. Containers help developers, CI systems, and servers run apps with consistent dependencies. When an app needs multiple containers — such as a frontend, API, and database — Docker Compose is the usual next step to run and wire them together.',
+    whyUse: 'Docker helps solve "it works on my machine." If every developer, test server, and production server runs the same container image, the app is more likely to behave consistently everywhere. A single container is a great start; Compose becomes important once several services must start together with shared networks, ports, and volumes.',
     conceptSections: [
       { icon: 'fa-file-lines', title: 'Dockerfile', desc: 'A Dockerfile is the recipe for an image.', example: 'Start from node:20, copy files, install packages, run the app.' },
       { icon: 'fa-layer-group', title: 'Image', desc: 'An image is the packaged result of the Dockerfile.', example: 'hello-web:1.0 can be shared and run elsewhere.' },
@@ -507,11 +666,11 @@ EXPOSE 3000
 CMD ["npm", "start"]`,
     pros: ['Makes app environments repeatable', 'Simplifies setup with many dependencies', 'Works well for local development, CI, and deployment'],
     cons: ['Adds new concepts and commands', 'Images can become large', 'Ports, volumes, and networking can confuse beginners'],
-    checklist: ['Explain image vs container.', 'Describe why Docker helps with "works on my machine".', 'Explain what a port mapping does.'],
+    checklist: ['Explain image vs container.', 'Describe why Docker helps with "works on my machine".', 'Explain what a port mapping does.', 'Describe when Docker Compose is the next step after one container.'],
   },
   {
     id: 'encryption-concepts',
-    category: 'Web & Infrastructure Foundations',
+    category: 'Security',
     title: 'Encryption, Keys, and Certificates',
     icon: 'fa-key',
     number: '28',
@@ -566,74 +725,6 @@ original = decrypt(later, secretKey)
 // only the private key owner can decrypt.
 ciphertext = encryptForRecipient("hello", recipientPublicKey)
 plaintext = decryptWithPrivateKey(ciphertext, recipientPrivateKey)`,
-    pros: ['Protects private data from casual reading', 'Makes HTTPS and secure storage possible', 'Builds foundation for auth and secrets management'],
-    cons: ['Key management is hard', 'Encryption does not fix bad authorization', 'Hashing, signing, and encryption are easy to confuse'],
     checklist: ['Explain plaintext vs ciphertext.', 'Describe symmetric vs asymmetric encryption.', 'Explain why certificates matter for HTTPS.'],
-  },
-  {
-    id: 'auth-security',
-    category: 'Web & Infrastructure Foundations',
-    title: 'Auth and Web Security Basics',
-    icon: 'fa-shield-halved',
-    number: '29',
-    subtitle: 'How apps know who you are, what you can access, and how they keep login data safe.',
-    analogy: 'Think of an airport. Authentication is showing your passport. Authorization is your boarding pass. A session is a temporary wristband. Secrets are staff-only keys.',
-    realWorldExample: {
-      title: 'Logging into a learning app',
-      desc: 'The app checks your password, creates a session or token, and remembers future requests are from you. A student can view lessons. An admin may also edit lessons. Same login, different permissions.',
-    },
-    whatIsIt: 'Authentication proves who a user is. Authorization checks what that user can do. Sessions and tokens remember login across requests. Security basics protect passwords, API keys, browser calls, and private data.',
-    whyUse: 'Most real apps need accounts, permissions, private data, and API calls. Security bugs often happen when beginners mix up authentication and authorization, store passwords incorrectly, trust the browser too much, or expose secrets.',
-    conceptSections: [
-      { icon: 'fa-user-check', title: 'Authentication', desc: 'Authentication answers: who are you?', example: 'Login checks an email and password or an OAuth provider.' },
-      { icon: 'fa-lock', title: 'Authorization', desc: 'Authorization answers: what are you allowed to do?', example: 'A student can view lessons, but only an admin can edit them.' },
-      { icon: 'fa-cookie-bite', title: 'Sessions and JWTs', desc: 'Sessions and JWTs help apps remember login across requests.', example: 'A cookie can carry a session ID to the server.' },
-      { icon: 'fa-key', title: 'Secrets and hashes', desc: 'Secrets stay private. Passwords should be stored as slow hashes, not plain text.', example: 'A Stripe secret key belongs on the server, not in frontend code.' },
-    ],
-    conceptFlow: ['User sends login', 'Server verifies password hash', 'Server creates session or token', 'Browser sends cookie or token', 'Server authenticates request', 'Server checks authorization', 'API returns allowed data'],
-    mermaidDiagram: `sequenceDiagram
-  participant Browser
-  participant App as App Server
-  participant DB as Database
-  participant API as Protected API
-  Browser->>App: POST /login
-  App->>DB: Find user
-  DB-->>App: Password hash + role
-  App->>App: Verify password
-  App-->>Browser: Set cookie or return JWT
-  Browser->>API: Request protected data
-  API->>API: Authenticate then authorize
-  API-->>Browser: Allowed data or error`,
-    whenToUse: [
-      { icon: 'fa-user-lock', title: 'Login systems', desc: 'Use authentication when users need private accounts.' },
-      { icon: 'fa-users-gear', title: 'Roles and permissions', desc: 'Use authorization when different users can do different actions.' },
-      { icon: 'fa-plug', title: 'Third-party access', desc: 'Use OAuth when users grant access to another service.' },
-      { icon: 'fa-server', title: 'Browser-to-API calls', desc: 'Configure CORS when frontend code calls a different origin.' },
-    ],
-    demoType: 'web-foundations',
-    demoTitle: 'Login request inspector',
-    demoHint: 'Step through identity and permission checks that protect private data.',
-    demoSteps: [
-      { label: 'Login', detail: 'The browser sends credentials to the server over HTTPS.', result: 'The server begins authentication.' },
-      { label: 'Hash check', detail: 'The server compares a password attempt with a stored hash.', result: 'The plain password is not stored.' },
-      { label: 'Remember user', detail: 'The app creates a session cookie or a signed JWT.', result: 'Future requests can prove who they belong to.' },
-      { label: 'Authorize', detail: 'The server checks the user role before returning protected data.', result: 'Logged in does not mean allowed to do everything.' },
-    ],
-    codeTitle: 'Auth Logic Example',
-    codeLanguage: 'JavaScript',
-    codeText: `function authenticate(email, password) {
-  const user = findUserByEmail(email);
-  if (!user) return null;
-
-  const matches = verifyPasswordHash(password, user.passwordHash);
-  return matches ? user : null;
-}
-
-function authorize(user, requiredRole) {
-  return Boolean(user) && user.role === requiredRole;
-}`,
-    pros: ['Separates identity, permissions, browser rules, and secret storage', 'Connects login concepts to real request/response flows', 'Prevents common beginner security mistakes'],
-    cons: ['Production auth has many edge cases', 'JWT, OAuth, cookies, and CORS are often confused', 'Real apps should use trusted security libraries'],
-    checklist: ['Explain authentication vs authorization.', 'Describe why plain passwords should not be stored.', 'Explain why API secrets do not belong in frontend code.'],
   },
 );

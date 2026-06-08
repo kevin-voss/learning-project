@@ -42,21 +42,5 @@ DS.curriculum.push({
     },
   ],
   conceptFlow: ['Start with facts', 'Combine with logical operator', 'Get one true/false answer', 'Choose what the program does next'],
-  whenToUse: [
-    { icon: 'fa-lock', title: 'Permissions', desc: 'Allow access when role and account state pass checks.' },
-    { icon: 'fa-filter', title: 'Filtering', desc: 'Include items that match one or more conditions.' },
-    { icon: 'fa-bug', title: 'Guard clauses', desc: 'Stop early when required facts are missing.' },
-    { icon: 'fa-microchip', title: 'Bit logic', desc: 'XOR and AND are also used at lower hardware and binary levels.' },
-  ],
-  pros: [
-    'Makes program decisions precise',
-    'Connects everyday yes/no thinking to code',
-    'Also appears in hardware, permissions, filters, and algorithms',
-  ],
-  cons: [
-    'Nested logic can become hard to read',
-    'AND vs OR mistakes can create bugs',
-    'XOR is useful but less common for beginners than AND, OR, and NOT',
-  ],
   demoType: 'logic',
 });

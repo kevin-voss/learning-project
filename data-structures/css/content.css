@@ -41,6 +41,13 @@
     max-width: 600px;
   }
 
+  .ds-subpage-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--fg);
+    margin-bottom: 10px;
+  }
+
   /* Real world analogy card */
   .analogy-card {
     background: linear-gradient(135deg, var(--accent-dim), rgba(240,180,41,0.03));
@@ -249,6 +256,91 @@
   .section-subnav a:hover {
     border-color: var(--accent);
     color: var(--accent);
+  }
+
+  .lesson-subnav {
+    align-items: center;
+    background: linear-gradient(135deg, rgba(76,201,240,0.08), rgba(240,180,41,0.04));
+    border: 1px solid rgba(76,201,240,0.25);
+    border-radius: var(--radius);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: -18px 0 20px;
+    padding: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 21;
+  }
+  .lesson-subnav span {
+    color: var(--blue);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-right: 6px;
+    text-transform: uppercase;
+  }
+  .lesson-subnav-btn {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--fg2);
+    cursor: pointer;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 10px;
+    transition: all 0.2s ease;
+  }
+  .lesson-subnav-btn:hover {
+    border-color: var(--blue);
+    color: var(--blue);
+  }
+  .lesson-subnav-btn.active {
+    background: rgba(76,201,240,0.12);
+    border-color: var(--blue);
+    color: var(--blue);
+  }
+  .subpage-code-grid {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    margin-top: 16px;
+  }
+
+  .subpage-code {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .subpage-code-label {
+    background: rgba(255,255,255,0.03);
+    border-bottom: 1px solid var(--border);
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    padding: 10px 14px;
+    text-transform: uppercase;
+  }
+
+  .subpage-code-body {
+    color: var(--fg2);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    line-height: 1.6;
+    margin: 0;
+    overflow-x: auto;
+    padding: 14px;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .lesson-subnav ~ .section-subnav {
+    top: 56px;
+    z-index: 20;
   }
 
   .mermaid-wrap {

@@ -42,20 +42,4 @@ DS.curriculum.push({
     },
   ],
   conceptFlow: ['Source code', 'Parse into structure', 'Compile / interpret', 'Runtime manages memory', 'CPU runs instructions'],
-  whenToUse: [
-    { icon: 'fa-layer-group', title: 'Call stack', desc: 'Function calls use stack frames while running.' },
-    { icon: 'fa-box-open', title: 'Heap memory', desc: 'Objects and arrays usually live in heap-managed memory.' },
-    { icon: 'fa-broom', title: 'Garbage collection', desc: 'The runtime frees memory that is no longer reachable.' },
-    { icon: 'fa-bolt', title: 'Optimization', desc: 'Hot code can be optimized so repeated operations run faster.' },
-  ],
-  pros: [
-    'Connects code to CPU, memory, stack, and heap',
-    'Explains why runtimes matter for high-level languages',
-    'Makes recursion and object references easier to understand',
-  ],
-  cons: [
-    'Real compilers are deep and complex',
-    'JavaScript engines hide many low-level details',
-    'Different languages compile and run differently',
-  ],
 });

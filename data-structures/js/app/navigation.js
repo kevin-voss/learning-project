@@ -2,9 +2,19 @@ window.DS = window.DS || {};
 
 DS.goTo = function (index) {
   DS.currentSection = index;
+  DS.currentSubPage = 0;
   DS.renderContent();
   DS.renderNav();
-}
+};
+
+DS.goToSubPage = function (index) {
+  const ds = DS.curriculum[DS.currentSection];
+  const count = ds.subPages?.length ?? 0;
+  if (!count) return;
+  DS.currentSubPage = Math.max(0, Math.min(index, count - 1));
+  DS.renderContent();
+  DS.renderNav();
+};
 
 DS.markComplete = function (id) {
   if (DS.completed.has(id)) return;

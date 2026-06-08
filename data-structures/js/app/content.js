@@ -136,6 +136,8 @@ DS.glossaryTerms = {
   'ci': 'Continuous Integration: automatically checking code with tests and builds when changes are pushed.',
   'client': 'The app or device making a request, often a browser or mobile app.',
   'commit': 'A saved snapshot of changes in Git with a message.',
+  'cdn': 'Content Delivery Network: caches static files close to users at edge locations.',
+  'compose': 'Docker Compose: a tool and YAML file format for running multi-container apps together.',
   'container': 'A running isolated environment created from a Docker image.',
   'cookie': 'Small data stored by the browser and sent with matching requests.',
   'cors': 'Cross-Origin Resource Sharing: browser rules for allowing or blocking cross-origin API calls.',
@@ -156,9 +158,12 @@ DS.glossaryTerms = {
   'ipv4': 'Internet Protocol version 4: addresses written as four decimal numbers, such as 192.168.1.20.',
   'ipv6': 'Internet Protocol version 6: longer addresses written in hexadecimal groups, such as 2001:db8::1.',
   'jwt': 'JSON Web Token: a signed token containing claims such as user ID and expiration.',
+  'load balancer': 'A front door that spreads traffic across multiple app instances and health-checks backends.',
   'log': 'A recorded message from an app that explains what happened.',
+  'metrics': 'Numeric measurements over time, such as request rate, error rate, or latency.',
   'merge': 'Combining changes from one Git branch into another.',
   'monitoring': 'Watching app health with metrics, dashboards, and alerts.',
+  'observability': 'The ability to understand production behavior through logs, metrics, and traces.',
   'normalization': 'Organizing database tables to reduce duplicated data and keep relationships clear.',
   'oauth': 'A protocol for delegated access between apps and services.',
   'octet': 'One 8-bit number in an IPv4 address, from 0 to 255.',
@@ -173,9 +178,12 @@ DS.glossaryTerms = {
   'response': 'The reply sent back after a request is handled.',
   'secret': 'A private value like an API key, database password, or signing key.',
   'server': 'A program or computer that receives requests and sends responses.',
+  'serverless': 'Cloud model where the provider runs your code per request without you managing servers.',
+  'slo': 'Service Level Objective: a target for reliability or performance, such as 99.9% success rate.',
   'session': 'Server-side login state, usually connected to the browser by a cookie.',
   'status code': 'A number in an HTTP response that summarizes what happened, such as 200, 404, or 500.',
   'tls': 'Encryption used to protect HTTPS connections.',
+  'trace': 'A record of one request path across services, split into timed spans.',
   'url': 'A full web address that tells the browser where and how to request a resource.',
   'volume': 'Storage shared with or persisted outside a Docker container.',
   'asymmetric encryption': 'Encryption that uses a public key and private key pair.',
@@ -207,6 +215,53 @@ DS.glossaryTerms = {
   'tcp': 'Transmission Control Protocol: a reliable connection protocol used by many web requests.',
   'transaction': 'A group of database operations that should succeed or fail together.',
   'udp': 'User Datagram Protocol: a faster connectionless protocol often used when occasional loss is acceptable.',
+  'command injection': 'Running unintended shell commands because user input was passed to a system command without strict controls.',
+  'csrf': 'Cross-Site Request Forgery: tricking a logged-in browser into sending an unwanted request to a site that trusts the user.',
+  'dependency vulnerability': 'A known security flaw in a third-party library or package your app depends on.',
+  'escaping': 'Turning special characters into safe text so they display instead of running as code.',
+  'input validation': 'Checking that user input matches expected type, length, format, and allowed values before using it.',
+  'least privilege': 'Giving users and services only the permissions they need, not more.',
+  'rate limiting': 'Blocking or slowing requests after a user or IP sends too many in a short time.',
+  'sanitization': 'Cleaning user input to remove or neutralize dangerous content before storage or display.',
+  'security header': 'An HTTP response header that tells browsers to add protections like blocking inline scripts or forcing HTTPS.',
+  'sql injection': 'Inserting SQL through user input because a query was built from strings instead of parameters.',
+  'threat model': 'A structured way to list assets, attackers, risks, and defenses for a system.',
+  'xss': 'Cross-Site Scripting: injecting script into a page so it runs in another user\'s browser.',
+  'method': 'The HTTP verb that says what action the client wants, such as GET, POST, PUT, PATCH, or DELETE.',
+  'get': 'An HTTP method that reads data without changing server state.',
+  'post': 'An HTTP method that usually creates a resource or submits new data.',
+  'put': 'An HTTP method that replaces a whole resource at a URL.',
+  'patch': 'An HTTP method that updates only part of a resource.',
+  'delete': 'An HTTP method that removes a resource.',
+  'idempotent': 'A request that can be repeated without changing the result beyond the first successful call.',
+  'content-type': 'A header that tells the receiver how to read the message body, such as application/json.',
+  'cache-control': 'A header that tells browsers and CDNs whether and how long to cache a response.',
+  'redirect': 'A response that tells the client to request a different URL, often with status 301 or 302.',
+  'preflight': 'A browser OPTIONS request that checks whether a cross-origin request is allowed before sending it.',
+  'bearer token': 'An access token sent in the Authorization header, usually as Bearer <token>.',
+  'access token': 'A short-lived credential used to call an API on behalf of a user or app.',
+  'argon2': 'A modern slow password hashing algorithm designed to resist large-scale guessing.',
+  'bcrypt': 'A slow password hashing algorithm commonly used to store passwords safely.',
+  'expiration': 'A time limit after which a session, token, link, or code should no longer work.',
+  'httponly': 'A cookie flag that prevents browser JavaScript from reading the cookie value.',
+  'id token': 'An OpenID Connect token that says who signed in; it is for the client app, not usually for API access.',
+  'jwt claim': 'A statement inside a JWT payload, such as user ID, role, issuer, or expiration time.',
+  'magic link': 'A login link sent to a user, usually by email, that works once or for a short time.',
+  'mfa': 'Multi-factor authentication: requiring another proof besides a password, such as a code or security key.',
+  'ownership check': 'An authorization check that confirms the current user owns or is assigned to the resource.',
+  'passkey': 'A passwordless login credential where the device keeps a private key and the server stores a public key.',
+  'password reset token': 'A random, single-use, expiring secret used to prove a password reset request is valid.',
+  'permission': 'A specific allowed action, such as lesson:edit or user:delete.',
+  'rbac': 'Role-Based Access Control: assigning permissions through roles such as student, editor, or admin.',
+  'refresh token': 'A longer-lived token used to get new access tokens; it must be stored and rotated carefully.',
+  'salt': 'Random data added before password hashing so identical passwords produce different hashes.',
+  'samesite': 'A cookie flag that limits when cookies are sent on cross-site requests.',
+  'scrypt': 'A slow password hashing algorithm designed to require significant memory as well as CPU.',
+  'secure cookie': 'A cookie marked Secure so browsers send it only over HTTPS.',
+  'session cookie': 'A browser cookie that carries a session ID or expires when the browser session ends.',
+  'session id': 'A random identifier that points to server-side session state.',
+  'totp': 'Time-based One-Time Password: a short code generated from a shared secret and the current time.',
+  'webauthn': 'A web standard that lets browsers use passkeys and hardware authenticators for public-key login.',
 };
 
 DS.escHtml = function (value) {
@@ -333,6 +388,134 @@ DS.renderSectionSubnav = function (ds, anchors = []) {
     </nav>`;
 };
 
+DS.renderSubPageCode = function (label, code) {
+  if (!code) return '';
+  return `
+    <div class="subpage-code">
+      <div class="subpage-code-label">${DS.escHtml(label)}</div>
+      <pre class="subpage-code-body">${DS.escHtml(code)}</pre>
+    </div>`;
+};
+
+DS.renderSubPageBlocks = function (subPages = []) {
+  if (!subPages.length) return '';
+  return subPages.map(page => `
+    <div class="block lesson-subpage" id="${page.id}">
+      <h3 class="block-title"><i class="fas ${page.icon || 'fa-circle-dot'}"></i> ${DS.explainTerms(page.title)}</h3>
+      <p class="block-text">${DS.explainTerms(page.summary || '')}</p>
+      ${Array.isArray(page.bullets) && page.bullets.length ? `
+        <ul class="lesson-checklist subpage-bullets">
+          ${page.bullets.map(item => `<li>${DS.explainTerms(item)}</li>`).join('')}
+        </ul>` : ''}
+      <div class="subpage-code-grid">
+        ${DS.renderSubPageCode('Raw HTTP', page.codeHttp)}
+        ${DS.renderSubPageCode('fetch example', page.codeFetch)}
+      </div>
+    </div>
+  `).join('');
+};
+
+DS.renderLessonSubnav = function (ds, subPages = [], activeIndex = 0) {
+  if (!subPages.length) return '';
+  return `
+    <nav class="lesson-subnav" aria-label="${DS.escHtml(ds.title)} topics">
+      <span><i class="fas fa-book-open"></i> Topics</span>
+      ${subPages.map((subPage, i) => `
+        <button type="button" class="lesson-subnav-btn ${i === activeIndex ? 'active' : ''}" onclick="goToSubPage(${i})">
+          ${DS.escHtml(subPage.label)}
+        </button>
+      `).join('')}
+    </nav>`;
+};
+
+DS.pickLessonField = function (lesson, subPage, activeIndex, key, altKey) {
+  const field = altKey || key;
+  if (subPage && subPage[field] !== undefined) return subPage[field];
+  if (key === 'demoType' && lesson[key]) return lesson[key];
+  if (activeIndex === 0) return lesson[key];
+  return null;
+};
+
+DS.resolveLessonView = function (lesson) {
+  const subPages = Array.isArray(lesson.subPages) ? lesson.subPages : [];
+  const hasSubPages = subPages.length > 0;
+  const activeIndex = hasSubPages
+    ? Math.max(0, Math.min(DS.currentSubPage ?? 0, subPages.length - 1))
+    : 0;
+  const subPage = hasSubPages ? subPages[activeIndex] : null;
+  const pick = (key, altKey) => DS.pickLessonField(lesson, subPage, activeIndex, key, altKey);
+
+  return {
+    subPages,
+    activeIndex,
+    hasSubPages,
+    view: {
+      id: lesson.id,
+      category: lesson.category,
+      title: lesson.title,
+      subtitle: pick('subtitle') ?? lesson.subtitle,
+      subPageTitle: subPage?.title || subPage?.label || null,
+      demoScenario: subPage?.demoScenario || subPage?.demoExample || null,
+      analogy: pick('analogy'),
+      realWorldExample: pick('realWorldExample'),
+      resourceLinks: pick('resourceLinks'),
+      whatIsIt: pick('whatIsIt', 'body'),
+      whyUse: pick('whyUse'),
+      conceptSections: pick('conceptSections'),
+      conceptFlow: pick('conceptFlow'),
+      mermaidDiagram: pick('mermaidDiagram'),
+      whenToUse: pick('whenToUse'),
+      demoType: pick('demoType'),
+      demoTitle: lesson.demoTitle,
+      demoHint: lesson.demoHint,
+      demoSteps: lesson.demoSteps,
+      codeTitle: pick('codeTitle') ?? lesson.codeTitle,
+      codeLanguage: pick('codeLanguage') ?? lesson.codeLanguage,
+      codeText: pick('codeText'),
+      codeExample: pick('codeExample'),
+      codeHttp: pick('codeHttp'),
+      codeFetch: pick('codeFetch'),
+      complexity: pick('complexity'),
+      pros: pick('pros'),
+      cons: pick('cons'),
+      checklist: pick('checklist'),
+    },
+  };
+};
+
+DS.renderDualCodeExamples = function (view) {
+  if (!view.codeHttp && !view.codeFetch) return '';
+  return `
+    <div class="subpage-code-grid">
+      ${DS.renderSubPageCode('Raw HTTP', view.codeHttp)}
+      ${DS.renderSubPageCode('fetch example', view.codeFetch)}
+    </div>`;
+};
+
+DS.buildSectionAnchors = function (view) {
+  const hasDemo = Boolean(view.demoType);
+  const hasCode = Boolean(view.codeExample || view.codeText || view.codeHttp || view.codeFetch);
+  const hasComplexity = Array.isArray(view.complexity) && view.complexity.length > 0;
+  const hasProsCons = Array.isArray(view.pros) && Array.isArray(view.cons);
+  const hasDiagram = Boolean(view.mermaidDiagram);
+
+  return [
+    ['analogy', 'Analogy', Boolean(view.analogy)],
+    ['real-world', 'Real World', Boolean(view.realWorldExample)],
+    ['what-is-it', 'What Is It', Boolean(view.whatIsIt)],
+    ['why-use-it', 'Why Use It', Boolean(view.whyUse)],
+    ['breakdown', 'Breakdown', Array.isArray(view.conceptSections) && view.conceptSections.length > 0],
+    ['flow', 'Flow', Array.isArray(view.conceptFlow) && view.conceptFlow.length > 0],
+    ['diagram', 'Mermaid', hasDiagram],
+    ['when-to-use', 'When To Use', Array.isArray(view.whenToUse) && view.whenToUse.length > 0],
+    ['demo-block', 'Demo', hasDemo],
+    ['code', 'Code', hasCode],
+    ['complexity', 'Complexity', hasComplexity],
+    ['pros-cons', 'Pros / Cons', hasProsCons],
+    ['checklist', 'Checklist', Array.isArray(view.checklist) && view.checklist.length > 0],
+  ].filter(([, , show]) => show).map(([id, label]) => ({ id, label }));
+};
+
 DS.renderMermaidDiagram = function (diagram) {
   if (!diagram) return '';
   return `
@@ -375,58 +558,46 @@ DS.renderMermaid = function () {
 };
 
 DS.renderContent = function () {
-  const ds = DS.curriculum[DS.currentSection];
+  const lesson = DS.curriculum[DS.currentSection];
+  const { subPages, activeIndex, hasSubPages, view } = DS.resolveLessonView(lesson);
   const area = document.getElementById('contentArea');
-  const hasDemo = Boolean(ds.demoType);
-  const hasCode = Boolean(ds.codeExample || ds.codeText);
-  const hasComplexity = Array.isArray(ds.complexity) && ds.complexity.length > 0;
-  const hasProsCons = Array.isArray(ds.pros) && Array.isArray(ds.cons);
-  const hasDiagram = Boolean(ds.mermaidDiagram);
-  const anchors = [
-    ['analogy', 'Analogy', true],
-    ['real-world', 'Real World', Boolean(ds.realWorldExample)],
-    ['what-is-it', 'What Is It', Boolean(ds.whatIsIt)],
-    ['why-use-it', 'Why Use It', Boolean(ds.whyUse)],
-    ['breakdown', 'Breakdown', Array.isArray(ds.conceptSections) && ds.conceptSections.length > 0],
-    ['flow', 'Flow', Array.isArray(ds.conceptFlow) && ds.conceptFlow.length > 0],
-    ['diagram', 'Mermaid', hasDiagram],
-    ['when-to-use', 'When To Use', Array.isArray(ds.whenToUse) && ds.whenToUse.length > 0],
-    ['demo-block', 'Demo', hasDemo],
-    ['code', 'Code', hasCode],
-    ['complexity', 'Complexity', hasComplexity],
-    ['pros-cons', 'Pros / Cons', hasProsCons],
-    ['checklist', 'Checklist', Array.isArray(ds.checklist) && ds.checklist.length > 0],
-  ].filter(([, , show]) => show).map(([id, label]) => ({ id, label }));
+  const hasDemo = Boolean(view.demoType);
+  const hasCode = Boolean(view.codeExample || view.codeText || view.codeHttp || view.codeFetch);
+  const hasComplexity = Array.isArray(view.complexity) && view.complexity.length > 0;
+  const hasProsCons = Array.isArray(view.pros) && Array.isArray(view.cons);
+  const anchors = DS.buildSectionAnchors(view);
 
   area.innerHTML = `
     <section class="ds-section active">
       <!-- Header -->
       <div class="ds-header">
-        <div class="ds-number">${DS.escHtml(ds.category || 'Data Structures')} · Lesson ${String(DS.currentSection + 1).padStart(2, '0')} of ${DS.curriculum.length}</div>
-        <h1 class="ds-title">${ds.title}</h1>
-        <p class="ds-subtitle">${ds.subtitle}</p>
+        <div class="ds-number">${DS.escHtml(view.category || 'Data Structures')} · Lesson ${String(DS.currentSection + 1).padStart(2, '0')} of ${DS.curriculum.length}${hasSubPages ? ` · Topic ${String(activeIndex + 1).padStart(2, '0')} of ${String(subPages.length).padStart(2, '0')}` : ''}</div>
+        <h1 class="ds-title">${view.title}</h1>
+        ${view.subPageTitle ? `<h2 class="ds-subpage-title">${DS.explainTerms(view.subPageTitle)}</h2>` : ''}
+        <p class="ds-subtitle">${view.subtitle}</p>
       </div>
 
-      ${DS.renderSectionSubnav(ds, anchors)}
+      ${DS.renderSectionSubnav(lesson, anchors)}
 
       <!-- Real World Analogy -->
+      ${view.analogy ? `
       <div class="analogy-card" id="analogy">
         <div class="analogy-label"><i class="fas fa-lightbulb"></i> Real-World Analogy</div>
-        <p class="analogy-text">${DS.explainTerms(ds.analogy)}</p>
-      </div>
-
-      <!-- Real World Example -->
-      ${ds.realWorldExample ? `
-      <div class="example-card" id="real-world">
-        <div class="example-label"><i class="fas fa-location-dot"></i> Real-World Example</div>
-        <h3>${DS.explainTerms(ds.realWorldExample.title)}</h3>
-        <p>${DS.explainTerms(ds.realWorldExample.desc)}</p>
+        <p class="analogy-text">${DS.explainTerms(view.analogy)}</p>
       </div>` : ''}
 
-      ${ds.resourceLinks ? `
+      <!-- Real World Example -->
+      ${view.realWorldExample ? `
+      <div class="example-card" id="real-world">
+        <div class="example-label"><i class="fas fa-location-dot"></i> Real-World Example</div>
+        <h3>${DS.explainTerms(view.realWorldExample.title)}</h3>
+        <p>${DS.explainTerms(view.realWorldExample.desc)}</p>
+      </div>` : ''}
+
+      ${view.resourceLinks ? `
       <div class="resource-card">
         <div class="resource-label"><i class="fas fa-link"></i> Related Resource</div>
-        ${ds.resourceLinks.map(link => `
+        ${view.resourceLinks.map(link => `
           <a href="${DS.escHtml(link.href)}" target="_blank" rel="noopener noreferrer">
             <i class="fas ${link.icon || 'fa-arrow-up-right-from-square'}"></i>
             <span>${DS.explainTerms(link.label)}</span>
@@ -435,28 +606,31 @@ DS.renderContent = function () {
       </div>` : ''}
 
       <!-- What Is It -->
+      ${view.whatIsIt ? `
       <div class="block" id="what-is-it">
         <h3 class="block-title"><i class="fas fa-circle-info"></i> What Is It?</h3>
-        <p class="block-text">${DS.explainTerms(ds.whatIsIt)}</p>
-      </div>
+        <p class="block-text">${DS.explainTerms(view.whatIsIt)}</p>
+      </div>` : ''}
 
       <!-- Why Use It -->
+      ${view.whyUse ? `
       <div class="block" id="why-use-it">
         <h3 class="block-title"><i class="fas fa-arrow-up-right-dots"></i> Why Use It?</h3>
-        <p class="block-text">${DS.explainTerms(ds.whyUse)}</p>
-      </div>
+        <p class="block-text">${DS.explainTerms(view.whyUse)}</p>
+      </div>` : ''}
 
-      <div id="breakdown">${DS.renderConceptSections(ds.conceptSections)}</div>
+      <div id="breakdown">${DS.renderConceptSections(view.conceptSections || [])}</div>
 
-      <div id="flow">${DS.renderConceptFlow(ds.conceptFlow)}</div>
+      <div id="flow">${DS.renderConceptFlow(view.conceptFlow || [])}</div>
 
-      ${DS.renderMermaidDiagram(ds.mermaidDiagram)}
+      ${DS.renderMermaidDiagram(view.mermaidDiagram)}
 
       <!-- When To Use -->
+      ${Array.isArray(view.whenToUse) && view.whenToUse.length ? `
       <div class="block" id="when-to-use">
         <h3 class="block-title"><i class="fas fa-clock"></i> When To Use?</h3>
         <div class="info-grid">
-          ${ds.whenToUse.map((w, i) => `
+          ${view.whenToUse.map((w, i) => `
             <div class="info-card">
               <div class="info-card-icon ${['ic-accent','ic-green','ic-blue','ic-red'][i % 4]}"><i class="fas ${w.icon}"></i></div>
               <h4>${DS.explainTerms(w.title)}</h4>
@@ -464,13 +638,13 @@ DS.renderContent = function () {
             </div>
           `).join('')}
         </div>
-      </div>
+      </div>` : ''}
 
       <!-- Interactive Visualization -->
       ${hasDemo ? `
       <div class="block" id="demo-block">
         <h3 class="block-title"><i class="fas fa-play-circle"></i> Interactive Demo</h3>
-        <div class="visual-demo" id="demo-${ds.id}">
+        <div class="visual-demo" id="demo-${view.id}">
           <!-- Populated by demo rendering logic -->
         </div>
       </div>` : ''}
@@ -478,14 +652,15 @@ DS.renderContent = function () {
       <!-- Code Example -->
       ${hasCode ? `
       <div class="block" id="code">
-        <h3 class="block-title"><i class="fas fa-code"></i> ${DS.escHtml(ds.codeTitle || 'Code Example')}</h3>
-        <div class="code-block" id="code-${ds.id}">
+        <h3 class="block-title"><i class="fas fa-code"></i> ${DS.escHtml(view.codeTitle || 'Code Examples')}</h3>
+        ${view.codeHttp || view.codeFetch ? DS.renderDualCodeExamples(view) : `
+        <div class="code-block" id="code-${view.id}">
           <div class="code-header">
-            <span class="code-lang">${DS.escHtml(ds.codeLanguage || 'JavaScript')}</span>
+            <span class="code-lang">${DS.escHtml(view.codeLanguage || 'JavaScript')}</span>
             <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
           </div>
-          <div class="code-body">${ds.codeExample || DS.escHtml(ds.codeText)}</div>
-        </div>
+          <div class="code-body">${view.codeExample || DS.escHtml(view.codeText)}</div>
+        </div>`}
       </div>` : ''}
 
       <!-- Time Complexity -->
@@ -496,7 +671,7 @@ DS.renderContent = function () {
         <table class="complexity-table">
           <thead><tr><th>Operation</th><th>Time</th><th>What it means</th><th>Speed</th></tr></thead>
           <tbody>
-            ${ds.complexity.map(c => `
+            ${view.complexity.map(c => `
               <tr>
                 <td class="op-name">${DS.explainTerms(c.op)}</td>
                 <td>${DS.explainTerms(c.time)}</td>
@@ -516,41 +691,49 @@ DS.renderContent = function () {
           <div class="pc-card pc-pros">
             <div class="pc-title"><i class="fas fa-thumbs-up"></i> Advantages</div>
             <ul class="pc-list">
-              ${ds.pros.map(p => `<li>${DS.explainTerms(p)}</li>`).join('')}
+              ${view.pros.map(p => `<li>${DS.explainTerms(p)}</li>`).join('')}
             </ul>
           </div>
           <div class="pc-card pc-cons">
             <div class="pc-title"><i class="fas fa-thumbs-down"></i> Disadvantages</div>
             <ul class="pc-list">
-              ${ds.cons.map(c => `<li>${DS.explainTerms(c)}</li>`).join('')}
+              ${view.cons.map(c => `<li>${DS.explainTerms(c)}</li>`).join('')}
             </ul>
           </div>
         </div>
       </div>` : ''}
 
-      ${DS.renderChecklist(ds.checklist)}
+      ${DS.renderChecklist(view.checklist || [])}
 
       <!-- Mark Complete -->
       <div class="complete-section">
-        <span class="complete-text">${DS.completed.has(ds.id) ? 'You\'ve completed this section. Nice work!' : 'Finished reading? Mark this section as complete.'}</span>
-        <button class="complete-btn ${DS.completed.has(ds.id) ? 'done' : ''}" onclick="markComplete('${ds.id}')">
-          ${DS.completed.has(ds.id) ? '<i class="fas fa-check"></i> Completed' : '<i class="fas fa-check"></i> Mark Complete'}
+        <span class="complete-text">${DS.completed.has(lesson.id) ? 'You\'ve completed this section. Nice work!' : 'Finished reading? Mark this section as complete.'}</span>
+        <button class="complete-btn ${DS.completed.has(lesson.id) ? 'done' : ''}" onclick="markComplete('${lesson.id}')">
+          ${DS.completed.has(lesson.id) ? '<i class="fas fa-check"></i> Completed' : '<i class="fas fa-check"></i> Mark Complete'}
         </button>
       </div>
 
       <!-- Navigation -->
       <div class="nav-buttons">
-        ${DS.currentSection > 0 ? `<button class="nav-btn" onclick="goTo(${DS.currentSection - 1})"><i class="fas fa-arrow-left"></i> ${DS.curriculum[DS.currentSection-1].title}</button>` : '<div></div>'}
-        ${DS.currentSection < DS.curriculum.length - 1 ? `<button class="nav-btn" onclick="goTo(${DS.currentSection + 1})">${DS.curriculum[DS.currentSection+1].title} <i class="fas fa-arrow-right"></i></button>` : '<div></div>'}
+        ${hasSubPages && activeIndex > 0
+          ? `<button class="nav-btn" onclick="goToSubPage(${activeIndex - 1})"><i class="fas fa-arrow-left"></i> ${DS.escHtml(subPages[activeIndex - 1].label)}</button>`
+          : DS.currentSection > 0
+            ? `<button class="nav-btn" onclick="goTo(${DS.currentSection - 1})"><i class="fas fa-arrow-left"></i> ${DS.curriculum[DS.currentSection - 1].title}</button>`
+            : '<div></div>'}
+        ${hasSubPages && activeIndex < subPages.length - 1
+          ? `<button class="nav-btn" onclick="goToSubPage(${activeIndex + 1})">${DS.escHtml(subPages[activeIndex + 1].label)} <i class="fas fa-arrow-right"></i></button>`
+          : DS.currentSection < DS.curriculum.length - 1
+            ? `<button class="nav-btn" onclick="goTo(${DS.currentSection + 1})">${DS.curriculum[DS.currentSection + 1].title} <i class="fas fa-arrow-right"></i></button>`
+            : '<div></div>'}
       </div>
     </section>
   `;
 
   // Initialize interactive demo
-  if (hasDemo) DS.initDemo(ds.id);
+  if (hasDemo) DS.initDemo(view.id, view.demoScenario);
 
   DS.renderMermaid();
 
   // Scroll to top
   window.scrollTo({ top: 0, behavior: 'smooth' });
-}
+};

@@ -30,7 +30,7 @@ DS.demos.webFoundations = function (container) {
 
   const render = () => {
     const step = steps[stepIndex] || {};
-    container.innerHTML = UI.shell({
+    UI.mount(container, {
       title: view.demoTitle || topic.demoTitle || `${view.title || topic.title} flow`,
       hint: view.demoHint || topic.demoHint || 'Step through the real-world flow and connect each keyword to the system doing the work.',
       stage: renderStage(),

@@ -8,7 +8,7 @@ DS.demos.dynamicProgramming = function (container) {
 
   const render = () => {
     const table = fib.slice(0, n + 1).map((v, i) => `<div class="dp-cell"><small>f(${i})</small><strong>${v}</strong></div>`).join('');
-    container.innerHTML = UI.shell({
+    UI.mount(container, {
       title: 'Fibonacci DP table',
       hint: 'Store sub-answers instead of recomputing: each cell uses prior cells.',
       stage: `
@@ -24,6 +24,6 @@ DS.demos.dynamicProgramming = function (container) {
       ]),
     });
   };
-  window.dpSetN = (v) => { n = Number(v). Render(); };
+  window.dpSetN = (v) => { n = Number(v); render(); };
   render();
 };

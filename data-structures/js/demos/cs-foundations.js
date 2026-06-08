@@ -143,7 +143,7 @@ sort matches by relevance;` : `// Waiting for query...
 
   const render = () => {
     const phase = phases[phaseIndex];
-    container.innerHTML = UI.shell({
+    UI.mount(container, {
       title: 'Search box: data, structure, and algorithm',
       hint: 'Walk through the same idea as the lesson: stored songs, an array structure, a filter-and-rank algorithm, and ranked results.',
       stage: `

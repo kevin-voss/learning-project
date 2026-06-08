@@ -50,7 +50,7 @@ DS.demos.logic = function (container) {
   ];
 
   const render = () => {
-    container.innerHTML = UI.shell({
+    UI.mount(container, {
       title: 'Logical operators: combine true/false facts',
       hint: 'Toggle A and B, then choose AND, OR, XOR, or NOT. The highlighted truth-table row shows the current inputs and final result.',
       stage: `

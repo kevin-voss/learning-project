@@ -78,7 +78,7 @@ DS.demos.dockerCompose = function (container) {
   const render = () => {
     applyStep();
     const current = steps[Math.min(step, steps.length - 1)];
-    container.innerHTML = UI.shell({
+    UI.mount(container, {
       title: 'Docker Compose stack runner',
       hint: 'Step through docker compose up and see how frontend, backend, and database connect through ports, volumes, and a shared network.',
       stage: renderStage(),

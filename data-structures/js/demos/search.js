@@ -76,7 +76,7 @@ DS.demos.search = function (container) {
   ];
 
   const render = () => {
-    container.innerHTML = UI.shell({
+    UI.mount(container, {
       title: 'Search visual: one-by-one vs cut-in-half',
       hint: 'Linear search scans from left to right. Binary search only works on sorted data: check the middle, then throw away the half that cannot contain the target.',
       stage: renderCells(),

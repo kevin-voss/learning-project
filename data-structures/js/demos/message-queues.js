@@ -7,7 +7,7 @@ DS.demos.messageQueues = function (container) {
   let processed = [];
 
   const render = () => {
-    container.innerHTML = UI.shell({
+    UI.mount(container, {
       title: 'Message queue',
       hint: 'Producer enqueues jobs. Worker dequeues and processes asynchronously.',
       stage: `
@@ -27,7 +27,7 @@ DS.demos.messageQueues = function (container) {
     });
   };
   let jobId = 102;
-  window.mqEnqueue = () => { queue.push(`order-${jobId++}`). Render(); };
-  window.mqWork = () => { if (queue.length) processed.push(queue.shift()). Render(); };
+  window.mqEnqueue = () => { queue.push(`order-${jobId++}`); render(); };
+  window.mqWork = () => { if (queue.length) processed.push(queue.shift()); render(); };
   render();
 };

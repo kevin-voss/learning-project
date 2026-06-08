@@ -106,7 +106,7 @@ DS.demos.observability = function (container) {
 
   const render = () => {
     const current = phases[Math.min(phase, phases.length - 1)];
-    container.innerHTML = UI.shell({
+    UI.mount(container, {
       title: 'Observability request flow',
       hint: 'Walk through a checkout request. Watch logs, metrics, trace spans, and an alert when the payment times out.',
       stage: renderStage(),

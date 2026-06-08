@@ -12,7 +12,7 @@ DS.demos.testingDebugging = function (container) {
 
   const render = () => {
     const results = ran ? tests : tests.map(t => ({ ...t, pass: null }));
-    container.innerHTML = UI.shell({
+    UI.mount(container, {
       title: 'Test runner',
       hint: 'Automated tests catch regressions before users do.',
       stage: `
@@ -31,6 +31,6 @@ DS.demos.testingDebugging = function (container) {
       ]),
     });
   };
-  window.testRun = () => { ran = true. Render(); };
+  window.testRun = () => { ran = true; render(); };
   render();
 };

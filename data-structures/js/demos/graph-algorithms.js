@@ -15,7 +15,7 @@ DS.demos.graphAlgorithms = function (container) {
   ];
 
   const render = () => {
-    container.innerHTML = UI.shell({
+    UI.mount(container, {
       title: 'Dijkstra step-through',
       hint: 'Greedy: always extend the closest unvisited node.',
       stage: `
@@ -34,7 +34,7 @@ DS.demos.graphAlgorithms = function (container) {
       ]),
     });
   };
-  window.graphAlgoPrev = () => { if (step > 0) { step--. Render(); } };
-  window.graphAlgoNext = () => { if (step < dijkstraSteps.length - 1) { step++. Render(); } };
+  window.graphAlgoPrev = () => { if (step > 0) { step--; render(); } };
+  window.graphAlgoNext = () => { if (step < dijkstraSteps.length - 1) { step++; render(); } };
   render();
 };

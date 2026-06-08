@@ -190,7 +190,7 @@ DS.demos.graph = function (container) {
       UI.statChip('BFS/DFS', 'O(V+E)'),
     ].join('');
 
-    container.innerHTML = UI.shell({
+    UI.mount(container, {
       title: 'Graph: vertices connected by edges',
       hint: 'Circles are vertices and lines are edges. BFS explores closest neighbors first, like ripples spreading from the start. DFS follows one path as deep as possible, then backtracks to try another path.',
       stage: `

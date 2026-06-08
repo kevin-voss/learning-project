@@ -18,11 +18,11 @@ DS.demos.array = function (container) {
     const info = UI.numberInfo(v);
     return [
       ['Index', `[${selectedIdx}]`, 'Zero-based position: O(1) access'],
-      ['Value', String(v)],
+      ['Value', info.decimal],
       ['Memory address', UI.memAddr(BASE, selectedIdx, ELEM_BYTES), 'Contiguous: each slot is 8 bytes apart'],
       ['Storage', `${info.bytes} bytes · ${info.bits} bits`, info.type],
       ['Binary', info.binary, 'Bit pattern (integers only)'],
-      ['Hex', info.hex],
+      ['Hex', info.hex, 'Base-16 shorthand'],
       ['Access cost', 'O(1)', 'CPU jumps directly: no scanning'],
     ];
   };
@@ -58,7 +58,7 @@ DS.demos.array = function (container) {
       UI.statChip('.length', arr.length, 'Array property: O(1) to read'),
     ].join('');
 
-    container.innerHTML = UI.shell({
+    UI.mount(container, {
       title: 'Array: contiguous memory lockers',
       hint: 'Each box is one slot in RAM. Numbers in JavaScript use 8 bytes (64 bits). Click a cell to inspect it. Try Push/Pop at the end (fast) vs Shift/Unshift at the start (slow: everything moves).',
       stage,
@@ -77,7 +77,7 @@ DS.demos.array = function (container) {
 
   render();
 
-  window.arrSelect = (i) => { selectedIdx = i. Render(); };
+  window.arrSelect = (i) => { selectedIdx = i; render(); };
 
   window.arrPush = () => {
     const val = document.getElementById('arrInput').value;

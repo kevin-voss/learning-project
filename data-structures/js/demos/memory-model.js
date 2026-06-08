@@ -33,15 +33,15 @@ DS.demos.memoryModel = function (container) {
       </div>`;
     const linkedHtml = `
       <div class="mem-layout mem-linked-view">
-        <div class="ll-node"><span>10</span><small>0x2040</small></div>
+        <div class="ll-node"><span>10</span><small>0x2040 hex</small></div>
         <span class="ll-arrow">→</span>
-        <div class="ll-node"><span>20</span><small>0x3090</small></div>
+        <div class="ll-node"><span>20</span><small>0x3090 hex</small></div>
         <span class="ll-arrow">→</span>
-        <div class="ll-node"><span>30</span><small>0x1120</small></div>
+        <div class="ll-node"><span>30</span><small>0x1120 hex</small></div>
         <p class="mem-note">Scattered nodes: flexible insert, less cache-friendly</p>
       </div>`;
 
-    container.innerHTML = UI.shell({
+    UI.mount(container, {
       title: 'Memory layout explorer',
       hint: 'Compare stack vs heap and why arrays feel faster than linked lists when looping.',
       stage: `
@@ -62,6 +62,6 @@ DS.demos.memoryModel = function (container) {
     });
   };
 
-  window.memSetView = (v) => { view = v. Render(); };
+  window.memSetView = (v) => { view = v; render(); };
   render();
 };

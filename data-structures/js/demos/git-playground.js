@@ -42,7 +42,8 @@ DS.demos.gitPlayground = function (container) {
   };
 
   const render = () => {
-    const outEl = document.getElementById('gitPgOut');
+    const UI = DS.demoUI;
+    const focus = UI.captureFocus(container);
     container.innerHTML = PG.shell({
       title: 'Git command playground',
       hint: 'Safe sandbox: no real repo. Practice status, add, commit, and branch.',
@@ -63,6 +64,7 @@ DS.demos.gitPlayground = function (container) {
         ['Commits', String(committed.length), 'Snapshots saved'],
       ],
     });
+    UI.restoreFocus(container, focus);
     const out = document.getElementById('gitPgOut');
     if (out) out.textContent = lastOut;
   };
@@ -71,8 +73,8 @@ DS.demos.gitPlayground = function (container) {
     const v = document.getElementById('gitPgIn')?.value || '';
     run(v);
   };
-  window.gitPgPrev = () => { if (step > 0) { step--. Render(); } };
-  window.gitPgNext = () => { if (step < GUIDED.length - 1) { step++. Render(); } };
+  window.gitPgPrev = () => { if (step > 0) { step--; render(); } };
+  window.gitPgNext = () => { if (step < GUIDED.length - 1) { step++; render(); } };
 
   render();
 };

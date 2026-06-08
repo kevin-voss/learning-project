@@ -76,7 +76,7 @@ DS.demos.cloudHosting = function (container) {
   };
 
   const render = () => {
-    container.innerHTML = UI.shell({
+    UI.mount(container, {
       title: 'Cloud deployment tradeoffs',
       hint: 'Pick VM, container, or serverless and compare cost, scaling, operations work, and cold starts.',
       stage: renderStage(),

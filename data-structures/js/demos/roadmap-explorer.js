@@ -25,7 +25,7 @@ DS.demos.roadmapExplorer = function (container) {
       </div>
     `).join('');
 
-    container.innerHTML = UI.shell({
+    UI.mount(container, {
       title: 'Curriculum roadmap',
       hint: `Click any lesson to jump there. ${DS.curriculum.length} lessons across ${Object.keys(categories).length} categories.`,
       stage: `<div class="roadmap-demo">${html}</div>`,

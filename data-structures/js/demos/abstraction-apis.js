@@ -13,7 +13,7 @@ DS.demos.abstractionApis = function (container) {
 
   const render = () => {
     const l = layers[layer];
-    container.innerHTML = UI.shell({
+    UI.mount(container, {
       title: 'Abstraction layers',
       hint: 'Each layer hides complexity below: change database without rewriting UI.',
       stage: `
@@ -32,6 +32,6 @@ DS.demos.abstractionApis = function (container) {
       ]),
     });
   };
-  window.absSet = (x) => { layer = x. Render(); };
+  window.absSet = (x) => { layer = x; render(); };
   render();
 };

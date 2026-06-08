@@ -156,7 +156,7 @@ DS.demos.http = function (container) {
   };
 
   const render = () => {
-    container.innerHTML = UI.shell({
+    UI.mount(container, {
       title: 'HTTP request inspector',
       hint: 'Choose a method and response type, toggle headers, body, and cookies, then read the raw request and example response.',
       stage: renderStage(),

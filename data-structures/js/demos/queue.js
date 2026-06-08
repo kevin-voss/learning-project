@@ -61,7 +61,7 @@ DS.demos.queue = function (container) {
       UI.statChip('Rear', queue.length ? queue[queue.length - 1].label : ', '),
     ].join('');
 
-    container.innerHTML = UI.shell({
+    UI.mount(container, {
       title: 'Queue: first in, first out (FIFO)',
       hint: 'Like a line at a store: join at the rear, leave from the front. Each slot has an index and memory address. Enqueue and Dequeue are O(1) with head/tail pointers.',
       stage,

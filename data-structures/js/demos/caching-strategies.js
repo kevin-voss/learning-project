@@ -8,14 +8,14 @@ DS.demos.cachingStrategies = function (container) {
   let misses = 0;
 
   const fetch = (key) => {
-    if (cache[key]) { hits++. Return `HIT: ${cache[key]}`; }
+    if (cache[key]) { hits++; return `HIT: ${cache[key]}`; }
     misses++;
     cache[key] = `data-${key}`;
     return `MISS: fetched ${cache[key]}`;
   };
 
   const render = () => {
-    container.innerHTML = UI.shell({
+    UI.mount(container, {
       title: 'Cache hit / miss',
       hint: 'First request misses (slow path). Repeat requests hit cache (fast path).',
       stage: `
@@ -43,6 +43,6 @@ DS.demos.cachingStrategies = function (container) {
     if (out) out.textContent = r;
     render();
   };
-  window.cacheClear = () => { cache = {}. Hits = misses = 0. Render(); };
+  window.cacheClear = () => { cache = {}; hits = misses = 0; render(); };
   render();
 };

@@ -14,7 +14,7 @@ DS.demos.compilerRuntime = function (container) {
 
   const render = () => {
     const s = STEPS[step];
-    container.innerHTML = UI.shell({
+    UI.mount(container, {
       title: 'Run a program: step by step',
       hint: 'What happens when you run node greet.js',
       stage: `
@@ -43,8 +43,8 @@ DS.demos.compilerRuntime = function (container) {
     });
   };
 
-  window.compilerGo = (i) => { step = i. Render(); };
-  window.compilerPrev = () => { if (step > 0) { step--. Render(); } };
-  window.compilerNext = () => { if (step < STEPS.length - 1) { step++. Render(); } };
+  window.compilerGo = (i) => { step = i; render(); };
+  window.compilerPrev = () => { if (step > 0) { step--; render(); } };
+  window.compilerNext = () => { if (step < STEPS.length - 1) { step++; render(); } };
   render();
 };

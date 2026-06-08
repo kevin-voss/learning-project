@@ -74,7 +74,7 @@ DS.demos['hash-table'] = function (container) {
       UI.statChip('Avg lookup', 'O(1)', 'With a good hash + few collisions'),
     ].join('');
 
-    container.innerHTML = UI.shell({
+    UI.mount(container, {
       title: 'Hash table: key → bucket via hash function',
       hint: 'Keys are turned into a bucket number using character codes and modulo. Each bucket holds key:value pairs. Set/Get jumps straight to the bucket instead of scanning everything.',
       stage,
@@ -126,5 +126,5 @@ DS.demos['hash-table'] = function (container) {
       DS.showMsg('htMsg', `Key "${key}" not found`, 'error');
     }
   };
-  window.htReset = () => { data = { ...INITIAL_DATA }. LastBucket = null. Render(); };
+  window.htReset = () => { data = { ...INITIAL_DATA }; lastBucket = null; render(); };
 };

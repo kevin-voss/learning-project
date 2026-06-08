@@ -9,26 +9,41 @@ DS.demoUI = {
       .replace(/"/g, '&quot;');
   },
 
+  formatDec(n) {
+    const num = Number(n);
+    if (!Number.isFinite(num)) return '—';
+    return `${num} dec`;
+  },
+
+  formatHex(n, pad = 2) {
+    const num = Number(n);
+    if (!Number.isInteger(num) || num < 0) return '—';
+    return `0x${num.toString(16).toUpperCase().padStart(pad, '0')} hex`;
+  },
+
+  formatBin(n, minPad = 8) {
+    const num = Number(n);
+    if (!Number.isInteger(num) || num < 0) return '—';
+    const bits = num.toString(2);
+    const padded = bits.length > minPad ? bits.slice(-32) : bits.padStart(minPad, '0');
+    return `${padded} bin`;
+  },
+
   memAddr(base, index, elemSize = 8) {
     const addr = base + index * elemSize;
-    return '0x' + addr.toString(16).toUpperCase().padStart(4, '0');
+    return this.formatHex(addr, 4);
   },
 
   numberInfo(n) {
     const num = Number(n);
     const isInt = Number.isInteger(num) && Math.abs(num) <= Number.MAX_SAFE_INTEGER;
-    const binary = isInt && num >= 0
-      ? num.toString(2).padStart(8, '0').slice(-32)
-      : ', ';
-    const hex = isInt && num >= 0
-      ? '0x' + num.toString(16).toUpperCase()
-      : ', ';
     return {
       type: 'Number (IEEE 754 float64)',
       bytes: 8,
       bits: 64,
-      binary,
-      hex,
+      binary: isInt && num >= 0 ? this.formatBin(num) : '—',
+      hex: isInt && num >= 0 ? this.formatHex(num) : '—',
+      decimal: isInt ? this.formatDec(num) : '—',
       isInt,
     };
   },
@@ -63,6 +78,39 @@ DS.demoUI = {
       </div>`).join('');
   },
 
+  captureFocus(container) {
+    const el = document.activeElement;
+    if (!el || !container.contains(el)) return null;
+    if (!['INPUT', 'TEXTAREA', 'SELECT'].includes(el.tagName)) return null;
+    return {
+      id: el.id || '',
+      ariaLabel: el.getAttribute('aria-label') || '',
+      selectionStart: el.selectionStart,
+      selectionEnd: el.selectionEnd,
+    };
+  },
+
+  restoreFocus(container, captured) {
+    if (!captured) return;
+    let el = captured.id ? container.querySelector(`#${CSS.escape(captured.id)}`) : null;
+    if (!el && captured.ariaLabel) {
+      el = container.querySelector(`[aria-label="${CSS.escape(captured.ariaLabel)}"]`);
+    }
+    if (!el) return;
+    el.focus();
+    if (captured.selectionStart != null && el.setSelectionRange) {
+      try {
+        el.setSelectionRange(captured.selectionStart, captured.selectionEnd);
+      } catch (_) { /* number inputs, etc. */ }
+    }
+  },
+
+  mount(container, options) {
+    const focus = this.captureFocus(container);
+    container.innerHTML = this.shell(options);
+    this.restoreFocus(container, focus);
+  },
+
   inspector(title, rows) {
     return `
       <aside class="demo-inspector">
@@ -92,11 +140,12 @@ DS.demoUI = {
           ${inspector}
         </div>
         ${stats ? `<div class="demo-stats">${stats}</div>` : ''}
+        ${controls ? `
         <div class="demo-controls-wrap">
           <span class="controls-label"><i class="fas fa-hand-pointer"></i> Try it yourself</span>
           <div class="demo-controls">${controls}</div>
-        </div>
-        <div class="demo-msg" id="${msgId}" ${msgId ? 'aria-live="polite"' : ''}></div>
+        </div>` : ''}
+        ${msgId ? `<div class="demo-msg" id="${msgId}" aria-live="polite"></div>` : ''}
       </div>`;
   },
 };

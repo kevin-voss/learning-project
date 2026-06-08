@@ -184,7 +184,7 @@ DS.demos.sorting = function (container) {
       UI.statChip('Swaps', swapCount),
     ].join('');
 
-    container.innerHTML = UI.shell({
+    UI.mount(container, {
       title: 'Sorting visualizer: frames, compares, writes, swaps',
       hint: 'Sorting algorithms are easier to understand when you see each tiny step. Compare means checking two values. Swap means two values trade places. Write means a value was assigned into an array index.',
       stage: renderBars(),

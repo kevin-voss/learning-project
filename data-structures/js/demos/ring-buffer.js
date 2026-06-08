@@ -25,7 +25,7 @@ DS.demos.ringBuffer = function (container) {
       </div>`;
     }).join('');
 
-    container.innerHTML = UI.shell({
+    UI.mount(container, {
       title: 'Ring buffer',
       hint: 'Fixed-size circular queue: tail writes, head reads, indices wrap with modulo.',
       stage: `
@@ -50,7 +50,7 @@ DS.demos.ringBuffer = function (container) {
   };
 
   window.ringEnqueue = () => {
-    if (full()) { msg = 'Buffer full: cannot enqueue.'; render(). Return; }
+    if (full()) { msg = 'Buffer full: cannot enqueue.'; render(); return; }
     const v = document.getElementById('ringVal')?.value || '?';
     buf[tail] = v;
     tail = (tail + 1) % SIZE;
@@ -60,7 +60,7 @@ DS.demos.ringBuffer = function (container) {
   };
 
   window.ringDequeue = () => {
-    if (empty()) { msg = 'Buffer empty: cannot dequeue.'; render(). Return; }
+    if (empty()) { msg = 'Buffer empty: cannot dequeue.'; render(); return; }
     const v = buf[head];
     buf[head] = null;
     head = (head + 1) % SIZE;

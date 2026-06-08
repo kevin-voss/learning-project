@@ -967,7 +967,7 @@ DS.demos.linuxTerminal = function (container) {
   };
 
   const render = () => {
-    container.innerHTML = UI.shell({
+    UI.mount(container, {
       title: `Linux terminal: ${topic.label}`,
       hint: 'Use Guided demo for predefined command steps, then try the same topic manually in Playground.',
       stage: renderStage(),

@@ -58,7 +58,7 @@ DS.demos.set = function (container) {
       UI.statChip('has()', 'O(1) avg', 'Fast membership test'),
     ].join('');
 
-    container.innerHTML = UI.shell({
+    UI.mount(container, {
       title: 'Set: unique members only',
       hint: 'A Set is like a VIP list: each value appears once. It may use hashing internally, but you do not store key:value pairs. Use Set for uniqueness and membership. Use Map/hash table when each key needs a value.',
       stage,

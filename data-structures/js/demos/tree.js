@@ -73,7 +73,7 @@ DS.demos.tree = function (container) {
     const right = node?.right?.val ?? ', ';
     const path = searchPath(root, selectedVal).join(' → ');
     return [
-      ['Value', String(selectedVal), `${info.bytes} B · ${info.binary}`],
+      ['Value', info.decimal, `${info.bytes} B · ${info.binary}`],
       ['Left child', String(left), 'Must be smaller than parent'],
       ['Right child', String(right), 'Must be larger than parent'],
       ['Search path', path, 'Compare once per level from the root'],
@@ -103,7 +103,7 @@ DS.demos.tree = function (container) {
       UI.statChip('Type', 'BST', 'Binary Search Tree'),
     ].join('');
 
-    container.innerHTML = UI.shell({
+    UI.mount(container, {
       title: 'Binary search tree: sorted hierarchy',
       hint: 'Each node has at most two children. Smaller values go left, larger values go right. Searching starts at the root and discards half the remaining tree each step when the tree is balanced.',
       stage,
@@ -120,7 +120,7 @@ DS.demos.tree = function (container) {
 
   render();
 
-  window.treeSelect = (v) => { selectedVal = v. Render(); };
+  window.treeSelect = (v) => { selectedVal = v; render(); };
 
   window.treeInsert = () => {
     const val = document.getElementById('treeInput').value;

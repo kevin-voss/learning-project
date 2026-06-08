@@ -61,7 +61,7 @@ DS.demos['linked-list'] = function (container) {
       UI.statChip('Tail', nodes.length ? nodeAddr(nodes.length - 1) : 'null'),
     ].join('');
 
-    container.innerHTML = UI.shell({
+    UI.mount(container, {
       title: 'Linked list: scattered nodes with pointers',
       hint: 'Unlike arrays, nodes are NOT side-by-side in memory. Each node stores a value plus a pointer (next) to the following node. Follow the arrows from head to tail.',
       stage,
@@ -79,7 +79,7 @@ DS.demos['linked-list'] = function (container) {
 
   render();
 
-  window.llSelect = (i) => { selectedIdx = i. Render(); };
+  window.llSelect = (i) => { selectedIdx = i; render(); };
 
   window.llPrepend = () => {
     const val = document.getElementById('llInput').value;

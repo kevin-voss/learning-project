@@ -276,7 +276,7 @@ const result = await db.query(
   };
 
   const render = () => {
-    container.innerHTML = UI.shell({
+    UI.mount(container, {
       title: 'SQL example runner',
       hint: 'Choose a preset query or type a simple SELECT in the playground (users, lessons, completions tables).',
       stage: `${renderStage()}

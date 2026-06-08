@@ -374,7 +374,7 @@ login: device signs challenge</code>
       jwt: 'JWT and OAuth Flow Visualizer',
       passwords: 'Password Safety Demo',
     };
-    container.innerHTML = UI.shell({
+    UI.mount(container, {
       title: titles[scenario] || titles.session,
       hint: 'Interactive toy model for learning only. Production auth should use trusted frameworks, providers, and libraries.',
       stage: renderStage(),

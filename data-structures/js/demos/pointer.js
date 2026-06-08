@@ -12,31 +12,31 @@ DS.demos.pointer = function (container) {
         <button class="pointer-var${selected === 'userA' ? ' is-selected' : ''}" onclick="ptrSelect('userA')">
           <strong>userA</strong>
           <span>stores address</span>
-          <code>0xA100</code>
+          <code>0xA100 hex</code>
         </button>
         <button class="pointer-var${selected === 'userB' ? ' is-selected' : ''}" onclick="ptrSelect('userB')">
           <strong>userB</strong>
           <span>stores same address</span>
-          <code>0xA100</code>
+          <code>0xA100 hex</code>
         </button>
       </div>
       <div class="pointer-arrow">both references point here</div>
       <div class="pointer-object">
-        <div class="pointer-object-head">Object in heap memory @ 0xA100</div>
+        <div class="pointer-object-head">Object in heap memory @ 0xA100 hex</div>
         <div><span>name</span><strong>Ada</strong></div>
         <div><span>score</span><strong>${sharedScore}</strong></div>
       </div>
     </div>`;
 
   const inspectorRows = () => [
-    ['userA value', '0xA100', 'The variable stores a reference, not the whole object'],
-    ['userB value', '0xA100', 'Same address means same object'],
+    ['userA value', '0xA100 hex', 'The variable stores a reference, not the whole object'],
+    ['userB value', '0xA100 hex', 'Same address means same object'],
     ['Shared score', String(sharedScore), 'Changing through one reference affects the shared object'],
     ['Null meaning', 'points nowhere', 'No object address is stored'],
   ];
 
   const render = () => {
-    container.innerHTML = UI.shell({
+    UI.mount(container, {
       title: 'Pointer/reference visual: variables point to memory',
       hint: 'The variables are small labels that store an address. The object lives in heap memory. Because both labels store the same address, they both reach the same object.',
       stage: renderMemory(),
@@ -44,7 +44,7 @@ DS.demos.pointer = function (container) {
       stats: [
         UI.statChip('Variables', 2),
         UI.statChip('Objects', 1),
-        UI.statChip('Address', '0xA100'),
+        UI.statChip('Address', '0xA100 hex'),
       ].join(''),
       controls: `
         <button class="demo-btn success" onclick="ptrUpdate()"><i class="fas fa-pen"></i> userB.score += 5</button>
@@ -63,7 +63,7 @@ DS.demos.pointer = function (container) {
     sharedScore += 5;
     selected = 'userB';
     render();
-    DS.showMsg('ptrMsg', `Updated through userB. userA sees score ${sharedScore} because both point to 0xA100.`, 'success-msg');
+    DS.showMsg('ptrMsg', `Updated through userB. userA sees score ${sharedScore} because both point to 0xA100 hex.`, 'success-msg');
   };
 
   window.ptrReset = () => {

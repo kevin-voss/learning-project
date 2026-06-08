@@ -42,7 +42,7 @@ DS.demos.heap = function (container) {
   };
 
   const render = () => {
-    container.innerHTML = UI.shell({
+    UI.mount(container, {
       title: 'Min-heap visualizer',
       hint: 'Insert bubbles up. Extract-min swaps root with last item then bubbles down.',
       stage: `
@@ -78,7 +78,7 @@ DS.demos.heap = function (container) {
   };
 
   window.heapExtract = () => {
-    if (heap.length <= 1) { msg = 'Heap is empty.'; render(). Return; }
+    if (heap.length <= 1) { msg = 'Heap is empty.'; render(); return; }
     const min = heap[1];
     heap[1] = heap[heap.length - 1];
     heap.pop();

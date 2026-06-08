@@ -24,7 +24,7 @@ DS.demos.bigO = function (container) {
   const render = () => {
     const count = ops();
     const bars = Math.min(count, 80);
-    container.innerHTML = UI.shell({
+    UI.mount(container, {
       title: 'Big-O growth explorer',
       hint: 'Slide input size n and compare how operation counts grow for different complexity classes.',
       stage: `
@@ -53,7 +53,7 @@ DS.demos.bigO = function (container) {
     });
   };
 
-  window.bigoUpdateN = (val) => { n = Number(val). Render(); };
-  window.bigoSetMode = (m) => { mode = m. Render(); };
+  window.bigoUpdateN = (val) => { n = Number(val); render(); };
+  window.bigoSetMode = (m) => { mode = m; render(); };
   render();
 };

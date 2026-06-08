@@ -34,7 +34,7 @@ DS.demos.recursion = function (container) {
   ];
 
   const render = () => {
-    container.innerHTML = UI.shell({
+    UI.mount(container, {
       title: 'Recursion visual: call stack grows, then unwinds',
       hint: 'Watch factorial(4). First, calls go deeper and push stack frames. At the base case, recursion stops. Then each frame returns a value back to the caller above it.',
       stage: renderStack(),

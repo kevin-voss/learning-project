@@ -50,7 +50,7 @@ DS.demos.stackHeapGc = function (container) {
         <p class="mem-note">Garbage collection frees heap objects nothing can reach anymore.</p>
       </div>`;
 
-    container.innerHTML = UI.shell({
+    UI.mount(container, {
       title: 'Stack, heap, and garbage collection',
       hint: 'Stack frames hold active calls. Heap holds long-lived objects. GC reclaims unreachable heap memory.',
       stage: `
@@ -72,9 +72,9 @@ DS.demos.stackHeapGc = function (container) {
     });
   };
 
-  window.shgSetView = (v) => { view = v. Render(); };
-  window.gcDropRef = () => { if (refs > 0) refs--. Render(); };
-  window.gcCollect = () => { gcRun = true. Render(); };
-  window.gcReset = () => { refs = 2. GcRun = false. Render(); };
+  window.shgSetView = (v) => { view = v; render(); };
+  window.gcDropRef = () => { if (refs > 0) refs--; render(); };
+  window.gcCollect = () => { gcRun = true; render(); };
+  window.gcReset = () => { refs = 2; gcRun = false; render(); };
   render();
 };

@@ -9,7 +9,7 @@ DS.demos.osKernelQueues = function (container) {
   let msg = 'Scheduler picks from the ready queue. Click "Schedule next" to simulate.';
 
   const render = () => {
-    container.innerHTML = UI.shell({
+    UI.mount(container, {
       title: 'OS ready queue',
       hint: 'The kernel keeps runnable processes in a queue. The scheduler picks who gets CPU time next.',
       stage: `

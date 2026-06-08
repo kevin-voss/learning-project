@@ -15,7 +15,7 @@ DS.curriculum.push({
   conceptSections: [
     { icon: 'fa-0', title: 'Bits and bytes', desc: 'One byte = 8 bits. Values 0–255.', example: 'Letter "A" is often 65 decimal or 0x41 hex.' },
     { icon: 'fa-language', title: 'UTF-8', desc: 'Variable-length encoding that stays ASCII-compatible for English.', example: 'Common on the web and in JSON.' },
-    { icon: 'fa-hashtag', title: 'Hex dumps', desc: 'Debuggers show memory as hex pairs.', example: '48 69 = "Hi" in ASCII.' },
+    { icon: 'fa-hashtag', title: 'Hex dumps', desc: 'Debuggers show memory as hex pairs.', example: '0x48 0x69 hex spells "Hi" (72 dec, 105 dec).' },
   ],
   demoType: 'binary-encoding',
   relatedIds: ['memory-model', 'compiler-runtime'],

@@ -34,7 +34,7 @@ DS.demos.encryption = function (container, initialScenario) {
 
   const toyEncrypt = (text, amount = seedShift()) => text.split('').map(char => shiftChar(char, amount)).join('');
   const toyDecrypt = (text, amount = seedShift()) => toyEncrypt(text, -amount);
-  const toyBytes = (text) => Array.from(text).map(char => char.charCodeAt(0).toString(16).padStart(2, '0')).join(' ');
+  const toyBytes = (text) => Array.from(text).map(char => UI.formatHex(char.charCodeAt(0))).join(' ');
   const short = (text, prefix) => `${prefix}-${simpleHash(text).slice(0, 10)}`;
 
   const buildMethods = () => {
@@ -231,7 +231,7 @@ DS.demos.encryption = function (container, initialScenario) {
 
   const render = () => {
     const current = methods()[method] || methods().tls;
-    container.innerHTML = UI.shell({
+    UI.mount(container, {
       title: 'Encryption method explorer',
       hint: 'Pick a popular method, type a message, and move step by step. The outputs are toy visuals, not real cryptography.',
       stage: renderStage(),

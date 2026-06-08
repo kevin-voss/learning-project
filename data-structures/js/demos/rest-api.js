@@ -14,7 +14,7 @@ DS.demos.restApi = function (container) {
 
   const render = () => {
     const key = `${method} ${path}`;
-    container.innerHTML = UI.shell({
+    UI.mount(container, {
       title: 'REST request builder',
       hint: 'Pick method and path: see typical status and JSON body.',
       stage: `
@@ -24,7 +24,7 @@ DS.demos.restApi = function (container) {
               <button type="button" class="demo-btn ${method === m ? 'success' : ''}" onclick="restSetMethod('${m}')">${m}</button>
             `).join('')}
           </div>
-          <input type="text" class="demo-input" value="${UI.esc(path)}" onchange="restSetPath(this.value)" aria-label="API path">
+          <input type="text" class="demo-input" value="${UI.esc(path)}" oninput="restSetPath(this.value)" aria-label="API path">
           <pre class="rest-response">${UI.esc(responses[key] || '404 Not found')}</pre>
         </div>`,
       inspector: UI.inspector('REST', [
@@ -34,7 +34,7 @@ DS.demos.restApi = function (container) {
       ]),
     });
   };
-  window.restSetMethod = (m) => { method = m. If (m === 'POST') path = '/users'; render(); };
-  window.restSetPath = (p) => { path = p. Render(); };
+  window.restSetMethod = (m) => { method = m; if (m === 'POST') path = '/users'; render(); };
+  window.restSetPath = (p) => { path = p; render(); };
   render();
 };

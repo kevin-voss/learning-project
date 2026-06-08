@@ -56,7 +56,7 @@ DS.demos.stack = function (container) {
       UI.statChip('Order', 'LIFO', 'Last In, First Out'),
     ].join('');
 
-    container.innerHTML = UI.shell({
+    UI.mount(container, {
       title: 'Stack: last in, first out (LIFO)',
       hint: 'Like a stack of plates: you add and remove only from the top. The stack pointer (SP) tracks the top frame. Push grows the stack; Pop shrinks it: both O(1).',
       stage,

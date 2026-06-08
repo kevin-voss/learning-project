@@ -242,7 +242,7 @@ DS.demos.securityThreats = function (container, initialScenario) {
 
   const render = () => {
     const showModeToggle = scenario !== 'rate-limit';
-    container.innerHTML = UI.shell({
+    UI.mount(container, {
       title: 'Security threats: safe vs risky patterns',
       hint: 'Pick a scenario, toggle unsafe vs safe, and see how defenses change outcomes. Toy examples only.',
       stage: `

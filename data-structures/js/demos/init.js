@@ -25,6 +25,7 @@ DS.initDemo = function (id, demoScenario) {
     'http-requests-responses': DS.demos.http,
     'networks-ips-requests': DS.demos.webFoundations,
     'networking-http': DS.demos.webFoundations,
+    'linux-terminal': DS.demos.linuxTerminal,
     'database-sql': (el) => DS.demos.databaseSql(el, demoScenario),
     'database-sql-fundamentals': (el) => DS.demos.databaseSql(el, demoScenario),
     'database-design-scaling': (el) => DS.demos.databaseSql(el, demoScenario),

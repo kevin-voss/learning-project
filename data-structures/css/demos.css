@@ -1133,6 +1133,266 @@
   transform: translateY(-1px);
 }
 
+.linux-demo {
+  display: grid;
+  gap: 14px;
+}
+
+.linux-terminal-window {
+  background: #070b09;
+  border: 1px solid rgba(240, 180, 41, 0.22);
+  border-radius: var(--radius);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+}
+
+.linux-window-bar {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  gap: 7px;
+  padding: 9px 12px;
+}
+
+.linux-window-bar span {
+  border-radius: 999px;
+  height: 10px;
+  width: 10px;
+}
+
+.linux-window-bar span:nth-child(1) { background: var(--red); }
+.linux-window-bar span:nth-child(2) { background: var(--accent); }
+.linux-window-bar span:nth-child(3) { background: var(--green); }
+
+.linux-window-bar strong {
+  color: var(--muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  margin-left: 6px;
+}
+
+.linux-terminal-output {
+  color: var(--fg2);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  line-height: 1.65;
+  min-height: 190px;
+  padding: 16px;
+}
+
+.linux-terminal-entry + .linux-terminal-entry {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  margin-top: 12px;
+  padding-top: 12px;
+}
+
+.linux-terminal-entry pre {
+  color: var(--fg);
+  margin: 4px 0 0;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.linux-terminal-empty,
+.linux-muted {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.linux-prompt {
+  color: var(--green);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.linux-input-row {
+  align-items: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  display: grid;
+  gap: 8px;
+  grid-template-columns: auto minmax(120px, 1fr) auto;
+  padding: 12px 16px 16px;
+}
+
+.linux-command-input {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--fg);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  outline: none;
+  padding: 9px 10px;
+}
+
+.linux-command-input:focus {
+  border-color: var(--accent);
+}
+
+.linux-flow {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.linux-flow-node {
+  align-items: center;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--fg2);
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 700;
+  gap: 7px;
+  padding: 8px 11px;
+  transition: all 0.2s ease;
+}
+
+.linux-flow-node i {
+  color: var(--muted);
+}
+
+.linux-flow-node.is-active {
+  background: var(--accent-dim);
+  border-color: rgba(240, 180, 41, 0.55);
+  color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(240, 180, 41, 0.08);
+}
+
+.linux-flow-node.is-active i {
+  color: var(--accent);
+}
+
+.linux-flow-arrow {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.linux-data-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.linux-data-grid section,
+.linux-breakdown {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+}
+
+.linux-data-grid h4 {
+  align-items: center;
+  color: var(--fg);
+  display: flex;
+  font-size: 13px;
+  gap: 8px;
+  margin: 0 0 10px;
+}
+
+.linux-tree,
+.linux-processes,
+.linux-breakdown {
+  color: var(--fg2);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.linux-tree .indent {
+  margin-left: 16px;
+}
+
+.linux-tree .deeper {
+  margin-left: 32px;
+}
+
+.linux-tree i {
+  color: var(--accent);
+  margin-right: 6px;
+}
+
+.linux-tree .is-hot {
+  color: var(--green);
+}
+
+.linux-tree span {
+  background: var(--green-dim);
+  border: 1px solid rgba(39, 196, 132, 0.25);
+  border-radius: 999px;
+  color: var(--green);
+  font-size: 10px;
+  padding: 1px 5px;
+}
+
+.linux-processes {
+  display: grid;
+  gap: 4px;
+}
+
+.linux-processes > div {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 54px 1fr 54px;
+}
+
+.linux-processes > div:first-child {
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.linux-breakdown strong {
+  color: var(--accent);
+  display: block;
+  margin-bottom: 6px;
+}
+
+.linux-breakdown p {
+  color: var(--fg2);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px;
+  line-height: 1.55;
+  margin: 0 0 8px;
+}
+
+.linux-breakdown ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.linux-control-group {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+}
+
+.linux-control-group > span {
+  color: var(--muted);
+  flex: 0 0 92px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 860px) {
+  .linux-data-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .linux-input-row {
+    grid-template-columns: 1fr;
+  }
+}
+
 .sql-demo {
   display: grid;
   gap: 14px;

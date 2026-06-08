@@ -612,6 +612,7 @@ DS.renderContent = function () {
         <p class="ds-subtitle">${view.subtitle}</p>
       </div>
 
+      ${DS.renderLessonSubnav(lesson, subPages, activeIndex)}
       ${DS.renderSectionSubnav(lesson, anchors)}
 
       <!-- Real World Analogy -->

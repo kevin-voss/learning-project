@@ -1,5 +1,5 @@
 /* DS Section */
-  .ds-section { display: none; }
+  .ds-section { display: none; max-width: 100%; }
   .ds-section.active { display: block; animation: fadeUp 0.4s ease; }
 
   @keyframes fadeUp {
@@ -537,6 +537,7 @@
   .code-body {
     padding: 20px;
     overflow-x: auto;
+    max-width: 100%;
     font-family: 'JetBrains Mono', monospace;
     font-size: 13px;
     line-height: 1.8;

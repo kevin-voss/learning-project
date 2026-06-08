@@ -35,6 +35,7 @@ DS.initDemo = function (id, demoScenario) {
     'docker-compose': DS.demos.dockerCompose,
     'observability': DS.demos.observability,
     'cloud-hosting': DS.demos.cloudHosting,
+    'encryption': (el) => DS.demos.encryption(el, demoScenario),
     'encryption-concepts': DS.demos.encryption,
     'auth-identity': (el) => DS.demos.authIdentity(el, demoScenario),
     'web-security-threats': (el) => DS.demos.securityThreats(el, demoScenario),

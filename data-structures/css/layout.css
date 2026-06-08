@@ -6,6 +6,9 @@
     width: 100%;
     max-width: 100%;
     z-index: 1;
+    /* JetBrains Mono coding ligatures off — keep ===, =>, != as separate glyphs */
+    font-variant-ligatures: none;
+    font-feature-settings: "liga" 0, "calt" 0;
   }
 
   /* Sidebar */

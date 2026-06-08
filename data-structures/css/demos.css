@@ -2650,7 +2650,7 @@
 
 /* New topic demos */
 .bigo-demo, .memory-demo, .heap-demo, .ring-demo, .compiler-demo, .os-queue-demo,
-.roadmap-demo, .playground-demo, .binary-demo, .gc-demo, .cs-demo, .graph-algo-demo, .dp-demo,
+.roadmap-demo, .playground-demo, .binary-demo, .number-bases-demo, .gc-demo, .cs-demo, .graph-algo-demo, .dp-demo,
 .greedy-demo, .async-demo, .cache-demo, .rest-demo, .mq-demo, .nosql-demo, .abstract-demo, .test-demo {
   display: flex;
   flex-direction: column;
@@ -2760,4 +2760,62 @@
   flex-direction: column;
   gap: 2px;
   padding: 8px 10px;
+}
+
+.number-bases-demo .nb-mode-tabs { margin-bottom: 4px; }
+.nb-explore, .nb-practice { display: flex; flex-direction: column; gap: 12px; }
+.nb-slider-label {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 13px;
+}
+.nb-slider-label input[type="range"] { flex: 1; min-width: 160px; }
+.nb-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+}
+.nb-summary span {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 10px;
+}
+.nb-panel {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+.nb-panel h4 { font-size: 13px; margin: 0 0 8px; }
+.nb-place-grid {
+  display: grid;
+  gap: 6px;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+}
+.nb-place {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  gap: 4px;
+  padding: 6px 4px;
+  text-align: center;
+}
+.nb-place.is-on { border-color: var(--accent); background: rgba(var(--accent-rgb, 100, 140, 120), 0.12); }
+.nb-steps { font-size: 12px; margin: 0; padding-left: 1.2rem; }
+.nb-steps li { margin: 4px 0; }
+.nb-note { font-size: 12px; margin: 8px 0 0; opacity: 0.9; }
+.nb-prompt { font-size: 15px; font-weight: 600; margin: 0; }
+.nb-practice-input { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+@media (max-width: 720px) {
+  .nb-place-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }

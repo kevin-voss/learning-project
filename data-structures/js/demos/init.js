@@ -37,6 +37,7 @@ DS.demoRunners = function (demoScenario) {
     'roadmap-explorer': DS.demos.roadmapExplorer,
     'git-playground': DS.demos.gitPlayground,
     'binary-encoding': DS.demos.binaryEncoding,
+    'number-bases': DS.demos.numberBases,
     'stack-heap-gc': DS.demos.stackHeapGc,
     'graph-algorithms': DS.demos.graphAlgorithms,
     'dynamic-programming-intro': DS.demos.dynamicProgramming,

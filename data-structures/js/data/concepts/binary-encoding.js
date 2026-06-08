@@ -18,7 +18,7 @@ DS.curriculum.push({
     { icon: 'fa-hashtag', title: 'Hex dumps', desc: 'Debuggers show memory as hex pairs.', example: '0x48 0x69 hex spells "Hi" (72 dec, 105 dec).' },
   ],
   demoType: 'binary-encoding',
-  relatedIds: ['memory-model', 'compiler-runtime'],
+  relatedIds: ['number-bases', 'memory-model', 'compiler-runtime'],
   keywords: ['binary', 'hex', 'ascii', 'utf-8', 'encoding', 'bit', 'byte', 'mojibake'],
   checklist: ['Convert a character to its byte value.', 'Explain why UTF-8 is common on the web.', 'Describe what mojibake means.'],
 });

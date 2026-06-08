@@ -14,6 +14,7 @@ Canonical human overview: [README.md](../../README.md). Agent entry doc: [AGENTS
 - **`beginner-js/`** — Topic folders with `tasks.js` / `tasks.test.js`. Root **`Makefile`** wraps **`bun test`** for topics and single-task targets (see Makefile comments).
 - **`docs/codestep/`** — Product overview and phased specs (`overview.md`, `01.md`–`04.md`); use when changing CodeStep behavior or roadmap-shaped work.
 - **`system-design/`** — Standalone static HTML/CSS/JS viewer; not part of the Vite app. Treat as a separate mini-site unless the task is explicitly there.
+- **`data-structures/`** — Standalone static HTML/CSS/JS data structures roadmap (`css/`, `js/data/`, `js/demos/`); same mini-site pattern as `system-design/`.
 
 ## Conventions
 

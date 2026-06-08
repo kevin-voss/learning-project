@@ -1,0 +1,30 @@
+/* Responsive */
+  @media (max-width: 900px) {
+    .sidebar { transform: translateX(-100%); }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; }
+    .menu-toggle { display: flex; }
+    .content-area { padding: 60px 20px 60px; }
+    .info-grid, .pros-cons, .complexity-guide-grid { grid-template-columns: 1fr; }
+    .ds-title { font-size: 28px; }
+    .demo-body { grid-template-columns: 1fr; }
+    .demo-inspector { border-left: none; border-top: 1px solid var(--border); }
+    .mem-strip { flex-wrap: wrap; }
+    .mem-cell { border-radius: 8px !important; border-right-width: 2px !important; margin-bottom: 4px; }
+  }
+
+  /* Hover glow on visual items */
+  .mem-cell:hover,
+  .ll-node-card:hover,
+  .stack-frame:hover,
+  .queue-slot:hover,
+  .tree-node-card:hover,
+  .set-member:hover {
+    box-shadow: 0 0 20px rgba(240,180,41,0.15);
+  }
+
+  /* Subtle float animation for decorative elements */
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }

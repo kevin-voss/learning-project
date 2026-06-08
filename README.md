@@ -12,6 +12,7 @@ High-level map of the monorepo (stacks: CodeStep UI in **`frontend/`**, Bun-test
 | [`beginner-js/`](beginner-js/README.md) | **Topic folders** (variables, math, strings, …) with `tasks.js` / `tasks.test.js`; run tests from the repo root with **`make`** — see [`Makefile`](Makefile). |
 | [`docs/codestep/`](docs/codestep/overview.md) | Product overview and **implementation phases** [`01.md`](docs/codestep/01.md)–[`04.md`](docs/codestep/04.md). |
 | [`system-design/`](system-design/index.html) | Static HTML/CSS/JS **architecture explorer**; open `index.html` in a browser — separate from the React app. |
+| [`data-structures/`](data-structures/README.md) | Static HTML/CSS/JS **data structures roadmap** with interactive demos; open `index.html` in a browser. |
 | [`AGENTS.md`](AGENTS.md) | Short entry for **AI agents and automation** (stack summary, `.cursor/` layout); full navigation stays in this README. |
 | [`Makefile`](Makefile) | Root **`make`** targets wrapping **Bun** tests for `beginner-js/`. |
 

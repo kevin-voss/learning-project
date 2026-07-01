@@ -1,0 +1,18 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+*.swp
+
+# Secrets
+.env
+.env.local
+
+# Logs
+*.log
+
+# Node (if you add tooling later)
+node_modules/
+
+# Docker build context — optional local notes
+docker-compose.override.yml

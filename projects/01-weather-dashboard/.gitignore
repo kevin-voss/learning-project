@@ -1,0 +1,20 @@
+# Secrets (Project 1 uses Open-Meteo — no keys; keep for habit)
+.env
+.env.local
+
+# OS
+Thumbs.db
+
+# Editor
+.vscode/
+*.swp
+
+# Logs
+*.log
+npm-debug.log*
+
+# Optional: if you add npm later
+node_modules/
+
+# Never commit real keys — use a local config file you gitignore:
+# js/config.local.js

@@ -13,6 +13,7 @@ High-level map of the monorepo (stacks: CodeStep UI in **`frontend/`**, Bun-test
 | [`docs/codestep/`](docs/codestep/overview.md) | Product overview and **implementation phases** [`01.md`](docs/codestep/01.md)–[`04.md`](docs/codestep/04.md). |
 | [`system-design/`](system-design/index.html) | Static HTML/CSS/JS **architecture explorer**; open `index.html` in a browser — separate from the React app. |
 | [`data-structures/`](data-structures/README.md) | Static HTML/CSS/JS **CS roadmap** with data structures, algorithms, web/infra foundations, DevOps, Git, Docker, and auth basics; open `index.html` in a browser. |
+| [`projects/`](projects/README.md) | **Beginner project curriculum** — four scaffolded learning projects (Weather, Docker, CLI, React) with docs only; you write the code. |
 | [`AGENTS.md`](AGENTS.md) | Short entry for **AI agents and automation** (stack summary, `.cursor/` layout); full navigation stays in this README. |
 | [`Makefile`](Makefile) | Root **`make`** targets wrapping **Bun** tests for `beginner-js/`. |
 
@@ -32,6 +33,7 @@ learning-project/
 │   ├── README.md
 │   └── (other app files; see frontend/README.md)
 ├── system-design/            # Standalone architecture viewer (index.html)
+├── projects/                 # Beginner 4-project curriculum (docs + scaffolding)
 └── README.md
 ```
 

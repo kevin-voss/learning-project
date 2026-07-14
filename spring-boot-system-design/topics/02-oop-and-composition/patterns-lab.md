@@ -76,21 +76,21 @@ Parcel parcel = Parcel.builder()
         .build();
 ```
 
-The trick is each setter returns `this` (the builder itself), so calls **chain**. `build()` is the single place that validates — so a half-built parcel can never escape.
+The trick is each setter returns `this` (the builder itself), so calls **chain**. `build()` is the single place that validates, so a half-built parcel can never escape.
 
 ## Pros and cons
 
 | Pros | Cons |
 |---|---|
 | Readable: every value is labeled | More code than a plain constructor |
-| Order-independent; optional fields with defaults | Overkill for objects with 1–2 required fields |
+| Order-independent, optional fields with defaults | Overkill for objects with 1–2 required fields |
 | One validation point (`build()`) | Slightly more to learn at first |
-| Hard to mix up same-typed arguments | — |
+| Hard to mix up same-typed arguments | n/a |
 
 ## When to use / when not
 
 - **Use it** when an object has several fields, especially **optional** ones, or several same-typed fields that are easy to swap.
-- **Don't use it** for a tiny value like `new Point(x, y)` — a constructor is clearer.
+- **Don't use it** for a tiny value like `new Point(x, y)`. A constructor is clearer.
 
 **Real-world examples:** `StringBuilder`, HTTP client request builders, and test-data builders. Java's own `HttpRequest.newBuilder().uri(...).GET().build()` is exactly this pattern.
 
@@ -158,9 +158,9 @@ Adding a "push notification" channel later means editing **one** place (the fact
 ## When to use / when not
 
 - **Use it** when the concrete class to create depends on input/config, or when you want callers decoupled from concrete classes.
-- **Don't use it** when there is exactly one implementation and no foreseeable second — just call `new`.
+- **Don't use it** when there is exactly one implementation and no foreseeable second. Just call `new`.
 
-**Real-world examples:** `DriverManager.getConnection(url)` returns the right database driver; logging frameworks return the configured logger implementation.
+**Real-world examples:** `DriverManager.getConnection(url)` returns the right database driver. Logging frameworks return the configured logger implementation.
 
 ---
 

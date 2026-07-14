@@ -29,7 +29,7 @@ Parcel parcel = Parcel.builder()
 
 ## Behavioral patterns
 
-**Observer**: interested parties react to an event. In-process Spring event listeners are observers; RabbitMQ consumers extend that idea across processes.
+**Observer**: interested parties react to an event. In-process Spring event listeners are observers. RabbitMQ consumers extend that idea across processes.
 
 **Strategy**: swap an algorithm. A rate limiter can choose fixed-window or token-bucket strategy.
 

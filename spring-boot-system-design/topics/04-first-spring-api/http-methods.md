@@ -5,13 +5,13 @@ HTTP methods are the **verbs** of the web: they say *what you want to do* to a r
 ## Two properties you must know
 
 - **Safe** = the request does not change data (read-only). `GET` is safe.
-- **Idempotent** = doing it once or many times has the **same end result**. `PUT` and `DELETE` are idempotent; `POST` is not.
+- **Idempotent** = doing it once or many times has the **same end result**. `PUT` and `DELETE` are idempotent, but `POST` is not.
 
 Why care? Networks retry. If a request might be sent twice, an idempotent method keeps data correct. A non-idempotent `POST` sent twice can create two parcels.
 
 ## The methods
 
-### GET — read
+### GET: read
 
 Fetch a resource. Safe and idempotent. No body.
 
@@ -21,7 +21,7 @@ curl -i http://localhost:8080/parcels/P-1
 
 **When:** reading one parcel or listing/filtering parcels. **Never** change data in a `GET`.
 
-### POST — create / trigger
+### POST: create / trigger
 
 Create a new resource or start an action. **Not** safe, **not** idempotent.
 
@@ -31,9 +31,9 @@ curl -i -X POST http://localhost:8080/parcels \
   -d '{"id":"P-2","recipient":"Ava"}'
 ```
 
-**When:** creating a parcel, or a "do this" command. Sending it twice may create two things — that's why it's not idempotent.
+**When:** creating a parcel, or a "do this" command. Sending it twice may create two things, which is why it's not idempotent.
 
-### PUT — replace
+### PUT: replace
 
 Replace a resource entirely at a known URL. Idempotent (replacing with the same body twice = same result).
 
@@ -45,7 +45,7 @@ curl -i -X PUT http://localhost:8080/parcels/P-2 \
 
 **When:** you send the **full** new version of a resource.
 
-### PATCH — partial change
+### PATCH: partial change
 
 Change part of a resource. Not guaranteed idempotent (depends on the change).
 
@@ -57,7 +57,7 @@ curl -i -X PATCH http://localhost:8080/parcels/P-2/status \
 
 **When:** updating one field/action (like advancing status) without resending everything. ParcelPilot uses this for status changes.
 
-### DELETE — remove
+### DELETE: remove
 
 Remove a resource. Idempotent (deleting an already-deleted thing still ends "not there").
 
@@ -65,14 +65,14 @@ Remove a resource. Idempotent (deleting an already-deleted thing still ends "not
 curl -i -X DELETE http://localhost:8080/parcels/P-2
 ```
 
-### QUERY — complex, safe reads (the newer method)
+### QUERY: complex, safe reads (the newer method)
 
 `QUERY` is a **newer HTTP method** (being standardized by the IETF) designed to fix a real gap: sometimes a read needs a **large or complex filter** that doesn't fit comfortably in a URL.
 
 The gap it fills:
 
 - `GET /parcels?status=CREATED` is perfect for simple filters, but URLs have length limits and can't cleanly express rich, nested search criteria.
-- People often abuse `POST /parcels/search` for complex reads — but `POST` is not safe or idempotent, so caches and retries treat it as a change.
+- People often abuse `POST /parcels/search` for complex reads, but `POST` is not safe or idempotent, so caches and retries treat it as a change.
 
 `QUERY` combines the best of both: it is **safe and idempotent like GET**, but it can carry a **request body like POST**, so complex search criteria go in the body.
 
@@ -106,4 +106,4 @@ flowchart LR
 
 ## Back to the step
 
-Return to [Step 04](README.md). ParcelPilot uses `GET`, `POST`, and `PATCH`; you now understand where `PUT`, `DELETE`, and the emerging `QUERY` fit too.
+Return to [Step 04](README.md). ParcelPilot uses `GET`, `POST`, and `PATCH`, and you now understand where `PUT`, `DELETE`, and the emerging `QUERY` fit too.

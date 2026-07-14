@@ -21,7 +21,7 @@ flowchart TB
 
 ## The problem inheritance can cause
 
-Inheritance tightly binds child to parent. Change the parent and every child is affected — sometimes in surprising ways. The classic trap: you inherit to reuse a method, but you also inherit things that don't make sense for the child.
+Inheritance tightly binds child to parent. Change the parent and every child is affected, sometimes in surprising ways. The classic trap: you inherit to reuse a method, but you also inherit things that don't make sense for the child.
 
 ```java
 // Tempting but wrong: a tracker is NOT a kind of clock
@@ -66,11 +66,11 @@ The rule of thumb: **reach for composition first.** Use inheritance only when th
 ## When inheritance IS appropriate
 
 - Modeling a genuine "is-a" that is always substitutable (e.g. `SmsSender` and `EmailSender` both **are** a `NotificationSender`). Here we inherit from an **interface**, which is the safest form.
-- Frameworks sometimes ask you to extend a base class — that's fine when the framework designed it that way.
+- Frameworks sometimes ask you to extend a base class, and that's fine when the framework designed it that way.
 
 ## Real-world analogy
 
-A car **has an** engine (composition) — you can swap a petrol engine for an electric one. A sports car **is a** car (inheritance) — a fixed, permanent relationship. You'd never say a car **is an** engine.
+A car **has an** engine (composition), so you can swap a petrol engine for an electric one. A sports car **is a** car (inheritance), a fixed, permanent relationship. You'd never say a car **is an** engine.
 
 ## Back to the step
 

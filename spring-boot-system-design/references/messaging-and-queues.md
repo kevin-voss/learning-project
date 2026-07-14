@@ -16,8 +16,8 @@ For a delivery update, the API needs to save the parcel. It does not need to wai
 ## Reliability vocabulary
 
 - **At-most-once**: never duplicate, but a message can be lost.
-- **At-least-once**: retries can duplicate a message; consumer must be idempotent.
-- **Exactly-once**: usually a narrow, costly guarantee; do not assume it across a full distributed workflow.
+- **At-least-once**: retries can duplicate a message, so your consumer must be idempotent.
+- **Exactly-once**: usually a narrow, costly guarantee. Do not assume it across a full distributed workflow.
 - **Idempotent**: repeating an operation gives the same final result.
 - **Dead-letter queue (DLQ)**: holds messages that repeatedly fail processing.
 
@@ -37,10 +37,10 @@ For a delivery update, the API needs to save the parcel. It does not need to wai
 | **Kafka** | very high throughput, multiple independent consumers, event replay/history | you just need a simple task queue (it's heavier to run and learn) |
 | **AWS SQS** | you're on AWS and want zero broker operations | you need Kafka-style replay, or you're not on AWS |
 
-**Why ParcelPilot uses RabbitMQ:** notification delivery is a classic **task queue** (send later, retry on failure), we want to *watch* queues/acks/retries while learning, and it runs in Docker with one command. Kafka's replayable log and SQS's managed cloud model are excellent — just not the simplest fit for this learning goal.
+**Why ParcelPilot uses RabbitMQ:** notification delivery is a classic **task queue** (send later, retry on failure), we want to *watch* queues/acks/retries while learning, and it runs in Docker with one command. Kafka's replayable log and SQS's managed cloud model are excellent, just not the simplest fit for this learning goal.
 
-Choose from requirements: throughput, ordering scope, replay, delivery semantics, operations budget, and cloud ecosystem—not popularity.
+Choose from requirements, not popularity: throughput, ordering scope, replay, delivery semantics, operations budget, and cloud ecosystem.
 
 ## The dual-write problem
 
-If code writes “delivered” to the database, then tries to publish an event, a crash between those actions creates inconsistent reality. The **transactional outbox** pattern writes an event record in the same database transaction; a separate publisher sends that record reliably afterward. Learn the basic queue first, then add this pattern.
+If code writes “delivered” to the database, then tries to publish an event, a crash between those actions creates inconsistent reality. The **transactional outbox** pattern writes an event record in the same database transaction. A separate publisher then sends that record reliably afterward. Learn the basic queue first, then add this pattern.

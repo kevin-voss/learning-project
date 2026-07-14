@@ -1,4 +1,4 @@
-# Step 05 — Docker: ship the API as one unit
+# Step 05: Docker, ship the API as one unit
 
 > In this step: package ParcelPilot into a portable image that runs on any machine with Docker, using a full Dockerfile you'll understand line by line. ~60–90 minutes.
 
@@ -13,17 +13,17 @@ Your API only runs where the source code and the right JDK are installed. Sharin
 | **Dockerfile** | A recipe listing the steps to build an image. |
 | **Image** | The frozen, ready-to-run package built from the Dockerfile. |
 | **Container** | A running instance of an image (you can start many from one image). |
-| **Layer** | Each Dockerfile instruction creates a cached layer; unchanged layers are reused (faster builds). |
+| **Layer** | Each Dockerfile instruction creates a cached layer, and unchanged layers are reused (faster builds). |
 | **Build context** | The folder Docker may read while building (usually your project). |
 | **Multi-stage build** | Build in a big image, then copy only the result into a small image. |
-| **JDK vs JRE** | JDK *builds* Java; JRE only *runs* it (smaller, enough to ship). |
+| **JDK vs JRE** | JDK *builds* Java, while JRE only *runs* it (smaller, enough to ship). |
 | **`.dockerignore`** | Files Docker should not copy (like `.gitignore`). |
 | **`EXPOSE` / `-p`** | Declares / maps the port the app listens on. |
 | **Tag** | A name + version for an image, e.g. `parcelpilot-api:05`. |
 
 ## What is an image vs a container?
 
-An **image** is like an app installer frozen on disk — it contains your compiled app plus everything it needs to run. A **container** is one running copy of that image. You can start, stop, and delete containers freely; the image stays put.
+An **image** is like an app installer frozen on disk: it contains your compiled app plus everything it needs to run. A **container** is one running copy of that image. You can start, stop, and delete containers freely, and the image stays put.
 
 ```mermaid
 flowchart LR
@@ -46,10 +46,10 @@ flowchart LR
 
 ## Why do it? Pros and cons
 
-**What it brings us:** identical runs anywhere with Docker; no manual Java install; easy to start/stop/replace; the foundation for Compose and microservices later.
+**What it brings us:** identical runs anywhere with Docker, no manual Java install, easy to start/stop/replace, and the foundation for Compose and microservices later.
 
-**Pros:** portable; reproducible; isolates the app from your machine.
-**Cons:** images use disk; an extra build step; and importantly, **data inside a container is lost when it's replaced** — the exact problem step 06 solves.
+**Pros:** portable, reproducible, and isolates the app from your machine.
+**Cons:** images use disk, there's an extra build step, and importantly, **data inside a container is lost when it's replaced**, the exact problem step 06 solves.
 
 **Real-world example:** teams build an image once in CI and run that *same* image in test and production, so "it worked in the pipeline" means "it works in prod".
 
@@ -80,14 +80,14 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 
 **Line by line:**
 
-- `FROM ... AS build` — start from an image that already has Maven + JDK; name this stage `build`.
-- `WORKDIR /app` — work inside `/app` in the image.
-- `COPY pom.xml .` then `dependency:go-offline` — download libraries in their own layer so later code changes don't re-download everything.
-- `COPY src ./src` + `mvn package` — compile and build the JAR.
-- Second `FROM` — a fresh, small JRE-only image for running.
-- `COPY --from=build` — take just the JAR from stage 1.
-- `EXPOSE 8080` — document the port.
-- `ENTRYPOINT` — the command that runs when the container starts.
+- `FROM ... AS build`: start from an image that already has Maven + JDK, and name this stage `build`.
+- `WORKDIR /app`: work inside `/app` in the image.
+- `COPY pom.xml .` then `dependency:go-offline`: download libraries in their own layer so later code changes don't re-download everything.
+- `COPY src ./src` + `mvn package`: compile and build the JAR.
+- Second `FROM`: a fresh, small JRE-only image for running.
+- `COPY --from=build`: take just the JAR from stage 1.
+- `EXPOSE 8080`: document the port.
+- `ENTRYPOINT`: the command that runs when the container starts.
 
 ### 2. Create `.dockerignore`
 
@@ -113,7 +113,7 @@ curl -i -X POST http://localhost:8080/parcels \
 curl -i http://localhost:8080/parcels/P-1
 ```
 
-Now prove the data problem: stop the container (`Ctrl+C`), start a **fresh** one, and query `P-1` again — it's gone.
+Now prove the data problem: stop the container (`Ctrl+C`), start a **fresh** one, and query `P-1` again. It's gone.
 
 ## Acceptance criteria
 
@@ -125,13 +125,13 @@ Now prove the data problem: stop the container (`Ctrl+C`), start a **fresh** one
 
 ## Say it like a developer
 
-- "The **Dockerfile** is the recipe; `docker build` turns it into an **image**; `docker run` starts a **container** from it."
+- "The **Dockerfile** is the recipe, `docker build` turns it into an **image**, and `docker run` starts a **container** from it."
 - "It's a **multi-stage build**: I compile in a big Maven+JDK image, then copy just the JAR into a small **JRE** image."
 - "Each instruction is a cached **layer**, so unchanged layers make rebuilds fast."
-- "`EXPOSE 8080` documents the port; `-p 8080:8080` maps it to my machine."
-- "The container is **disposable** — data inside it is gone when it's replaced."
+- "`EXPOSE 8080` documents the port, and `-p 8080:8080` maps it to my machine."
+- "The container is **disposable**: data inside it is gone when it's replaced."
 
-## Quiz — check yourself
+## Quiz: check yourself
 
 Answer out loud before opening each toggle.
 
@@ -147,7 +147,7 @@ An image is the frozen, built package on disk. A container is a running instance
 
 <details><summary>Show answer</summary>
 
-Building needs Maven and a full JDK (large); running only needs a JRE (small). Multi-stage builds in the big image and copies just the resulting JAR into a small runtime image — leaner and safer.
+Building needs Maven and a full JDK (large), while running only needs a JRE (small). Multi-stage builds in the big image and copies just the resulting JAR into a small runtime image, which is leaner and safer.
 
 </details>
 
@@ -155,7 +155,7 @@ Building needs Maven and a full JDK (large); running only needs a JRE (small). M
 
 <details><summary>Show answer</summary>
 
-Docker caches layers. Dependencies rarely change, so putting them in their own earlier layer means editing your source code doesn't force Docker to re-download every library — rebuilds are much faster.
+Docker caches layers. Dependencies rarely change, so putting them in their own earlier layer means editing your source code doesn't force Docker to re-download every library, so rebuilds are much faster.
 
 </details>
 
@@ -163,7 +163,7 @@ Docker caches layers. Dependencies rarely change, so putting them in their own e
 
 <details><summary>Show answer</summary>
 
-It's the command that runs when the container starts — here, launching the app by running the packaged JAR.
+It's the command that runs when the container starts: here, launching the app by running the packaged JAR.
 
 </details>
 
@@ -171,13 +171,13 @@ It's the command that runs when the container starts — here, launching the app
 
 <details><summary>Show answer</summary>
 
-The parcel lived in the app's in-memory `Map` inside the container. A container is disposable, so replacing it wipes everything inside. Durable data must live outside the container (a database with a volume — step 06).
+The parcel lived in the app's in-memory `Map` inside the container. A container is disposable, so replacing it wipes everything inside. Durable data must live outside the container (a database with a volume, covered in step 06).
 
 </details>
 
 ## Reflect (stretch)
 
-The disappearing parcel isn't a bug — it's the point. A container is disposable, so real data must live somewhere that outlives it. That "somewhere" is a database with a volume.
+The disappearing parcel isn't a bug. It's the point. A container is disposable, so real data must live somewhere that outlives it. That "somewhere" is a database with a volume.
 
 ## Next
 

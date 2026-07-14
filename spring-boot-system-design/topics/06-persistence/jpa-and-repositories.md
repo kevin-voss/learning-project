@@ -4,7 +4,7 @@ This page explains how ParcelPilot talks to PostgreSQL from Java **without writi
 
 ## The problem
 
-Your code has Java objects (`Parcel`); the database has rows in a table. Something must translate between "a Java object" and "a database row" — reading, writing, and querying. Writing that translation by hand (raw SQL + manual mapping) is repetitive and error-prone.
+Your code has Java objects (`Parcel`), and the database has rows in a table. Something must translate between "a Java object" and "a database row": reading, writing, and querying. Writing that translation by hand (raw SQL + manual mapping) is repetitive and error-prone.
 
 ## The solution: an ORM (JPA/Hibernate)
 
@@ -59,7 +59,7 @@ public class ParcelEntity {
 
 ## Step 2: create a repository
 
-You write an **interface**; Spring Data JPA generates the implementation at startup. Extending `JpaRepository<Entity, IdType>` gives you `save`, `findById`, `findAll`, `deleteById`, and more — for free:
+You write an **interface**, and Spring Data JPA generates the implementation at startup. Extending `JpaRepository<Entity, IdType>` gives you `save`, `findById`, `findAll`, `deleteById`, and more, all for free:
 
 ```java
 package com.parcelpilot;
@@ -75,7 +75,7 @@ public interface ParcelRepository extends JpaRepository<ParcelEntity, String> {
 }
 ```
 
-That method name (`findByStatus`) is not magic naming for fun — Spring parses it into a real query. `findByRecipientAndStatus(...)` would generate a two-condition query.
+That method name (`findByStatus`) is not magic naming for fun. Spring parses it into a real query. `findByRecipientAndStatus(...)` would generate a two-condition query.
 
 ## Step 3: use it (no SQL in your code)
 
@@ -94,18 +94,18 @@ List<ParcelEntity> created = repository.findByStatus(Status.CREATED);
 
 | Pros | Cons |
 |---|---|
-| Little/no SQL for common operations | Hides SQL — easy to write slow queries unknowingly |
+| Little/no SQL for common operations | Hides SQL, so it's easy to write slow queries unknowingly |
 | Repositories give instant CRUD | Learning curve (entities, sessions, lazy loading) |
-| Portable across databases | Complex queries can be awkward; sometimes raw SQL is clearer |
+| Portable across databases | Complex queries can be awkward, and sometimes raw SQL is clearer |
 | Handles mapping + optimistic locking | Can surprise you if you don't understand what it generates |
 
 **When to reach past JPA:** for a very complex report query, you can write native SQL or use a query builder. For ParcelPilot's CRUD, JPA is ideal.
 
 ## Alternatives (so you know they exist)
 
-- **Spring JDBC / JdbcTemplate** — you write SQL, Spring maps results. More control, less magic.
-- **jOOQ** — type-safe SQL in Java. Great when SQL is central.
-- **MyBatis** — SQL in mapper files.
+- **Spring JDBC / JdbcTemplate**: you write SQL, Spring maps results. More control, less magic.
+- **jOOQ**: type-safe SQL in Java. Great when SQL is central.
+- **MyBatis**: SQL in mapper files.
 
 We choose **Spring Data JPA** because it gives a beginner working persistence fastest, matches the Spring ecosystem, and supports optimistic locking with one annotation.
 

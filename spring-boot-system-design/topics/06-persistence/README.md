@@ -1,4 +1,4 @@
-# Step 06 — Persistence: keep the parcels
+# Step 06: Persistence, keep the parcels
 
 > In this step: store parcels in PostgreSQL (running in Docker) so they survive restarts, and protect against two people overwriting each other. ~90–120 minutes.
 
@@ -12,7 +12,7 @@ Step 05 proved parcels vanish when the container is replaced, because they live 
 |---|---|
 | **Database** | A separate program built to store and query data reliably. |
 | **PostgreSQL** | The relational (table-based) database this course uses. |
-| **Relational / SQL** | Data in tables (rows + columns); queried with the SQL language. |
+| **Relational / SQL** | Data in tables (rows + columns), queried with the SQL language. |
 | **Persistence** | Data that survives even after the app stops. |
 | **Volume** | Docker storage living *outside* a container, so data isn't lost when the container is replaced. |
 | **Environment variable** | A setting passed to a program at startup (e.g. DB address, password). |
@@ -27,18 +27,18 @@ Step 05 proved parcels vanish when the container is replaced, because they live 
 
 This step has more moving parts than earlier ones, so it's split into focused companion pages. Read them in this order:
 
-1. [Databases and SQL basics](sql-and-databases.md) — what a relational DB is, core SQL, why PostgreSQL (vs MySQL, SQLite, MongoDB, Redis).
-2. [JPA, entities, and repositories](jpa-and-repositories.md) — how Java talks to the DB without hand-written SQL, and the alternatives.
-3. [Locking explained](locking-explained.md) — optimistic vs pessimistic, and why we pick optimistic.
+1. [Databases and SQL basics](sql-and-databases.md): what a relational DB is, core SQL, why PostgreSQL (vs MySQL, SQLite, MongoDB, Redis).
+2. [JPA, entities, and repositories](jpa-and-repositories.md): how Java talks to the DB without hand-written SQL, and the alternatives.
+3. [Locking explained](locking-explained.md): optimistic vs pessimistic, and why we pick optimistic.
 
 ## What "persistence" means, and why a volume matters
 
 Two separate containers now:
 
-- the **app** container — disposable, replaced on every deploy;
-- the **database** container — stores data in a Docker **volume** on your disk.
+- the **app** container: disposable, replaced on every deploy.
+- the **database** container: stores data in a Docker **volume** on your disk.
 
-Replace the app as often as you like; the database and its volume keep the parcels.
+Replace the app as often as you like, and the database and its volume keep the parcels.
 
 ```mermaid
 flowchart LR
@@ -49,7 +49,7 @@ flowchart LR
 
 ## The clashing-updates problem (locking)
 
-Two operators both load parcel `P-1` at version 3 and both save. Without protection, the second silently overwrites the first — a **lost update**. **Optimistic locking** adds a `version` column: an update only succeeds if the version still matches; otherwise the API returns `409` and the caller reloads and retries.
+Two operators both load parcel `P-1` at version 3 and both save. Without protection, the second silently overwrites the first, a **lost update**. **Optimistic locking** adds a `version` column: an update only succeeds if the version still matches. Otherwise the API returns `409` and the caller reloads and retries.
 
 ```mermaid
 sequenceDiagram
@@ -66,8 +66,8 @@ sequenceDiagram
 
 **What it brings us:** durable data, real queries, and safety when many users act at once.
 
-**Pros:** survives restarts/deploys; powerful querying; transactions keep data consistent.
-**Cons:** another service to run and back up; schema changes need migrations; you must supply connection settings via environment variables.
+**Pros:** survives restarts/deploys, powerful querying, and transactions keep data consistent.
+**Cons:** another service to run and back up, schema changes need migrations, and you must supply connection settings via environment variables.
 
 **Real-world example:** every shop, bank, and tracking system stores records in a database, never in the web server's memory.
 
@@ -85,7 +85,7 @@ docker run --name parcelpilot-db \
   -d postgres:16-alpine
 ```
 
-The `-v parcelpilot-postgres:/var/lib/postgresql/data` part is the **volume** — it keeps data on your disk. The password here is an intentionally visible local-only value; never commit real secrets.
+The `-v parcelpilot-postgres:/var/lib/postgresql/data` part is the **volume**: it keeps data on your disk. The password here is an intentionally visible local-only value, so never commit real secrets.
 
 ### 2. Add dependencies to `pom.xml`
 
@@ -132,7 +132,7 @@ CREATE TABLE parcels (
 
 ### 5. Turn `Parcel` into an entity and add a repository
 
-An `@Entity` maps to the table; `@Version` enables optimistic locking automatically:
+An `@Entity` maps to the table, and `@Version` enables optimistic locking automatically:
 
 ```java
 package com.parcelpilot;
@@ -184,7 +184,7 @@ curl -i http://localhost:8080/parcels/P-1
 ## Acceptance criteria
 
 - [ ] After recreating the **API** container, a previously created parcel is still returned.
-- [ ] PostgreSQL runs in Docker with a named volume; keeping the volume preserves data across DB container recreation.
+- [ ] PostgreSQL runs in Docker with a named volume, and keeping the volume preserves data across DB container recreation.
 - [ ] DB credentials come from environment variables, not source code.
 - [ ] Two updates based on the same version: one succeeds, the other returns `409`.
 - [ ] You can explain what a volume, a migration, an entity, and optimistic locking are.
@@ -195,13 +195,13 @@ curl -i http://localhost:8080/parcels/P-1
 
 - "Parcels are now **persisted** in PostgreSQL, so they **survive a restart**."
 - "The database's data lives in a Docker **volume**, so it outlives the container."
-- "`ParcelEntity` is a JPA **entity** — it maps to the `parcels` **table**."
+- "`ParcelEntity` is a JPA **entity**: it maps to the `parcels` **table**."
 - "The **repository** reads and writes entities so I don't hand-write SQL."
 - "A **migration** (Flyway) creates the table in a versioned, repeatable way."
 - "`@Version` gives me **optimistic locking**: a clashing update returns `409 Conflict`."
 - "DB credentials come from **environment variables**, never from source code."
 
-## Quiz — check yourself
+## Quiz: check yourself
 
 Answer out loud before opening each toggle.
 
@@ -209,7 +209,7 @@ Answer out loud before opening each toggle.
 
 <details><summary>Show answer</summary>
 
-A container is disposable — replacing it wipes its contents. A volume stores data on disk *outside* the container, so the database keeps the parcels even when the container is recreated.
+A container is disposable, so replacing it wipes its contents. A volume stores data on disk *outside* the container, so the database keeps the parcels even when the container is recreated.
 
 </details>
 
@@ -225,7 +225,7 @@ It maps a Java class to a database table, so each object corresponds to a row. J
 
 <details><summary>Show answer</summary>
 
-A migration is a versioned SQL script (via Flyway) that creates/changes tables. It runs the same way on every machine and in CI, so the schema is reproducible and tracked in version control — hand-creating tables isn't.
+A migration is a versioned SQL script (via Flyway) that creates/changes tables. It runs the same way on every machine and in CI, so the schema is reproducible and tracked in version control, which hand-creating tables isn't.
 
 </details>
 
@@ -233,7 +233,7 @@ A migration is a versioned SQL script (via Flyway) that creates/changes tables. 
 
 <details><summary>Show answer</summary>
 
-Each row has a `version`. An update only succeeds if the version still matches what you read; otherwise someone else changed it first, so the update fails and the API returns `409 Conflict`, prompting a reload-and-retry. This prevents silent lost updates.
+Each row has a `version`. An update only succeeds if the version still matches what you read. Otherwise someone else changed it first, so the update fails and the API returns `409 Conflict`, prompting a reload-and-retry. This prevents silent lost updates.
 
 </details>
 
@@ -249,13 +249,13 @@ So secrets aren't committed to source control, and the same image can run agains
 
 <details><summary>Show answer</summary>
 
-Parcels have a clear, consistent structure and need reliable updates, transactions, and locking — exactly what a relational database is built for. (See [SQL and databases](sql-and-databases.md).)
+Parcels have a clear, consistent structure and need reliable updates, transactions, and locking, exactly what a relational database is built for. (See [SQL and databases](sql-and-databases.md).)
 
 </details>
 
 ## Reflect (stretch)
 
-ParcelPilot now has HTTP, business rules, and durable data — but a lot of responsibilities are mixed in a few classes. The next step gives them clean internal boundaries **without** adding network complexity.
+ParcelPilot now has HTTP, business rules, and durable data, but a lot of responsibilities are mixed in a few classes. The next step gives them clean internal boundaries **without** adding network complexity.
 
 ## Next
 

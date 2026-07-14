@@ -8,7 +8,7 @@ A framework like Spring needs to know things about your code: "this class handle
 
 ## What is an annotation?
 
-An annotation is a label starting with `@`, placed above a class, method, field, or parameter. It doesn't run on its own — something else (the compiler, or Spring at startup) **reads** it and acts on it.
+An annotation is a label starting with `@`, placed above a class, method, field, or parameter. It doesn't run on its own: something else (the compiler, or Spring at startup) **reads** it and acts on it.
 
 ```java
 @RestController          // Spring reads this: "this class handles HTTP, return JSON"
@@ -19,7 +19,7 @@ Think of annotations as sticky notes: `@Test` says "run me as a test", `@RestCon
 
 ## Annotations need imports
 
-An annotation is just a special type, so — like any class from another package — you must **import** it (unless it's in the same package or `java.lang`). Your editor usually adds imports automatically.
+An annotation is just a special type, so, like any class from another package, you must **import** it (unless it's in the same package or `java.lang`). Your editor usually adds imports automatically.
 
 ```java
 import org.springframework.web.bind.annotation.RestController;
@@ -49,7 +49,7 @@ If you see "cannot find symbol `@GetMapping`", it almost always means the import
 | `@GetMapping("/{id}")` | handle `GET` on that path | `GET /parcels/P-1` |
 | `@PostMapping` | handle `POST` | `POST /parcels` |
 | `@PatchMapping("/{id}/status")` | handle `PATCH` | `PATCH /parcels/P-1/status` |
-| `@PutMapping` / `@DeleteMapping` | handle `PUT` / `DELETE` | — |
+| `@PutMapping` / `@DeleteMapping` | handle `PUT` / `DELETE` | `PUT /parcels/P-1` / `DELETE /parcels/P-1` |
 
 ### Data-binding annotations (where a value comes from)
 
@@ -72,7 +72,7 @@ public ResponseEntity<ParcelResponse> create(@RequestBody CreateParcelRequest re
 
 ## Dependency injection is composition, automated
 
-When a class needs another object, declare it in the constructor. Spring sees the `@Service`/`@Component` and **injects** the dependency automatically — this is the composition idea from step 02, done by the framework:
+When a class needs another object, declare it in the constructor. Spring sees the `@Service`/`@Component` and **injects** the dependency automatically. This is the composition idea from step 02, done by the framework:
 
 ```java
 @Service
@@ -85,11 +85,11 @@ public class ParcelApplication {
 }
 ```
 
-Prefer **constructor injection** (like above). Avoid putting `@Autowired` on fields — it hides required dependencies and makes testing harder.
+Prefer **constructor injection** (like above). Avoid putting `@Autowired` on fields, because it hides required dependencies and makes testing harder.
 
-## When to use which — quick guide
+## When to use which: quick guide
 
-- Building a web endpoint? Class = `@RestController`; methods = `@GetMapping`/`@PostMapping`/`@PatchMapping`.
+- Building a web endpoint? Class = `@RestController`, methods = `@GetMapping`/`@PostMapping`/`@PatchMapping`.
 - A class with business logic Spring should manage? `@Service`.
 - A class that talks to the database? Often a Spring Data `@Repository` interface.
 - Need a value from the URL path? `@PathVariable`. From `?query`? `@RequestParam`. From the JSON body? `@RequestBody`.
@@ -103,4 +103,4 @@ Prefer **constructor injection** (like above). Avoid putting `@Autowired` on fie
 
 ## Back to the step
 
-Return to [Step 04](README.md) and read the controller again — every annotation there is in the tables above.
+Return to [Step 04](README.md) and read the controller again. Every annotation there is in the tables above.

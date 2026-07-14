@@ -1,10 +1,10 @@
-# Step 10 — Docker Compose & observing the system
+# Step 10: Docker Compose & observing the system
 
 > In this step: start the whole system with one command, add health checks and logs, and watch it fail on purpose. ~75 minutes.
 
 ## The problem right now
 
-Your system is now two services + RabbitMQ + databases. Starting each container by hand, in the right order, with the right ports, network, and environment variables is slow and error-prone — and it isn't written down anywhere. You need a **single, documented definition** of the local system.
+Your system is now two services + RabbitMQ + databases. Starting each container by hand, in the right order, with the right ports, network, and environment variables is slow and error-prone, and it isn't written down anywhere. You need a **single, documented definition** of the local system.
 
 ## Key words
 
@@ -40,8 +40,8 @@ flowchart TB
 
 **What it brings us:** a reproducible, documented, one-command local system, plus the signals to debug it.
 
-**Pros:** one command; config is version-controlled; consistent startup order via health checks; easy to share.
-**Cons:** Compose is for local/single-host use (production orchestration like Kubernetes is a separate topic); YAML mistakes can be fiddly; you must design health checks that are honest.
+**Pros:** one command, config is version-controlled, consistent startup order via health checks, and easy to share.
+**Cons:** Compose is for local/single-host use (production orchestration like Kubernetes is a separate topic), YAML mistakes can be fiddly, and you must design health checks that are honest.
 
 **Real-world example:** developers clone a repo and run `docker compose up` to get the entire backend running locally in minutes, instead of a page of manual setup steps.
 
@@ -134,18 +134,18 @@ docker compose start rabbitmq
 - [ ] `docker compose up --build` starts every service successfully.
 - [ ] `GET /actuator/health` returns `UP` for the services.
 - [ ] `docker compose logs` shows notification-service consuming events.
-- [ ] With RabbitMQ stopped, you can describe what happens to a delivery event; after restart, the system recovers.
+- [ ] With RabbitMQ stopped, you can describe what happens to a delivery event. After restart, the system recovers.
 - [ ] You can explain what a health check is and why logs go to stdout.
 
 ## Say it like a developer
 
-- "`docker compose up` starts the **whole system** — both services, RabbitMQ, and the database — with one command."
+- "`docker compose up` starts the **whole system** (both services, RabbitMQ, and the database) with one command."
 - "Services reach each other by **name** on the Compose **network** (host `rabbitmq`, not `localhost`)."
 - "**Health checks** let Compose wait until a service is actually **ready** before starting dependents."
 - "I log to **stdout** so Docker can collect the logs."
 - "**Observability** answers three questions: is it alive (health), what did it do (logs), is it degrading (metrics)."
 
-## Quiz — check yourself
+## Quiz: check yourself
 
 Answer out loud before opening each toggle.
 
@@ -153,7 +153,7 @@ Answer out loud before opening each toggle.
 
 <details><summary>Show answer</summary>
 
-One command starts the entire multi-container system on a shared network with the right config, in the right order — and that setup is documented and version-controlled in `compose.yaml`.
+One command starts the entire multi-container system on a shared network with the right config, in the right order, and that setup is documented and version-controlled in `compose.yaml`.
 
 </details>
 
@@ -195,7 +195,7 @@ The system runs, but it isn't yet *robust* or *safe*: repeated reads hit the dat
 
 ## What comes after this course
 
-Once ParcelPilot is complete, natural next topics are: retries + dead-letter queues + the transactional outbox; API versioning; metrics + tracing + correlation IDs; cloud deployment; and Kafka/SQS where their properties fit. See [Production thinking](../../references/production-thinking.md).
+Once ParcelPilot is complete, natural next topics are: retries + dead-letter queues + the transactional outbox, API versioning, metrics + tracing + correlation IDs, cloud deployment, and Kafka/SQS where their properties fit. See [Production thinking](../../references/production-thinking.md).
 
 ## Next
 

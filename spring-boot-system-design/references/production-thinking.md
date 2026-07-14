@@ -25,18 +25,18 @@ flowchart LR
   D --> I[inspect and repair]
 ```
 
-Never retry forever without delay; it can overload a broken dependency. Set timeouts on network calls. A health check should report a service’s readiness honestly, but should not itself create cascading failure.
+Never retry forever without delay. It can overload a broken dependency. Set timeouts on network calls. A health check should report a service’s readiness honestly, but should not itself create cascading failure.
 
 ## Safe next improvements
 
 After Compose works:
 
-1. add a unique event ID and idempotent consumer storage;
-2. implement an outbox;
-3. add metrics and request IDs;
-4. protect endpoints with authentication;
-5. document API contracts;
-6. add integration tests using disposable containers; and
-7. deploy one service at a time to a non-production environment.
+1. add a unique event ID and idempotent consumer storage
+2. implement an outbox
+3. add metrics and request IDs
+4. protect endpoints with authentication
+5. document API contracts
+6. add integration tests using disposable containers
+7. deploy one service at a time to a non-production environment
 
 Production is not “more Docker files.” It is the ability to understand, change, and recover the system safely.

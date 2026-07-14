@@ -1,14 +1,14 @@
-# Step 04 — Spring Boot: the first web API
+# Step 04: Spring Boot, the first web API
 
 > In this step: put ParcelPilot on the web so anyone can create and read parcels with `curl`. You'll learn what HTTP, REST, and JSON are, and write a real Spring Boot controller line by line. ~90–120 minutes.
 
 ## The problem right now
 
-Your program only talks to its own terminal via `main`. To be useful, other people and programs (a phone app, a website, `curl`) must create and read parcels **over the network** — without your Java source. The standard way to do that is an HTTP **API**.
+Your program only talks to its own terminal via `main`. To be useful, other people and programs (a phone app, a website, `curl`) must create and read parcels **over the network**, without your Java source. The standard way to do that is an HTTP **API**.
 
 ## What is HTTP? (the foundation)
 
-HTTP is the request/response language of the web. A **client** sends a **request** (a method + a path + optional body); a **server** sends back a **response** (a status code + optional body).
+HTTP is the request/response language of the web. A **client** sends a **request** (a method + a path + optional body), and a **server** sends back a **response** (a status code + optional body).
 
 ```mermaid
 sequenceDiagram
@@ -20,12 +20,12 @@ sequenceDiagram
 
 A request has four things that matter to us:
 
-- **Method (verb):** what you want to do — `GET` (read), `POST` (create), `PUT`/`PATCH` (change), `DELETE` (remove), and the newer `QUERY` (complex safe reads).
-- **Path:** which resource — `/parcels/P-1`.
-- **Query parameters:** filters after `?` — `/parcels?status=CREATED`.
+- **Method (verb):** what you want to do. `GET` (read), `POST` (create), `PUT`/`PATCH` (change), `DELETE` (remove), and the newer `QUERY` (complex safe reads).
+- **Path:** which resource, e.g. `/parcels/P-1`.
+- **Query parameters:** filters after `?`, e.g. `/parcels?status=CREATED`.
 - **Body:** data you send, usually **JSON**.
 
-> Every method — including the emerging **`QUERY`** method and the "safe"/"idempotent" properties that decide which to use — is explained with examples in [HTTP methods explained](http-methods.md). Read it after this section.
+> Every method (including the emerging **`QUERY`** method and the "safe"/"idempotent" properties that decide which to use) is explained with examples in [HTTP methods explained](http-methods.md). Read it after this section.
 
 ## Key words
 
@@ -75,11 +75,11 @@ DELETE /parcels/P-1             # remove
 
 Notice the **path stays about the resource** (`/parcels`), and the **method changes the intent**. That consistency is the whole point of REST.
 
-### Why / when to use REST — and its limits
+### Why and when to use REST, and its limits
 
 **Why:** predictable, uses plain HTTP, cache-friendly for reads, and works with any client (browser, `curl`, mobile).
 
-**When:** classic create/read/update/delete resources over HTTP — exactly ParcelPilot's needs, and most business backends.
+**When:** classic create/read/update/delete resources over HTTP, which is exactly ParcelPilot's needs, and most business backends.
 
 | Pros | Cons / when something else fits better |
 |---|---|
@@ -88,14 +88,14 @@ Notice the **path stays about the resource** (`/parcels`), and the **method chan
 | Clear mapping of verbs to intent | Not ideal for real-time streams (use WebSockets/SSE) |
 | Huge tooling support | Very high-throughput internal calls may prefer gRPC |
 
-Don't add GraphQL, WebSockets, or gRPC in this beginner path — REST is the right first tool. Learn the alternatives exist and when they'd win.
+Don't add GraphQL, WebSockets, or gRPC in this beginner path. REST is the right first tool. Learn that the alternatives exist and when they'd win.
 
 ## Why Spring Boot? Pros and cons
 
-**What it brings us:** an embedded web server, automatic JSON conversion, and dependency injection — so you focus on parcels, not plumbing.
+**What it brings us:** an embedded web server, automatic JSON conversion, and dependency injection, so you focus on parcels, not plumbing.
 
-**Pros:** fast to start; huge ecosystem; industry standard for Java.
-**Cons:** annotations do hidden "magic"; larger app; a learning curve for what happens behind the scenes.
+**Pros:** fast to start, huge ecosystem, industry standard for Java.
+**Cons:** annotations do hidden "magic", the app is larger, and there's a learning curve for what happens behind the scenes.
 
 **Real-world example:** a delivery company's app calls `GET /parcels?status=CREATED` to list pickups and `PATCH /parcels/{id}/status` when a driver scans a package.
 
@@ -138,7 +138,7 @@ Add the Spring Boot parent and the web starter (keep your JUnit dependency). A *
 
 ### 2. Add the application entry point
 
-`@SpringBootApplication` marks the start of a Spring Boot app; `SpringApplication.run(...)` boots the embedded web server:
+`@SpringBootApplication` marks the start of a Spring Boot app, and `SpringApplication.run(...)` boots the embedded web server:
 
 ```java
 package com.parcelpilot;
@@ -167,7 +167,7 @@ public record ParcelResponse(String id, String recipient, String status) {}
 
 ### 4. Write the controller (the heart of this step)
 
-Every annotation is explained in comments below, and in depth in [Annotations and imports in Spring Boot](annotations-imports.md) (what `@RestController`, `@GetMapping`, `@RequestBody`, etc. mean, and why imports matter). It's fine for now that this one class holds the data and the endpoints — we split responsibilities in step 07.
+Every annotation is explained in comments below, and in depth in [Annotations and imports in Spring Boot](annotations-imports.md) (what `@RestController`, `@GetMapping`, `@RequestBody`, etc. mean, and why imports matter). It's fine for now that this one class holds the data and the endpoints. You'll split responsibilities into controller/service/repository **layers** in step 06–07. Want to see that layering shape (and why we don't do it yet)? See Stage 4 of [Code organization](../../references/code-organization.md).
 
 ```java
 package com.parcelpilot;
@@ -227,13 +227,13 @@ public class ParcelController {
 
 **What the annotations mean:**
 
-- `@RestController` — the class handles HTTP and its return values become the JSON response body.
-- `@RequestMapping("/parcels")` — a shared path prefix for the whole class.
-- `@PostMapping`, `@GetMapping` — map a method to `POST`/`GET`.
-- `@RequestBody` — convert the incoming JSON into a Java object.
-- `@PathVariable` — grab a value from the URL path (`{id}`).
-- `@RequestParam` — grab a value from the query string (`?status=...`).
-- `ResponseEntity` — lets you set the status code and body explicitly.
+- `@RestController`: the class handles HTTP and its return values become the JSON response body.
+- `@RequestMapping("/parcels")`: a shared path prefix for the whole class.
+- `@PostMapping`, `@GetMapping`: map a method to `POST`/`GET`.
+- `@RequestBody`: convert the incoming JSON into a Java object.
+- `@PathVariable`: grab a value from the URL path (`{id}`).
+- `@RequestParam`: grab a value from the query string (`?status=...`).
+- `ResponseEntity`: lets you set the status code and body explicitly.
 
 ### 5. (Lab) Add status changes
 
@@ -278,13 +278,13 @@ curl -i 'http://localhost:8080/parcels?status=CREATED'
 ## Say it like a developer
 
 - "I exposed a REST **endpoint**: `POST /parcels` creates a parcel."
-- "`/parcels/P-1` is a **resource**; the **method** (`GET`, `POST`, `PATCH`) is the verb on it."
+- "`/parcels/P-1` is a **resource**, and the **method** (`GET`, `POST`, `PATCH`) is the verb on it."
 - "The controller takes the request **body** as JSON and turns it into a `CreateParcelRequest` **DTO** via `@RequestBody`."
-- "`@PathVariable` pulls `{id}` out of the URL; `@RequestParam` pulls `?status=` out of the query string."
+- "`@PathVariable` pulls `{id}` out of the URL, and `@RequestParam` pulls `?status=` out of the query string."
 - "I return a `201 Created` **status code** on success and `404 Not Found` when the parcel doesn't exist."
-- "`GET` is **safe** — reading never changes data."
+- "`GET` is **safe**: reading never changes data."
 
-## Quiz — check yourself
+## Quiz: check yourself
 
 Answer out loud before opening each toggle.
 
@@ -338,7 +338,7 @@ So the API's shape and the internal domain can evolve independently. You can cha
 
 ## Reflect (stretch)
 
-Stop and restart the app, then `GET /parcels/P-2` — it's gone, because the `Map` lives in memory. Also, the app only runs where your JDK and source are. The next two steps fix **portability** (Docker) and **durability** (a database).
+Stop and restart the app, then `GET /parcels/P-2`. It's gone, because the `Map` lives in memory. Also, the app only runs where your JDK and source are. The next two steps fix **portability** (Docker) and **durability** (a database).
 
 ## Next
 

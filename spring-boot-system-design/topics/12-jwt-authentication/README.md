@@ -1,4 +1,4 @@
-# Step 12 — Password login & JWT protection
+# Step 12: Password login & JWT protection
 
 > In this step: add a small, safe login and protect an operator action with a token. ~90 minutes. Required reading: [Password authentication and JWT](../../references/authentication.md).
 
@@ -20,7 +20,7 @@ Every endpoint is public. Anyone who can reach the port can change parcels. Sens
 | **Claim** | A fact inside a JWT, e.g. `sub` (subject) or `role`. |
 | **Bearer token** | A token sent in the `Authorization: Bearer <token>` header. |
 | **Signature** | Proof the token wasn't tampered with (verified with a secret/key). |
-| **`401` / `403`** | `401` = not authenticated; `403` = authenticated but not allowed. |
+| **`401` / `403`** | `401` = not authenticated, and `403` = authenticated but not allowed. |
 
 ## What is JWT-based auth (the flow)?
 
@@ -46,10 +46,10 @@ flowchart LR
 
 **What it brings us:** only known operators can perform sensitive actions, and each request proves identity without re-sending the password.
 
-**Pros of JWT:** stateless (server needn't store sessions); carries role info; works well across services.
-**Cons / cautions:** JWT contents are usually **readable** (don't put secrets in them); **revoking** a token before it expires is hard (needs short expiry + refresh strategy); getting crypto wrong is dangerous — **use the library, never invent your own**.
+**Pros of JWT:** stateless (server needn't store sessions), carries role info, and works well across services.
+**Cons / cautions:** JWT contents are usually **readable** (don't put secrets in them), **revoking** a token before it expires is hard (needs short expiry + refresh strategy), and getting crypto wrong is dangerous, so **use the library, never invent your own**.
 
-**Real-world example:** most APIs issue a short-lived access token at login and require it on every protected call; a separate refresh token gets new access tokens.
+**Real-world example:** most APIs issue a short-lived access token at login and require it on every protected call. A separate refresh token gets new access tokens.
 
 ## Build it in ParcelPilot
 
@@ -82,21 +82,21 @@ curl -i -X PATCH http://localhost:8080/parcels/P-1/status \
 ## Acceptance criteria
 
 - [ ] Passwords are stored only as salted hashes (verify the DB has no plaintext).
-- [ ] `POST /auth/login` with correct credentials returns a JWT; wrong credentials return `401`.
+- [ ] `POST /auth/login` with correct credentials returns a JWT. Wrong credentials return `401`.
 - [ ] The protected endpoint works **with** a valid Bearer token and returns `401` **without** one.
 - [ ] A valid token lacking the required role returns `403`.
 - [ ] You can explain authentication vs authorization, and why hashing (not encryption) is used for passwords.
 
 ## Say it like a developer
 
-- "**Authentication** proves *who* you are (login); **authorization** decides *what* you may do (role)."
-- "Passwords are stored as **salted hashes** via `PasswordEncoder` — never plaintext."
+- "**Authentication** proves *who* you are (login). **Authorization** decides *what* you may do (role)."
+- "Passwords are stored as **salted hashes** via `PasswordEncoder`, never plaintext."
 - "On successful login the server issues a short-lived, signed **JWT**."
 - "The client sends it as a **Bearer token** in the `Authorization` header."
 - "The server checks the **signature**, expiry, and role before allowing the action."
-- "No token → `401`; valid token but wrong role → `403`."
+- "No token → `401`. Valid token but wrong role → `403`."
 
-## Quiz — check yourself
+## Quiz: check yourself
 
 Answer out loud before opening each toggle.
 
@@ -104,7 +104,7 @@ Answer out loud before opening each toggle.
 
 <details><summary>Show answer</summary>
 
-Authentication (authn) proves *who* you are — logging in. Authorization (authz) decides *what* you're allowed to do — your roles/permissions.
+Authentication (authn) proves *who* you are: logging in. Authorization (authz) decides *what* you're allowed to do: your roles/permissions.
 
 </details>
 
@@ -136,7 +136,7 @@ A JSON Web Token: a signed token carrying claims (like subject and role). The se
 
 <details><summary>Show answer</summary>
 
-Any two of: their contents are usually **readable**, so never put secrets inside; **revoking** one before expiry is hard, so use short expiry + a refresh strategy; and never invent your own crypto — use a vetted library.
+Any two of: their contents are usually **readable**, so never put secrets inside. **Revoking** one before expiry is hard, so use short expiry + a refresh strategy. And never invent your own crypto, so use a vetted library.
 
 </details>
 
@@ -150,8 +150,8 @@ It's security-sensitive and easiest to get right once you understand the whole s
 
 ## Reflect (stretch)
 
-You implemented only short-lived access tokens. Real systems also need HTTPS, refresh tokens + revocation, brute-force protection, secret rotation, and audit logs. You now know enough to read those topics safely — see [Password authentication and JWT](../../references/authentication.md).
+You implemented only short-lived access tokens. Real systems also need HTTPS, refresh tokens + revocation, brute-force protection, secret rotation, and audit logs. You now know enough to read those topics safely. See [Password authentication and JWT](../../references/authentication.md).
 
 ## You finished the roadmap
 
-ParcelPilot grew from one Java file into an observable, secured, multi-service system — one problem at a time. Revisit [Production thinking](../../references/production-thinking.md) for what to explore next.
+ParcelPilot grew from one Java file into an observable, secured, multi-service system, one problem at a time. Revisit [Production thinking](../../references/production-thinking.md) for what to explore next.

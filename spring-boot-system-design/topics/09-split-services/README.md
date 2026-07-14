@@ -1,4 +1,4 @@
-# Step 09 — Extract the notification microservice
+# Step 09: Extract the notification microservice
 
 > In this step: split the monolith into two independent services that talk through the broker. ~90 minutes.
 
@@ -13,11 +13,11 @@ Step 08 proved notification work runs on its own schedule via the queue. But it 
 | **Microservice** | A small app that is built, deployed, and scaled independently. |
 | **Service boundary** | The clear line of responsibility a service owns. |
 | **Independent deployment** | Releasing one service without redeploying the others. |
-| **Database per service** | Each service owns its own data; others can't read it directly. |
+| **Database per service** | Each service owns its own data, and others can't read it directly. |
 | **Eventual consistency** | Different services become consistent shortly after, not instantly. |
 | **Contract** | The agreed message/format two services use to talk. |
 | **Failure isolation** | One service failing doesn't automatically break the others. |
-| **Network call** | Talking over the network — slower and can fail, unlike a local method call. |
+| **Network call** | Talking over the network, which is slower and can fail, unlike a local method call. |
 
 ## What makes it a microservice (not just a folder)?
 
@@ -40,8 +40,8 @@ flowchart LR
 
 **What it brings us:** notifications can be deployed, scaled, and fail on their own without touching parcel tracking.
 
-**Pros:** independent deploy/scale; failure isolation; smaller, focused codebases; teams can own a service each.
-**Cons — real and important:** network calls fail and add latency; two databases to run; eventual consistency; duplicated setup (config, logging, builds); debugging spans multiple apps. **This is exactly why we started as a monolith.**
+**Pros:** independent deploy/scale, failure isolation, smaller focused codebases, and teams can own a service each.
+**Cons, real and important:** network calls fail and add latency, two databases to run, eventual consistency, duplicated setup (config, logging, builds), and debugging spans multiple apps. **This is exactly why we started as a monolith.**
 
 **Real-world example:** an e-commerce platform keeps checkout separate from email/notifications so a notification outage never blocks purchases.
 
@@ -58,7 +58,7 @@ applications/parcelpilot-services/
 
 1. Move parcel code into `parcel-service` (keep its endpoints and DB).
 2. Move notification code into `notification-service` with its **own** database.
-3. The parcel-service **publishes** `ParcelDelivered`; the notification-service **consumes** it.
+3. The parcel-service **publishes** `ParcelDelivered`, and the notification-service **consumes** it.
 4. Give each service its own `pom.xml` and `Dockerfile` so they build independently.
 5. Keep the notification consumer **idempotent** (still important across the network).
 
@@ -84,13 +84,13 @@ curl -i -X PATCH http://localhost:8080/parcels/P-1/status \
 
 ## Say it like a developer
 
-- "I **extracted** notifications into its own **microservice** — independently deployable."
-- "Each service owns its own data (**database per service**); notification-service **never** reads the parcel DB."
-- "They communicate only through the broker — that's the **contract** between them."
-- "Because they're separate, one can fail without taking the other down — **failure isolation**."
+- "I **extracted** notifications into its own **microservice**: independently deployable."
+- "Each service owns its own data (**database per service**), and notification-service **never** reads the parcel DB."
+- "They communicate only through the broker: that's the **contract** between them."
+- "Because they're separate, one can fail without taking the other down: **failure isolation**."
 - "The trade-off is **network calls**, **eventual consistency**, and more moving parts to run."
 
-## Quiz — check yourself
+## Quiz: check yourself
 
 Answer out loud before opening each toggle.
 
@@ -98,7 +98,7 @@ Answer out loud before opening each toggle.
 
 <details><summary>Show answer</summary>
 
-It's independently deployable and owns its own data. Two packages in one app sharing a database are not microservices — they deploy together and share state.
+It's independently deployable and owns its own data. Two packages in one app sharing a database are not microservices. They deploy together and share state.
 
 </details>
 
@@ -114,7 +114,7 @@ So the services stay truly independent. Sharing a database re-couples them: a sc
 
 <details><summary>Show answer</summary>
 
-Any two of: network calls that add latency and can fail; eventual consistency instead of instant; two databases to run and back up; duplicated setup (config, logging, builds); debugging that spans multiple apps.
+Any two of: network calls that add latency and can fail, eventual consistency instead of instant, two databases to run and back up, duplicated setup (config, logging, builds), and debugging that spans multiple apps.
 
 </details>
 
@@ -130,13 +130,13 @@ Different services become consistent shortly *after* an event, not instantly. Fo
 
 <details><summary>Show answer</summary>
 
-Microservices add real cost and complexity. Splitting is only worth it once a genuine boundary appears — here, notifications proven (in step 08) to run on their own schedule and needing independent scaling/deploy.
+Microservices add real cost and complexity. Splitting is only worth it once a genuine boundary appears. Here, notifications proved (in step 08) that they run on their own schedule and need independent scaling and deployment.
 
 </details>
 
 ## Reflect (stretch)
 
-Starting two services, a broker, and two databases by hand is tedious and easy to get wrong. You need a single, documented way to bring the whole system up — that is Docker Compose.
+Starting two services, a broker, and two databases by hand is tedious and easy to get wrong. You need a single, documented way to bring the whole system up. That is Docker Compose.
 
 ## Next
 

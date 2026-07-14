@@ -36,17 +36,17 @@ applications/
     └── compose.yaml
 ```
 
-`applications/` is intentionally empty now. Create these only when the guide tells you to; no starter framework structure is hidden from you.
+`applications/` is intentionally empty now. Create these only when the guide tells you to. No starter framework structure is hidden from you.
 
 ## The product’s growing behavior
 
 1. A parcel is a Java object with valid states.
 2. Maven makes that object testable and repeatable.
 3. Spring Boot lets `curl` create and read parcels.
-4. Docker makes the API portable; PostgreSQL keeps data after restart.
+4. Docker makes the API portable. PostgreSQL keeps data after a restart.
 5. The modular monolith separates parcel and notification responsibilities without network complexity.
 6. A queue lets notification work happen after the parcel request finishes.
 7. Only then does notification become a separate service.
-8. Compose runs the real local system; cache, rate limits, and JWT make its boundaries safer.
+8. Compose runs the real local system. Cache, rate limits, and JWT make its boundaries safer.
 
 Every topic answers three questions: **what problem exists now, what small change solves it, and how can I watch that change happen locally?**

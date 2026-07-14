@@ -25,7 +25,7 @@ sequenceDiagram
 
 Useful statuses: `200 OK`, `201 Created`, `204 No Content`, `400 Bad Request`, `404 Not Found`, `409 Conflict`, and `500 Internal Server Error`.
 
-Query parameters are the part after `?`, for example `GET /parcels?status=CREATED`. They filter or shape a read. Do not confuse them with the newer `QUERY` **HTTP method**, which carries complex filter criteria in a request body while staying safe and idempotent — see [HTTP methods explained](../topics/04-first-spring-api/http-methods.md). See also the step 04 [REST API lab](../topics/04-first-spring-api/rest-api.md) for hands-on requests and API trade-offs.
+Query parameters are the part after `?`, for example `GET /parcels?status=CREATED`. They filter or shape a read. Do not confuse them with the newer `QUERY` **HTTP method**, which carries complex filter criteria in a request body while staying safe and idempotent. See [HTTP methods explained](../topics/04-first-spring-api/http-methods.md). See also the step 04 [REST API lab](../topics/04-first-spring-api/rest-api.md) for hands-on requests and API trade-offs.
 
 ## Dependency injection
 

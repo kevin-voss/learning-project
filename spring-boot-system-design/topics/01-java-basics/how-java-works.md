@@ -1,10 +1,10 @@
 # How Java works (the flow)
 
-Read this once. You do not need to memorize it — but knowing the flow removes a lot of "why do I run two commands?" confusion.
+Read this once. You do not need to memorize it, but knowing the flow removes a lot of "why do I run two commands?" confusion.
 
 ## The problem it explains
 
-You wrote `Parcel.java` (plain text). But a computer's processor does not understand Java text — it understands its own machine instructions. Something must translate between them. Java's answer is a two-step flow with a helper program called the **JVM**.
+You wrote `Parcel.java` (plain text). But a computer's processor does not understand Java text. It understands its own machine instructions. Something must translate between them. Java's answer is a two-step flow with a helper program called the **JVM**.
 
 ## The big picture
 
@@ -15,7 +15,7 @@ flowchart LR
   C -->|JIT translates hot code| D["Machine code the CPU runs"]
 ```
 
-1. **You write** `.java` source — human-readable text.
+1. **You write** `.java` source: human-readable text.
 2. **`javac` compiles** it into **bytecode** (`.class` files). Bytecode is a compact instruction set that is *not* tied to any specific computer.
 3. **`java` starts the JVM** (Java Virtual Machine), which reads the bytecode and executes it.
 4. The JVM's **JIT** (Just-In-Time compiler) notices code that runs often ("hot") and translates it into fast machine code while the program runs.
@@ -31,11 +31,11 @@ flowchart LR
 | **JIT** | Just-In-Time compiler inside the JVM that speeds up frequently-run code. |
 | **Garbage collector (GC)** | The JVM part that automatically frees memory you no longer use. |
 | **Classpath** | The list of places the JVM looks to find your classes and libraries. |
-| **Platform independence** | "Write once, run anywhere" — the same bytecode runs on any machine that has a JVM. |
+| **Platform independence** | "Write once, run anywhere": the same bytecode runs on any machine that has a JVM. |
 
 ## Why two steps (compile, then run)?
 
-Because of **platform independence**. The compiler turns your code into bytecode *once*. That same bytecode then runs on Windows, macOS, or Linux, as long as each has a JVM. Contrast with languages that compile straight to one machine's instructions — those must be recompiled per platform.
+Because of **platform independence**. The compiler turns your code into bytecode *once*. That same bytecode then runs on Windows, macOS, or Linux, as long as each has a JVM. Contrast with languages that compile straight to one machine's instructions, which must be recompiled per platform.
 
 ```mermaid
 flowchart TB
@@ -54,7 +54,7 @@ This is also why **Docker + Java** fit so well later: we ship the bytecode (a JA
 3. It finds the special `public static void main(String[] args)` method.
 4. It starts executing your instructions there.
 5. When you write `new Parcel(...)`, the JVM allocates memory for that object on the **heap**.
-6. When nothing uses an object anymore, the **garbage collector** reclaims that memory automatically — you never free memory by hand in Java.
+6. When nothing uses an object anymore, the **garbage collector** reclaims that memory automatically, and you never free memory by hand in Java.
 
 ```mermaid
 sequenceDiagram
@@ -70,12 +70,12 @@ sequenceDiagram
 
 ## Memory in one paragraph (enough for now)
 
-Java keeps small, short-lived data (like a method's local variables) on the **stack**, and objects created with `new` on the **heap**. You don't manage this manually; the GC cleans up the heap. You'll meet these words again — for now, just know: `new` puts an object on the heap, and Java frees it for you.
+Java keeps small, short-lived data (like a method's local variables) on the **stack**, and objects created with `new` on the **heap**. You don't manage this manually. The GC cleans up the heap. You'll meet these words again. For now, just know: `new` puts an object on the heap, and Java frees it for you.
 
 ## Pros and cons of this design
 
-**Pros:** run anywhere; automatic memory management (fewer crashes/leaks); mature, fast JIT; huge library ecosystem.
-**Cons:** startup is slower than pre-compiled native programs; the JVM uses extra memory; you need a JVM present to run anything (which Docker makes easy).
+**Pros:** run anywhere, automatic memory management (fewer crashes/leaks), a mature and fast JIT, and a huge library ecosystem.
+**Cons:** startup is slower than pre-compiled native programs, the JVM uses extra memory, and you need a JVM present to run anything (which Docker makes easy).
 
 ## Real-world analogy
 

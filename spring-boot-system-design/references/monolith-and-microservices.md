@@ -6,10 +6,10 @@ A monolith is one deployable application. It can still have clean modules and bo
 
 Benefits:
 
-- one process to run and debug;
-- no network call between internal features;
-- simpler local setup, deployment, and data consistency;
-- easier refactoring early in a product.
+- one process to run and debug
+- no network call between internal features
+- simpler local setup, deployment, and data consistency
+- easier refactoring early in a product
 
 Costs emerge when unrelated parts need different scaling, deployment frequency, reliability boundaries, or ownership.
 
@@ -19,16 +19,16 @@ Microservices are independently deployed services that communicate over a networ
 
 Benefits:
 
-- deploy and scale an isolated capability;
-- contain some failures;
-- allow independent technology or ownership choices.
+- deploy and scale an isolated capability
+- contain some failures
+- allow independent technology or ownership choices
 
 Costs:
 
-- network timeouts and retries;
-- eventual consistency;
-- distributed logs, metrics, tracing, and security;
-- more images, configuration, databases, and deployments.
+- network timeouts and retries
+- eventual consistency
+- distributed logs, metrics, tracing, and security
+- more images, configuration, databases, and deployments
 
 ```mermaid
 flowchart LR

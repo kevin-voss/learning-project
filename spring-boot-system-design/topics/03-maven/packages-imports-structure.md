@@ -8,7 +8,7 @@ In step 01 you had `Parcel.java` and `Main.java` loose in one folder. In a real 
 
 ## What is a package?
 
-A **package** is a namespace — a labeled group of related classes. It matches a folder path. If a class starts with:
+A **package** is a namespace, a labeled group of related classes. It matches a folder path. If a class starts with:
 
 ```java
 package com.parcelpilot;
@@ -45,12 +45,12 @@ Without the import you'd have to write `java.time.Instant` everywhere. `Status` 
 ### When do you NOT need an import?
 
 - Classes in the **same package**.
-- Classes in `java.lang` (like `String`, `Integer`, `System`) — always available automatically.
+- Classes in `java.lang` (like `String`, `Integer`, `System`), which are always available automatically.
 
 ## Why this structure matters
 
 - **No name clashes:** your `Status` (`com.parcelpilot.Status`) can't be confused with some library's `Status`.
-- **Organization:** later you'll group by feature — `com.parcelpilot.parcel`, `com.parcelpilot.notification` (that's step 07).
+- **Organization:** later you'll group by feature: `com.parcelpilot.parcel`, `com.parcelpilot.notification` (that's step 07).
 - **Tooling:** Maven relies on the standard layout to know what's app code vs test code.
 
 ## The standard Maven layout (recap)
@@ -70,7 +70,7 @@ Rule of thumb: **the folders under `java/` must match the `package` line exactly
 
 ## A note on annotations (preview)
 
-You'll soon see lines like `@Test` (step 03) and `@RestController` (step 04) sitting above classes/methods. Those are **annotations** — labels that give the compiler or a framework extra instructions. They're explained in depth in [step 04's annotations guide](../04-first-spring-api/annotations-imports.md). For now: `@Test` tells JUnit "run this method as a test".
+You'll soon see lines like `@Test` (step 03) and `@RestController` (step 04) sitting above classes/methods. Those are **annotations**: labels that give the compiler or a framework extra instructions. They're explained in depth in [step 04's annotations guide](../04-first-spring-api/annotations-imports.md). For now: `@Test` tells JUnit "run this method as a test".
 
 ## Back to the step
 

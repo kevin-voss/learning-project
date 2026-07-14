@@ -2,7 +2,7 @@
 
 ## Problem
 
-A client needs to create, find, update, and search parcels without knowing Java internals. HTTP gives a shared request/response language; REST-style paths give it predictable resource names.
+A client needs to create, find, update, and search parcels without knowing Java internals. HTTP gives a shared request/response language, and REST-style paths give it predictable resource names.
 
 ## Resource design
 
@@ -17,7 +17,7 @@ Use nouns in paths and HTTP methods for intent:
 | Change one field/action | `PATCH /parcels/P-1/status` | `200 OK` |
 | Delete | `DELETE /parcels/P-1` | `204 No Content` |
 
-Two different "query" ideas, don't mix them up: **query parameters** are the `?status=...` part of a `GET`, used for simple filters. The **`QUERY` method** is a separate, newer HTTP method for complex safe reads that carry criteria in a body — see [HTTP methods explained](http-methods.md). For these exercises, use `GET` with query parameters. Keep `GET` safe: it must not change a parcel.
+Two different "query" ideas, don't mix them up: **query parameters** are the `?status=...` part of a `GET`, used for simple filters. The **`QUERY` method** is a separate, newer HTTP method for complex safe reads that carry criteria in a body (see [HTTP methods explained](http-methods.md)). For these exercises, use `GET` with query parameters. Keep `GET` safe: it must not change a parcel.
 
 ## Real-world example
 

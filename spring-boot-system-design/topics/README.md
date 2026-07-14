@@ -1,6 +1,6 @@
 # How to use a topic
 
-Each numbered folder is **one step** on the [roadmap](../GUIDE.md) and one change to the same ParcelPilot product. Walk them in order; do not read all references first.
+Each numbered folder is **one step** on the [roadmap](../GUIDE.md) and one change to the same ParcelPilot product. Walk them in order. Do not read all references first.
 
 ## The rhythm for every step
 
@@ -15,7 +15,7 @@ flowchart LR
 2. **Understand** the topic using its "What is …?" section and linked lab/reference. Aim to explain it in one sentence.
 3. **Build** it in `applications/` following "Build it in ParcelPilot".
 4. **Test** it with the exact commands under "Test it".
-5. **Check acceptance criteria** — every box must be tickable. If not, return to Build.
+5. **Check acceptance criteria**: every box must be tickable. If not, return to Build.
 6. Only then go to the **Next** step.
 
 ## What each section means
@@ -31,7 +31,7 @@ flowchart LR
 | **Test it** | Terminal commands that show the change working. |
 | **Acceptance criteria** | A checklist that defines "done" for the step. |
 | **Say it like a developer** | Example sentences using the new terms correctly, so you learn to *talk* about the concept, not just recognize it. |
-| **Quiz — check yourself** | A few questions with hidden answers. Answer each out loud in a full sentence **before** revealing it. |
+| **Quiz: check yourself** | A few questions with hidden answers. Answer each out loud in a full sentence **before** revealing it. |
 | **Reflect / Next** | The limitation that motivates the next step. |
 
 ## How to use the quiz
@@ -39,7 +39,7 @@ flowchart LR
 Every step ends with a short quiz. Treat it as the real gate for "did I understand this?":
 
 - Answer **out loud or in writing**, in full sentences, *before* opening the answer toggle.
-- If your answer is fuzzy or wrong, re-read the linked section and try again — don't move on.
+- If your answer is fuzzy or wrong, re-read the linked section and try again. Don't move on.
 - Being able to say the answer in your own words matters more than remembering exact wording.
 
 ## Two rules

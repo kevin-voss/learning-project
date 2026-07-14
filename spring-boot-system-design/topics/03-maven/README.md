@@ -1,4 +1,4 @@
-# Step 03 — Maven: a repeatable, tested build
+# Step 03: Maven for a repeatable, tested build
 
 > In this step: turn your loose `.java` files into a real project that builds and tests with **one command**, and write your first automated tests. ~60–90 minutes.
 
@@ -6,11 +6,11 @@
 
 You compile with `javac *.java` and check results by reading the printout. That does not scale:
 
-- adding an external library means downloading JAR files by hand;
-- checking behavior by eye misses mistakes;
+- adding an external library means downloading JAR files by hand.
+- checking behavior by eye misses mistakes.
 - there's no single, standard way for another machine (or a teammate) to build your project.
 
-You need **one command** that compiles, runs tests, and packages the app — the same way everywhere.
+You need **one command** that compiles, runs tests, and packages the app, the same way everywhere.
 
 ## Key words
 
@@ -19,7 +19,7 @@ You need **one command** that compiles, runs tests, and packages the app — the
 | **Build tool** | A program that automates compiling, testing, and packaging. |
 | **Maven** | The build tool this course uses for Java. |
 | **`pom.xml`** | Maven's project file: Java version, libraries, build settings. |
-| **Dependency** | An external library your project uses; Maven downloads it automatically. |
+| **Dependency** | An external library your project uses, which Maven downloads automatically. |
 | **Artifact** | The thing your build produces (here, a JAR). |
 | **JAR** | One packaged file containing your compiled program, runnable with `java -jar`. |
 | **Convention** | A standard folder layout Maven expects, so you write almost no config. |
@@ -28,11 +28,11 @@ You need **one command** that compiles, runs tests, and packages the app — the
 | **Assertion** | A check inside a test, e.g. "the status must equal DELIVERED". |
 | **CI** | Continuous Integration: a server that runs your build + tests automatically. |
 
-> Maven isn't the only build tool. For a short comparison of Maven vs Gradle vs Ant vs plain `javac` — and exactly why this course starts with Maven — read [Build tools compared](build-tools-compared.md).
+> Maven isn't the only build tool. For a short comparison of Maven vs Gradle vs Ant vs plain `javac`, and exactly why this course starts with Maven, read [Build tools compared](build-tools-compared.md).
 
 ## What Maven does (and why it feels magical at first)
 
-You declare *what* you need in `pom.xml`; Maven works out *how*: download libraries, compile, test, package.
+You declare *what* you need in `pom.xml`. Maven works out *how*: download libraries, compile, test, package.
 
 ```mermaid
 flowchart LR
@@ -62,14 +62,14 @@ applications/parcelpilot/
             └── ParcelTrackerTest.java
 ```
 
-> **Package note:** the `com/parcelpilot/` folders match a line `package com.parcelpilot;` you add at the top of each `.java` file. A **package** is just a namespace/folder that groups related classes. New to packages and imports? Read [Packages, imports, and project structure](packages-imports-structure.md) — it explains the `package` line, when you need `import`, and why folders must match.
+> **Package note:** the `com/parcelpilot/` folders match a line `package com.parcelpilot;` you add at the top of each `.java` file. A **package** is just a namespace/folder that groups related classes. New to packages and imports? Read [Packages, imports, and project structure](packages-imports-structure.md): it explains the `package` line, when you need `import`, and why folders must match. For the bigger arc (how ParcelPilot moves from loose files to packages and, later, layers) see [Code organization: from one file to a layered app](../../references/code-organization.md).
 
 ## Why do it? Pros and cons
 
 **What it brings us:** repeatable builds, automatic tests, easy library management, and a project any Java developer or CI server understands instantly.
 
-**Pros:** one command (`mvn test`) does everything; dependencies are declared, not hand-downloaded; tests catch regressions automatically.
-**Cons:** `pom.xml` XML looks verbose; the first build downloads a lot; new vocabulary. All worth it.
+**Pros:** one command (`mvn test`) does everything, dependencies are declared rather than hand-downloaded, and tests catch regressions automatically.
+**Cons:** `pom.xml` XML looks verbose, the first build downloads a lot, and there's new vocabulary. All worth it.
 
 **Real-world example:** essentially every Java team uses Maven or Gradle. Nobody ships production Java by running `javac` by hand.
 
@@ -164,7 +164,7 @@ mvn test        # compiles everything + runs the tests
 mvn package     # builds target/parcelpilot-0.1.0.jar
 ```
 
-`mvn test` should end with **BUILD SUCCESS** and `Tests run: 2, Failures: 0`. Try breaking a rule on purpose (e.g. allow delivering from CREATED) and watch a test go red — that red is the safety net working.
+`mvn test` should end with **BUILD SUCCESS** and `Tests run: 2, Failures: 0`. Try breaking a rule on purpose (e.g. allow delivering from CREATED) and watch a test go red. That red is the safety net working.
 
 > Do **not** add Spring Boot yet. Maven is worth it for plain Java too.
 
@@ -185,9 +185,9 @@ mvn package     # builds target/parcelpilot-0.1.0.jar
 - "`mvn test` **compiles** the code and **runs the tests**; `mvn package` builds the **JAR** (the **artifact**)."
 - "Each `.java` file starts with a **package** line that matches its folder."
 - "The test **asserts** that the status equals `DELIVERED`."
-- "I follow Maven's **conventions** — code in `src/main/java`, tests in `src/test/java` — so it just works."
+- "I follow Maven's **conventions** (code in `src/main/java`, tests in `src/test/java`), so it just works."
 
-## Quiz — check yourself
+## Quiz: check yourself
 
 Answer out loud before opening each toggle.
 
@@ -203,7 +203,7 @@ Maven's project file. It declares the Java version, the project's coordinates (g
 
 <details><summary>Show answer</summary>
 
-A dependency is an external library your project uses (e.g. JUnit). You declare it in `pom.xml` and Maven downloads it automatically — you never hand-download JAR files.
+A dependency is an external library your project uses (e.g. JUnit). You declare it in `pom.xml` and Maven downloads it automatically, so you never hand-download JAR files.
 
 </details>
 

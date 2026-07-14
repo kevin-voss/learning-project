@@ -1,4 +1,4 @@
-# Step 00 — Your tools (no Java yet)
+# Step 00: Your tools (no Java yet)
 
 > In this step: prove you can run a server, talk to it, and stop it. ~20 minutes. Zero code.
 
@@ -15,7 +15,7 @@ You have an empty `applications/` folder and, maybe, zero programming experience
 | **Server** | A program that waits for requests and sends back responses. |
 | **Client** | Anything that sends a request to a server (here: `curl`). |
 | **HTTP** | The language clients and servers use to talk over a network. |
-| **Request / Response** | You ask (request); the server answers (response). |
+| **Request / Response** | You ask (request), and the server answers (response). |
 | **Port** | A numbered "door" on a computer, e.g. `8080`, so traffic reaches the right program. |
 | **Image** | A frozen, ready-to-run package of a program (like an app installer). |
 | **Container** | A running copy of an image, isolated from the rest of your machine. |
@@ -37,8 +37,8 @@ sequenceDiagram
 
 **The problem it solves:** software normally needs installation, correct versions, and matching settings. That breaks with "works on my machine" surprises. Docker packages a program + everything it needs into an **image**, so it runs the same anywhere.
 
-**Pros:** same behavior on every machine; nothing permanently installed; easy to throw away and retry.
-**Cons:** an extra tool to learn; images take disk space; a running container disappears (including any data inside it) unless you plan for that — a fact that matters a lot at step 06.
+**Pros:** same behavior on every machine, nothing permanently installed, and easy to throw away and retry.
+**Cons:** an extra tool to learn, images take disk space, and a running container disappears (including any data inside it) unless you plan for that. That last fact matters a lot at step 06.
 
 **Real-world example:** a company runs the exact same database image on a laptop, in tests, and in production. No one has to install the database by hand three times.
 
@@ -47,17 +47,17 @@ sequenceDiagram
 Run each command. Each should print a version (exact numbers may differ). If one says "command not found", install that tool before continuing.
 
 ```bash
-java -version      # need Java (JDK) 21+   -> install: https://adoptium.net
-mvn -version       # need Maven            -> often bundled with your IDE
-docker --version   # need Docker Desktop   -> https://www.docker.com/products/docker-desktop
-curl --version     # need curl             -> preinstalled on macOS/Linux
+java -version      # need Java (JDK) 21+   -> see GUIDE.md Install (Ubuntu)
+mvn -version       # need Maven            -> sudo apt install -y maven
+docker --version   # need Docker Engine    -> sudo apt install -y docker.io docker-compose-v2
+curl --version     # need curl             -> preinstalled on Ubuntu
 ```
 
 Optional but handy: `jq --version` (formats JSON nicely in the terminal).
 
 ## Build it in ParcelPilot
 
-Nothing to build yet — just operate the tools.
+Nothing to build yet. Just operate the tools.
 
 1. Start a throwaway web server (Docker downloads `nginx` the first time):
 
@@ -73,7 +73,7 @@ docker run --rm -p 8080:80 nginx:alpine
 curl -i http://localhost:8080
 ```
 
-3. Go back to the first terminal and press `Ctrl+C` to stop the server. Run `curl` again and watch it fail — the server is gone.
+3. Go back to the first terminal and press `Ctrl+C` to stop the server. Run `curl` again and watch it fail. The server is gone.
 
 ## Test it
 
@@ -94,10 +94,10 @@ Practice phrasing these the way engineers do:
 - "I sent a **GET request** to `localhost:8080` and got back a **200 OK response**."
 - "Docker pulled the **image** and ran it as a **container**."
 - "I **mapped** host port `8080` to the container's port `80` with `-p 8080:80`."
-- "`curl` is the **client**; nginx is the **server**."
-- "When I stopped the container, the server was gone — the response only exists **while the container runs**."
+- "`curl` is the **client**, and nginx is the **server**."
+- "When I stopped the container, the server was gone. The response only exists **while the container runs**."
 
-## Quiz — check yourself
+## Quiz: check yourself
 
 Answer out loud before opening each toggle.
 
@@ -129,7 +129,7 @@ It maps port `8080` on your machine to port `80` inside the container, so traffi
 
 <details><summary>Show answer</summary>
 
-The "works on my machine" problem. Docker packages a program plus everything it needs into an image, so it runs the same way on any machine that has Docker — no manual install of matching versions and settings.
+The "works on my machine" problem. Docker packages a program plus everything it needs into an image, so it runs the same way on any machine that has Docker, with no manual install of matching versions and settings.
 
 </details>
 

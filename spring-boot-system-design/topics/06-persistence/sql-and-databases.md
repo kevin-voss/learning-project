@@ -28,7 +28,7 @@ parcels table
 | **Row / record** | One entry (one parcel). |
 | **Column** | One field of every row (e.g. `status`). |
 | **Primary key** | The column that uniquely identifies a row (`id`). |
-| **SQL** | Structured Query Language — how you talk to the database. |
+| **SQL** | Structured Query Language, how you talk to the database. |
 | **Query** | A request for data (a `SELECT`). |
 | **Index** | A lookup structure that makes some queries fast. |
 | **Schema** | The definition of tables and columns. |
@@ -57,7 +57,7 @@ UPDATE parcels SET status = 'PICKED_UP' WHERE id = 'P-1';
 DELETE FROM parcels WHERE id = 'P-1';
 ```
 
-Good news: in ParcelPilot you mostly won't write SQL by hand — **JPA** (next page) generates it from your Java. But you should recognize what it's doing.
+Good news: in ParcelPilot you mostly won't write SQL by hand, because **JPA** (next page) generates it from your Java. But you should recognize what it's doing.
 
 ## Why PostgreSQL (and the alternatives)
 
@@ -66,14 +66,14 @@ Good news: in ParcelPilot you mostly won't write SQL by hand — **JPA** (next p
 | **PostgreSQL** (our choice) | Relational (SQL) | free, powerful, reliable, great features, ubiquitous | needs a running server | default choice for structured data with relationships |
 | **MySQL / MariaDB** | Relational (SQL) | popular, fast, well-supported | fewer advanced features than Postgres | web apps, when a team already knows it |
 | **SQLite** | Relational (file) | zero-setup, single file | not for concurrent server workloads | tiny apps, tests, mobile |
-| **MongoDB** | Document (NoSQL) | flexible schema, JSON-like docs | weaker multi-record transactions; easy to model badly | rapidly-changing or document-shaped data |
+| **MongoDB** | Document (NoSQL) | flexible schema, JSON-like docs | weaker multi-record transactions, easy to model badly | rapidly-changing or document-shaped data |
 | **Redis** | Key-value (in-memory) | extremely fast | not a durable source of truth by default | caching (that's step 11!), sessions |
 
 **Why we pick PostgreSQL:** parcels have a clear, stable structure and relationships, we want reliable transactions (for locking), and Postgres is the industry-standard free relational database that runs trivially in Docker. It's the safe default you can grow with.
 
 ## Relational vs NoSQL in one line
 
-Use **relational** (Postgres) when data is structured with clear relationships and you value consistency — like parcels. Use **NoSQL** when the shape varies a lot or you need a specific scaling model. Choosing NoSQL "because it's modern" is a common mistake.
+Use **relational** (Postgres) when data is structured with clear relationships and you value consistency, like parcels. Use **NoSQL** when the shape varies a lot or you need a specific scaling model. Choosing NoSQL "because it's modern" is a common mistake.
 
 ## Back to the step
 

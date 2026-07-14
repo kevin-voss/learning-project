@@ -31,7 +31,7 @@ final class ParcelTracker {
 }
 ```
 
-Inheritance says one class is a specialized form of another. It can be appropriate for true substitutable types, but it couples parent and child behavior. A `ParcelTracker` is not a clock; it **has** one. Composition makes a fake clock easy in a test.
+Inheritance says one class is a specialized form of another. It can be appropriate for true substitutable types, but it couples parent and child behavior. A `ParcelTracker` is not a clock. It **has** one. Composition makes a fake clock easy in a test.
 
 ## Singleton
 
@@ -45,11 +45,11 @@ final class SystemClock implements Clock {
 }
 ```
 
-Use it sparingly for stateless shared infrastructure. Do not use a singleton as a shortcut for global mutable application state. Spring itself manages many objects as singleton-scoped beans; that does not mean they should hold per-request data.
+Use it sparingly for stateless shared infrastructure. Do not use a singleton as a shortcut for global mutable application state. Spring itself manages many objects as singleton-scoped beans, but that does not mean they should hold per-request data.
 
 ## Useful early principles
 
-- Prefer `final` fields; objects are easier to reason about when their identity cannot change.
+- Prefer `final` fields, because objects are easier to reason about when their identity cannot change.
 - Make invalid states hard to create.
 - Put a rule near the data it protects.
 - Keep methods small and names specific.

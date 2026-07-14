@@ -15,7 +15,7 @@ flowchart LR
 ```text
 src/main/java/   application source
 src/test/java/   test source
-target/          generated output; do not edit or commit
+target/          generated output, do not edit or commit
 pom.xml          project definition
 ```
 
@@ -38,4 +38,4 @@ Add a dependency only because code needs it. Spring Boot starters are curated de
 
 ## Maven versus Docker
 
-Maven builds Java artifacts; Docker packages and runs them in an operating-system-level image. They solve different reproducibility problems and work together.
+Maven builds Java artifacts. Docker packages and runs them in an operating-system-level image. They solve different reproducibility problems and work together.

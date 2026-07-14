@@ -1,17 +1,17 @@
 # Password authentication and JWT
 
-This is intentionally the last core topic. Authentication is security-sensitive; do not invent a protocol or password storage scheme.
+This is intentionally the last core topic. Authentication is security-sensitive, so do not invent your own protocol or password storage scheme.
 
 ## Terms
 
 - **Authentication**: prove who the caller is.
 - **Authorization**: decide what an authenticated caller may do.
 - **Password hash**: slow, salted one-way password storage.
-- **JWT**: a signed token carrying claims; it is not automatically encrypted.
+- **JWT**: a signed token carrying claims. It is not automatically encrypted.
 
 ## Passwords
 
-Never store, log, or return plaintext passwords. Delegate password hashing and verification to Spring Security’s `PasswordEncoder`, using Argon2id or bcrypt. A salt prevents identical passwords from producing matching hashes; the algorithm’s work factor makes guessing expensive.
+Never store, log, or return plaintext passwords. Delegate password hashing and verification to Spring Security’s `PasswordEncoder`, using Argon2id or bcrypt. A salt prevents identical passwords from producing matching hashes. The algorithm’s work factor makes guessing expensive.
 
 ```mermaid
 sequenceDiagram

@@ -1,6 +1,6 @@
 # Docker
 
-Docker uses an **image** (a packaged filesystem plus startup command) to create a **container** (a running instance). An image is reusable; a container is disposable.
+Docker uses an **image** (a packaged filesystem plus startup command) to create a **container** (a running instance). An image is reusable. A container is disposable.
 
 ```mermaid
 flowchart LR
@@ -23,7 +23,7 @@ docker stop <container>
 
 ## A multi-stage Java Dockerfile
 
-The first stage needs Maven and a JDK; the running application needs only a JRE. Copying the JAR into the smaller runtime image produces a leaner, safer result.
+The first stage needs Maven and a JDK. The running application needs only a JRE. Copying the JAR into the smaller runtime image produces a leaner, safer result.
 
 ```dockerfile
 FROM maven:3-eclipse-temurin-21 AS build

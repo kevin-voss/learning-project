@@ -29,11 +29,21 @@ flowchart LR
 
 ## Before you start
 
+### Install your tools
+
+You need a **terminal**, a **code editor**, **JDK 21**, **Maven**, **Docker Engine** (with Compose), and **`curl`**. Optional: **`jq`** (pretty-prints JSON in the terminal).
+
+You do **not** need to know Java yet. Step 01 starts from zero.
+
+Pick your platform:
+
+- **Ubuntu / Debian-family Linux:** follow the [Install (Ubuntu)](#install-ubuntu) section right below.
+- **macOS:** follow [Install on macOS (Homebrew)](topics/00-start-here/install-macos.md).
+- **Windows:** follow [Install on Windows (WSL2)](topics/00-start-here/install-windows.md).
+
+Not sure which editor to use, or new to juggling two terminals? Read [Editor and terminal setup](topics/00-start-here/editor-and-terminal.md).
+
 ### Install (Ubuntu)
-
-You need a **terminal**, a **code editor**, **JDK 21**, **Maven**, **Docker Engine** (with Compose), and `**curl`**. Optional: `**jq**` (pretty-prints JSON in the terminal).
-
-You do **not** need to know Java yet — step 01 starts from zero.
 
 #### Install everything
 
@@ -52,7 +62,7 @@ sudo usermod -aG docker "$USER"
 
 #### Check that everything works
 
-Open a **new terminal** after `usermod`. Each command should print a version or status — not `command not found` or `permission denied`.
+Open a **new terminal** after `usermod`. Each command should print a version or status, not `command not found` or `permission denied`.
 
 ```bash
 # Java & build
@@ -67,7 +77,7 @@ jq --version           # optional
 # Docker daemon + Compose
 docker --version
 docker compose version
-docker info            # → must succeed without sudo; proves the daemon is running
+docker info            # → must succeed without sudo, proves the daemon is running
 systemctl is-enabled docker   # → enabled
 systemctl is-active docker    # → active
 ```
@@ -86,7 +96,29 @@ curl -s -o /dev/null -w "%{http_code}\n" https://example.com   # → 200
 | `Cannot connect to the Docker daemon` | `sudo systemctl start docker` and check `systemctl status docker`                 |
 | `openjdk-21-jdk` not found            | Temurin 21 or SDKMAN (see note above)                                             |
 | `mvn: command not found`              | Re-run `sudo apt install -y maven`, or see [Maven reference](references/maven.md) |
+| Port `8080` already in use            | `lsof -i :8080` to find the process, stop it, or change `server.port` — full recipe in [Debugging & troubleshooting](references/debugging-and-troubleshooting.md) |
+| App or container misbehaves and you're stuck | Symptom-by-symptom quick fixes in [When things break](references/when-things-break.md) |
 
+
+### Running several containers (read before step 10)
+
+From step 10 on you run more than one container at a time (the API plus PostgreSQL, later RabbitMQ and a second service). On Linux there are two rules that trip people up, so learn them once here.
+
+1. Inside a container, `localhost` means "this container itself", not your laptop. So one container cannot reach another with `localhost`.
+2. Containers on Docker's default bridge cannot find each other by name. On macOS people reach for `host.docker.internal`, but on plain Ubuntu that name does not exist unless you add it.
+
+The clean fix that works everywhere is a **user-defined network**. Create one, attach every container to it, and they reach each other by their `--name`.
+
+```bash
+# Create the shared network once
+docker network create parcelpilot-net
+
+# Attach each container with --network and give it a --name
+docker run --network parcelpilot-net --name parcelpilot-db ...   # the database
+docker run --network parcelpilot-net --name parcelpilot-api ...  # the API
+```
+
+Now the API reaches the database at the host name `parcelpilot-db`, not `localhost`. You still publish ports with `-p` only for the containers you call from your laptop with `curl`. Step 14 replaces this manual wiring with Docker Compose, which creates the network for you. (On macOS the same rules apply; `host.docker.internal` exists there, but the course uses user-defined networks everywhere so commands work on every platform.)
 
 Read [PROJECT-STORY.md](PROJECT-STORY.md) once. It explains that you build **one** product (ParcelPilot, a parcel-tracking backend) that grows with every step.
 
@@ -100,7 +132,7 @@ You don't read these cover-to-cover up front (steps link to them at the right mo
 - [Code organization: from one file to a layered app](references/code-organization.md): how the project grows from one file → packages/imports → controllers/services → separate services, and *when* each stage is worth it.
 - [System design & scaling](references/scaling-and-architecture.md): how backends scale (queues, caching, rate limiting, auth, statelessness), how each ParcelPilot step maps to a system-design idea, and the advanced topics to explore afterward.
 
-## The 13 steps
+## The 16 steps
 
 
 | Step                                             | You will learn                                    | The project gains                        | You prove it by                         |
@@ -108,19 +140,25 @@ You don't read these cover-to-cover up front (steps link to them at the right mo
 | [00](topics/00-start-here/README.md)             | Terminal, HTTP, containers                        | Nothing yet, tools only                  | `curl` a throwaway container            |
 | [01](topics/01-java-basics/README.md)            | Java values, classes, methods                     | A `Parcel` object you can print          | `java` prints a label                   |
 | [02](topics/02-oop-and-composition/README.md)    | Objects, composition, singleton, builder, factory | Parcels change state by rules            | a test shows valid + blocked changes    |
-| [03](topics/03-maven/README.md)                  | Maven and automated tests                         | A repeatable, testable build             | `mvn test` passes                       |
+| [03](topics/03-maven/README.md)                  | Maven and first unit tests                        | A repeatable, testable build             | `mvn test` passes                       |
 | [04](topics/04-first-spring-api/README.md)       | HTTP, REST, JSON, Spring Boot                     | Create/read parcels over the web         | `curl` gets JSON                        |
-| [05](topics/05-docker/README.md)                 | Images and containers                             | The API runs as one portable image       | `docker run` serves the API             |
-| [06](topics/06-persistence/README.md)            | Databases, volumes, locking                       | Parcels survive a restart                | recreate container, data remains        |
-| [07](topics/07-monolith/README.md)               | Architecture of a monolith                        | Clean internal modules                   | tests pass, endpoints unchanged         |
-| [08](topics/08-queues/README.md)                 | Queues and async work                             | Notifications happen *after* the request | response is fast while worker is paused |
-| [09](topics/09-split-services/README.md)         | Microservices                                     | Notifications become a separate service  | two containers cooperate                |
-| [10](topics/10-compose-and-observe/README.md)    | Docker Compose, health, logs                      | Whole system starts with one command     | `docker compose up` runs everything     |
-| [11](topics/11-performance-and-safety/README.md) | Caching, locking, rate limiting                   | The API stays fast and safe under load   | cache hit, `409`, and `429` observed    |
-| [12](topics/12-jwt-authentication/README.md)     | Passwords, hashing, JWT                           | A protected operator action              | login, then call with a token           |
+| [05](topics/05-validation-and-inputs/README.md)  | Bean Validation, `@Valid`, DTO constraints        | Bad input is rejected with a helpful 400 | `curl` an invalid body → `400` + field errors |
+| [06](topics/06-error-handling/README.md)         | Exceptions, `@RestControllerAdvice`, error contracts | One consistent error JSON everywhere  | `409`/`404` bodies match the `400` shape |
+| [07](topics/07-logging-and-observability-basics/README.md) | SLF4J, log levels, request IDs          | Traceable requests, useful failure logs  | logs show the request flow; `500` hides the stack trace from clients |
+| [08](topics/08-testing/README.md)                | Test pyramid, MockMvc, integration tests          | API behavior locked in by tests          | `mvn test` covers HTTP `200/400/404/409` |
+| [09](topics/09-docker/README.md)                 | Images and containers                             | The API runs as one portable image       | `docker run` serves the API             |
+| [10](topics/10-persistence/README.md)            | PostgreSQL, JPA, volumes, locking                 | Parcels survive a restart                | recreate container, data remains        |
+| [11](topics/11-monolith/README.md)               | Architecture of a monolith                        | Clean internal modules                   | tests pass, endpoints unchanged         |
+| [12](topics/12-queues/README.md)                 | Queues and async work                             | Notifications happen *after* the request | response is fast while worker is paused |
+| [13](topics/13-split-services/README.md)         | Microservices                                     | Notifications become a separate service  | two containers cooperate                |
+| [14](topics/14-compose-and-observe/README.md)    | Docker Compose, health, logs                      | Whole system starts with one command     | `docker compose up` runs everything     |
+| [15](topics/15-performance-and-safety/README.md) | Caching, locking, rate limiting                   | The API stays fast and safe under load   | cache hit, `409`, and `429` observed    |
+| [16](topics/16-jwt-authentication/README.md)     | Passwords, hashing, JWT                           | A protected operator action              | login, then call with a token           |
 
 
-The monolith (steps 04–07) is **not** a beginner mistake you fix later. It is the correct starting architecture. Microservices (step 09) only appear once the monolith reveals a real boundary.
+The monolith (steps 04–11) is **not** a beginner mistake you fix later. It is the correct starting architecture. Microservices (step 13) only appear once the monolith reveals a real boundary.
+
+> **Before step 13:** read [Git for this course](references/git-for-this-course.md) and do the [git tag checkpoint](topics/13-split-services/git-tag-checkpoint.md). You are about to reshape the whole project, and you want the working monolith saved first.
 
 ## A note on design patterns and keywords
 

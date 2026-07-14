@@ -232,6 +232,58 @@ int first = counts.get(0);   // auto-unboxing: Integer -> int
 - Unboxing a `null` wrapper crashes: `Integer x = null; int y = x;` → `NullPointerException`.
 - Compare wrapper values with `.equals()` or by unboxing, not `==` (identity can surprise you). Prefer primitives unless you specifically need an object or `null`.
 
+## Generics in one page
+
+You just saw `List<Integer>`. That `<...>` is **generics**, and it exists to solve a real problem. Before generics, a list held *anything*, and mistakes only exploded at runtime:
+
+```java
+List parcels = new ArrayList();        // a list of... whatever (old style)
+parcels.add(new Parcel("P-1", "Ava"));
+parcels.add("hello");                  // oops, a String snuck in — compiles fine!
+
+Parcel p = (Parcel) parcels.get(1);    // 💥 ClassCastException at RUNTIME
+```
+
+The `<Type>` fills in the blank "a list **of what?**", and moves that explosion to **compile time**, where `javac` catches it before the program ever runs:
+
+```java
+List<Parcel> parcels = new ArrayList<>();
+parcels.add(new Parcel("P-1", "Ava"));
+parcels.add("hello");                  // ❌ compile error: String is not a Parcel
+
+Parcel p = parcels.get(0);             // no cast needed — it can only be a Parcel
+```
+
+Two more things and you know enough generics for the whole course:
+
+- **The diamond operator `<>`**: on the right-hand side you can leave the type out (`new ArrayList<>()`) and Java infers it from the left. Write the type once, not twice.
+- **`<T>` in your own class**: the same trick is available to you. A class can leave a type as a placeholder, and the user of the class fills it in:
+
+```java
+public class Box<T> {                   // T = "some type, decided later"
+    private T content;
+    public void put(T item) { this.content = item; }
+    public T take() { return content; }
+}
+
+Box<Parcel> box = new Box<>();          // now T means Parcel, everywhere in this box
+```
+
+You'll mostly *use* generic types (`List<Parcel>`, `Map<String, Parcel>`, later `Optional<Parcel>` and `ResponseEntity<Parcel>`) rather than write your own — recognizing "the `<>` says *of what type*" is the skill. Collections put generics to work on every line: see [collections basics](collections-basics.md).
+
+## Optional: a pointer
+
+`Optional<T>` is a small standard class that represents "**a box that may or may not contain a value**". It's an alternative to returning `null` from a lookup: a method that returns `Optional<Parcel>` *says in its type* "I might find nothing", and the caller can't forget to deal with that case — unlike a `null`, which crashes later, somewhere else, as a `NullPointerException`.
+
+```java
+Optional<Parcel> maybe = findParcel("P-9");   // maybe empty, maybe holding a parcel
+String label = maybe
+        .map(Parcel::label)                    // runs only if a parcel is inside
+        .orElse("no such parcel");             // fallback if the box is empty
+```
+
+You don't need to practice it yet — it returns for real in step 10, where database repositories return `Optional<Parcel>` from `findById` precisely because "no row with that id" is a normal, expected outcome. For the wider strategy of keeping `null` out of your code, see [best practices #7: tame `null`](../../references/java-best-practices.md#7-tame-null-avoid-nullpointerexception).
+
 ## `var`: let Java infer the type
 
 Since Java 10, `var` infers a local variable's type from the right-hand side. The variable is still strongly typed, so you just don't repeat the type name.

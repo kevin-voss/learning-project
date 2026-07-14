@@ -95,7 +95,7 @@ public record TrackingEvent(String parcelId, Status newStatus, Instant when) {}
 **Why:** packages organize a growing codebase and avoid clashes (your `Status` vs a library's `Status`). Maven's layout lets one command build, test, and package everything.
 **What forces the next stage:** the app now talks HTTP and a database, so it has clearly different *kinds* of code (web handling vs business rules vs storage) mixed together.
 
-## Stage 4: Layers: controller, service, repository (Step 04 → 06)
+## Stage 4: Layers: controller, service, repository (Step 04 → 10)
 
 When the app does HTTP + rules + persistence, separate those responsibilities so each has one job. This is the classic three-layer shape.
 
@@ -135,11 +135,11 @@ class ParcelService {
 
 **Why:** each layer changes for one reason. You can swap the database (repository) without touching HTTP (controller), and test the service without starting a web server. Notice dependencies point **inward** (controller → service → repository), and each is **injected** via the constructor.
 
-> **Don't over-do it early.** In Step 04 it's fine that one controller class holds the data and endpoints. You split into layers in Step 06/07 *once there's something to separate*. Layering an app that does almost nothing is just ceremony.
+> **Don't over-do it early.** In Step 04 it's fine that one controller class holds the data and endpoints. You split into layers in Step 10/11 *once there's something to separate*. Layering an app that does almost nothing is just ceremony.
 
 **What forces the next stage:** several features (parcel, notification) each spanning all three layers, tangled together.
 
-## Stage 5: Package by feature (modular monolith, Step 07)
+## Stage 5: Package by feature (modular monolith, Step 11)
 
 Instead of top-level `controllers/`, `services/`, `repositories/` folders (which scatter one feature across three places), group by **feature**. Each feature has its own layers inside.
 
@@ -157,10 +157,10 @@ com/parcelpilot/
 
 The parcel module talks to notifications through a **small interface** (`Notifier`), not by reaching into its internals.
 
-**Why:** a change to "parcels" touches one folder. Features stay cohesive and loosely coupled, which is exactly what makes the next stage cheap. See [Step 07](../topics/07-monolith/README.md).
+**Why:** a change to "parcels" touches one folder. Features stay cohesive and loosely coupled, which is exactly what makes the next stage cheap. See [Step 11](../topics/11-monolith/README.md).
 **What forces the next stage:** a feature needs to deploy, scale, or fail **independently**.
 
-## Stage 6: Separate services (Step 09+)
+## Stage 6: Separate services (Step 13+)
 
 Only now, with a proven boundary, do you split a module into its own deployable service with its own database, communicating over a broker.
 
@@ -171,7 +171,7 @@ applications/parcelpilot-services/
 └── compose.yaml
 ```
 
-**Why:** independent deploy/scale/failure, at the cost of network calls, more infrastructure, and eventual consistency. See [Step 09](../topics/09-split-services/README.md) and [monolith vs microservices](monolith-and-microservices.md).
+**Why:** independent deploy/scale/failure, at the cost of network calls, more infrastructure, and eventual consistency. See [Step 13](../topics/13-split-services/README.md) and [monolith vs microservices](monolith-and-microservices.md).
 
 ---
 

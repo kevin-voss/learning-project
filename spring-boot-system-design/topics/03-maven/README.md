@@ -164,7 +164,7 @@ mvn test        # compiles everything + runs the tests
 mvn package     # builds target/parcelpilot-0.1.0.jar
 ```
 
-`mvn test` should end with **BUILD SUCCESS** and `Tests run: 2, Failures: 0`. Try breaking a rule on purpose (e.g. allow delivering from CREATED) and watch a test go red. That red is the safety net working.
+`mvn test` should end with **BUILD SUCCESS** and `Tests run: 2, Failures: 0`. Curious what actually happens between typing the command and seeing that line (phases, the Surefire plugin, reports)? Read [Testing with Maven](testing-with-maven.md). Try breaking a rule on purpose (e.g. allow delivering from CREATED) and watch a test go red. That red is the safety net working. If the build goes red for a reason you *didn't* intend, [Common build failures](common-build-failures.md) decodes the usual error messages.
 
 > Do **not** add Spring Boot yet. Maven is worth it for plain Java too.
 
@@ -242,6 +242,10 @@ Alternatives include Gradle, Ant, and Bazel. This course chose Maven because its
 ## Reflect (stretch)
 
 You now change code, run `mvn test`, and instantly know if you broke something. That safety net is what makes every later step (Spring, database, queues) survivable. See the [Maven reference](../../references/maven.md) for the Maven Wrapper (`./mvnw`) and dependency tips.
+
+## Tests you'll grow later
+
+The unit test you wrote here is deliberately the smallest kind of test: one class, no network, no framework. That's on purpose — it keeps this step about Maven, not about testing strategy. Once ParcelPilot has an HTTP API and a database worth testing, you'll add HTTP-level and database-level tests in [Step 08](../08-testing/README.md).
 
 ## Next
 

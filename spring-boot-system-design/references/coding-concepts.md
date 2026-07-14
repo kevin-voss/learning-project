@@ -141,11 +141,11 @@ Data that can't change after creation can't be corrupted, is safe to share, and 
 - **Coupling** = how much one part depends on another. Aim for **low** (talk through small interfaces, not internals).
 - **Cohesion** = how focused a unit is on one job. Aim for **high** (related things together).
 
-Low coupling + high cohesion is what lets you change one part without breaking others, the whole reason the modular monolith (Step 07) is structured the way it is.
+Low coupling + high cohesion is what lets you change one part without breaking others, the whole reason the modular monolith (Step 11) is structured the way it is.
 
 ## 13. Idempotency
 
-An operation is **idempotent** if doing it twice has the same effect as doing it once. It matters anywhere retries or duplicates can happen (network calls, queue messages). ParcelPilot's notification consumer is idempotent so a redelivered message doesn't notify twice (Step 08).
+An operation is **idempotent** if doing it twice has the same effect as doing it once. It matters anywhere retries or duplicates can happen (network calls, queue messages). ParcelPilot's notification consumer is idempotent so a redelivered message doesn't notify twice (Step 12).
 
 ## 14. Make the change easy, then make the easy change
 

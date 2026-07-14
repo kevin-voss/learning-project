@@ -28,13 +28,22 @@ spring-boot-system-design/
 │   ├── scaling-and-architecture.md # system design, scaling, advanced topics
 │   ├── spring-and-http.md
 │   ├── maven.md
+│   ├── validation-and-api-contracts.md  # boundary validation, error message design
+│   ├── error-handling-and-http-statuses.md
+│   ├── logging.md                  # SLF4J, levels, security, structured logging
+│   ├── testing.md                  # pyramid, MockMvc, Testcontainers, flaky tests
+│   ├── configuration.md            # application.properties, env vars, profiles
 │   ├── docker.md
 │   ├── monolith-and-microservices.md
 │   ├── messaging-and-queues.md
 │   ├── production-thinking.md
 │   ├── design-patterns.md
 │   ├── databases-caching-and-locking.md
-│   └── authentication.md
+│   ├── authentication.md
+│   ├── git-for-this-course.md      # init, commit, diff, tag — read before step 13
+│   ├── debugging-and-troubleshooting.md
+│   ├── when-things-break.md        # FAQ: quick fixes by symptom
+│   └── glossary.md                 # every keyword, linked to where it's introduced
 └── topics/                  # Per-stage lesson, build work, proof, and labs
     ├── README.md            # How to learn from each stage
     ├── 00-start-here/
@@ -42,20 +51,24 @@ spring-boot-system-design/
     ├── 02-oop-and-composition/
     ├── 03-maven/
     ├── 04-first-spring-api/
-    ├── 05-docker/
-    ├── 06-persistence/
-    ├── 07-monolith/
-    ├── 08-queues/
-    ├── 09-split-services/
-    ├── 10-compose-and-observe/
-    ├── 11-performance-and-safety/
-    └── 12-jwt-authentication/
+    ├── 05-validation-and-inputs/
+    ├── 06-error-handling/
+    ├── 07-logging-and-observability-basics/
+    ├── 08-testing/
+    ├── 09-docker/
+    ├── 10-persistence/
+    ├── 11-monolith/
+    ├── 12-queues/
+    ├── 13-split-services/
+    ├── 14-compose-and-observe/
+    ├── 15-performance-and-safety/
+    └── 16-jwt-authentication/
 ```
 
 ## Prerequisites
 
-- A terminal and editor
-- **JDK 21**, **Maven**, **Docker Engine** (with Compose), and **`curl`** on **Ubuntu** — see [GUIDE.md — Install (Ubuntu)](GUIDE.md#install-ubuntu) for `apt` commands and verification
+- A terminal and editor (see [editor and terminal setup](topics/00-start-here/editor-and-terminal.md))
+- **JDK 21**, **Maven**, **Docker Engine** (with Compose), and **`curl`**. Install instructions: [Ubuntu](GUIDE.md#install-ubuntu), [macOS](topics/00-start-here/install-macos.md), or [Windows](topics/00-start-here/install-windows.md)
 - Optional: **`jq`**
 
 Maven can be installed locally, but every Maven build later runs inside a container too. See [references/maven.md](references/maven.md).

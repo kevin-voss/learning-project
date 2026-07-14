@@ -57,17 +57,20 @@ Assume conflicts are **likely**. Lock the row in the database while you work, so
 Optional<ParcelEntity> findById(String id);
 ```
 
-## Optimistic vs pessimistic: when to use which
+## Optimistic vs pessimistic: the full comparison
 
 | | Optimistic | Pessimistic |
 |---|---|---|
-| Assumes | conflicts are rare | conflicts are common |
-| How | version check on write | lock the row while working |
-| Cost | must handle `409`/retry | others wait, risk of deadlock |
-| Concurrency | high | lower |
-| Good for | typical REST updates (ParcelPilot) | short critical sections, hot rows (e.g. seat/stock counters) |
+| How it works | no lock; write checks the `version` still matches, else the update matches 0 rows | the row is locked in the database while the transaction works; others must wait |
+| Throughput under **low** contention | high: readers and writers never wait on each other | lower: even non-clashing work pays for taking and holding locks |
+| Behavior under **high** contention | many failed writes → a storm of `409`s and retries, wasted work | writers queue up in order; each waits but usually succeeds on its turn |
+| Deadlock risk | none from the locking itself (no locks held) | real: two transactions each holding a row the other wants → the DB kills one |
+| Failure mode the client sees | a fast, clean `409 Conflict` → reload and retry (client-visible, recoverable) | a **blocked wait**: the request just hangs until the lock frees or times out |
+| When to choose | conflicts are rare and retrying is cheap: typical REST updates (ParcelPilot) | conflicts are common on a hot row and waiting beats retry storms: seat/stock counters, short critical sections |
 
 **We use optimistic locking** because parcel updates rarely collide, and it keeps the API fast and simple. You just handle the occasional `409`.
+
+You will *provoke* an optimistic-lock conflict on purpose and script the retry in step 15's [optimistic locking lab](../15-performance-and-safety/optimistic-locking-lab.md).
 
 ## Locking vs transactions (don't confuse them)
 
@@ -86,4 +89,4 @@ Create `P-1`, then send two updates both based on version 3. One succeeds, and t
 
 ## Back to the step
 
-Return to [Step 06](README.md).
+Return to [Step 10](README.md).

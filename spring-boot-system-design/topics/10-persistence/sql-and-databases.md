@@ -67,7 +67,7 @@ Good news: in ParcelPilot you mostly won't write SQL by hand, because **JPA** (n
 | **MySQL / MariaDB** | Relational (SQL) | popular, fast, well-supported | fewer advanced features than Postgres | web apps, when a team already knows it |
 | **SQLite** | Relational (file) | zero-setup, single file | not for concurrent server workloads | tiny apps, tests, mobile |
 | **MongoDB** | Document (NoSQL) | flexible schema, JSON-like docs | weaker multi-record transactions, easy to model badly | rapidly-changing or document-shaped data |
-| **Redis** | Key-value (in-memory) | extremely fast | not a durable source of truth by default | caching (that's step 11!), sessions |
+| **Redis** | Key-value (in-memory) | extremely fast | not a durable source of truth by default | caching (that's step 15!), sessions |
 
 **Why we pick PostgreSQL:** parcels have a clear, stable structure and relationships, we want reliable transactions (for locking), and Postgres is the industry-standard free relational database that runs trivially in Docker. It's the safe default you can grow with.
 
@@ -77,4 +77,4 @@ Use **relational** (Postgres) when data is structured with clear relationships a
 
 ## Back to the step
 
-Return to [Step 06](README.md) and start Postgres in Docker.
+Return to [Step 10](README.md) and start Postgres in Docker.

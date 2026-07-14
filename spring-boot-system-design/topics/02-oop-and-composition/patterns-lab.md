@@ -164,6 +164,81 @@ Adding a "push notification" channel later means editing **one** place (the fact
 
 ---
 
+# When NOT to use builder and factory
+
+Patterns are tools, not merit badges. Both patterns above have a real cost (more code, more indirection), so they must earn their place. Here's what over-use looks like, honestly.
+
+## Builder: don't use it for 2–3 field objects
+
+The builder solves *telescoping constructors* — many fields, several optional. A tiny object has neither problem. Compare:
+
+```java
+// Over-built: ~20 lines of ceremony for two required fields
+TrackingEvent event = TrackingEvent.builder()
+        .parcelId("P-1")
+        .status(Status.DELIVERED)
+        .build();
+
+// Plain and better: nothing to mix up, nothing optional
+TrackingEvent event = new TrackingEvent("P-1", Status.DELIVERED);
+```
+
+The builder version isn't just longer at the call site — someone had to *write and maintain* the `Builder` class behind it (a field, a setter, and a `build()` check for every property). All that to label two arguments that were never confusing.
+
+**Records remove the need even more often.** A Java `record` gives you the constructor, accessors, `equals`/`hashCode`, and `toString` in one line, and its compact constructor is a fine validation point:
+
+```java
+public record TrackingEvent(String parcelId, Status status, Instant when) {
+    public TrackingEvent {                       // compact constructor: validates
+        if (parcelId == null || parcelId.isBlank())
+            throw new IllegalArgumentException("parcelId required");
+    }
+}
+```
+
+If your object is small, immutable data — and `TrackingEvent` is exactly that — a record beats a hand-written builder on every axis. Builders shine when there are *many* fields, *several optional with defaults*, or *several same-typed fields in a row* (`String, String, String` — which one was the city?).
+
+## Factory: don't use it when there's nothing to decide
+
+The factory's job is to centralize a *decision*: which implementation, based on input or config. One implementation and no creation logic = no decision = nothing to centralize:
+
+```java
+// Over-abstracted: a factory that can only ever say "a ConsoleSender"
+public class SenderFactory {
+    public static NotificationSender create() {
+        return new ConsoleSender();     // no input, no branching, no choice
+    }
+}
+NotificationSender sender = SenderFactory.create();
+
+// Honest version:
+NotificationSender sender = new ConsoleSender();
+```
+
+The factory adds a class, a level of indirection, and an implication ("something interesting happens during creation!") that is a lie. Every reader pays a small toll checking what `create()` really does; the answer is `new`. This is **YAGNI** — *You Aren't Gonna Need It*: don't build machinery for a future that hasn't asked for it. If a second sender arrives (it does, in step 12), introducing a factory *then* is a five-minute, low-risk refactor — the compiler shows you every call site. You lose essentially nothing by waiting, and you avoid carrying dead weight if the future never comes.
+
+> The same honesty applies to interfaces themselves: see the "just in case" discussion in [interfaces and abstractions](interfaces-and-abstractions.md).
+
+## Decision checklist
+
+Reach for a **builder** when:
+
+- the object has **many fields**, especially several **optional** ones with defaults, or
+- adjacent **same-typed parameters** make call sites genuinely easy to get wrong, or
+- construction needs a single validation point *and* a record doesn't fit (mutable, complex assembly).
+
+Otherwise: a **constructor** — or better, a **record** — is clearer.
+
+Reach for a **factory** when:
+
+- **which** implementation to create depends on input, config, or environment, or
+- creation involves real **logic** (wiring, pooling, caching) callers shouldn't repeat, or
+- you must keep callers **decoupled** from concrete classes across a real boundary.
+
+Otherwise: just call `new`. It's not a design failure — it's the simplest thing that works.
+
+---
+
 ## Proof (do this)
 
 1. Create a parcel with the **builder** and write a test asserting `build()` throws when `recipient` is blank.

@@ -1,10 +1,10 @@
-# Step 06: Persistence, keep the parcels
+# Step 10: Persistence, keep the parcels
 
 > In this step: store parcels in PostgreSQL (running in Docker) so they survive restarts, and protect against two people overwriting each other. ~90–120 minutes.
 
 ## The problem right now
 
-Step 05 proved parcels vanish when the container is replaced, because they live in an in-memory `Map`. A delivery company cannot lose all parcels on every deploy. Data needs a **durable** home separate from the disposable app.
+Step 09 proved parcels vanish when the container is replaced, because they live in an in-memory `Map`. A delivery company cannot lose all parcels on every deploy. Data needs a **durable** home separate from the disposable app.
 
 ## Key words
 
@@ -30,6 +30,8 @@ This step has more moving parts than earlier ones, so it's split into focused co
 1. [Databases and SQL basics](sql-and-databases.md): what a relational DB is, core SQL, why PostgreSQL (vs MySQL, SQLite, MongoDB, Redis).
 2. [JPA, entities, and repositories](jpa-and-repositories.md): how Java talks to the DB without hand-written SQL, and the alternatives.
 3. [Locking explained](locking-explained.md): optimistic vs pessimistic, and why we pick optimistic.
+4. [Flyway migrations explained](flyway-migrations-explained.md): why the schema is versioned, the naming rules, and the never-edit-history rule.
+5. [Indexes: why queries get fast](indexes-intro.md): what an index is and how to see it working with `EXPLAIN`.
 
 ## What "persistence" means, and why a volume matters
 
@@ -75,8 +77,14 @@ sequenceDiagram
 
 ### 1. Start PostgreSQL in Docker with a named volume
 
+On Ubuntu, put the database and the API on a shared **user-defined network** so the API can reach the database by name. See [Running several containers on Ubuntu](../../GUIDE.md#running-several-containers-on-ubuntu-read-before-step-06) in the GUIDE for why `localhost` does not work between containers.
+
 ```bash
+# create the shared network once (safe to re-run if it already exists)
+docker network create parcelpilot-net
+
 docker run --name parcelpilot-db \
+  --network parcelpilot-net \
   -e POSTGRES_DB=parcelpilot \
   -e POSTGRES_USER=parcelpilot \
   -e POSTGRES_PASSWORD=local-dev-only \
@@ -85,7 +93,7 @@ docker run --name parcelpilot-db \
   -d postgres:16-alpine
 ```
 
-The `-v parcelpilot-postgres:/var/lib/postgresql/data` part is the **volume**: it keeps data on your disk. The password here is an intentionally visible local-only value, so never commit real secrets.
+The `-v parcelpilot-postgres:/var/lib/postgresql/data` part is the **volume**: it keeps data on your disk. The password here is an intentionally visible local-only value, so never commit real secrets. The `-p 5432:5432` publish is only so you can inspect the database from your laptop. The API reaches it over the shared network by name.
 
 ### 2. Add dependencies to `pom.xml`
 
@@ -170,14 +178,29 @@ Follow the [database lab](database-lab.md) for the exact wiring and a `409` conf
 
 ## Test it
 
+Run the API container on the same network as the database and point it at the database by name with `DB_HOST`:
+
+```bash
+# run the API on the shared network; it reaches the DB at host name parcelpilot-db
+docker run --name parcelpilot-api \
+  --network parcelpilot-net \
+  -e DB_HOST=parcelpilot-db \
+  -e DB_USER=parcelpilot \
+  -e DB_PASSWORD=local-dev-only \
+  -p 8080:8080 \
+  -d parcelpilot-api:10
+```
+
 ```bash
 # 1. create a parcel
 curl -i -X POST http://localhost:8080/parcels \
   -H 'Content-Type: application/json' -d '{"id":"P-1","recipient":"Ava"}'
 
-# 2. replace ONLY the API container (rebuild + run again)
+# 2. replace ONLY the API container: stop and remove it, then run it again
+docker rm -f parcelpilot-api
+# (re-run the docker run command above)
 
-# 3. it is still there
+# 3. it is still there, because the data lives in the database volume
 curl -i http://localhost:8080/parcels/P-1
 ```
 
@@ -190,6 +213,8 @@ curl -i http://localhost:8080/parcels/P-1
 - [ ] You can explain what a volume, a migration, an entity, and optimistic locking are.
 - [ ] You can say why we chose PostgreSQL over a NoSQL store for parcels (see [SQL and databases](sql-and-databases.md)).
 - [ ] You can explain what an ORM/JPA does and why we don't hand-write SQL (see [JPA and repositories](jpa-and-repositories.md)).
+
+> **Return to testing:** ParcelPilot now has a real database — go back and complete the [Testcontainers lab](../08-testing/testcontainers-lab.md) from step 08 so your repository is covered by tests against real PostgreSQL.
 
 ## Say it like a developer
 
@@ -259,4 +284,4 @@ ParcelPilot now has HTTP, business rules, and durable data, but a lot of respons
 
 ## Next
 
-[Step 07](../07-monolith/README.md): organize everything into a clean modular monolith.
+[Step 11](../11-monolith/README.md): organize everything into a clean modular monolith.

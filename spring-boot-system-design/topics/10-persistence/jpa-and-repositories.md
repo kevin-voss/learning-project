@@ -111,4 +111,4 @@ We choose **Spring Data JPA** because it gives a beginner working persistence fa
 
 ## Back to the step
 
-Return to [Step 06](README.md) and turn `Parcel` into an entity with a repository. Then read [Locking explained](locking-explained.md) for the `@Version` field.
+Return to [Step 10](README.md) and turn `Parcel` into an entity with a repository. Then read [Locking explained](locking-explained.md) for the `@Version` field.

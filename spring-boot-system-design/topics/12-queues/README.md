@@ -91,8 +91,15 @@ Do the [event-driven lab](event-driven-lab.md) for the command/observer/adapter 
 
 ## Test it
 
+Run RabbitMQ on the same `parcelpilot-net` network you created in step 06, and give it `--name rabbitmq` so the app reaches it by that name (not `localhost`). See [Running several containers on Ubuntu](../../GUIDE.md#running-several-containers-on-ubuntu-read-before-step-06).
+
 ```bash
-# 1. start RabbitMQ, then the app
+docker run --name rabbitmq --network parcelpilot-net \
+  -p 5672:5672 -p 15672:15672 -d rabbitmq:3-management
+```
+
+```bash
+# 1. start RabbitMQ (above) and the app on the same network
 # 2. PAUSE the consumer (comment it out or stop that part)
 # 3. mark a parcel delivered -> response is still fast:
 curl -i -X PATCH http://localhost:8080/parcels/P-1/status \

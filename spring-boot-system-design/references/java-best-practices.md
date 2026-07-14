@@ -41,6 +41,8 @@ public final class Parcel {
 
 **Why:** if the object guarantees its own validity, every other piece of code can trust it. The alternative (checking validity everywhere) is repetitive and always misses a spot.
 
+Once ParcelPilot speaks HTTP, the same idea gets a second line of defense at the API boundary: [Step 05 (validation and trustworthy inputs)](../topics/05-validation-and-inputs/README.md) rejects bad requests with a helpful `400` before they ever reach the constructor.
+
 ## 4. Encapsulate: hide data, expose behavior
 
 ```java
@@ -76,6 +78,8 @@ public ParcelTracker(Clock clock) { this.clock = clock; }
 
 **Why:** a precise exception at the moment something goes wrong is a map straight to the bug. A swallowed exception turns one clear failure into a mysterious one later.
 
+[Step 06 (error handling)](../topics/06-error-handling/README.md) builds on exactly this habit: specific exceptions (`ParcelNotFoundException`, `IllegalStateException`) are what let one central handler map each failure to the right HTTP status. The language mechanics are in [exceptions in Java](../topics/06-error-handling/exceptions-in-java.md).
+
 ## 7. Tame `null` (avoid `NullPointerException`)
 
 - Return `Optional<T>` for "might be absent" instead of `null` (Spring Data repositories already do: `findById` returns `Optional`).
@@ -83,6 +87,8 @@ public ParcelTracker(Clock clock) { this.clock = clock; }
 - Prefer empty collections (`List.of()`) over `null` lists.
 
 **Why:** `NullPointerException` is the most common Java crash. Making absence explicit (`Optional`) forces callers to handle the "nothing" case instead of being surprised by it.
+
+At the HTTP boundary, "this field must not be missing or blank" is the same discipline expressed as Bean Validation constraints — see [Step 05](../topics/05-validation-and-inputs/README.md).
 
 ## 8. Keep methods and classes small and focused
 
@@ -112,6 +118,8 @@ int maxRetries = 5;
 
 **Why:** tests are the safety net that makes every later change (Spring, DB, queues) survivable. Testing behavior (not internals) lets you refactor freely as long as behavior holds.
 
+Unit tests on the rules are the start; [Step 08 (testing)](../topics/08-testing/README.md) grows the suite to cover HTTP behavior (MockMvc) and, later, real database wiring (Testcontainers). The full picture is in the [testing reference](testing.md).
+
 ## 11. Program to interfaces at real boundaries
 
 ```java
@@ -120,7 +128,7 @@ public interface Notifier { void parcelDelivered(String parcelId); }
 
 Depend on the interface (`Notifier`), and provide the implementation (`LoggingNotifier`, later a queue publisher) separately.
 
-**Why:** an interface at a boundary lets you change *how* something is done (log → email → queue → separate service) without touching the code that *uses* it. This is exactly what makes step 09's service extraction cheap.
+**Why:** an interface at a boundary lets you change *how* something is done (log → email → queue → separate service) without touching the code that *uses* it. This is exactly what makes step 13's service extraction cheap.
 
 **Caution:** don't add an interface for everything. Introduce one only at a real seam where you expect more than one implementation (or need it for testing). Premature interfaces are just noise.
 
@@ -142,6 +150,8 @@ controllers/    services/    repositories/   # by layer (avoid at scale)
 - Never commit real secrets. Local-only placeholder values are fine and should look obviously fake.
 
 **Why:** the same build must run against different environments (local, test, prod) by changing config, not code, and leaked credentials in Git history are a serious incident.
+
+How Spring Boot does this (`application.properties`, environment variables, profiles, and their precedence) is covered in the [configuration reference](configuration.md).
 
 ## 14. Let tools enforce style
 

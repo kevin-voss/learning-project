@@ -27,10 +27,10 @@ If a request's outcome depends on data stored *in one server's memory*, you can'
 
 **The fix:** keep servers stateless and push state to shared services:
 
-- session/identity → a **JWT** the client carries (Step 12), or a shared session store
-- data → the **database** (Step 06)
-- cached data → **Redis** (Step 11)
-- work to do later → a **queue** (Step 08)
+- session/identity → a **JWT** the client carries (Step 16), or a shared session store
+- data → the **database** (Step 10)
+- cached data → **Redis** (Step 15)
+- work to do later → a **queue** (Step 12)
 
 ParcelPilot became stateless the moment parcels moved from an in-memory `Map` into PostgreSQL. That single change is what would let you run ten API instances behind a load balancer.
 
@@ -102,7 +102,7 @@ flowchart LR
 You'll be ready for these once ParcelPilot is complete. Each solves a specific pressure that appears at larger scale:
 
 **Data & consistency**
-- **Transactional outbox**: reliably publish an event *and* commit the DB change together (fixes the dual-write problem from Step 08).
+- **Transactional outbox**: reliably publish an event *and* commit the DB change together (fixes the dual-write problem from Step 12).
 - **CQRS**: separate the write model from optimized read models.
 - **Event sourcing**: store the sequence of events as the source of truth.
 - **Sagas**: coordinate a multi-service workflow without a distributed transaction.

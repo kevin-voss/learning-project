@@ -36,13 +36,13 @@ A request has four things that matter to us:
 | **Resource** | A thing your API exposes, e.g. a parcel at `/parcels/P-1`. |
 | **Endpoint** | One callable method+path, e.g. `GET /parcels/{id}`. |
 | **JSON** | A text format for data: `{"id":"P-1","recipient":"Ava"}`. |
-| **Status code** | A number describing the result: `200`, `201`, `404`, `409`. |
+| **Status code** | A number describing the result: `200`, `201`, `404`, `409`. Tour them all in the [status codes lab](http-status-codes-lab.md). |
 | **Header** | Extra info on a request/response, e.g. `Content-Type: application/json`. |
 | **Spring Boot** | A framework that runs your Java as a web server with minimal setup. |
 | **Controller** | A class whose methods handle incoming HTTP requests. |
 | **Annotation** | A `@Something` label that tells Spring how to treat a class/method. |
 | **DTO** | Data Transfer Object: a small class shaped for the API request/response. |
-| **Dependency injection** | Spring creates your objects and hands them their dependencies (composition, automated). |
+| **Dependency injection** | Spring creates your objects and hands them their dependencies (composition, automated). See the [DI walkthrough](dependency-injection-walkthrough.md). |
 
 ## What is REST (beginner version)?
 
@@ -156,7 +156,7 @@ public class ParcelPilotApplication {
 
 ### 3. Add request/response DTOs
 
-DTOs are small classes shaped for the API. `record` makes them one line. We keep them separate from the internal `Parcel` so the API shape and the domain can evolve independently:
+DTOs are small classes shaped for the API. `record` makes them one line. We keep them separate from the internal `Parcel` so the API shape and the domain can evolve independently (the full reasoning, plus how these records become JSON, is in [JSON and DTOs](json-and-dtos.md)):
 
 ```java
 package com.parcelpilot;
@@ -167,7 +167,7 @@ public record ParcelResponse(String id, String recipient, String status) {}
 
 ### 4. Write the controller (the heart of this step)
 
-Every annotation is explained in comments below, and in depth in [Annotations and imports in Spring Boot](annotations-imports.md) (what `@RestController`, `@GetMapping`, `@RequestBody`, etc. mean, and why imports matter). It's fine for now that this one class holds the data and the endpoints. You'll split responsibilities into controller/service/repository **layers** in step 06–07. Want to see that layering shape (and why we don't do it yet)? See Stage 4 of [Code organization](../../references/code-organization.md).
+Every annotation is explained in comments below, and in depth in [Annotations and imports in Spring Boot](annotations-imports.md) (what `@RestController`, `@GetMapping`, `@RequestBody`, etc. mean, and why imports matter). It's fine for now that this one class holds the data and the endpoints. A real database arrives in step 10, and you'll split responsibilities into controller/service/repository **layers** in step 11. Want to see that layering shape (and why we don't do it yet)? See Stage 4 of [Code organization](../../references/code-organization.md).
 
 ```java
 package com.parcelpilot;
@@ -184,7 +184,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequestMapping("/parcels")     // every path below starts with /parcels
 public class ParcelController {
 
-    // Temporary in-memory storage (a Map). Replaced by a database in step 06.
+    // Temporary in-memory storage (a Map). Replaced by a database in step 10.
     private final Map<String, Parcel> store = new ConcurrentHashMap<>();
 
     // POST /parcels  -> create a parcel from the JSON body
@@ -271,6 +271,7 @@ curl -i 'http://localhost:8080/parcels?status=CREATED'
 - [ ] `GET /parcels/{id}` returns `200`+JSON for an existing parcel and `404` for a missing one.
 - [ ] `GET /parcels?status=CREATED` returns only matching parcels.
 - [ ] (Lab) an illegal status change returns `409 Conflict`.
+- [ ] You've predicted and verified the status codes in the [HTTP status codes lab](http-status-codes-lab.md).
 - [ ] You can point at each annotation in your controller and say what it does (see [annotations guide](annotations-imports.md)).
 - [ ] You can explain "safe" and "idempotent" and say which methods are which (see [HTTP methods](http-methods.md)).
 - [ ] You can say what problem REST solves and name one situation where GraphQL/WebSockets/gRPC would fit better.
@@ -338,8 +339,8 @@ So the API's shape and the internal domain can evolve independently. You can cha
 
 ## Reflect (stretch)
 
-Stop and restart the app, then `GET /parcels/P-2`. It's gone, because the `Map` lives in memory. Also, the app only runs where your JDK and source are. The next two steps fix **portability** (Docker) and **durability** (a database).
+Stop and restart the app, then `GET /parcels/P-2`. It's gone, because the `Map` lives in memory. That restart-data-loss still gets fixed later: **portability** in step 09 (Docker) and **durability** in step 10 (a database). But the NEXT problem is nearer: the API **trusts input blindly**. Try `POST /parcels` with an empty `"id"` or a blank `"recipient"` and watch either a confusing `500` or a broken parcel get happily stored. An API that accepts garbage is a bug factory.
 
 ## Next
 
-[Step 05](../05-docker/README.md): package this API into one portable Docker image.
+[Step 05](../05-validation-and-inputs/README.md): reject bad input at the boundary with Bean Validation, and return helpful 400s.

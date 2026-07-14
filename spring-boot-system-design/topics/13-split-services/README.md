@@ -64,11 +64,17 @@ applications/parcelpilot-services/
 
 ## Test it
 
+Run everything on the shared `parcelpilot-net` network from step 06 so the services, both databases, and the broker reach each other by name (not `localhost`). See [Running several containers on Ubuntu](../../GUIDE.md#running-several-containers-on-ubuntu-read-before-step-06).
+
 ```bash
-# start RabbitMQ, both databases, then both services (manually for now)
+# start RabbitMQ and both databases on parcelpilot-net (manually for now)
 docker build -t parcel-service ./parcel-service
 docker build -t notification-service ./notification-service
-# run them, then:
+
+# run each service with --network parcelpilot-net and a --name, for example:
+docker run --network parcelpilot-net --name parcel-service -p 8080:8080 -d parcel-service
+docker run --network parcelpilot-net --name notification-service -d notification-service
+
 curl -i -X PATCH http://localhost:8080/parcels/P-1/status \
   -H 'Content-Type: application/json' -d '{"status":"DELIVERED"}'
 # watch notification-service logs consume exactly one event

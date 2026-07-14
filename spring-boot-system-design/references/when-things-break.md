@@ -153,7 +153,7 @@ sudo apt install -y maven openjdk-21-jdk
 mvn -version    # must print Maven 3.x AND "Java version: 21"
 ```
 
-If `mvn -version` shows the wrong Java, point `JAVA_HOME` at JDK 21. Full install steps: [GUIDE install section](../GUIDE.md#install-ubuntu); background: [maven.md](maven.md).
+If `mvn -version` shows the wrong Java, point `JAVA_HOME` at JDK 21. Full install steps: [Step 00 install section](../topics/00-start-here/README.md#if-your-tools-are-not-installed-yet); background: [maven.md](maven.md).
 
 **Usually bites at:** [step 03](../topics/03-maven/README.md).
 

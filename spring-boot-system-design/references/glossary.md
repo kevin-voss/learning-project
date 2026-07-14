@@ -404,7 +404,7 @@ Links point to the step README, or to the specific companion file when the term 
 
 **`PasswordEncoder`** — Spring Security's tool to hash and verify passwords (Argon2/bcrypt). → [Step 16](../topics/16-jwt-authentication/README.md)
 
-**PATH** — The list of folders your terminal searches when you type a command name. → [GUIDE.md — Install (Ubuntu)](../GUIDE.md#install-ubuntu)
+**PATH** — The list of folders your terminal searches when you type a command name. → [Step 00 install help](../topics/00-start-here/README.md#if-your-tools-are-not-installed-yet)
 
 **Persistence** — Data that survives even after the app stops. → [Step 10](../topics/10-persistence/README.md)
 

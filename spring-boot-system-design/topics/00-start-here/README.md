@@ -1,18 +1,23 @@
-# Step 00: Your tools (no Java yet)
+# Step 00: Your tools (no code yet)
 
-> In this step: prove you can run a server, talk to it, and stop it. ~20 minutes. Zero code.
+> In this step: prove you can start a tiny program, ask it for a page, and stop it. ~20 minutes. Zero code.
 
 ## The problem right now
 
-You have an empty `applications/` folder and, maybe, zero programming experience. Before writing Java, you need to be comfortable with the three tools you will use in *every* later step. If these feel like magic, everything after will feel like magic too.
+You have an empty `applications/` folder and, maybe, zero programming experience. Before writing code, you need to be comfortable with the few tools you will use in later steps. If these feel like magic, everything after will feel like magic too.
 
 ## Key words
 
 | Word | Beginner meaning |
 |---|---|
 | **Terminal** | A text window where you type commands instead of clicking buttons. |
-| **Command** | One instruction you type and run, e.g. `curl ...`. |
+| **Command** | One instruction you type and run. |
+| **Java** | The language you start writing in step 01. |
+| **JDK** | The Java toolbox your computer needs so it can build and run Java code. |
+| **Maven** | A helper you meet in step 03. It builds the project and runs checks for you. |
 | **Server** | A program that waits for requests and sends back responses. |
+| **`curl`** | A small terminal tool that sends a request and prints the response. |
+| **`jq`** | An optional helper that makes JSON easier to read in the terminal. |
 | **Client** | Anything that sends a request to a server (here: `curl`). |
 | **HTTP** | The language clients and servers use to talk over a network. |
 | **Request / Response** | You ask (request), and the server answers (response). |
@@ -38,22 +43,61 @@ sequenceDiagram
 **The problem it solves:** software normally needs installation, correct versions, and matching settings. That breaks with "works on my machine" surprises. Docker packages a program + everything it needs into an **image**, so it runs the same anywhere.
 
 **Pros:** same behavior on every machine, nothing permanently installed, and easy to throw away and retry.
-**Cons:** an extra tool to learn, images take disk space, and a running container disappears (including any data inside it) unless you plan for that. That last fact matters a lot at step 06.
+**Cons:** an extra tool to learn, images take disk space, and a running container disappears (including any data inside it) unless you plan for that. That last fact matters a lot later when ParcelPilot starts saving parcels.
 
 **Real-world example:** a company runs the exact same database image on a laptop, in tests, and in production. No one has to install the database by hand three times.
+
+## If your tools are not installed yet
+
+This course targets **Ubuntu** or a similar Linux system. If one of the checks below says `command not found`, install the tools with:
+
+```bash
+sudo apt update
+sudo apt install -y curl jq openjdk-21-jdk maven docker.io docker-compose-v2
+
+# Start Docker now and each time the computer starts.
+sudo systemctl enable --now docker
+
+# Let your user run Docker commands.
+sudo usermod -aG docker "$USER"
+```
+
+After the last command, log out and back in. If you want to stay in this terminal, run:
+
+```bash
+newgrp docker
+```
+
+If `openjdk-21-jdk` is not found, install Temurin 21 from [adoptium.net](https://adoptium.net) or use [SDKMAN](https://sdkman.io):
+
+```bash
+sdk install java 21-tem
+```
 
 ## First: check your tools are installed
 
 Run each command. Each should print a version (exact numbers may differ). If one says "command not found", install that tool before continuing.
 
 ```bash
-java -version      # need Java (JDK) 21+   -> see GUIDE.md Install (Ubuntu)
+java -version      # need Java (JDK) 21+
 mvn -version       # need Maven            -> sudo apt install -y maven
 docker --version   # need Docker Engine    -> sudo apt install -y docker.io docker-compose-v2
 curl --version     # need curl             -> preinstalled on Ubuntu
 ```
 
 Optional but handy: `jq --version` (formats JSON nicely in the terminal).
+
+Docker also needs to be running and usable by your user:
+
+```bash
+docker info
+docker compose version
+systemctl is-enabled docker
+systemctl is-active docker
+```
+
+If `docker info` says `permission denied`, log out and back in, or run `newgrp docker`.
+If it says it cannot connect to Docker, run `sudo systemctl start docker`.
 
 ## Build it in ParcelPilot
 
@@ -143,7 +187,7 @@ The "works on my machine" problem. Docker packages a program plus everything it 
 
 ## Reflect
 
-You never installed nginx on your computer. Docker fetched an image and ran it. Notice that when the container stops, *everything* about it is gone. Hold that thought for step 06.
+You never installed nginx on your computer. Docker fetched an image and ran it. Notice that when the container stops, *everything* about it is gone. Hold that thought for the later step where ParcelPilot starts saving parcels.
 
 ## Next
 

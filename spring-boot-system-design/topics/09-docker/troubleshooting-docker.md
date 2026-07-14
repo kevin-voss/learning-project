@@ -115,7 +115,7 @@ curl -i http://localhost:8081/parcels/P-1
 
 **Cause:** on Linux your user isn't in the `docker` group yet, so only root may talk to the daemon.
 
-**Fix:** the [GUIDE's install section](../../GUIDE.md#install-ubuntu) covers this: `sudo usermod -aG docker "$USER"`, then **log out and back in** (or run `newgrp docker` in the current shell) for the group change to take effect.
+**Fix:** the [Step 00 install section](../00-start-here/README.md#if-your-tools-are-not-installed-yet) covers this: `sudo usermod -aG docker "$USER"`, then **log out and back in** (or run `newgrp docker` in the current shell) for the group change to take effect.
 
 ---
 

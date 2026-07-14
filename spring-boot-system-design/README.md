@@ -1,78 +1,42 @@
 # Spring Boot System Design: Build One Product, One Step at a Time
 
-Learn Java, Spring Boot, architecture, Docker, and distributed systems by evolving one deliberately small backend: **ParcelPilot**.
+This course teaches you how a small backend grows into a real system.
 
-ParcelPilot is a parcel-delivery tracking service. A customer creates a delivery. An operator moves it through states such as `CREATED`, `PICKED_UP`, and `DELIVERED`. A notification is eventually sent. It is familiar, small enough for `curl`, and naturally grows from one Java file into a monolith and then a few services.
+You build one product: **ParcelPilot**, a tiny parcel-tracking service. At first it is only a small program that can describe one parcel. Step by step, it learns more: how to remember parcels, how to answer another program, how to survive mistakes, and how to grow when the work becomes bigger.
 
-This is a **backend-only** curriculum. Each step should:
+You do **not** need to understand all the words on day one. The course is written so each step teaches the next word right before you use it.
 
-1. introduce one main idea,
-2. make one observable improvement to ParcelPilot,
-3. run locally, preferably in Docker, and
-4. be demonstrable with a command-line request.
+Start here:
 
-Start with [PROJECT-STORY.md](PROJECT-STORY.md), then follow [GUIDE.md](GUIDE.md). [Topic instructions](topics/README.md) explain the repeated problem → lesson → build → verify flow. References are deep dives, not extra work to finish first.
+1. Read [PROJECT-STORY.md](PROJECT-STORY.md) for the big picture.
+2. Open [GUIDE.md](GUIDE.md) and follow it from the top.
+3. Do one numbered topic at a time. Do not read the references first.
 
-## Folder map
+The rule for students is simple: **read the step, build the small change, prove it works, then move on.**
+
+## What is in this folder?
 
 ```text
 spring-boot-system-design/
-├── GUIDE.md                 # Do these steps in order
-├── PROJECT-STORY.md         # One application evolving into a local system
-├── applications/            # Intentionally empty: you build the code here
-├── references/              # Detailed, reusable explanations
-│   ├── java-and-oop.md
-│   ├── java-best-practices.md      # habits + the problem each prevents
-│   ├── coding-concepts.md          # early return, guard clauses, DRY, KISS...
-│   ├── code-organization.md        # one file -> packages -> layers -> services
-│   ├── scaling-and-architecture.md # system design, scaling, advanced topics
-│   ├── spring-and-http.md
-│   ├── maven.md
-│   ├── validation-and-api-contracts.md  # boundary validation, error message design
-│   ├── error-handling-and-http-statuses.md
-│   ├── logging.md                  # SLF4J, levels, security, structured logging
-│   ├── testing.md                  # pyramid, MockMvc, Testcontainers, flaky tests
-│   ├── configuration.md            # application.properties, env vars, profiles
-│   ├── docker.md
-│   ├── monolith-and-microservices.md
-│   ├── messaging-and-queues.md
-│   ├── production-thinking.md
-│   ├── design-patterns.md
-│   ├── databases-caching-and-locking.md
-│   ├── authentication.md
-│   ├── git-for-this-course.md      # init, commit, diff, tag — read before step 13
-│   ├── debugging-and-troubleshooting.md
-│   ├── when-things-break.md        # FAQ: quick fixes by symptom
-│   └── glossary.md                 # every keyword, linked to where it's introduced
-└── topics/                  # Per-stage lesson, build work, proof, and labs
-    ├── README.md            # How to learn from each stage
-    ├── 00-start-here/
-    ├── 01-java-basics/
-    ├── 02-oop-and-composition/
-    ├── 03-maven/
-    ├── 04-first-spring-api/
-    ├── 05-validation-and-inputs/
-    ├── 06-error-handling/
-    ├── 07-logging-and-observability-basics/
-    ├── 08-testing/
-    ├── 09-docker/
-    ├── 10-persistence/
-    ├── 11-monolith/
-    ├── 12-queues/
-    ├── 13-split-services/
-    ├── 14-compose-and-observe/
-    ├── 15-performance-and-safety/
-    └── 16-jwt-authentication/
+├── GUIDE.md          # The path to follow, in order
+├── PROJECT-STORY.md  # The simple story of what ParcelPilot becomes
+├── applications/     # Empty at first; your code will grow here
+├── topics/           # The numbered lessons
+└── references/       # Extra explanations for when a lesson links to them
 ```
 
-## Prerequisites
+## How to learn from it
 
-- A terminal and editor (see [editor and terminal setup](topics/00-start-here/editor-and-terminal.md))
-- **JDK 21**, **Maven**, **Docker Engine** (with Compose), and **`curl`** on **Ubuntu**. Install instructions: [GUIDE.md — Install (Ubuntu)](GUIDE.md#install-ubuntu)
-- Optional: **`jq`**
+Each numbered topic has the same rhythm:
 
-Maven can be installed locally, but every Maven build later runs inside a container too. See [references/maven.md](references/maven.md).
+1. It shows the problem in the current project.
+2. It teaches the new idea in plain language.
+3. It asks you to build one small change.
+4. It gives you a way to check that the change worked.
+5. It ends with questions so you can explain the idea in your own words.
+
+If you see a word you do not know yet, do not panic. The lesson that needs the word will define it. The [glossary](references/glossary.md) is there when you want to look something up, not as homework before you start.
 
 ## Product scope
 
-Do not add users, a frontend, payments, or cloud deployment while learning the core path. Use simple hard-coded data first. Complexity is added only when the current design has a concrete limitation.
+Keep ParcelPilot small while learning the core path. Do not add screens, payments, cloud hosting, or extra features unless a topic asks for them. The course adds complexity only when the current version has a clear problem to fix.

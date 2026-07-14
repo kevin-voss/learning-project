@@ -14,7 +14,7 @@ flowchart LR
 1. **Read** the step `README.md`.
 2. **Understand** the topic using its "What is …?" section and linked lab/reference. Aim to explain it in one sentence.
 3. **Build** it in `applications/` following "Build it in ParcelPilot".
-4. **Test** it with the exact commands under "Test it".
+4. **Test** it with the exact check under "Test it".
 5. **Check acceptance criteria**: every box must be tickable. If not, return to Build.
 6. Only then go to the **Next** step.
 
@@ -28,7 +28,7 @@ flowchart LR
 | **Why do it? Pros and cons** | What it buys you and what it costs. |
 | **Real-world example** | Where the same idea appears outside ParcelPilot. |
 | **Build it in ParcelPilot** | The exact, minimal changes to make this step. |
-| **Test it** | Terminal commands that show the change working. |
+| **Test it** | The exact check that shows the change working. |
 | **Acceptance criteria** | A checklist that defines "done" for the step. |
 | **Say it like a developer** | Example sentences using the new terms correctly, so you learn to *talk* about the concept, not just recognize it. |
 | **Quiz: check yourself** | A few questions with hidden answers. Answer each out loud in a full sentence **before** revealing it. |

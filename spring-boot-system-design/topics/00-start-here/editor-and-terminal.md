@@ -107,4 +107,4 @@ Use the IDE for what it's great at — writing, navigating, refactoring, and (fr
 
 ## Next
 
-Back to [Step 00](README.md) if you haven't finished it, then on to [Step 01](../01-java-basics/README.md) to write your first Java. Install help: [GUIDE.md — Install (Ubuntu)](../../GUIDE.md#install-ubuntu).
+Back to [Step 00](README.md) if you haven't finished it, then on to [Step 01](../01-java-basics/README.md) to write your first Java. Install help is now in [Step 00](README.md#if-your-tools-are-not-installed-yet).

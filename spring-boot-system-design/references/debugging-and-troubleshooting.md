@@ -91,7 +91,7 @@ How to tell them apart at a glance: **compilation** errors mention `.java` files
 | `Unable to find image 'parcelpilot:latest' locally` then a pull error | You ran an image name you never built, or a typo | `docker images` to list what exists; `docker build -t parcelpilot .` first; check spelling |
 | `Bind for 0.0.0.0:8080 failed: port is already allocated` | Another **container** already publishes 8080 | `docker ps` to find it, `docker stop <name>`, or publish differently: `-p 8081:8080` |
 | Container exits immediately after `docker run` | The process inside crashed at startup (often a Spring startup failure) | `docker logs <container>` — the container's stdout holds the same stack trace you would see locally. This command is the single most important Docker debugging habit. |
-| `permission denied while trying to connect to the Docker daemon socket` (Linux) | Your user is not in the `docker` group | `sudo usermod -aG docker "$USER"`, then log out/in or `newgrp docker` — see the [install section of the GUIDE](../GUIDE.md#install-ubuntu) |
+| `permission denied while trying to connect to the Docker daemon socket` (Linux) | Your user is not in the `docker` group | `sudo usermod -aG docker "$USER"`, then log out/in or `newgrp docker` — see the [Step 00 install section](../topics/00-start-here/README.md#if-your-tools-are-not-installed-yet) |
 
 The mental shift: a container failing is not a new category of problem. It is usually your normal app failing, *hidden* inside a box — and `docker logs` opens the box.
 

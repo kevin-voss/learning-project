@@ -68,7 +68,7 @@ spring-boot-system-design/
 ## Prerequisites
 
 - A terminal and editor (see [editor and terminal setup](topics/00-start-here/editor-and-terminal.md))
-- **JDK 21**, **Maven**, **Docker Engine** (with Compose), and **`curl`**. Install instructions: [Ubuntu](GUIDE.md#install-ubuntu), [macOS](topics/00-start-here/install-macos.md), or [Windows](topics/00-start-here/install-windows.md)
+- **JDK 21**, **Maven**, **Docker Engine** (with Compose), and **`curl`** on **Ubuntu**. Install instructions: [GUIDE.md — Install (Ubuntu)](GUIDE.md#install-ubuntu)
 - Optional: **`jq`**
 
 Maven can be installed locally, but every Maven build later runs inside a container too. See [references/maven.md](references/maven.md).

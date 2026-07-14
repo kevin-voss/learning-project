@@ -35,14 +35,12 @@ flowchart LR
 
 ## Why two steps (compile, then run)?
 
-Because of **platform independence**. The compiler turns your code into bytecode *once*. That same bytecode then runs on Windows, macOS, or Linux, as long as each has a JVM. Contrast with languages that compile straight to one machine's instructions, which must be recompiled per platform.
+Because of **platform independence**. The compiler turns your code into bytecode *once*. That same bytecode then runs on any machine with a JVM — this course uses **Ubuntu**. Contrast with languages that compile straight to one machine's instructions, which must be recompiled per platform.
 
 ```mermaid
 flowchart TB
   S["Parcel.java"] --> BC["Parcel.class (bytecode)"]
-  BC --> W["JVM on Windows"]
-  BC --> M["JVM on macOS"]
-  BC --> L["JVM on Linux"]
+  BC --> L["JVM on Ubuntu"]
 ```
 
 This is also why **Docker + Java** fit so well later: we ship the bytecode (a JAR) with a JVM inside an image, and it runs identically anywhere.

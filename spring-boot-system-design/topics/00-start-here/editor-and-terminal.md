@@ -35,7 +35,7 @@ Both options below understand Java, flag errors as you type, and have a debugger
 
 Downloads: [IntelliJ IDEA Community](https://www.jetbrains.com/idea/download/) · [VS Code](https://code.visualstudio.com/) (then install the *Extension Pack for Java* from the Extensions panel).
 
-> **On Windows with WSL2?** Open the project *through* WSL: in VS Code use the "WSL" remote extension (an Ubuntu terminal tab, `cd` to your project, `code .`); IntelliJ can open `\\wsl$\Ubuntu\home\you\projects\...` paths. Your files stay in the fast Linux filesystem (see [Install on Windows](install-windows.md)).
+On Ubuntu, open the project folder in your editor (`File → Open Folder`, or from a terminal: `code .` / `idea .` if those commands are on your PATH).
 
 ## The two-terminal workflow (you'll use this every single step)
 
@@ -59,10 +59,9 @@ You already did exactly this in [step 00](README.md): `docker run` in terminal 1
 
 | Where you are | How |
 |---|---|
-| macOS Terminal.app | `Cmd+T` for a new tab |
-| iTerm2 (macOS) | `Cmd+T` tab, or `Cmd+D` to split the window |
-| Windows Terminal | `Ctrl+Shift+T` new tab (make sure it's an **Ubuntu** tab), or `Alt+Shift+D` to split |
-| GNOME Terminal (Ubuntu) | `Ctrl+Shift+T` for a new tab |
+| GNOME Terminal (Ubuntu default) | `Ctrl+Shift+T` for a new tab |
+| Konsole (KDE) | `Ctrl+Shift+T` for a new tab |
+| Tilix / other Linux terminals | Usually `Ctrl+Shift+T` or `Ctrl+Shift+N` |
 | IntelliJ built-in terminal | View → Tool Windows → Terminal, then the `+` for a second tab |
 | VS Code built-in terminal | `` Ctrl+` `` to open, then the `+` (or split icon) for a second one |
 
@@ -108,4 +107,4 @@ Use the IDE for what it's great at — writing, navigating, refactoring, and (fr
 
 ## Next
 
-Back to [Step 00](README.md) if you haven't finished it, then on to [Step 01](../01-java-basics/README.md) to write your first Java. Install help: [macOS](install-macos.md) · [Windows](install-windows.md) · Ubuntu is in [GUIDE.md](../../GUIDE.md).
+Back to [Step 00](README.md) if you haven't finished it, then on to [Step 01](../01-java-basics/README.md) to write your first Java. Install help: [GUIDE.md — Install (Ubuntu)](../../GUIDE.md#install-ubuntu).

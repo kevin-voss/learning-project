@@ -404,7 +404,7 @@ Links point to the step README, or to the specific companion file when the term 
 
 **`PasswordEncoder`** — Spring Security's tool to hash and verify passwords (Argon2/bcrypt). → [Step 16](../topics/16-jwt-authentication/README.md)
 
-**PATH** — The list of folders your terminal searches when you type a command name. → [Step 00](../topics/00-start-here/install-macos.md)
+**PATH** — The list of folders your terminal searches when you type a command name. → [GUIDE.md — Install (Ubuntu)](../GUIDE.md#install-ubuntu)
 
 **Persistence** — Data that survives even after the app stops. → [Step 10](../topics/10-persistence/README.md)
 
@@ -561,5 +561,3 @@ Links point to the step README, or to the specific companion file when the term 
 **Working directory** — The folder your terminal is currently "standing in" — commands run relative to it. → [Step 00](../topics/00-start-here/editor-and-terminal.md)
 
 **Write-through** — Writing to the cache and the database together on every write. → [Step 15](../topics/15-performance-and-safety/cache-invalidation-lab.md)
-
-**WSL2** — "Windows Subsystem for Linux": a real Linux kernel running inside Windows. → [Step 00](../topics/00-start-here/install-windows.md)

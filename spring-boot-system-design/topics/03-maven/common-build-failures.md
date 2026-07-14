@@ -141,7 +141,7 @@ zsh: command not found: mvn
 
 **Cause:** Maven isn't installed, or it's installed but not on your shell's `PATH`.
 
-**Fix:** install it (macOS: `brew install maven`; Linux: your package manager; Windows: download + add `bin/` to PATH), then verify with `mvn -version`. Alternatively, if a project ships the **Maven Wrapper**, run `./mvnw test` instead — the wrapper downloads its own Maven and needs no install (see the [Maven reference](../../references/maven.md)).
+**Fix:** install it with `sudo apt install -y maven`, then verify with `mvn -version`. Alternatively, if a project ships the **Maven Wrapper**, run `./mvnw test` instead — the wrapper downloads its own Maven and needs no install (see the [Maven reference](../../references/maven.md)).
 
 ## Not-quite-failures: plugin version warnings
 

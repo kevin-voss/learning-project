@@ -13,11 +13,11 @@ docker logs <name>      # what the app inside printed (its stdout/stderr)
 
 ---
 
-## "The platform … does not match the detected host platform" (Apple Silicon)
+## "The platform … does not match the detected host platform" (architecture mismatch)
 
-**Symptom:** on an Apple Silicon Mac (M1/M2/M3, arm64) you see a warning like `image with reference … was found but its platform (linux/amd64) does not match the detected host platform (linux/arm64)`. The container may still run (slowly, emulated) or crash oddly.
+**Symptom:** on an **arm64** Ubuntu machine (some cloud VMs, Raspberry Pi, or other ARM hardware) you see a warning like `image with reference … was found but its platform (linux/amd64) does not match the detected host platform (linux/arm64)`. The container may still run (slowly, emulated) or crash oddly.
 
-**Cause:** the image was built only for `amd64` (Intel) CPUs, and your machine is `arm64`. Docker emulates the foreign architecture, which is slow and occasionally flaky.
+**Cause:** the image was built only for `amd64` (Intel/AMD) CPUs, and your machine is `arm64`. Docker emulates the foreign architecture, which is slow and occasionally flaky.
 
 **Fix:** first, don't panic — every image this course uses (`eclipse-temurin`, `maven`, `postgres`, `rabbitmq`) is **multi-arch**: Docker automatically picks the arm64 variant and you'll never see this warning with them. If a third-party image does trigger it, you can force a platform explicitly:
 
@@ -33,7 +33,7 @@ docker run --platform linux/amd64 some/amd64-only-image
 
 **Symptom:** you fixed a bug, restarted the container, and the bug is still there.
 
-**Cause #1 (most common):** you restarted the container but never rebuilt the image. A container runs the image it was created from; your edit only changed source files on your laptop.
+**Cause #1 (most common):** you restarted the container but never rebuilt the image. A container runs the image it was created from; your edit only changed source files on your machine.
 
 **Fix:** rebuild, then run the new image:
 
@@ -142,11 +142,11 @@ Careful with anything stronger: `docker system prune --volumes` deletes unused *
 The app behaves differently inside the container than with `mvn spring-boot:run`. Walk this list top to bottom:
 
 1. **Did you rebuild the image** after your last change? (See the cache section above.)
-2. **Paths**: the container's filesystem is *only* what the Dockerfile copied in. A file that exists on your laptop (`./data/parcels.csv`, a config in your home directory) does not exist in the container unless a `COPY` put it there.
+2. **Paths**: the container's filesystem is *only* what the Dockerfile copied in. A file that exists on your machine (`./data/parcels.csv`, a config in your home directory) does not exist in the container unless a `COPY` put it there.
 3. **Environment variables**: `export DB_HOST=…` in your shell does nothing for the container. Every variable must be passed explicitly with `-e DB_HOST=…` on `docker run`.
-4. **The `localhost` trap**: inside a container, `localhost` means *the container itself*, not your laptop and not other containers. If the app tries to reach a database at `localhost:5432`, it will find nothing there. Containers reach each other by name over a shared network — see [Running several containers](../../GUIDE.md#running-several-containers-read-before-step-10) in the GUIDE.
+4. **The `localhost` trap**: inside a container, `localhost` means *the container itself*, not your host and not other containers. If the app tries to reach a database at `localhost:5432`, it will find nothing there. Containers reach each other by name over a shared network — see [Running several containers](../../GUIDE.md#running-several-containers-read-before-step-10) in the GUIDE.
 5. **Ports**: `EXPOSE` publishes nothing; only `-p host:container` does. And check you're curling the *host* port you mapped.
-6. **Java version**: the container runs the JRE from the base image tag, not whatever is installed on your laptop.
+6. **Java version**: the container runs the JRE from the base image tag, not whatever is installed on your host.
 
 ---
 

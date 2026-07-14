@@ -35,11 +35,7 @@ You need a **terminal**, a **code editor**, **JDK 21**, **Maven**, **Docker Engi
 
 You do **not** need to know Java yet. Step 01 starts from zero.
 
-Pick your platform:
-
-- **Ubuntu / Debian-family Linux:** follow the [Install (Ubuntu)](#install-ubuntu) section right below.
-- **macOS:** follow [Install on macOS (Homebrew)](topics/00-start-here/install-macos.md).
-- **Windows:** follow [Install on Windows (WSL2)](topics/00-start-here/install-windows.md).
+This course targets **Ubuntu** (or Debian-family Linux). Follow the [Install (Ubuntu)](#install-ubuntu) section right below.
 
 Not sure which editor to use, or new to juggling two terminals? Read [Editor and terminal setup](topics/00-start-here/editor-and-terminal.md).
 
@@ -104,8 +100,8 @@ curl -s -o /dev/null -w "%{http_code}\n" https://example.com   # → 200
 
 From step 10 on you run more than one container at a time (the API plus PostgreSQL, later RabbitMQ and a second service). On Linux there are two rules that trip people up, so learn them once here.
 
-1. Inside a container, `localhost` means "this container itself", not your laptop. So one container cannot reach another with `localhost`.
-2. Containers on Docker's default bridge cannot find each other by name. On macOS people reach for `host.docker.internal`, but on plain Ubuntu that name does not exist unless you add it.
+1. Inside a container, `localhost` means "this container itself", not your host machine. So one container cannot reach another with `localhost`.
+2. Containers on Docker's default bridge cannot find each other by name. Blog posts often suggest `host.docker.internal`, but on Ubuntu that hostname does not exist unless you add it manually.
 
 The clean fix that works everywhere is a **user-defined network**. Create one, attach every container to it, and they reach each other by their `--name`.
 
@@ -118,7 +114,7 @@ docker run --network parcelpilot-net --name parcelpilot-db ...   # the database
 docker run --network parcelpilot-net --name parcelpilot-api ...  # the API
 ```
 
-Now the API reaches the database at the host name `parcelpilot-db`, not `localhost`. You still publish ports with `-p` only for the containers you call from your laptop with `curl`. Step 14 replaces this manual wiring with Docker Compose, which creates the network for you. (On macOS the same rules apply; `host.docker.internal` exists there, but the course uses user-defined networks everywhere so commands work on every platform.)
+Now the API reaches the database at the host name `parcelpilot-db`, not `localhost`. You still publish ports with `-p` only for the containers you call from your machine with `curl`. Step 14 replaces this manual wiring with Docker Compose, which creates the network for you.
 
 Read [PROJECT-STORY.md](PROJECT-STORY.md) once. It explains that you build **one** product (ParcelPilot, a parcel-tracking backend) that grows with every step.
 

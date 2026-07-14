@@ -102,7 +102,7 @@ This one earns its own section because it bites at nearly every step from [04](.
 **Cause:** exactly one process may listen on a port. A previous run of your app (still running in another terminal), or a container with `-p 8080:8080`, is holding it.
 
 ```bash
-# 1. Find who owns the port (macOS and Linux)
+# 1. Find who owns the port
 lsof -i :8080
 # COMMAND   PID        USER   ...  NAME
 # java    41712  kevin.voss   ...  *:8080 (LISTEN)

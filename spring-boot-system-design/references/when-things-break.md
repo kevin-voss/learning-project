@@ -15,7 +15,7 @@ Web server failed to start. Port 8080 was already in use.
 **Fix:**
 
 ```bash
-lsof -i :8080           # find the PID (macOS and Linux)
+lsof -i :8080           # find the PID
 kill <PID>              # if it's a stray java process
 docker ps               # if it's a container...
 docker stop <container> # ...stop it instead
@@ -55,7 +55,7 @@ docker run --rm -p 8080:8080 parcelpilot-api:dev
 Connection to localhost:5432 refused. Check that the hostname and port are correct...
 ```
 
-**Likely cause:** the classic trap — **inside a container, `localhost` means the container itself**, not your laptop and not the other container. Your API is looking for PostgreSQL inside its own box.
+**Likely cause:** the classic trap — **inside a container, `localhost` means the container itself**, not your host machine and not the other container. Your API is looking for PostgreSQL inside its own box.
 
 **Fix:** put both containers on a user-defined network and use the other container's **name** as the host (full explanation: [Running several containers in the GUIDE](../GUIDE.md#running-several-containers-read-before-step-10)):
 
@@ -149,7 +149,7 @@ or Maven runs but fails with `invalid target release: 21` / `class file has wron
 **Fix:**
 
 ```bash
-sudo apt install -y maven openjdk-21-jdk    # Ubuntu (macOS: brew install maven temurin@21)
+sudo apt install -y maven openjdk-21-jdk
 mvn -version    # must print Maven 3.x AND "Java version: 21"
 ```
 

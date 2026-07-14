@@ -1,10 +1,10 @@
-# Step 05: Docker, ship the API as one unit
+# Step 09: Docker, ship the API as one unit
 
 > In this step: package ParcelPilot into a portable image that runs on any machine with Docker, using a full Dockerfile you'll understand line by line. ~60–90 minutes.
 
 ## The problem right now
 
-Your API only runs where the source code and the right JDK are installed. Sharing it means telling someone "install Java 21, clone the repo, run Maven…". That's fragile and error-prone. You want to hand over **one runnable thing** that behaves identically everywhere.
+ParcelPilot has grown up since step 04: it validates input, returns clean errors, logs to stdout, and has tests (steps 05–08). But it still only runs where the source code and the right JDK are installed. Sharing it means telling someone "install Java 21, clone the repo, run Maven…". That's fragile and error-prone. You want to hand over **one runnable thing** that behaves identically everywhere.
 
 ## Key words
 
@@ -19,7 +19,7 @@ Your API only runs where the source code and the right JDK are installed. Sharin
 | **JDK vs JRE** | JDK *builds* Java, while JRE only *runs* it (smaller, enough to ship). |
 | **`.dockerignore`** | Files Docker should not copy (like `.gitignore`). |
 | **`EXPOSE` / `-p`** | Declares / maps the port the app listens on. |
-| **Tag** | A name + version for an image, e.g. `parcelpilot-api:05`. |
+| **Tag** | A name + version for an image, e.g. `parcelpilot-api:09`. |
 
 ## What is an image vs a container?
 
@@ -27,7 +27,7 @@ An **image** is like an app installer frozen on disk: it contains your compiled 
 
 ```mermaid
 flowchart LR
-  D[Dockerfile] -->|docker build| I[image: parcelpilot-api:05]
+  D[Dockerfile] -->|docker build| I[image: parcelpilot-api:09]
   I -->|docker run| C1[container A]
   I -->|docker run| C2[container B]
 ```
@@ -49,7 +49,7 @@ flowchart LR
 **What it brings us:** identical runs anywhere with Docker, no manual Java install, easy to start/stop/replace, and the foundation for Compose and microservices later.
 
 **Pros:** portable, reproducible, and isolates the app from your machine.
-**Cons:** images use disk, there's an extra build step, and importantly, **data inside a container is lost when it's replaced**, the exact problem step 06 solves.
+**Cons:** images use disk, there's an extra build step, and importantly, **data inside a container is lost when it's replaced**, the exact problem step 10 solves.
 
 **Real-world example:** teams build an image once in CI and run that *same* image in test and production, so "it worked in the pipeline" means "it works in prod".
 
@@ -78,7 +78,7 @@ EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
 ```
 
-**Line by line:**
+**Line by line** (short version here; every instruction is explained in depth in [The Dockerfile, line by line](dockerfile-line-by-line.md)):
 
 - `FROM ... AS build`: start from an image that already has Maven + JDK, and name this stage `build`.
 - `WORKDIR /app`: work inside `/app` in the image.
@@ -104,8 +104,8 @@ target/
 
 ```bash
 cd applications/parcelpilot
-docker build -t parcelpilot-api:05 .
-docker run --rm -p 8080:8080 parcelpilot-api:05
+docker build -t parcelpilot-api:09 .
+docker run --rm -p 8080:8080 parcelpilot-api:09
 
 # in another terminal
 curl -i -X POST http://localhost:8080/parcels \
@@ -115,9 +115,11 @@ curl -i http://localhost:8080/parcels/P-1
 
 Now prove the data problem: stop the container (`Ctrl+C`), start a **fresh** one, and query `P-1` again. It's gone.
 
+If anything misbehaves — build fails, container exits instantly, port conflicts, "works locally but not in the container" — [Troubleshooting Docker](troubleshooting-docker.md) covers the classic failures symptom by symptom.
+
 ## Acceptance criteria
 
-- [ ] `docker build -t parcelpilot-api:05 .` succeeds.
+- [ ] `docker build -t parcelpilot-api:09 .` succeeds.
 - [ ] `docker run -p 8080:8080 ...` serves the API and `curl` gets JSON.
 - [ ] After replacing the container, the previously created parcel is **gone**.
 - [ ] Your Dockerfile is multi-stage (build stage + smaller runtime stage) and you have a `.dockerignore`.
@@ -171,7 +173,7 @@ It's the command that runs when the container starts: here, launching the app by
 
 <details><summary>Show answer</summary>
 
-The parcel lived in the app's in-memory `Map` inside the container. A container is disposable, so replacing it wipes everything inside. Durable data must live outside the container (a database with a volume, covered in step 06).
+The parcel lived in the app's in-memory `Map` inside the container. A container is disposable, so replacing it wipes everything inside. Durable data must live outside the container (a database with a volume, covered in step 10).
 
 </details>
 
@@ -181,4 +183,4 @@ The disappearing parcel isn't a bug. It's the point. A container is disposable, 
 
 ## Next
 
-[Step 06](../06-persistence/README.md): add PostgreSQL so parcels survive restarts.
+[Step 10](../10-persistence/README.md): add PostgreSQL so parcels survive restarts.

@@ -57,7 +57,7 @@ Connection to localhost:5432 refused. Check that the hostname and port are corre
 
 **Likely cause:** the classic trap — **inside a container, `localhost` means the container itself**, not your laptop and not the other container. Your API is looking for PostgreSQL inside its own box.
 
-**Fix:** put both containers on a user-defined network and use the other container's **name** as the host (full explanation: [Running several containers in the GUIDE](../GUIDE.md#running-several-containers-on-ubuntu-read-before-step-06)):
+**Fix:** put both containers on a user-defined network and use the other container's **name** as the host (full explanation: [Running several containers in the GUIDE](../GUIDE.md#running-several-containers-read-before-step-10)):
 
 ```bash
 docker network create parcelpilot-net

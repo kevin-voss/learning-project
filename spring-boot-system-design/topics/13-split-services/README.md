@@ -1,10 +1,12 @@
-# Step 09: Extract the notification microservice
+# Step 13: Extract the notification microservice
 
 > In this step: split the monolith into two independent services that talk through the broker. ~90 minutes.
+>
+> **Before you split anything:** snapshot the working monolith — do [git-tag-checkpoint.md](git-tag-checkpoint.md) first.
 
 ## The problem right now
 
-Step 08 proved notification work runs on its own schedule via the queue. But it still lives **inside** the parcel app: they share a deploy, a codebase, and a database. If notifications need to scale or get redeployed, parcel tracking is dragged along. Now there is a *real* boundary worth splitting.
+Step 12 proved notification work runs on its own schedule via the queue. But it still lives **inside** the parcel app: they share a deploy, a codebase, and a database. If notifications need to scale or get redeployed, parcel tracking is dragged along. Now there is a *real* boundary worth splitting.
 
 ## Key words
 
@@ -15,7 +17,7 @@ Step 08 proved notification work runs on its own schedule via the queue. But it 
 | **Independent deployment** | Releasing one service without redeploying the others. |
 | **Database per service** | Each service owns its own data, and others can't read it directly. |
 | **Eventual consistency** | Different services become consistent shortly after, not instantly. |
-| **Contract** | The agreed message/format two services use to talk. |
+| **Contract** | The agreed message/format two services use to talk (deep dive: [service-contracts.md](service-contracts.md)). |
 | **Failure isolation** | One service failing doesn't automatically break the others. |
 | **Network call** | Talking over the network, which is slower and can fail, unlike a local method call. |
 
@@ -47,13 +49,13 @@ flowchart LR
 
 ## Build it in ParcelPilot
 
-Reshape the project (see [PROJECT-STORY.md](../../PROJECT-STORY.md)). First, **save the working monolith** as a Git tag or a `checkpoints/08-event-driven-monolith` copy, then:
+Reshape the project (see [PROJECT-STORY.md](../../PROJECT-STORY.md)). First, **save the working monolith** as a Git tag (walkthrough: [git-tag-checkpoint.md](git-tag-checkpoint.md)) or a `checkpoints/12-event-driven-monolith` copy, then:
 
 ```text
 applications/parcelpilot-services/
 ├── parcel-service/          # parcel endpoints + parcel DB + publishes events
 ├── notification-service/    # consumes events + notification DB
-└── compose.yaml             # created in step 10
+└── compose.yaml             # created in step 14
 ```
 
 1. Move parcel code into `parcel-service` (keep its endpoints and DB).
@@ -64,7 +66,7 @@ applications/parcelpilot-services/
 
 ## Test it
 
-Run everything on the shared `parcelpilot-net` network from step 06 so the services, both databases, and the broker reach each other by name (not `localhost`). See [Running several containers on Ubuntu](../../GUIDE.md#running-several-containers-on-ubuntu-read-before-step-06).
+Run everything on the shared `parcelpilot-net` network from step 10 so the services, both databases, and the broker reach each other by name (not `localhost`). See [Running several containers](../../GUIDE.md#running-several-containers-read-before-step-10).
 
 ```bash
 # start RabbitMQ and both databases on parcelpilot-net (manually for now)
@@ -136,14 +138,14 @@ Different services become consistent shortly *after* an event, not instantly. Fo
 
 <details><summary>Show answer</summary>
 
-Microservices add real cost and complexity. Splitting is only worth it once a genuine boundary appears. Here, notifications proved (in step 08) that they run on their own schedule and need independent scaling and deployment.
+Microservices add real cost and complexity. Splitting is only worth it once a genuine boundary appears. Here, notifications proved (in step 12) that they run on their own schedule and need independent scaling and deployment.
 
 </details>
 
 ## Reflect (stretch)
 
-Starting two services, a broker, and two databases by hand is tedious and easy to get wrong. You need a single, documented way to bring the whole system up. That is Docker Compose.
+Starting two services, a broker, and two databases by hand is tedious and easy to get wrong. You need a single, documented way to bring the whole system up. That is Docker Compose. And before you leave: make partial failure concrete with the [network failure lab](network-failure-lab.md) — stop one service, then the broker, and watch what each failure actually does.
 
 ## Next
 
-[Step 10](../10-compose-and-observe/README.md): run everything with one command and learn to observe it.
+[Step 14](../14-compose-and-observe/README.md): run everything with one command and learn to observe it.

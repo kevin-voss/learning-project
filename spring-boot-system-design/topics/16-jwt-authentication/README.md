@@ -1,4 +1,4 @@
-# Step 12: Password login & JWT protection
+# Step 16: Password login & JWT protection
 
 > In this step: add a small, safe login and protect an operator action with a token. ~90 minutes. Required reading: [Password authentication and JWT](../../references/authentication.md).
 
@@ -58,7 +58,7 @@ Scope: a **teaching** implementation, not a full identity system. Work in `parce
 1. Add `spring-boot-starter-security` (+ a JWT library).
 2. Store one seeded operator: username, role, and a **hashed** password in PostgreSQL.
 3. Implement `POST /auth/login` that verifies the password with `PasswordEncoder` and returns a short-lived signed JWT (claims: subject + role).
-4. Require `Authorization: Bearer <token>` for `PATCH /parcels/{id}/status`.
+4. Require `Authorization: Bearer <token>` for `PATCH /parcels/{id}/status`, then restrict it to the operator **role** with the [authn vs authz lab](authz-vs-authn-lab.md).
 5. Decide deliberately whether `GET` parcel endpoints stay public.
 6. **Never** log, store, or return plaintext passwords or put secrets in JWT claims.
 
@@ -78,6 +78,8 @@ curl -i -X PATCH http://localhost:8080/parcels/P-1/status \
 curl -i -X PATCH http://localhost:8080/parcels/P-1/status \
   -H 'Content-Type: application/json' -d '{"status":"PICKED_UP"}'
 ```
+
+Getting a `401` or `403` you can't explain? That's normal with Spring Security — work through [security-troubleshooting.md](security-troubleshooting.md) before assuming your code is wrong.
 
 ## Acceptance criteria
 

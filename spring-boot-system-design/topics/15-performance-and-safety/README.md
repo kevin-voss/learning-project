@@ -1,4 +1,4 @@
-# Step 11: Caching, locking, and rate limiting
+# Step 15: Caching, locking, and rate limiting
 
 > In this step: keep the API fast and safe under load with a cache, a lock, and a rate limit. ~90 minutes. See the [rate-limiting lab](rate-limiting.md).
 
@@ -24,7 +24,7 @@ The full system works, so realistic pressure appears: the same parcel is read ov
 ## The three tools, in plain language
 
 - **Cache** = a sticky note with the answer. Reading `GET /parcels/P-1` a thousand times shouldn't hit the database a thousand times. Store the answer in Redis with a **TTL**, and **invalidate** it when the parcel changes. The database stays the source of truth.
-- **Locking** = "who edits wins, safely." Use the `version` from step 06 (optimistic locking) so a clashing update returns `409` instead of silently overwriting.
+- **Locking** = "who edits wins, safely." Use the `version` from step 10 (optimistic locking) so a clashing update returns `409` instead of silently overwriting.
 - **Rate limiting** = "a bouncer at the door." If a client sends too many requests, reject extras with `429` and a `Retry-After` hint, protecting capacity for everyone.
 
 ```mermaid
@@ -53,8 +53,8 @@ flowchart LR
 
 In `applications/parcelpilot-services/` (add Redis to `compose.yaml`):
 
-1. **Cache-aside**: cache `GET /parcels/{id}` in Redis with a short TTL, then **invalidate** the key when the parcel is updated.
-2. **Optimistic locking**: ensure updates use the parcel `version` and return `409` on conflict.
+1. **Cache-aside**: cache `GET /parcels/{id}` in Redis with a short TTL, then **invalidate** the key when the parcel is updated. Feel the staleness bug first in the [cache invalidation lab](cache-invalidation-lab.md).
+2. **Optimistic locking**: ensure updates use the parcel `version` and return `409` on conflict — stage the race in the [optimistic locking lab](optimistic-locking-lab.md).
 3. **Rate limiting**: limit an expensive endpoint per client/IP, and return `429` + `Retry-After`. Use a tiny limit locally so it's easy to trigger. Follow the [rate-limiting lab](rate-limiting.md).
 
 Spring makes cache-aside almost declarative. Add `spring-boot-starter-data-redis` + `spring-boot-starter-cache`, enable caching, then annotate the read and the update:
@@ -154,4 +154,4 @@ Everything so far is open to anyone who can reach the port. Real operations must
 
 ## Next
 
-[Step 12](../12-jwt-authentication/README.md): add password login and JWT-protected actions.
+[Step 16](../16-jwt-authentication/README.md): add password login and JWT-protected actions.

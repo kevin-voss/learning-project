@@ -144,7 +144,7 @@ The app behaves differently inside the container than with `mvn spring-boot:run`
 1. **Did you rebuild the image** after your last change? (See the cache section above.)
 2. **Paths**: the container's filesystem is *only* what the Dockerfile copied in. A file that exists on your laptop (`./data/parcels.csv`, a config in your home directory) does not exist in the container unless a `COPY` put it there.
 3. **Environment variables**: `export DB_HOST=…` in your shell does nothing for the container. Every variable must be passed explicitly with `-e DB_HOST=…` on `docker run`.
-4. **The `localhost` trap**: inside a container, `localhost` means *the container itself*, not your laptop and not other containers. If the app tries to reach a database at `localhost:5432`, it will find nothing there. Containers reach each other by name over a shared network — see [Running several containers on Ubuntu](../../GUIDE.md#running-several-containers-on-ubuntu-read-before-step-06) in the GUIDE.
+4. **The `localhost` trap**: inside a container, `localhost` means *the container itself*, not your laptop and not other containers. If the app tries to reach a database at `localhost:5432`, it will find nothing there. Containers reach each other by name over a shared network — see [Running several containers](../../GUIDE.md#running-several-containers-read-before-step-10) in the GUIDE.
 5. **Ports**: `EXPOSE` publishes nothing; only `-p host:container` does. And check you're curling the *host* port you mapped.
 6. **Java version**: the container runs the JRE from the base image tag, not whatever is installed on your laptop.
 

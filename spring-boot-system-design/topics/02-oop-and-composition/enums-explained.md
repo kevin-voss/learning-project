@@ -26,7 +26,7 @@ An **enum**: a type whose complete list of possible values is written down once,
 `enum` looks like new syntax, but underneath it's a **class** — one whose instances are created by Java, all at once, and *nobody else may ever create another*:
 
 ```java
-public enum ParcelStatus {
+public enum Status {
     CREATED, PICKED_UP, DELIVERED
 }
 ```
@@ -34,12 +34,12 @@ public enum ParcelStatus {
 is conceptually:
 
 ```java
-public final class ParcelStatus {
-    public static final ParcelStatus CREATED   = new ParcelStatus();
-    public static final ParcelStatus PICKED_UP = new ParcelStatus();
-    public static final ParcelStatus DELIVERED = new ParcelStatus();
+public final class Status {
+    public static final Status CREATED   = new Status();
+    public static final Status PICKED_UP = new Status();
+    public static final Status DELIVERED = new Status();
 
-    private ParcelStatus() {}   // private constructor: the list above is ALL there is
+    private Status() {}   // private constructor: the list above is ALL there is
 }
 ```
 
@@ -77,32 +77,32 @@ int x = CREATED * DELIVERED;               // meaningless math — compiles fine
 An `int` doesn't know it's supposed to be a status. The enum closes every hole at once:
 
 ```java
-ParcelStatus status = ParcelStatus.CREATED;
-status = ParcelStatus.DELIVRED;   // ❌ compile error: no such constant
-status = 7;                       // ❌ compile error: int is not a ParcelStatus
+Status status = Status.CREATED;
+status = Status.DELIVRED;   // ❌ compile error: no such constant
+status = 7;                       // ❌ compile error: int is not a Status
 ```
 
 **The whole universe of invalid values is unrepresentable.** This is the "make invalid states impossible" habit from [best practices #3](../../references/java-best-practices.md#3-make-invalid-states-impossible).
 
 ## Enums with fields and methods (the underused superpower)
 
-Because constants are objects, they can carry data and behavior. Watch `ParcelStatus` absorb the transition rules that [Step 02](README.md) wrote as `if`-checks inside `Parcel`:
+Because constants are objects, they can carry data and behavior. Watch `Status` absorb the transition rules that [Step 02](README.md) wrote as `if`-checks inside `Parcel`:
 
 ```java
-public enum ParcelStatus {
+public enum Status {
     CREATED("waiting for pickup"),
     PICKED_UP("on the way"),
     DELIVERED("done");
 
     private final String description;          // each constant carries its own
 
-    ParcelStatus(String description) {         // runs once per constant, at class load
+    Status(String description) {         // runs once per constant, at class load
         this.description = description;
     }
 
     public String description() { return description; }
 
-    public boolean canTransitionTo(ParcelStatus next) {
+    public boolean canTransitionTo(Status next) {
         return switch (this) {
             case CREATED   -> next == PICKED_UP;
             case PICKED_UP -> next == DELIVERED;
@@ -115,7 +115,7 @@ public enum ParcelStatus {
 Now the state machine's rules live *inside the type that is the state*, and `Parcel` shrinks to:
 
 ```java
-public void transitionTo(ParcelStatus next) {
+public void transitionTo(Status next) {
     if (!status.canTransitionTo(next)) {
         throw new IllegalStateException("cannot go from " + status + " to " + next);
     }
@@ -136,12 +136,12 @@ stateDiagram-v2
 Every enum gets these without you writing anything:
 
 ```java
-for (ParcelStatus s : ParcelStatus.values()) {         // all constants, in order
+for (Status s : Status.values()) {         // all constants, in order
     System.out.println(s + ": " + s.description());
 }
 
-ParcelStatus s = ParcelStatus.valueOf("PICKED_UP");    // text -> constant
-ParcelStatus bad = ParcelStatus.valueOf("SHIPPED");    // 💥 IllegalArgumentException
+Status s = Status.valueOf("PICKED_UP");    // text -> constant
+Status bad = Status.valueOf("SHIPPED");    // 💥 IllegalArgumentException
 ```
 
 That exception on `valueOf` is a feature with a future: the moment ParcelPilot becomes a web API, clients will send statuses **as text** in JSON, and *"is this text one of our real statuses?"* becomes a validation question at the system's boundary. `valueOf` (and friendlier wrappers around it) is exactly how [step 05: validation and inputs](../05-validation-and-inputs/README.md) answers it — invalid text gets rejected at the door instead of wandering into the domain.
@@ -162,7 +162,7 @@ Here's the payoff: add a fourth status (`RETURNED`) next month, and **every such
 
 ## EnumSet and EnumMap (one paragraph)
 
-When you need a *collection* of enum values, `EnumSet` and `EnumMap` are drop-in, enum-specialized versions of `Set` and `Map` ([collections basics](../01-java-basics/collections-basics.md)): `EnumSet.of(CREATED, PICKED_UP)` for "the non-terminal statuses", `new EnumMap<ParcelStatus, Long>(ParcelStatus.class)` for per-status counters. Because the full set of keys is known at compile time they're faster and smaller than their hash-based cousins — and they even iterate in declaration order. Nothing to memorize: just know they exist so you reach for them when the key is an enum.
+When you need a *collection* of enum values, `EnumSet` and `EnumMap` are drop-in, enum-specialized versions of `Set` and `Map` ([collections basics](../01-java-basics/collections-basics.md)): `EnumSet.of(CREATED, PICKED_UP)` for "the non-terminal statuses", `new EnumMap<Status, Long>(Status.class)` for per-status counters. Because the full set of keys is known at compile time they're faster and smaller than their hash-based cousins — and they even iterate in declaration order. Nothing to memorize: just know they exist so you reach for them when the key is an enum.
 
 ## Pros and cons
 
@@ -177,13 +177,13 @@ When you need a *collection* of enum values, `EnumSet` and `EnumMap` are drop-in
 
 **Persisting by ordinal.** Each constant has a position number: `CREATED.ordinal()` is `0`. It's tempting (some tools even default to it) to store that number in a database. Don't: reorder the declaration or insert a constant, and **every stored number silently means a different status**. `PICKED_UP` becomes someone's `DELIVERED` — data corruption with no error anywhere. Store the **name** instead (`name()` / store-as-string). This trap gets a proper treatment when parcels hit a real database in [step 10: persistence](../10-persistence/README.md).
 
-**Fearing `==` and using `equals` (or vice versa) without knowing why.** For enums specifically, `==` is *correct and preferred*: each constant exists exactly once, so identity and equality coincide. `==` is also null-safe (`status == ParcelStatus.CREATED` is simply `false` when `status` is null, while `status.equals(...)` throws `NullPointerException`) and typo-proof (comparing an enum to the wrong *type* won't compile). This is the one famous exception to the "compare objects with `.equals()`" rule from [data types](../01-java-basics/data-types.md) — strings still need `.equals()`.
+**Fearing `==` and using `equals` (or vice versa) without knowing why.** For enums specifically, `==` is *correct and preferred*: each constant exists exactly once, so identity and equality coincide. `==` is also null-safe (`status == Status.CREATED` is simply `false` when `status` is null, while `status.equals(...)` throws `NullPointerException`) and typo-proof (comparing an enum to the wrong *type* won't compile). This is the one famous exception to the "compare objects with `.equals()`" rule from [data types](../01-java-basics/data-types.md) — strings still need `.equals()`.
 
 **Validating with `valueOf` and letting the raw exception escape.** At a boundary, catch it (or check against `values()`) and turn it into a *helpful* message: "unknown status 'SHIPPED', expected one of CREATED, PICKED_UP, DELIVERED". Step 05 makes this concrete.
 
 ## Say it like a developer
 
-- "`ParcelStatus` is an **enum**, so an invalid status is a **compile error**, not a runtime surprise."
+- "`Status` is an **enum**, so an invalid status is a **compile error**, not a runtime surprise."
 - "The transition rules live **on the enum** in `canTransitionTo`, next to the states they govern."
 - "The **switch is exhaustive** — add a constant and the compiler points at every place that must handle it."
 - "Never persist the **ordinal**; store the **name**."
@@ -199,7 +199,7 @@ A class whose instances are a fixed, pre-built set of named constants, with a pr
 
 </details>
 
-2. Name two bugs a `String` status allows that `ParcelStatus` makes impossible.
+2. Name two bugs a `String` status allows that `Status` makes impossible.
 
 <details><summary>Show answer</summary>
 
@@ -215,7 +215,7 @@ The ordinal is just the declaration position. Reordering or inserting a constant
 
 </details>
 
-4. What does `ParcelStatus.valueOf("SHIPPED")` do, and where does that matter in ParcelPilot's future?
+4. What does `Status.valueOf("SHIPPED")` do, and where does that matter in ParcelPilot's future?
 
 <details><summary>Show answer</summary>
 

@@ -1,4 +1,4 @@
-# Step 08: Queues, do slow work later
+# Step 12: Queues, do slow work later
 
 > In this step: send notifications through a queue so the API responds fast. ~90 minutes. Start with the [What is a queue?](what-is-a-queue.md) lab.
 
@@ -85,13 +85,13 @@ Still the one monolith in `applications/parcelpilot`.
 3. Define an event `ParcelDelivered(eventId, parcelId, occurredAt)`.
 4. When a parcel is marked delivered: save state, then **publish** the event (producer).
 5. Add a **consumer** that receives the event and logs `"notification sent for <parcelId>"`.
-6. Make the consumer **idempotent**: remember handled `eventId`s so a redelivered message doesn't notify twice.
+6. Make the consumer **idempotent**: remember handled `eventId`s so a redelivered message doesn't notify twice. The [idempotency lab](idempotency-lab.md) builds this properly, with a `notifications` table and proof.
 
-Do the [event-driven lab](event-driven-lab.md) for the command/observer/adapter framing.
+Do the [event-driven lab](event-driven-lab.md) for the command/observer/adapter framing. Then read [Retries and dead letters](retries-and-dead-letters.md) for what happens when a message doesn't just duplicate but keeps *failing*.
 
 ## Test it
 
-Run RabbitMQ on the same `parcelpilot-net` network you created in step 06, and give it `--name rabbitmq` so the app reaches it by that name (not `localhost`). See [Running several containers on Ubuntu](../../GUIDE.md#running-several-containers-on-ubuntu-read-before-step-06).
+Run RabbitMQ on the same `parcelpilot-net` network you created in step 10, and give it `--name rabbitmq` so the app reaches it by that name (not `localhost`). See [Running several containers](../../GUIDE.md#running-several-containers-read-before-step-10) in the GUIDE.
 
 ```bash
 docker run --name rabbitmq --network parcelpilot-net \
@@ -182,4 +182,4 @@ Two subtle risks: messages can be delivered **twice** (handle with idempotency),
 
 ## Next
 
-[Step 09](../09-split-services/README.md): extract notifications into a standalone microservice.
+[Step 13](../13-split-services/README.md): extract notifications into a standalone microservice.

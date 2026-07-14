@@ -1,4 +1,4 @@
-# Step 10: Docker Compose & observing the system
+# Step 14: Docker Compose & observing the system
 
 > In this step: start the whole system with one command, add health checks and logs, and watch it fail on purpose. ~75 minutes.
 
@@ -22,7 +22,7 @@ Your system is now two services + RabbitMQ + databases. Starting each container 
 
 ## What is Docker Compose (and why observe)?
 
-Compose is a recipe for your **whole** local system. One `docker compose up` builds and starts every service on a shared network with the right config. **Observability** is how you answer three questions about a running system: *Is it alive?* (health), *What did it do?* (logs), *Is it degrading?* (metrics).
+Compose is a recipe for your **whole** local system. One `docker compose up` builds and starts every service on a shared network with the right config. **Observability** is how you answer three questions about a running system: *Is it alive?* (health), *What did it do?* (logs — see [reading logs across services](reading-logs-across-services.md)), *Is it degrading?* (metrics — see the [metrics intro](metrics-intro.md)).
 
 ```mermaid
 flowchart TB
@@ -129,6 +129,8 @@ docker compose start rabbitmq
 # observe recovery
 ```
 
+To follow one request's story across *both* services' logs, give it a single ID that travels with the event: the [correlation IDs lab](correlation-ids.md).
+
 ## Acceptance criteria
 
 - [ ] `docker compose up --build` starts every service successfully.
@@ -199,4 +201,4 @@ Once ParcelPilot is complete, natural next topics are: retries + dead-letter que
 
 ## Next
 
-[Step 11](../11-performance-and-safety/README.md): add caching, locking, and rate limiting.
+[Step 15](../15-performance-and-safety/README.md): add caching, locking, and rate limiting.

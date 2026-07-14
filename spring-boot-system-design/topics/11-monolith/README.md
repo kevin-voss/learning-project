@@ -1,4 +1,4 @@
-# Step 07: The modular monolith
+# Step 11: The modular monolith
 
 > In this step: organize the code into clean feature modules while keeping ONE deployable app. ~75 minutes.
 
@@ -24,7 +24,7 @@ ParcelPilot now does HTTP, parcel rules, storage, and (soon) notifications, ofte
 
 Think of one building with well-labeled rooms. You still live in one house (one deploy, no network between rooms), but each room has a clear purpose, so you can later move a room into its own building if needed.
 
-Organize **by feature**, not by generic layers (this is Stage 5 in [Code organization](../../references/code-organization.md), and it applies the [package-by-feature best practice](../../references/java-best-practices.md#12-organize-by-feature-not-by-layer)):
+Organize **by feature**, not by generic layers (this is Stage 5 in [Code organization](../../references/code-organization.md), and it applies the [package-by-feature best practice](../../references/java-best-practices.md#12-organize-by-feature-not-by-layer) — the full side-by-side comparison of both layouts is in [Layered vs feature packages](layered-vs-feature-packages.md)):
 
 ```text
 parcel/
@@ -47,7 +47,7 @@ flowchart TB
 
 ## Why do it? Pros and cons
 
-**What it brings us:** each feature is understandable and testable on its own, and future extraction (step 09) becomes a copy-paste-sized job instead of a rewrite.
+**What it brings us:** each feature is understandable and testable on its own, and future extraction (step 13) becomes a copy-paste-sized job instead of a rewrite.
 
 **Pros of the monolith:** one deploy, fast local calls (no network), easy debugging, and simple data consistency.
 **Cons:** everything scales and deploys together, a heavy feature can't be scaled alone, and the codebase can grow large.
@@ -60,10 +60,10 @@ Keep it one app in `applications/parcelpilot`.
 
 1. Group code into `parcel/` and `notification/` packages by feature.
 2. Inside `parcel/`, separate: domain (`Parcel`), application (use cases), HTTP adapter, repository.
-3. Make the notification side a **separate module the parcel module talks to through a small interface**, not by reaching into its internals.
+3. Make the notification side a **separate module the parcel module talks to through a small interface**, not by reaching into its internals. The [module boundaries lab](module-boundaries-lab.md) turns this into an enforceable rule you can check with a grep.
 4. Keep the same endpoints and database. This is reorganization, not new features.
 
-The key move is a small interface (a "port") that the parcel module depends on, while the notification module provides the implementation. This is what makes step 09's extraction easy later:
+The key move is a small interface (a "port") that the parcel module depends on, while the notification module provides the implementation — the intro-level pattern behind this is [ports and adapters](ports-and-adapters.md). This is what makes step 13's extraction easy later:
 
 ```java
 // parcel module depends on this interface only, not on notification internals
@@ -110,7 +110,7 @@ public class ParcelApplication {
     public void markDelivered(String parcelId) {
         ParcelEntity parcel = repository.findById(parcelId).orElseThrow();
         // ... apply domain rule to move to DELIVERED, then save ...
-        notifier.parcelDelivered(parcelId);   // still inline for now (step 08 fixes this)
+        notifier.parcelDelivered(parcelId);   // still inline for now (step 12 fixes this)
     }
 }
 ```
@@ -187,8 +187,8 @@ It reorganizes existing code into clean boundaries. That structure is what makes
 
 ## Reflect (stretch)
 
-Right now, marking a parcel delivered probably calls notification code **inline**, so the HTTP response waits for it. If notifications get slow or fail, parcel updates suffer. That shared-timing problem is what the queue in step 08 removes.
+Right now, marking a parcel delivered probably calls notification code **inline**, so the HTTP response waits for it. If notifications get slow or fail, parcel updates suffer. That shared-timing problem is what the queue in step 12 removes.
 
 ## Next
 
-[Step 08](../08-queues/README.md): move notification work off the request path with a queue.
+[Step 12](../12-queues/README.md): move notification work off the request path with a queue.

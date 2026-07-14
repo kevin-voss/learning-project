@@ -77,7 +77,7 @@ sequenceDiagram
 
 ### 1. Start PostgreSQL in Docker with a named volume
 
-On Ubuntu, put the database and the API on a shared **user-defined network** so the API can reach the database by name. See [Running several containers on Ubuntu](../../GUIDE.md#running-several-containers-on-ubuntu-read-before-step-06) in the GUIDE for why `localhost` does not work between containers.
+On Ubuntu, put the database and the API on a shared **user-defined network** so the API can reach the database by name. See [Running several containers](../../GUIDE.md#running-several-containers-read-before-step-10) in the GUIDE for why `localhost` does not work between containers.
 
 ```bash
 # create the shared network once (safe to re-run if it already exists)

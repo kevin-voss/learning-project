@@ -15,6 +15,7 @@ Canonical human overview: [README.md](../../README.md). Agent entry doc: [AGENTS
 - **`docs/codestep/`** — Product overview and phased specs (`overview.md`, `01.md`–`04.md`); use when changing CodeStep behavior or roadmap-shaped work.
 - **`system-design/`** — Standalone static HTML/CSS/JS viewer; not part of the Vite app. Treat as a separate mini-site unless the task is explicitly there.
 - **`data-structures/`** — Standalone static HTML/CSS/JS CS roadmap (`css/`, `js/data/`, `js/demos/`) covering data structures, algorithms, computer internals, and beginner web/infra foundations; same mini-site pattern as `system-design/`.
+- **`java/`** — Standalone static HTML/CSS/JS Java learning hub (`css/`, `js/topics/`, `topics/`) with an Ubuntu-focused Java 21 LTS basics-first path plus REST/HTTP, UML, Git, and design-pattern topic pages; same mini-site pattern as `system-design/`.
 
 ## Conventions
 

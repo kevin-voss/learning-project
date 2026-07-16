@@ -1,0 +1,17 @@
+:root {
+  --bg: #0a0e1a;
+  --bg-2: #0f1421;
+  --card: #131826;
+  --card-2: #1a2030;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.14);
+  --fg: #f1f5f9;
+  --muted: #94a3b8;
+  --dim: #64748b;
+  --amber: #fbbf24;
+  --teal: #2dd4bf;
+  --coral: #fb7185;
+  --violet: #a78bfa;
+  --green: #4ade80;
+  --red: #f87171;
+}

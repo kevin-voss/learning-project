@@ -1,0 +1,181 @@
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Header */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: rgba(10, 14, 26, 0.75);
+  border-bottom: 1px solid var(--border);
+}
+.site-header nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: -0.02em;
+}
+.logo-mark {
+  width: 30px;
+  height: 30px;
+  background: linear-gradient(135deg, var(--amber), var(--coral));
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  color: #0a0e1a;
+  font-weight: 800;
+  font-size: 15px;
+}
+.header-meta {
+  display: flex;
+  gap: 18px;
+  font-size: 12px;
+  color: var(--muted);
+  flex-wrap: wrap;
+}
+.header-meta span { display: flex; align-items: center; gap: 6px; }
+.dot { width: 7px; height: 7px; border-radius: 50%; }
+.dot.creational { background: var(--amber); }
+.dot.structural { background: var(--teal); }
+.dot.behavioral { background: var(--coral); }
+.dot.architectural { background: var(--violet); }
+
+/* Hero */
+.hero {
+  padding: 80px 0 50px;
+  position: relative;
+}
+.hero-badge, .hero h1, .hero p, .hero-stats {
+  animation: rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+.hero-badge { animation-delay: 0.05s; }
+.hero h1 { animation-delay: 0.15s; }
+.hero p { animation-delay: 0.3s; }
+.hero-stats { animation-delay: 0.4s; }
+@keyframes rise {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 100px;
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid rgba(251, 191, 36, 0.25);
+  color: var(--amber);
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+.hero-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: var(--amber);
+  border-radius: 50%;
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.6); }
+  50% { opacity: 0.7; transform: scale(0.85); box-shadow: 0 0 0 6px rgba(251, 191, 36, 0); }
+}
+.hero h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: clamp(44px, 8.5vw, 100px);
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  margin: 0 0 24px;
+}
+.hero h1 .accent {
+  background: linear-gradient(135deg, var(--amber) 0%, var(--coral) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-style: italic;
+  font-weight: 500;
+}
+.hero p {
+  font-size: 18px;
+  color: var(--muted);
+  max-width: 680px;
+  margin: 0 0 40px;
+  line-height: 1.55;
+}
+.hero p strong { color: var(--fg); font-weight: 600; }
+.hero-stats {
+  display: flex;
+  gap: 48px;
+  flex-wrap: wrap;
+}
+.hero-stat .num {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--fg);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.hero-stat .lbl {
+  font-size: 11px;
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+}
+
+/* Sections */
+.section {
+  padding: 50px 0;
+  position: relative;
+}
+.section-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.section-head h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(30px, 4.5vw, 44px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin: 0;
+  line-height: 1;
+}
+.section-head .num-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--dim);
+  margin-bottom: 8px;
+  letter-spacing: 0.05em;
+}
+.section-head p {
+  color: var(--muted);
+  margin: 0;
+  max-width: 400px;
+  font-size: 14px;
+}

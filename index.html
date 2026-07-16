@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learning Project</title>
+  <link rel="stylesheet" href="landing.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <div class="brand"><div class="brand-mark">LP</div><span>Learning Project</span></div>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="frontend/index.html">CodeStep</a>
+        <a href="beginner-js/README.md">Beginner JS</a>
+        <a href="java/index.html">Java</a>
+        <a href="data-structures/index.html">CS Roadmap</a>
+        <a href="system-design/index.html">System Design</a>
+        <a href="projects/README.md">Projects</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-layout">
+        <div>
+          <div class="eyebrow">Interactive learning paths · browser tools · terminal practice</div>
+          <h1>A clean launchpad for the whole learning repo.</h1>
+          <p>Start with JavaScript drills, explore computer-science foundations, learn Java on Ubuntu, open CodeStep, or move into system-design and project work. Each path has a clear purpose and an explicit entry point.</p>
+          <div class="quick-actions">
+            <a class="button primary" href="java/index.html">Open Java Hub</a>
+            <a class="button secondary" href="data-structures/index.html">Open CS Roadmap</a>
+            <a class="button secondary" href="frontend/index.html">Open CodeStep</a>
+          </div>
+        </div>
+
+        <div class="map-panel" aria-label="Learning map">
+          <div class="map-row"><span class="tag js">JS</span><div><strong>Beginner JavaScript</strong><br><span>Small drills with tests and repeatable practice.</span></div><small>Makefile</small></div>
+          <div class="map-row"><span class="tag cs">CS</span><div><strong>Data Structures & Foundations</strong><br><span>Algorithms, web, infra, Git, Docker, and demos.</span></div><small>Static</small></div>
+          <div class="map-row"><span class="tag java">Java</span><div><strong>Java on Ubuntu</strong><br><span>Java 21 LTS curriculum, glossary, and Practice Lab.</span></div><small>Static</small></div>
+          <div class="map-row"><span class="tag systems">Sys</span><div><strong>System Design</strong><br><span>Architecture concepts and Spring Boot backend depth.</span></div><small>Guides</small></div>
+          <div class="map-row"><span class="tag projects">Build</span><div><strong>Beginner Projects</strong><br><span>Weather, Docker, CLI, and React project docs.</span></div><small>Docs</small></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Choose a path</div>
+            <h2>Learning areas</h2>
+          </div>
+          <p>Each card opens a concrete local entry point. Static viewers use explicit `index.html` links so they work directly from disk.</p>
+        </div>
+        <div class="grid">
+          <a class="track-card" href="frontend/index.html"><span class="tag js">App</span><h3>CodeStep</h3><p>Vite, React, TypeScript, and Tailwind learner UI for guided code walkthroughs.</p><div class="meta"><span>frontend/</span><span>Run with Bun</span></div></a>
+          <a class="track-card" href="beginner-js/README.md"><span class="tag js">Drills</span><h3>Beginner JavaScript</h3><p>Topic folders with tasks, solutions, and tests for focused JavaScript repetition.</p><div class="meta"><span>beginner-js/</span><span>make</span></div></a>
+          <a class="track-card" href="java/index.html"><span class="tag java">Java</span><h3>Java Learning Hub</h3><p>Ubuntu-only Java 21 LTS path from setup to objects, testing, build tools, JVM, and projects.</p><div class="meta"><span>java/</span><span>index.html</span></div></a>
+          <a class="track-card" href="data-structures/index.html"><span class="tag cs">CS</span><h3>CS Roadmap</h3><p>Data structures, algorithms, web foundations, Linux, Git, Docker, auth, and interactive demos.</p><div class="meta"><span>data-structures/</span><span>index.html</span></div></a>
+          <a class="track-card" href="system-design/index.html"><span class="tag systems">Design</span><h3>System Design</h3><p>Standalone architecture explorer for communication, foundations, data layers, and tradeoffs.</p><div class="meta"><span>system-design/</span><span>index.html</span></div></a>
+          <a class="track-card" href="projects/README.md"><span class="tag projects">Projects</span><h3>Project Curriculum</h3><p>Beginner project briefs and docs for weather, Docker portfolio, CLI tooling, and React todo work.</p><div class="meta"><span>projects/</span><span>Docs</span></div></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Suggested flow</div>
+            <h2>How to move through it</h2>
+          </div>
+          <p>Use the repo as a set of connected learning loops: understand, practice, build, then revisit with more context.</p>
+        </div>
+        <div class="workflow">
+          <div class="workflow-step"><strong>1. Learn syntax</strong><span>Use Beginner JS, CodeStep, or Java fundamentals to get fast feedback.</span></div>
+          <div class="workflow-step"><strong>2. Build foundations</strong><span>Open the CS roadmap for structures, algorithms, web, Linux, and tooling ideas.</span></div>
+          <div class="workflow-step"><strong>3. Practice projects</strong><span>Move into CLI, Docker, React, or Java terminal projects once basics are steady.</span></div>
+          <div class="workflow-step"><strong>4. Design systems</strong><span>Use system-design and Spring Boot materials when programs become services.</span></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">Learning Project · Local-first curriculum for browser study, terminal practice, and project work</div>
+  </footer>
+</body>
+</html>

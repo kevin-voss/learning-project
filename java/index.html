@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Java Learning Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+  <div class="grid-bg"></div>
+  <div class="glow glow-1"></div>
+  <div class="glow glow-2"></div>
+  <div class="glow glow-3"></div>
+
+  <header class="site-header">
+    <div class="container">
+      <nav>
+        <div class="logo">
+          <div class="logo-mark">J</div>
+          <span>Java · Learning Hub</span>
+        </div>
+        <div class="header-meta">
+          <span><span class="dot creational"></span>Ubuntu</span>
+          <span><span class="dot structural"></span>Terminal practice</span>
+          <span><span class="dot behavioral"></span>Java 21</span>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hub-hero">
+      <div class="container">
+        <div class="hero-badge">Ubuntu Linux · Java 21 LTS · beginner to advanced</div>
+        <h1>Java on Ubuntu —<br><span class="accent">from first command to real projects.</span></h1>
+        <p>Follow one clean path from terminal setup through syntax, objects, collections, exceptions, files, debugging, testing, build tools, Git, REST, UML, JVM memory, design patterns, and practice projects. The browser explains code and diagrams; actual Java execution happens in your Ubuntu terminal.</p>
+        <div class="hero-stats" id="hubStats"></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="num-tag">01 / START HERE</div>
+            <h2>Ordered Curriculum Path</h2>
+          </div>
+          <p><span id="pathCount">21 ordered topics</span>, arranged from first Ubuntu setup to advanced design and project practice.</p>
+        </div>
+        <div class="basics-path" id="learningPath"></div>
+      </div>
+    </section>
+
+    <section class="section terminal-section">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="num-tag">02 / PRACTICE REALITY</div>
+            <h2>Browser Lessons, Terminal Runs</h2>
+          </div>
+          <p>Use the page to read examples and diagrams. Use Ubuntu Terminal to create files, compile with <code>javac</code>, and run with <code>java</code>.</p>
+        </div>
+        <div class="terminal-practice">
+          <div class="terminal-step">
+            <span>1</span>
+            <strong>Create a small file</strong>
+            <pre><code>mkdir -p java-practice
+cd java-practice
+nano HelloJava.java</code></pre>
+          </div>
+          <div class="terminal-step">
+            <span>2</span>
+            <strong>Compile it</strong>
+            <pre><code>javac HelloJava.java</code></pre>
+          </div>
+          <div class="terminal-step">
+            <span>3</span>
+            <strong>Run the compiled class</strong>
+            <pre><code>java HelloJava</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="num-tag">03 / TRACK VIEW</div>
+            <h2>Stages &amp; Topics</h2>
+          </div>
+          <p><span id="trackCount">Structured stages</span> for scanning the same path by skill area.</p>
+        </div>
+        <div class="track-grid" id="trackGrid"></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="num-tag">04 / BEGINNER GLOSSARY</div>
+            <h2>Hover Glossary</h2>
+          </div>
+          <p>Keyword, data type, Git, REST, and UML terms with short beginner definitions.</p>
+        </div>
+        <div class="glossary-grid" id="glossaryGrid"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      Built for developers learning Java on Ubuntu · Examples target <strong>Java 21 LTS</strong> · Java runs in the terminal
+    </div>
+  </footer>
+
+  <script src="js/ns.js"></script>
+  <script src="js/topics/registry.js"></script>
+  <script src="js/glossary.js"></script>
+  <script src="js/hub.js"></script>
+</body>
+</html>

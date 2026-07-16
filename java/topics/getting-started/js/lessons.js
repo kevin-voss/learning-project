@@ -10,6 +10,39 @@ const ubuntuGlossary = [
   { term: 'JAVA_HOME', definition: 'An environment variable some Java tools use to locate the installed JDK.' }
 ];
 
+function singleFilePracticeCommands(folder, fileName, className) {
+  return [
+    {
+      label: 'Create and enter the practice folder',
+      note: 'Start from the terminal. This keeps beginner files away from downloads, desktop clutter, and unrelated projects.',
+      command: `mkdir -p ~/java-practice/${folder}
+cd ~/java-practice/${folder}`
+    },
+    {
+      label: 'Create the Java file and open it',
+      note: 'The file name must match the public class name in the snippet.',
+      command: `touch ${fileName}
+code ${fileName}`
+    },
+    {
+      label: 'Paste the lesson code and save',
+      note: 'Paste the Java code from the example panel into VS Code, then save the file before compiling.',
+      command: `# Paste the code into ${fileName}
+# Save in VS Code with Ctrl+S`
+    },
+    {
+      label: 'Compile from the same folder',
+      note: 'javac reads the .java source file and creates a .class bytecode file next to it.',
+      command: `javac ${fileName}`
+    },
+    {
+      label: 'Run the class name',
+      note: 'Use the class name only. Do not type .java or .class after it.',
+      command: `java ${className}`
+    }
+  ];
+}
+
 Java.topics.gettingStarted.lessons = [
   {
     id: 'jdk-21-install',
@@ -32,6 +65,28 @@ sudo apt install openjdk-21-jdk
 
 java --version
 javac --version`,
+    commands: [
+      {
+        label: 'Open the Ubuntu terminal and refresh apt',
+        note: 'This updates Ubuntu package metadata before installation.',
+        command: 'sudo apt update'
+      },
+      {
+        label: 'Install the full JDK',
+        note: 'Use the JDK package because beginners need both java and javac.',
+        command: 'sudo apt install openjdk-21-jdk'
+      },
+      {
+        label: 'Verify the Java runtime',
+        note: 'The java command runs compiled Java programs. It should report version 21.x.',
+        command: 'java --version'
+      },
+      {
+        label: 'Verify the Java compiler',
+        note: 'The javac command compiles your .java files. It should also report version 21.x.',
+        command: 'javac --version'
+      }
+    ],
     keyPoints: [
       'These lessons assume Ubuntu Linux.',
       'Install a JDK, not just a JRE: use sudo apt install openjdk-21-jdk.',
@@ -58,7 +113,7 @@ javac --version`,
     why: 'Java separates checking/building from running so compiler errors can be caught before the program starts.',
     howThink: 'First translate source code with javac. Then run the compiled class name with java.',
     whenUse: 'Use this two-command loop for single-file beginner programs before Maven or Gradle enter the picture.',
-    syntax: 'On Ubuntu, run these commands from the folder containing the file: javac ToolCheck.java then java ToolCheck.',
+    syntax: 'On Ubuntu, create a practice folder, create ToolCheck.java, open it in VS Code, paste the Java code, save, compile with javac ToolCheck.java, then run with java ToolCheck.',
     fileName: 'ToolCheck.java',
     code: `public class ToolCheck {
     public static void main(String[] args) {
@@ -66,7 +121,9 @@ javac --version`,
         System.out.println("java is running me.");
     }
 }`,
+    commands: singleFilePracticeCommands('getting-started', 'ToolCheck.java', 'ToolCheck'),
     keyPoints: [
+      'Work from the folder that contains ToolCheck.java.',
       'Compile with javac ToolCheck.java.',
       'Run with java ToolCheck.',
       'Do not include .class when using the java launcher.',
@@ -89,17 +146,48 @@ javac --version`,
     tagline: 'Keep source files predictable',
     definition: 'A project layout is the folder structure that tells humans and tools where source files, compiled output, and notes belong.',
     realWorld: 'It is like labeled drawers in a desk. You can work without them for one paper, but structure matters as soon as there are several files.',
-    syntax: 'On Ubuntu, create folders with mkdir -p src out. Compile with javac -d out src/ProjectLayout.java and run with java -cp out ProjectLayout.',
-    exampleLabel: 'Ubuntu Terminal + Java',
-    codeLanguage: 'bash',
-    fileName: 'project-layout.sh',
-    code: `mkdir -p src out
-nano src/ProjectLayout.java
-javac -d out src/ProjectLayout.java
-java -cp out ProjectLayout`,
+    syntax: 'On Ubuntu, create one project folder with src/ for source files and out/ for compiled bytecode. Put ProjectLayout.java in src/, compile into out/, then run with java -cp out ProjectLayout.',
+    fileName: 'src/ProjectLayout.java',
+    code: `public class ProjectLayout {
+    public static void main(String[] args) {
+        System.out.println("Source file: src/ProjectLayout.java");
+        System.out.println("Compiled output folder: out/");
+    }
+}`,
+    commands: [
+      {
+        label: 'Create the project folders',
+        note: 'Use one outer folder for this lesson, then keep source code and compiled output separate inside it.',
+        command: `mkdir -p ~/java-practice/project-layout/src ~/java-practice/project-layout/out
+cd ~/java-practice/project-layout`
+      },
+      {
+        label: 'Create the source file and open it',
+        note: 'The source file lives under src/ because it is code you write and keep.',
+        command: `touch src/ProjectLayout.java
+code src/ProjectLayout.java`
+      },
+      {
+        label: 'Paste the lesson code and save',
+        note: 'Paste the Java code from the example panel into src/ProjectLayout.java, then save before compiling.',
+        command: `# Paste the code into src/ProjectLayout.java
+# Save in VS Code with Ctrl+S`
+      },
+      {
+        label: 'Compile into the output folder',
+        note: '-d out tells javac to put generated .class files in out/ instead of mixing them into src/.',
+        command: 'javac -d out src/ProjectLayout.java'
+      },
+      {
+        label: 'Run from the compiled output',
+        note: '-cp out tells java where to find ProjectLayout.class.',
+        command: 'java -cp out ProjectLayout'
+      }
+    ],
     keyPoints: [
       'Small beginner projects can start with one .java file.',
       'A common simple layout is src/ for source and out/ for compiled classes.',
+      'Run javac and java from the project folder, not from inside src/.',
       'Packages later map to folders under src/.',
       'Build tools are useful later, but not required for the basics.'
     ],
@@ -120,13 +208,14 @@ java -cp out ProjectLayout`,
     tagline: 'The program entry point',
     definition: 'main is the method the Java launcher looks for when it starts a command-line program.',
     realWorld: 'It is the front door of a building. There may be many rooms inside, but visitors need one official place to enter.',
-    syntax: 'The command java MainExample asks the JVM to load MainExample.class and call public static void main(String[] args).',
+    syntax: 'Create MainExample.java, paste the code, save, compile with javac MainExample.java, then run java MainExample. The java command asks the JVM to load MainExample.class and call public static void main(String[] args).',
     fileName: 'MainExample.java',
     code: `public class MainExample {
     public static void main(String[] args) {
         System.out.println("This line runs first.");
     }
 }`,
+    commands: singleFilePracticeCommands('getting-started', 'MainExample.java', 'MainExample'),
     keyPoints: [
       'Use public static void main(String[] args).',
       'The JVM calls main without creating your class first.',
@@ -150,15 +239,17 @@ java -cp out ProjectLayout`,
     tagline: 'Print a result you can see',
     definition: 'A first Java program is a tiny class with main that performs one visible action, usually printing text.',
     realWorld: 'It is the first light switch test after wiring a room. You are proving the whole path works.',
-    syntax: 'On Ubuntu, save the file, open the terminal in that folder, run javac HelloJava.java, then run java HelloJava.',
+    syntax: 'On Ubuntu, make a practice folder, create HelloJava.java, open it with code HelloJava.java, paste the code, save, compile with javac HelloJava.java, then run java HelloJava.',
     fileName: 'HelloJava.java',
     code: `public class HelloJava {
     public static void main(String[] args) {
         System.out.println("Hello, Java 21!");
     }
 }`,
+    commands: singleFilePracticeCommands('getting-started', 'HelloJava.java', 'HelloJava'),
     keyPoints: [
       'Save this as HelloJava.java.',
+      'Open the file with code HelloJava.java or use another editor if VS Code is not installed.',
       'Compile with javac HelloJava.java.',
       'Run with java HelloJava.',
       'System.out.println prints a line to the terminal.'
@@ -183,7 +274,7 @@ java -cp out ProjectLayout`,
     why: 'The flow makes Java errors easier to place: compile-time problems happen during javac, runtime problems happen after java starts the program.',
     howThink: 'Source code becomes bytecode; bytecode becomes a running program inside the JVM.',
     whenUse: 'Use the flow every time you edit a beginner file: save, compile, run, read feedback, edit again.',
-    syntax: 'Typical Ubuntu beginner loop: edit in nano or VS Code, compile in the terminal with javac, run with java, read errors, edit again.',
+    syntax: 'Typical Ubuntu beginner loop: create a folder, create the .java file, open it in VS Code, paste or edit code, save, compile in the terminal with javac, run with java, read errors, edit again.',
     fileName: 'Flow.java',
     code: `public class Flow {
     public static void main(String[] args) {
@@ -193,6 +284,7 @@ java -cp out ProjectLayout`,
         System.out.println(bytecode + " -> java -> running program");
     }
 }`,
+    commands: singleFilePracticeCommands('getting-started', 'Flow.java', 'Flow'),
     keyPoints: [
       'The .java file is source code.',
       'The .class file is JVM bytecode.',

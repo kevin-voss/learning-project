@@ -94,6 +94,69 @@
     return `<p>${renderText(value, lesson)}</p>`;
   }
 
+  function namespaceToPracticeFolder(namespace) {
+    return namespace
+      .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+      .toLowerCase();
+  }
+
+  function classNameFromLesson(lesson) {
+    const match = lesson.code && lesson.code.match(/\bpublic\s+class\s+([A-Za-z_$][\w$]*)/);
+    if (match) return match[1];
+    if (!lesson.fileName || !lesson.fileName.endsWith('.java')) return '';
+    return lesson.fileName.split('/').pop().replace(/\.java$/, '');
+  }
+
+  function generatedJavaCommands(lesson, config) {
+    if (lesson.commands) return lesson.commands;
+    if (lesson.codeLanguage && lesson.codeLanguage !== 'java') return [];
+    if (!lesson.fileName || !lesson.fileName.endsWith('.java')) return [];
+    if (/\bpackage\s+[\w.]+\s*;/.test(lesson.code || '')) return [];
+
+    const className = classNameFromLesson(lesson);
+    if (!className) return [];
+
+    const folder = namespaceToPracticeFolder(config.namespace);
+    const filePath = lesson.fileName;
+    const parentPath = filePath.includes('/') ? filePath.slice(0, filePath.lastIndexOf('/')) : '';
+    const createFileCommand = parentPath
+      ? `mkdir -p ${parentPath}
+touch ${filePath}
+code ${filePath}`
+      : `touch ${filePath}
+code ${filePath}`;
+
+    return [
+      {
+        label: 'Create and enter the practice folder',
+        note: 'Keep this lesson in its own predictable folder before creating the Java file.',
+        command: `mkdir -p ~/java-practice/${folder}
+cd ~/java-practice/${folder}`
+      },
+      {
+        label: 'Create the Java file and open it',
+        note: 'The file name must match the public class name in the snippet.',
+        command: createFileCommand
+      },
+      {
+        label: 'Paste the lesson code and save',
+        note: 'Paste the Java code from the example panel into VS Code, then save before compiling.',
+        command: `# Paste the code into ${filePath}
+# Save in VS Code with Ctrl+S`
+      },
+      {
+        label: 'Compile from this folder',
+        note: 'javac reads the .java source file and creates JVM bytecode.',
+        command: `javac ${filePath}`
+      },
+      {
+        label: 'Run the class name',
+        note: 'Run the class name only. Do not add .java or .class.',
+        command: `java ${className}`
+      }
+    ];
+  }
+
   function lessonWhy(lesson) {
     if (lesson.why) return lesson.why;
     if (lesson.pros && lesson.pros.length) return lesson.pros[0];
@@ -132,13 +195,14 @@
     `;
   }
 
-  function renderCommands(lesson) {
-    if (!lesson.commands || !lesson.commands.length) return '';
+  function renderCommands(lesson, config) {
+    const commands = generatedJavaCommands(lesson, config);
+    if (!commands.length) return '';
     return `
       <div class="detail-section">
-        <div class="detail-section-label">${icons.code}Ubuntu Terminal Commands</div>
+        <div class="detail-section-label">${icons.code}${lesson.commandsLabel || 'Do This In Order'}</div>
         <div class="command-steps">
-          ${lesson.commands.map(command => `
+          ${commands.map(command => `
             <div class="command-step">
               <div>
                 <div class="command-name">${renderText(command.label, lesson)}</div>
@@ -450,8 +514,6 @@
 
           ${renderSyntax(lesson)}
 
-          ${renderCommands(lesson)}
-
           ${renderPrimitiveTypes(lesson)}
 
           ${renderStatusCodes(lesson)}
@@ -473,6 +535,8 @@
               <pre><code class="language-${lesson.codeLanguage || 'java'}">${escapeHtml(lesson.code)}</code></pre>
             </div>
           </div>
+
+          ${renderCommands(lesson, config)}
 
           <div class="detail-section">
             <div class="pros-cons">

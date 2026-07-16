@@ -22,6 +22,7 @@ The hub is registry-driven and renders:
 
 - **Ordered Curriculum Path:** one beginner-to-advanced sequence from Ubuntu setup through practice projects.
 - **Terminal Practice:** browser pages show lessons, code, and diagrams. Actual Java execution happens in Ubuntu Terminal with `javac` and `java`.
+- **Runnable Snippet Flow:** plain `.java` lesson snippets automatically show the beginner order: create a practice folder, create the file, open it with `code`, paste/save, compile, then run.
 - **Stages & Topics:** grouped cards for foundation, core Java, workflow, applied Java, advanced, and projects.
 - **Hover Glossary:** beginner definitions for Java keywords, data types, Git terms, REST terms, and UML terms.
 
@@ -158,6 +159,7 @@ Lesson objects follow this shape:
   codeLanguage, // omit or use 'java' only for Java snippets that should compile
   code,
   syntax,
+  commands: [], // optional override; plain .java snippets get generated beginner run steps
   keyPoints: [],
   commonMistakes: [],
   pros: [],
@@ -173,6 +175,8 @@ Lesson objects follow this shape:
 
 - Keep all setup and commands Ubuntu-only.
 - Keep execution realistic: static browser pages can edit and save code but cannot run Java without an added runtime. Actual execution belongs in the Ubuntu terminal with `javac` and `java`.
+- For runnable beginner snippets, show the full order: create/enter a folder, create the `.java` file, open it with `code`, paste the lesson code, save, compile with `javac`, and run with `java`.
+- Omit `commands` for simple single-file `.java` snippets so [`js/lesson-topic.js`](js/lesson-topic.js) can generate the standard ordered flow. Add custom `commands` only when a lesson needs a special layout such as `src/` and `out/`.
 - Use `codeLanguage: 'bash'`, `'http'`, `'json'`, or `'plaintext'` for non-Java examples so verification can compile only Java snippets.
 - Available registry paths should point to explicit `index.html` files.
 - Beginner terminology should use `glossary` entries or the global [`js/glossary.js`](js/glossary.js). The renderer shows viewport-safe hover/focus explanations.

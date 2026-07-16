@@ -36,18 +36,6 @@ Java.topics.typesAndVariables.lessons = [
     howThink: 'Start with int for whole-number counts, double for beginner decimal measurements, boolean for yes/no decisions, and char only when you truly need one character-sized value.',
     whenUse: 'Beginners use primitives in variables, conditions, loops, calculations, method parameters, and return values before moving into richer objects.',
     syntax: 'Declare a primitive by writing the type, then the variable name, then an optional value: int age = 32; double price = 19.99; boolean active = true; char grade = \'A\'; long population = 8_000_000_000L;',
-    commands: [
-      {
-        label: 'Compile this lesson',
-        note: 'Save the example as Primitives.java, then compile it from the same Ubuntu folder.',
-        command: 'javac Primitives.java'
-      },
-      {
-        label: 'Run the class',
-        note: 'Run the class name without .java or .class.',
-        command: 'java Primitives'
-      }
-    ],
     primitiveTypes: [
       {
         name: 'byte',

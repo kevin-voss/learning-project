@@ -210,6 +210,29 @@
     `;
   }
 
+  function renderPracticePrompts(lesson) {
+    if (!lesson.practicePrompts || !lesson.practicePrompts.length) return '';
+    return `
+      <div class="detail-section">
+        <div class="detail-section-label">${icons.check}Practice Prompts</div>
+        <div class="prompt-grid">
+          ${lesson.practicePrompts.map(prompt => `
+            <article class="prompt-card">
+              <div class="prompt-level">${escapeHtml(prompt.level || 'Beginner')}</div>
+              <h3>${renderText(prompt.title, lesson)}</h3>
+              <p>${renderText(prompt.goal, lesson)}</p>
+              ${prompt.checks && prompt.checks.length ? `
+                <div class="prompt-subhead">Checks</div>
+                <ul>${renderList(prompt.checks, lesson)}</ul>
+              ` : ''}
+              ${prompt.stretch ? `<div class="prompt-stretch">${renderText(prompt.stretch, lesson)}</div>` : ''}
+            </article>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+
   function renderMermaidDiagrams(root) {
     if (!window.mermaid) return;
 
@@ -434,6 +457,8 @@
           ${renderStatusCodes(lesson)}
 
           ${renderVisuals(lesson)}
+
+          ${renderPracticePrompts(lesson)}
 
           <div class="detail-section">
             <div class="detail-section-label">${icons.code}${lesson.exampleLabel || 'Java 21 LTS Example'}</div>

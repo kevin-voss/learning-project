@@ -1072,6 +1072,100 @@ gradle test`,
         'Skipping tests after code changes.'
       ],
       related: ['Maven & Gradle Basics', 'Practice Projects']
+    },
+    {
+      id: 'recursion-self-checks',
+      title: 'Recursion Self-Checks',
+      category: 'practice',
+      icon: 'rec',
+      tagline: 'Test the base case first',
+      definition: 'Recursion is when a method solves a problem by calling itself with a smaller input until it reaches a base case.',
+      realWorld: 'It is like opening nested folders: handle the current folder, then use the same rule for the next smaller folder.',
+      why: 'Recursion is useful for problems that naturally shrink, such as counting down, walking trees, or splitting a problem into smaller copies.',
+      howThink: 'Every recursive method needs a stop rule and a smaller next call. Tests should prove both pieces work.',
+      whenUse: 'Beginners use recursion as a thinking exercise first, then later for trees, search, parsing, and divide-and-conquer algorithms.',
+      syntax: 'Write plain self-checks before adding JUnit: checkEquals(120, factorial(5)); checkEquals(0, sumTo(0));',
+      fileName: 'RecursionPracticeTests.java',
+      code: `public class RecursionPracticeTests {
+    static int factorial(int n) {
+        if (n < 0) {
+            throw new IllegalArgumentException("n must be non-negative");
+        }
+        if (n == 0) {
+            return 1;
+        }
+        return n * factorial(n - 1);
+    }
+
+    static int sumTo(int n) {
+        if (n <= 0) {
+            return 0;
+        }
+        return n + sumTo(n - 1);
+    }
+
+    static void checkEquals(int expected, int actual) {
+        if (expected != actual) {
+            throw new AssertionError("expected " + expected + " but got " + actual);
+        }
+    }
+
+    public static void main(String[] args) {
+        checkEquals(1, factorial(0));
+        checkEquals(1, factorial(1));
+        checkEquals(120, factorial(5));
+        checkEquals(0, sumTo(0));
+        checkEquals(15, sumTo(5));
+        System.out.println("Recursion checks passed");
+    }
+}`,
+      commands: [
+        {
+          label: 'Compile recursion checks',
+          note: 'Save the file, then compile it from the same Ubuntu folder.',
+          command: 'javac RecursionPracticeTests.java'
+        },
+        {
+          label: 'Run recursion checks',
+          note: 'A failed check throws AssertionError so the problem is loud.',
+          command: 'java RecursionPracticeTests'
+        }
+      ],
+      practicePrompts: [
+        {
+          title: 'Base case check',
+          level: 'Starter',
+          goal: 'Write tests for the smallest input before testing the repeating case.',
+          checks: ['factorial(0) returns 1.', 'sumTo(0) returns 0.', 'sumTo(-3) returns 0 or throws, depending on your chosen rule.'],
+          stretch: 'Explain in a comment why your base case stops the recursion.'
+        },
+        {
+          title: 'Recursive step check',
+          level: 'Core',
+          goal: 'Test an input that requires several recursive calls.',
+          checks: ['factorial(5) returns 120.', 'sumTo(5) returns 15.', 'The method calls itself with a smaller number.'],
+          stretch: 'Add a temporary print line to watch the method count down, then remove it.'
+        },
+        {
+          title: 'Failure check',
+          level: 'Habit',
+          goal: 'Decide how invalid input should behave and write a check for that decision.',
+          checks: ['Negative factorial input is rejected.', 'The error message helps the beginner understand what went wrong.'],
+          stretch: 'Create checkThrows for IllegalArgumentException after checkEquals feels comfortable.'
+        }
+      ],
+      keyPoints: [
+        'The base case is the stop sign.',
+        'The recursive call must move toward the base case.',
+        'Test tiny inputs before bigger ones.',
+        'A stack overflow usually means the stop rule was missing or unreachable.'
+      ],
+      commonMistakes: [
+        'Testing only factorial(5) and missing factorial(0).',
+        'Calling the same input again, which never gets smaller.',
+        'Using recursion where a simple loop would be clearer for beginner code.'
+      ],
+      related: ['Methods', 'JVM & Memory']
     }
   ]);
 
@@ -1475,6 +1569,191 @@ public class NotesProject {
         'Hard-coding personal absolute paths.'
       ],
       related: ['I/O Basics', 'Git Basics']
+    },
+    {
+      id: 'recursion-drills',
+      title: 'Recursion Drills',
+      category: 'practice',
+      icon: '04',
+      tagline: 'Small methods, clear stop rules',
+      definition: 'A recursion drill is a tiny one-class project where one method calls itself with a smaller input and a few self-checks prove the behavior.',
+      realWorld: 'It is a staircase: each call steps down one stair until it reaches the floor.',
+      why: 'Small recursion projects build confidence with base cases, stack frames, and expected-result testing before data structures get involved.',
+      howThink: 'Write the base case first, then the smaller recursive call, then checks for tiny, normal, and edge inputs.',
+      whenUse: 'Use these drills after methods and before tree-like data structures or algorithms.',
+      syntax: 'Keep it one class: recursive methods, checkEquals, and main in RecursionDrills.java.',
+      fileName: 'RecursionDrills.java',
+      code: `public class RecursionDrills {
+    static int countDigits(int n) {
+        n = Math.abs(n);
+        if (n < 10) {
+            return 1;
+        }
+        return 1 + countDigits(n / 10);
+    }
+
+    static String repeat(String text, int times) {
+        if (times <= 0) {
+            return "";
+        }
+        return text + repeat(text, times - 1);
+    }
+
+    static void checkEquals(int expected, int actual) {
+        if (expected != actual) {
+            throw new AssertionError("expected " + expected + " but got " + actual);
+        }
+    }
+
+    static void checkEquals(String expected, String actual) {
+        if (!expected.equals(actual)) {
+            throw new AssertionError("expected " + expected + " but got " + actual);
+        }
+    }
+
+    public static void main(String[] args) {
+        checkEquals(1, countDigits(7));
+        checkEquals(3, countDigits(105));
+        checkEquals("hahaha", repeat("ha", 3));
+        checkEquals("", repeat("ha", 0));
+        System.out.println("Recursion drills passed");
+    }
+}`,
+      commands: [
+        {
+          label: 'Compile the drill',
+          note: 'Run this from the folder containing RecursionDrills.java.',
+          command: 'javac RecursionDrills.java'
+        },
+        {
+          label: 'Run the checks',
+          note: 'The program prints success only after all self-checks pass.',
+          command: 'java RecursionDrills'
+        }
+      ],
+      practicePrompts: [
+        {
+          title: 'Count digits',
+          level: 'Starter',
+          goal: 'Write countDigits so 7 has 1 digit and 105 has 3 digits.',
+          checks: ['countDigits(0) returns 1.', 'countDigits(42) returns 2.', 'countDigits(-900) returns 3.'],
+          stretch: 'Write a comment explaining why dividing by 10 makes the problem smaller.'
+        },
+        {
+          title: 'Repeat text',
+          level: 'Core',
+          goal: 'Build a string by repeating a smaller request.',
+          checks: ['repeat("ha", 3) returns "hahaha".', 'repeat("x", 1) returns "x".', 'repeat("x", 0) returns "".' ],
+          stretch: 'Try the same problem with a loop and compare which version is easier to read.'
+        },
+        {
+          title: 'Reverse text',
+          level: 'Stretch',
+          goal: 'Create reverse("java") using the first character plus a recursive call on the rest.',
+          checks: ['reverse("") returns "".', 'reverse("a") returns "a".', 'reverse("java") returns "avaj".'],
+          stretch: 'Avoid substring indexes until you can explain what each index means.'
+        }
+      ],
+      keyPoints: [
+        'Recursion drills should stay tiny.',
+        'Every prompt needs expected outputs.',
+        'A method can be correct before it has terminal input.',
+        'Use self-checks to protect your solution while refactoring.'
+      ],
+      commonMistakes: [
+        'Starting with user input instead of the recursive method.',
+        'Forgetting to test zero, one, or empty input.',
+        'Letting recursion continue with the same input forever.'
+      ],
+      related: ['Testing', 'JVM & Memory']
+    },
+    {
+      id: 'one-class-prompts',
+      title: 'One-Class Project Prompts',
+      category: 'habits',
+      icon: '05',
+      tagline: 'Finishable terminal programs',
+      definition: 'A one-class project is a complete beginner program kept in one public class so compiling, running, and testing stay simple.',
+      realWorld: 'It is a small workbench project: one file, one purpose, a few methods, and clear checks before decoration.',
+      why: 'One-class projects help beginners finish real programs without getting buried in packages, build tools, or UI frameworks.',
+      howThink: 'Keep main as the coordinator. Put real logic in named methods. Add self-checks before adding menus or file I/O.',
+      whenUse: 'Use one-class projects for the first version of calculators, converters, quizzes, grade tools, and text helpers.',
+      syntax: 'Create one file, compile it with javac ProjectName.java, then run java ProjectName.',
+      fileName: 'OneClassProjects.java',
+      code: `public class OneClassProjects {
+    static double celsiusToFahrenheit(double celsius) {
+        return celsius * 9 / 5 + 32;
+    }
+
+    static boolean isPassing(int score) {
+        return score >= 70;
+    }
+
+    static String initials(String first, String last) {
+        return first.substring(0, 1).toUpperCase()
+            + last.substring(0, 1).toUpperCase();
+    }
+
+    public static void main(String[] args) {
+        System.out.println(celsiusToFahrenheit(20));
+        System.out.println(isPassing(82));
+        System.out.println(initials("Ada", "Lovelace"));
+    }
+}`,
+      commands: [
+        {
+          label: 'Create a project folder',
+          note: 'Keep small one-class projects in their own folder so .class files do not mix with notes.',
+          command: 'mkdir -p java-practice/one-class\ncd java-practice/one-class'
+        },
+        {
+          label: 'Compile and run',
+          note: 'Use the class name without .java when running.',
+          command: 'javac OneClassProjects.java\njava OneClassProjects'
+        }
+      ],
+      practicePrompts: [
+        {
+          title: 'Temperature converter',
+          level: 'Starter',
+          goal: 'Convert Celsius to Fahrenheit and Fahrenheit to Celsius with two methods.',
+          checks: ['celsiusToFahrenheit(0) returns 32.0.', 'celsiusToFahrenheit(100) returns 212.0.', 'fahrenheitToCelsius(32) returns 0.0.'],
+          stretch: 'Print a tiny table for 0, 10, 20, and 30 Celsius.'
+        },
+        {
+          title: 'Grade helper',
+          level: 'Core',
+          goal: 'Turn numeric scores into pass/fail and letter labels.',
+          checks: ['isPassing(70) returns true.', 'isPassing(69) returns false.', 'letterGrade(90) returns "A".'],
+          stretch: 'Reject scores below 0 or above 100 with IllegalArgumentException.'
+        },
+        {
+          title: 'Text initials',
+          level: 'Core',
+          goal: 'Return uppercase initials from first and last name input.',
+          checks: ['initials("Ada", "Lovelace") returns "AL".', 'initials("grace", "hopper") returns "GH".'],
+          stretch: 'Trim extra spaces before reading the first character.'
+        },
+        {
+          title: 'Number guessing rules',
+          level: 'Stretch',
+          goal: 'Write compareGuess(secret, guess) that returns "low", "high", or "correct".',
+          checks: ['compareGuess(10, 7) returns "low".', 'compareGuess(10, 12) returns "high".', 'compareGuess(10, 10) returns "correct".'],
+          stretch: 'Add Scanner input only after compareGuess is fully checked.'
+        }
+      ],
+      keyPoints: [
+        'One class is enough for many first projects.',
+        'Start with pure methods that return values.',
+        'Add terminal input after the methods pass checks.',
+        'Use Git after each working milestone.'
+      ],
+      commonMistakes: [
+        'Adding menus, colors, or files before the core method works.',
+        'Putting all logic directly inside main.',
+        'Starting Maven or Gradle for a 30-line exercise.'
+      ],
+      related: ['Methods', 'Testing']
     }
   ]);
 })();

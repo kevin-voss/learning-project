@@ -539,6 +539,59 @@
   margin-left: 4px;
 }
 
+.prompt-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.prompt-card {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--pattern-color);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.prompt-level,
+.prompt-subhead {
+  color: var(--pattern-color);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+}
+
+.prompt-card h3 {
+  margin: 8px 0;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 18px;
+}
+
+.prompt-card p,
+.prompt-card li,
+.prompt-stretch {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.prompt-card p {
+  margin: 0 0 12px;
+}
+
+.prompt-card ul {
+  margin: 6px 0 0;
+  padding-left: 18px;
+}
+
+.prompt-stretch {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+
 .visual-panel {
   padding: 18px;
   overflow-x: auto;

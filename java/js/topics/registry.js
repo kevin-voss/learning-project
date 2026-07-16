@@ -192,7 +192,7 @@ Java.topics.registry = [
     order: 14,
     prerequisites: ['methods', 'classes-and-objects'],
     ltsNote: 'Ubuntu + Java 21 LTS',
-    stats: [{ value: '3', label: 'Lessons' }, { value: 'Quality', label: 'Level' }],
+    stats: [{ value: '4', label: 'Lessons' }, { value: 'Quality', label: 'Level' }],
     accent: 'violet'
   },
   {

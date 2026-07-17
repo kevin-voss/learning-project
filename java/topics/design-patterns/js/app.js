@@ -126,6 +126,96 @@ const icons = {
   link: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>'
 };
 
+function summarizePatternCode(pattern) {
+  return `The Java sketch shows the moving parts of ${pattern.name}: the names involved, who creates or calls whom, and the small example at the bottom that shows how a beginner would use it.`;
+}
+
+function explainPatternLine(line) {
+  const trimmed = line.trim();
+  if (!trimmed) return '';
+  if (trimmed.startsWith('//')) return 'A human note labels the role of the next few lines.';
+  if (trimmed.startsWith('/*') || trimmed.startsWith('*') || trimmed.endsWith('*/')) return 'Part of a longer human note. Java ignores it when compiling.';
+  if (/^interface\s+|^public\s+interface\s+/.test(trimmed)) return 'The line defines an interface, which is a promise about methods that other classes can implement.';
+  if (/\b(public\s+)?class\s+/.test(trimmed)) return 'The line starts a class. In pattern examples, each class usually plays one named role.';
+  if (/\bextends\b/.test(trimmed)) return 'extends means this class reuses or specializes behavior from another class.';
+  if (/\bimplements\b/.test(trimmed)) return 'implements means this class agrees to provide the methods required by an interface.';
+  if (/\bprivate\s+/.test(trimmed)) return 'private hides this field, constructor, or helper from outside code so access stays controlled.';
+  if (/\bpublic\s+static\b/.test(trimmed)) return 'public static makes this member available from the class itself, which is common in small pattern sketches.';
+  if (/\bnew\s+[A-Z]/.test(trimmed)) return 'new creates an object, which is often the key moment in creation-focused patterns.';
+  if (/System\.out\.println/.test(trimmed)) return 'System.out.println prints a value so you can see the example behavior in the terminal.';
+  if (/^return\b/.test(trimmed)) return 'return sends an object or value back to the caller.';
+  if (/^if\s*\(/.test(trimmed)) return 'if protects a decision: the following block runs only when the condition is true.';
+  if (/^for\s*\(/.test(trimmed)) return 'for repeats work for each item or while a counter condition is true.';
+  if (/^[\w<>\[\], ?]+\s+\w+\s*=/.test(trimmed) || /^final\s+[\w<>\[\], ?]+\s+\w+\s*=/.test(trimmed)) {
+    return 'A variable is being created: the type sets what can be stored, the name lets later code use it, and = gives it a value.';
+  }
+  if (/\)\s*\{?$/.test(trimmed) && !/^(if|for|while|switch|catch|synchronized)\b/.test(trimmed)) {
+    return 'The line declares a method or constructor, which is a named block of behavior.';
+  }
+  if (/^[{}]+$/.test(trimmed)) return 'A brace opens or closes a block that keeps related Java lines together.';
+  return 'One piece of the pattern sketch. Read the role names first, then follow which object calls which method.';
+}
+
+function patternCodeExplanation(pattern) {
+  const lines = pattern.code.split('\n')
+    .map((text, index) => ({ text, line: index + 1 }))
+    .filter(item => item.text.trim());
+  const items = [];
+
+  lines.forEach(item => {
+    const text = explainPatternLine(item.text);
+    if (!text) return;
+    if (/^[{}]+$/.test(item.text.trim()) && items.length > 8) return;
+    items.push({
+      label: `Line ${item.line}`,
+      code: item.text.trim(),
+      text
+    });
+  });
+
+  const visible = items.slice(0, 14);
+  if (items.length > visible.length) {
+    visible.push({
+      label: 'After that',
+      code: '',
+      text: 'The remaining lines repeat the same pattern roles: classes hold state, methods perform actions, and the usage code connects them.'
+    });
+  }
+  return visible;
+}
+
+function renderPatternCode(pattern) {
+  const items = patternCodeExplanation(pattern);
+  return `
+    <div class="detail-section">
+      <div class="detail-section-label">${icons.code}Java Pattern Sketch</div>
+      <div class="code-summary">${escapeHtml(summarizePatternCode(pattern))}</div>
+      <div class="code-wrap">
+        <div class="code-head">
+          <div class="file">
+            <div class="dots"><span></span><span></span><span></span></div>
+            <span>${escapeHtml(pattern.name.replace(/\s+/g, ''))}.java</span>
+          </div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <pre><code class="language-plaintext">${escapeHtml(pattern.code)}</code></pre>
+      </div>
+      <div class="code-explain">
+        <div class="code-explain-title">Beginner walkthrough</div>
+        <ol>
+          ${items.map(item => `
+            <li>
+              <div class="walk-label">${escapeHtml(item.label)}</div>
+              ${item.code ? `<code>${escapeHtml(item.code)}</code>` : ''}
+              <p>${escapeHtml(item.text)}</p>
+            </li>
+          `).join('')}
+        </ol>
+      </div>
+    </div>
+  `;
+}
+
 // Render the detail panel for the selected pattern
 function renderDetail() {
   const p = patterns.find(x => x.id === selectedId);
@@ -160,19 +250,7 @@ function renderDetail() {
         </div>
       </div>
       
-      <div class="detail-section">
-        <div class="detail-section-label">${icons.code}Java Pattern Sketch</div>
-        <div class="code-wrap">
-          <div class="code-head">
-            <div class="file">
-              <div class="dots"><span></span><span></span><span></span></div>
-              <span>${p.name.replace(/\s+/g, '')}.java</span>
-            </div>
-            <button class="copy-btn" onclick="copyCode(this)">copy</button>
-          </div>
-          <pre><code class="language-plaintext">${escapeHtml(p.code)}</code></pre>
-        </div>
-      </div>
+      ${renderPatternCode(p)}
       
       <div class="detail-section">
         <div class="two-col">

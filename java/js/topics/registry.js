@@ -3,14 +3,14 @@ Java.topics.registry = [
     id: 'getting-started',
     title: 'Getting Started on Ubuntu',
     tagline: 'Understand Ubuntu commands and run your first program',
-    description: 'Use the Ubuntu terminal, sudo, apt, OpenJDK 21, javac, java, and a tiny folder layout before writing larger code.',
+    description: 'Use the Ubuntu terminal, sudo, apt, OpenJDK 21, JDK, JRE, JVM, javac, java, and a tiny folder layout before writing larger code.',
     path: 'topics/getting-started/index.html',
     status: 'available',
     tier: 'foundation',
     order: 1,
     prerequisites: [],
     ltsNote: 'Ubuntu + Java 21 LTS',
-    stats: [{ value: '9', label: 'Lessons' }, { value: 'Ubuntu', label: 'OS' }],
+    stats: [{ value: '10', label: 'Lessons' }, { value: 'Ubuntu', label: 'OS' }],
     accent: 'amber'
   },
   {

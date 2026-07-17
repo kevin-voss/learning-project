@@ -286,8 +286,78 @@ javac --version`,
     glossary: ubuntuGlossary
   },
   {
-    id: 'javac-java',
+    id: 'jdk-jre-jvm',
     num: '05',
+    title: 'JDK, JRE, and JVM',
+    category: 'setup',
+    icon: 'JVM',
+    tagline: 'Separate the Java tool names',
+    definition: 'JDK, JRE, and JVM are three related Java pieces. The JDK is for building Java programs, the JRE is for running Java programs, and the JVM is the engine that actually executes Java bytecode.',
+    what: [
+      'JDK means Java Development Kit. It includes javac, java, the JVM, libraries, and developer tools.',
+      'JRE means Java Runtime Environment. It has what is needed to run Java programs, but not the full developer toolset.',
+      'JVM means Java Virtual Machine. It loads .class bytecode and executes it on your computer.',
+      'Bytecode is the compiled .class format that the JVM understands.'
+    ],
+    realWorld: 'Think of it like this: the JDK is a full workshop with tools and a machine, the JRE is mostly the machine plus parts needed to operate it, and the JVM is the machine doing the work.',
+    why: 'Beginners see these names early because Java has a build step and a run step. Knowing the difference explains why javac belongs to the JDK, while java starts the runtime and JVM.',
+    howThink: 'Use this chain: you write .java source code, javac from the JDK compiles it into .class bytecode, and the JVM runs that bytecode when you use the java command.',
+    whenUse: 'Think about JDK, JRE, and JVM whenever an install guide asks which Java package to install or an error says javac, java, class file, runtime, or virtual machine.',
+    syntax: 'For beginner coding on Ubuntu, install the JDK package: sudo apt install openjdk-21-jdk. That gives you the tools for both compiling and running.',
+    exampleLabel: 'Ubuntu Terminal',
+    codeLanguage: 'bash',
+    fileName: 'java-pieces.sh',
+    code: `javac --version
+java --version
+
+# Write source code:
+# HelloJava.java
+
+# Compile to bytecode:
+javac HelloJava.java
+
+# Run bytecode on the JVM:
+java HelloJava`,
+    commands: [
+      {
+        label: 'Check the compiler from the JDK',
+        note: 'javac is the compiler. If this command is missing, you probably do not have the full JDK installed.',
+        command: 'javac --version'
+      },
+      {
+        label: 'Check the Java launcher/runtime',
+        note: 'java starts the runtime and JVM. It should report Java 21 for these lessons.',
+        command: 'java --version'
+      },
+      {
+        label: 'Compile source into bytecode',
+        note: 'javac reads HelloJava.java and creates HelloJava.class.',
+        command: 'javac HelloJava.java'
+      },
+      {
+        label: 'Run the class on the JVM',
+        note: 'java HelloJava asks the JVM to load HelloJava.class and call main.',
+        command: 'java HelloJava'
+      }
+    ],
+    keyPoints: [
+      'Install the JDK when you are learning to write Java.',
+      'The JRE is enough for running some Java apps, but not enough for compiling your own code with javac.',
+      'The JVM is the engine that runs compiled .class bytecode.',
+      'javac creates bytecode; java starts the runtime/JVM and runs it.',
+      'OpenJDK 21 JDK gives beginners the full set needed for these lessons.'
+    ],
+    commonMistakes: [
+      'Installing only a JRE and then wondering why javac is missing.',
+      'Thinking the JVM reads your .java file directly after you have compiled it.',
+      'Using JDK, JRE, JVM, java, and javac as if they all mean the same thing.'
+    ],
+    related: ['OpenJDK 21 Install', 'javac and java'],
+    glossary: ubuntuGlossary
+  },
+  {
+    id: 'javac-java',
+    num: '06',
     title: 'javac and java',
     category: 'setup',
     icon: '⌁',
@@ -330,7 +400,7 @@ javac --version`,
   },
   {
     id: 'project-layout',
-    num: '06',
+    num: '07',
     title: 'Project Layout',
     category: 'setup',
     icon: '▦',
@@ -392,7 +462,7 @@ code src/ProjectLayout.java`
   },
   {
     id: 'main-method',
-    num: '07',
+    num: '08',
     title: 'main',
     category: 'firstRun',
     icon: '▶',
@@ -423,7 +493,7 @@ code src/ProjectLayout.java`
   },
   {
     id: 'first-program',
-    num: '08',
+    num: '09',
     title: 'First Program',
     category: 'firstRun',
     icon: 'J',
@@ -455,7 +525,7 @@ code src/ProjectLayout.java`
   },
   {
     id: 'compile-run-flow',
-    num: '09',
+    num: '10',
     title: 'Compile and Run Flow',
     category: 'firstRun',
     icon: '⇢',

@@ -61,23 +61,29 @@
             <div class="num-tag">02 / PRACTICE REALITY</div>
             <h2>Browser Lessons, Terminal Runs</h2>
           </div>
-          <p>Use the page to read examples and diagrams. Use Ubuntu Terminal to create files, compile with <code>javac</code>, and run with <code>java</code>.</p>
+          <p>Use the page to read examples and diagrams. Use Ubuntu Terminal to install OpenJDK with <code>sudo apt</code>, create files, compile with <code>javac</code>, and run with <code>java</code>.</p>
         </div>
         <div class="terminal-practice">
           <div class="terminal-step">
             <span>1</span>
+            <strong>Install Java tools</strong>
+            <pre><code>sudo apt update
+sudo apt install openjdk-21-jdk</code></pre>
+          </div>
+          <div class="terminal-step">
+            <span>2</span>
             <strong>Create a small file</strong>
             <pre><code>mkdir -p java-practice
 cd java-practice
 nano HelloJava.java</code></pre>
           </div>
           <div class="terminal-step">
-            <span>2</span>
+            <span>3</span>
             <strong>Compile it</strong>
             <pre><code>javac HelloJava.java</code></pre>
           </div>
           <div class="terminal-step">
-            <span>3</span>
+            <span>4</span>
             <strong>Run the compiled class</strong>
             <pre><code>java HelloJava</code></pre>
           </div>

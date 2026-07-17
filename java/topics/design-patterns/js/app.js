@@ -2,6 +2,23 @@
   const { categories, patterns } = Java.topics.designPatterns;
   let selectedId = patterns[0].id;
 
+  function indexToLetters(index) {
+    let value = index + 1;
+    let label = '';
+
+    while (value > 0) {
+      value -= 1;
+      label = String.fromCharCode(65 + (value % 26)) + label;
+      value = Math.floor(value / 26);
+    }
+
+    return label;
+  }
+
+  function patternStep(pattern) {
+    return indexToLetters(patterns.findIndex(item => item.id === pattern.id));
+  }
+
   // Render the visual roadmap
 function renderRoadmap() {
   const container = document.getElementById('roadmap');
@@ -31,7 +48,7 @@ function renderRoadmap() {
                  tabindex="0"
                  role="button"
                  aria-label="View ${p.name} pattern">
-              <div class="num">${p.num} · ${cat.name}</div>
+              <div class="num">Step ${patternStep(p)} · ${cat.name}</div>
               <div class="name"><span class="icon">${p.icon}</span>${p.name}</div>
               <div class="tag">${p.tagline}</div>
             </div>
@@ -76,7 +93,7 @@ function renderSidebar() {
                role="button">
             <span class="marker" style="background: ${cat.color};"></span>
             <span>${p.name}</span>
-            <span class="num">${p.num}</span>
+            <span class="num">Step ${patternStep(p)}</span>
           </div>
         `).join('')}
       </div>
@@ -114,13 +131,15 @@ function renderDetail() {
   const p = patterns.find(x => x.id === selectedId);
   const cat = categories[p.category];
   const detail = document.getElementById('detail');
+  const stepLabel = patternStep(p);
+  const finalStepLabel = indexToLetters(patterns.length - 1);
   
   detail.style.setProperty('--pattern-color', cat.color);
   detail.style.setProperty('--pattern-bg', cat.bg);
   
   detail.innerHTML = `
     <div class="detail-head">
-      <div class="detail-cat">${cat.name} · ${p.num} / 12</div>
+      <div class="detail-cat">${cat.name} · Step ${stepLabel} of ${finalStepLabel}</div>
       <h1 class="detail-title">${p.name}</h1>
       <p class="detail-tagline">${p.tagline}</p>
     </div>

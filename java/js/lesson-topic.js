@@ -60,6 +60,19 @@
     return items.map(item => `<li>${renderText(item, lesson)}</li>`).join('');
   }
 
+  function indexToLetters(index) {
+    let value = index + 1;
+    let label = '';
+
+    while (value > 0) {
+      value -= 1;
+      label = String.fromCharCode(65 + (value % 26)) + label;
+      value = Math.floor(value / 26);
+    }
+
+    return label;
+  }
+
   function renderSyntax(lesson) {
     if (!lesson.syntax) return '';
     return `
@@ -395,6 +408,10 @@ cd ~/java-practice/${folder}`
       const byCategory = groupedLessons();
       let html = '';
 
+      function lessonStep(lesson) {
+        return indexToLetters(lessons.findIndex(item => item.id === lesson.id));
+      }
+
       Object.keys(categories).forEach(catKey => {
         const cat = categories[catKey];
         const items = byCategory[catKey] || [];
@@ -414,7 +431,7 @@ cd ~/java-practice/${folder}`
                      tabindex="0"
                      role="button"
                      aria-label="View ${lesson.title}">
-                  <div class="num">${lesson.num} · ${cat.name}</div>
+                  <div class="num">Step ${lessonStep(lesson)} · ${cat.name}</div>
                   <div class="name"><span class="icon">${lesson.icon || '•'}</span>${lesson.title}</div>
                   <div class="tag">${lesson.tagline}</div>
                 </div>
@@ -441,6 +458,10 @@ cd ~/java-practice/${folder}`
       const sidebar = document.getElementById('sidebar');
       let html = '';
 
+      function lessonStep(lesson) {
+        return indexToLetters(lessons.findIndex(item => item.id === lesson.id));
+      }
+
       Object.keys(categories).forEach(catKey => {
         const cat = categories[catKey];
         const items = lessons.filter(lesson => lesson.category === catKey);
@@ -459,7 +480,7 @@ cd ~/java-practice/${folder}`
                    role="button">
                 <span class="marker" style="background: ${cat.color};"></span>
                 <span>${lesson.title}</span>
-                <span class="num">${lesson.num}</span>
+                <span class="num">Step ${lessonStep(lesson)}</span>
               </div>
             `).join('')}
           </div>
@@ -483,13 +504,15 @@ cd ~/java-practice/${folder}`
       const lesson = lessons.find(item => item.id === selectedId);
       const cat = categories[lesson.category];
       const detail = document.getElementById('detail');
+      const stepLabel = indexToLetters(lessons.findIndex(item => item.id === lesson.id));
+      const finalStepLabel = indexToLetters(lessons.length - 1);
 
       detail.style.setProperty('--pattern-color', cat.color);
       detail.style.setProperty('--pattern-bg', cat.bg);
 
       detail.innerHTML = `
         <div class="detail-head">
-          <div class="detail-cat">${cat.name} · ${lesson.num} / ${lessons.length}</div>
+          <div class="detail-cat">${cat.name} · Step ${stepLabel} of ${finalStepLabel}</div>
           <h1 class="detail-title">${lesson.title}</h1>
           <p class="detail-tagline">${lesson.tagline}</p>
         </div>

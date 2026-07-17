@@ -188,11 +188,16 @@
   border-radius: 50%;
   flex-shrink: 0;
 }
+.sidebar-item span:not(.marker):not(.num) {
+  min-width: 0;
+}
 .sidebar-item .num {
   font-family: 'JetBrains Mono', monospace;
   font-size: 10px;
   color: var(--dim);
   margin-left: auto;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 /* Detail content */
@@ -400,7 +405,7 @@
 }
 
 .command-step::before {
-  content: counter(command-step);
+  content: counter(command-step, upper-alpha);
   width: 26px;
   height: 26px;
   border-radius: 999px;

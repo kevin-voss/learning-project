@@ -19,7 +19,7 @@
   }
 
   addTopic('methods', {
-    badge: 'Step 06 · Java 21 LTS',
+    badge: 'Topic 06 · Java 21 LTS',
     label: 'Methods',
     headline: 'Methods,',
     accent: 'reusable steps.',
@@ -149,7 +149,7 @@
   ]);
 
   addTopic('classes-and-objects', {
-    badge: 'Step 07 · Java 21 LTS',
+    badge: 'Topic 07 · Java 21 LTS',
     label: 'Objects',
     headline: 'Classes and objects,',
     accent: 'state with behavior.',
@@ -293,7 +293,7 @@
   ]);
 
   addTopic('arrays', {
-    badge: 'Step 08 · Java 21 LTS',
+    badge: 'Topic 08 · Java 21 LTS',
     label: 'Arrays',
     headline: 'Arrays,',
     accent: 'fixed-size lists.',
@@ -407,7 +407,7 @@
   ]);
 
   addTopic('strings', {
-    badge: 'Step 09 · Java 21 LTS',
+    badge: 'Topic 09 · Java 21 LTS',
     label: 'Text',
     headline: 'Strings,',
     accent: 'text with rules.',
@@ -516,7 +516,7 @@
   ]);
 
   addTopic('collections', {
-    badge: 'Step 10 · Java 21 LTS',
+    badge: 'Topic 10 · Java 21 LTS',
     label: 'Collections',
     headline: 'Collections,',
     accent: 'flexible groups.',
@@ -635,7 +635,7 @@ public class MapDemo {
   ]);
 
   addTopic('exceptions', {
-    badge: 'Step 11 · Java 21 LTS',
+    badge: 'Topic 11 · Java 21 LTS',
     label: 'Exceptions',
     headline: 'Exceptions,',
     accent: 'visible failure.',
@@ -751,7 +751,7 @@ public class MapDemo {
   ]);
 
   addTopic('io-basics', {
-    badge: 'Step 12 · Java 21 LTS',
+    badge: 'Topic 12 · Java 21 LTS',
     label: 'I/O',
     headline: 'I/O basics,',
     accent: 'terminal and files.',
@@ -867,7 +867,7 @@ public class WriteLinesDemo {
   ]);
 
   addTopic('debugging', {
-    badge: 'Step 13 · Ubuntu workflow',
+    badge: 'Topic 13 · Ubuntu workflow',
     label: 'Debugging',
     headline: 'Debugging,',
     accent: 'small calm steps.',
@@ -967,7 +967,7 @@ jshell> /exit`,
   ]);
 
   addTopic('testing', {
-    badge: 'Step 14 · Java 21 LTS',
+    badge: 'Topic 14 · Java 21 LTS',
     label: 'Testing',
     headline: 'Testing,',
     accent: 'repeatable confidence.',
@@ -1170,7 +1170,7 @@ gradle test`,
   ]);
 
   addTopic('build-tools', {
-    badge: 'Step 15 · Ubuntu builds',
+    badge: 'Topic 15 · Ubuntu builds',
     label: 'Build Tools',
     headline: 'Maven and Gradle,',
     accent: 'repeatable builds.',
@@ -1267,7 +1267,7 @@ gradle build`,
   ]);
 
   addTopic('jvm-memory', {
-    badge: 'Step 19 · Java runtime',
+    badge: 'Topic 19 · Java runtime',
     label: 'Runtime',
     headline: 'JVM and memory,',
     accent: 'what runs Java.',
@@ -1443,7 +1443,7 @@ java MemoryDemo`,
   ]);
 
   addTopic('practice-projects', {
-    badge: 'Step 21 · Practice mode',
+    badge: 'Topic 21 · Practice mode',
     label: 'Projects',
     headline: 'Practice projects,',
     accent: 'small wins.',

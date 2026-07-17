@@ -2,15 +2,15 @@ Java.topics.registry = [
   {
     id: 'getting-started',
     title: 'Getting Started on Ubuntu',
-    tagline: 'Install JDK 21 and run your first program',
-    description: 'Use the Ubuntu terminal, apt, OpenJDK 21, javac, java, and a tiny folder layout before writing larger code.',
+    tagline: 'Understand Ubuntu commands and run your first program',
+    description: 'Use the Ubuntu terminal, sudo, apt, OpenJDK 21, javac, java, and a tiny folder layout before writing larger code.',
     path: 'topics/getting-started/index.html',
     status: 'available',
     tier: 'foundation',
     order: 1,
     prerequisites: [],
     ltsNote: 'Ubuntu + Java 21 LTS',
-    stats: [{ value: '6', label: 'Lessons' }, { value: 'Ubuntu', label: 'OS' }],
+    stats: [{ value: '9', label: 'Lessons' }, { value: 'Ubuntu', label: 'OS' }],
     accent: 'amber'
   },
   {

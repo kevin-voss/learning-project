@@ -30,7 +30,7 @@
     <section class="section">
       <div class="container">
         <div class="section-head">
-          <div><div class="num-tag">01 / OVERVIEW</div><h2>The Roadmap</h2></div>
+          <div><div class="num-tag">A / OVERVIEW</div><h2>The Roadmap</h2></div>
           <p>${details.overview}</p>
         </div>
         <div class="roadmap-lanes" id="roadmap"></div>
@@ -40,7 +40,7 @@
     <section class="section" id="detail-section">
       <div class="container">
         <div class="section-head">
-          <div><div class="num-tag">02 / LESSON</div><h2>The Details</h2></div>
+          <div><div class="num-tag">B / LESSON</div><h2>The Details</h2></div>
           <p>What · why · mental model · terminal commands where relevant · code · mistakes</p>
         </div>
         <div class="detail-grid">

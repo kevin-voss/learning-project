@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Engineering Field Guide · foundations, RAG, tools, agents, MCP, security, evals</title>
+<meta name="description" content="Dark, print-ready field guide to AI engineering: how LLMs work, tokens and cost, context budgeting, RAG and hybrid search, tool calling, MCP, AG-UI, agent orchestration, memory, prompt injection defense, guardrails, evals, AWS system patterns.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/print.css">
+</head>
+<body>
+
+<div id="progress"></div>
+
+<header class="topbar">
+  <button class="tbtn" id="nav-toggle" type="button" aria-label="Toggle navigation">☰</button>
+  <a class="brand" href="#top"><b>ai</b>·field-guide</a>
+  <div class="tools">
+    <input id="toc-filter" type="search" placeholder="filter topics · /" aria-label="Filter topics">
+    <button class="tbtn" id="expand-all" type="button">expand code</button>
+    <button class="tbtn" id="print-btn" type="button">print / pdf</button>
+  </div>
+</header>
+
+<nav class="sidebar" id="toc" aria-label="Topics">
+  <div class="nav-empty">loading topics…</div>
+</nav>
+
+<main class="main" id="top">
+  <div class="content">
+    <div class="hero">
+      <h1>AI engineering <b>field guide</b></h1>
+      <p class="sub">A dark, print-ready map of the whole stack: how the model thinks, what a token costs,
+        how retrieval actually works, how tools and agents are wired, and what breaks in production.
+        Every topic follows the same loop: <em>problem → solution → mechanics → when to use → example → pitfalls → checklist</em>.</p>
+      <div class="hero-chips">
+        <a href="#llm-internals">foundations</a>
+        <a href="#tokens-cost">tokens &amp; cost</a>
+        <a href="#rag-overview">rag</a>
+        <a href="#tool-calling">tools</a>
+        <a href="#mcp">mcp</a>
+        <a href="#agent-patterns">agents</a>
+        <a href="#memory">memory</a>
+        <a href="#injection">security</a>
+        <a href="#evals">evals</a>
+        <a href="#aws">systems</a>
+      </div>
+    </div>
+
+    <div id="content">
+      <noscript><p class="warn">This guide renders its sections with JavaScript. Enable it, or see
+        <code>content/README.md</code> for the source files.</p></noscript>
+    </div>
+
+    <footer class="footer">
+      <p>learning-project · tracks/ai · source sections live in <code>content/</code> · print with the button above
+        (each topic starts on a new page) · diagrams load mermaid from CDN, sources show offline.</p>
+    </footer>
+  </div>
+</main>
+
+<script src="js/app.js"></script>
+<script src="content/01-foundations/llm-internals.js"></script>
+<script src="content/01-foundations/ml-multimodal.js"></script>
+<script src="content/01-foundations/finetune-decide.js"></script>
+<script src="content/02-tokens-context/tokens-cost.js"></script>
+<script src="content/02-tokens-context/context-budget.js"></script>
+<script src="content/03-rag-search/rag-overview.js"></script>
+<script src="content/03-rag-search/chunking.js"></script>
+<script src="content/03-rag-search/embeddings.js"></script>
+<script src="content/03-rag-search/search-rerank.js"></script>
+<script src="content/03-rag-search/rag-variants.js"></script>
+<script src="content/04-tools-mcp/tool-calling.js"></script>
+<script src="content/04-tools-mcp/mcp.js"></script>
+<script src="content/04-tools-mcp/ag-ui.js"></script>
+<script src="content/05-agents-orchestration/agent-patterns.js"></script>
+<script src="content/05-agents-orchestration/graphs.js"></script>
+<script src="content/05-agents-orchestration/ops.js"></script>
+<script src="content/05-agents-orchestration/ecosystem.js"></script>
+<script src="content/06-memory/memory.js"></script>
+<script src="content/07-security/injection.js"></script>
+<script src="content/07-security/guardrails.js"></script>
+<script src="content/08-evals/evals.js"></script>
+<script src="content/09-systems/architecture.js"></script>
+<script src="content/09-systems/aws.js"></script>
+<script src="content/10-quickref/quickref.js"></script>
+</body>
+</html>

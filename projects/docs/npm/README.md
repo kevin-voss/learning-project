@@ -1,8 +1,10 @@
 # npm (Node Package Manager)
 
-**When:** Project 3 (CLI) and Project 4 (Vite/React). Read `package.json` sections before `npm init`; read link/npx before publish.
+**Scope:** Phase 6 optional (projects 03–04). Not on the main Java spine. Maven is the Java build tool (Layer C).
 
-**Roadmap:** [Project 3 Phase 2](../roadmap.md#phase-23--npm-project--dependencies-15-h)
+**When:** Optional Node CLI or React. Read `package.json` before `npm init`.
+
+**Roadmap:** [roadmap → Project 03 / 04](../roadmap.md)
 
 ---
 

@@ -1,123 +1,50 @@
 # Getting Started
 
-Install tools **as each project needs them** — you don't need everything on day one.
+**Scope:** Early web projects (00–01) and shared tools. Java setup lives in [`tracks/java`](../../../tracks/java/README.md) (Ubuntu, Java 21).
+
+Install tools **when the spine needs them**. You do not need everything on day one.
 
 | Tool | Needed for | Install when |
 |------|------------|--------------|
-| VS Code + browser | Project 1 | **Now** |
-| Git | Project 1 | **Now** |
-| Live Server (or similar) | Project 1 | **Now** |
-| Node.js + npm | Projects 3–4 | Before Project 3 (install early if you want) |
-| Docker Desktop | Project 2 | Before Project 2 |
-| React DevTools extension | Project 4 | Before Project 4 |
+| VS Code + browser | Projects 00–01 | Phase 2 |
+| Git | All projects | Phase 2 (apply sheet links CS) |
+| Live Server (or similar) | 00–01 | Phase 2–3 |
+| Java 21 + Ubuntu terminal | Java Layers A–C · project 05 | Phase 4 |
+| Docker Desktop | Project 02 · Layer D Postgres | Phase 5 / Layer D |
+| Node.js + npm | Optional 03–04 only | Phase 6 if you take it |
+| React DevTools | Optional 04 | Phase 6 if you take it |
 
-**Start building:** [Roadmap → Project 1 Phase 1](../roadmap.md#project-1--weather-dashboard)
+**Order:** [`LEARNING_PATH`](../../../docs/LEARNING_PATH.md) · project checklists: [`roadmap`](../roadmap.md)
 
 ---
 
 ## What you already need to know
 
-- HTML tags and basic page structure
-- CSS selectors, colors, layout basics (flexbox helps)
-- JavaScript: variables, functions, `if`, `for`/`while`, arrays
+**For Phase 2–3 (web):** basic HTML/CSS ideas help. JS drills cover arrays, functions, loops.
 
-Shaky on JS? Spend an hour on [MDN JavaScript Guide](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide), then start Project 1 anyway.
+**For Phase 4 (Java):** start from the [java foundation sheet](../java/README.md). No Spring yet.
 
 ---
 
-## 1. Code editor
-
-**VS Code:** https://code.visualstudio.com/
-
-Optional extensions:
-
-- **Live Server** — preview HTML (Project 1)
-- **Prettier** — auto-format
-- **ESLint** — catch mistakes (Project 4)
-
----
-
-## 2. Git (Project 1 Phase 1)
+## First commands (web)
 
 ```bash
-git --version
-git config --global user.name "Your Name"
-git config --global user.email "you@example.com"
+pwd
+ls
+cd projects/00-static-page
 ```
 
-Install: https://git-scm.com/downloads
-
-When you `git init`, read [Git guide](../git/README.md#first-time-setup-per-project).
-
----
-
-## 3. Node.js and npm (before Project 3)
+## First commands (Java later)
 
 ```bash
-node --version   # v18+ or v20+ LTS
-npm --version
+java --version
+javac --version
 ```
 
-Install LTS: https://nodejs.org/
-
-You won't use Node until **Project 3**, but installing early is fine. When you get there: [Node.js](../nodejs/README.md) · [npm](../npm/README.md).
+Both should report `21.x`. Details: [tracks/java README](../../../tracks/java/README.md).
 
 ---
 
-## 4. Docker Desktop (before Project 2)
+## Checkpoint
 
-```bash
-docker --version
-docker run hello-world
-```
-
-Install: https://www.docker.com/products/docker-desktop/
-
-When you start Project 2: [Docker guide](../docker/README.md).
-
----
-
-## 5. Browser
-
-Chrome or Edge — **DevTools Network tab** is essential in Project 1.
-
-Project 4: install **React Developer Tools** extension.
-
----
-
-## Local server (Project 1 Phase 1)
-
-API calls fail on `file://` URLs. Serve over HTTP:
-
-1. **Live Server** — right-click `index.html`
-2. **npx serve .** — after Node installed
-3. **python3 -m http.server 8080** — often pre-installed on Mac
-
-Visit `http://localhost:8080` (or port shown).
-
----
-
-## Accounts (create when needed)
-
-| Service | When | Why |
-|---------|------|-----|
-| [GitHub](https://github.com) | Project 1 Phase 1 | Backup, portfolio |
-| [Docker Hub](https://hub.docker.com) | Project 2 | Share images |
-| [npm](https://www.npmjs.com) | Project 3 optional | Publish CLI |
-
-Weather data uses [Open-Meteo](https://open-meteo.com/) — **no account**.
-
----
-
-## When stuck
-
-1. Read the error out loud
-2. Project `docs/help/troubleshooting.md`
-3. [Roadmap](../roadmap.md) — confirm you're on the right phase
-4. [MDN](https://developer.mozilla.org/)
-
----
-
-## Next
-
-[Roadmap — Project 1 Phase 1](../roadmap.md#phase-1--setup-1-h) · [01 Weather Dashboard](../../01-weather-dashboard/README.md)
+You know which tools belong to web vs Java vs optional Node/React.

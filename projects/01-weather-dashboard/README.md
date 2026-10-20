@@ -2,7 +2,7 @@
 
 **Your first app that talks to the internet.**
 
-Build a weather app where a person types a city, clicks Search, and sees real weather from a public weather service.
+Build a weather app where a person types a city, clicks Search, and sees real weather from a public weather service. Browser JavaScript only. No Java here.
 
 Think of this project like making a tiny weather robot:
 
@@ -11,18 +11,29 @@ Think of this project like making a tiny weather robot:
 3. The internet sends back data.
 4. Your page turns that data into friendly text, numbers, and cards.
 
+> **Scope**
+>
+> | | |
+> |---|---|
+> | **Phase** | Phase 3 (JavaScript apply) |
+> | **Hours** | about 6–10 |
+> | **Java path** | Optional before Java. HTTP / `fetch` ideas help later with Layer C ([05 Java Weather CLI](../05-java-weather-cli/)). Do **not** teach or require Java in this project. |
+
 ## Status
 
 This folder contains **guides only**. You create all HTML, CSS, and JavaScript files yourself.
 
 That is on purpose. You learn more by making the folders and files with your own hands.
 
+## Where this sits
+
+[Learning path - Phase 3 (JavaScript)](../../docs/LEARNING_PATH.md#phase-3--javascript)
+
 ## Prerequisites
 
-- HTML, CSS, basic JS (arrays, functions, loops)
-- [Getting Started](../docs/setup/getting-started.md) — editor, Git, local server (Phase 1 only)
-- [Learning Roadmap](../docs/roadmap.md) — **start here for phase order**
-- **No account needed** — we use [Open-Meteo](https://open-meteo.com/) (free public API)
+- HTML, CSS, and basic JS (arrays, functions, loops) from Phase 2 and JS drills
+- [Getting Started](../docs/setup/getting-started.md) - editor, Git, local server
+- **No account needed** - we use [Open-Meteo](https://open-meteo.com/) (free public API)
 
 ## Project goal
 
@@ -50,15 +61,13 @@ The deeper goal is bigger than weather: you are learning how websites get data f
 | Recent searches | localStorage, JSON |
 | Responsive layout | CSS media queries |
 
-**Time estimate:** 8–12 hours
-
 ## Read this order
 
 | Doc | Read when |
 |-----|-----------|
 | [Project structure](./docs/structure.md) | First, to create folders/files in the terminal |
-| [Concepts](./docs/concepts.md) | Before API work — API, HTTP, JSON, fetch, async |
-| [Step-by-step plan](./docs/step-by-step.md) | **Main build guide** — follow this while coding |
+| [Concepts](./docs/concepts.md) | Before API work - API, HTTP, JSON, fetch, async |
+| [Step-by-step plan](./docs/step-by-step.md) | **Main build guide** - follow this while coding |
 | [Code reference](./docs/code-reference.md) | When you need example code patterns |
 | [Help: FAQ](./docs/help/faq.md) | Quick answers |
 | [Help: Troubleshooting](./docs/help/troubleshooting.md) | When something breaks |
@@ -118,8 +127,7 @@ When finished, you can explain:
 
 1. Open [Project structure](./docs/structure.md) and create the folders/files.
 2. Run `git init` in this folder.
-3. Open [Roadmap — Project 1 Phase 1](../docs/roadmap.md#phase-1--setup-1-h).
-4. Follow [step-by-step](./docs/step-by-step.md).
+3. Follow [step-by-step](./docs/step-by-step.md).
 
 ## Resources
 
@@ -127,6 +135,6 @@ When finished, you can explain:
 - [MDN Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)
 - [MDN async/await](https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Promises)
 
-## Next project
+## Next
 
-When deployed and working → [02-docker-portfolio](../02-docker-portfolio/)
+When search → live weather works → [Learning path Phase 4 (Java)](../../docs/LEARNING_PATH.md#phase-4--java-main-focus). Same weather idea returns in Java at Layer C: [05-java-weather-cli](../05-java-weather-cli/).

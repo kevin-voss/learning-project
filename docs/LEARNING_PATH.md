@@ -62,42 +62,127 @@ Skip rewriting Git/Docker/HTTP elsewhere — only deepen later.
 
 ### Phase 4 — Java (main focus)
 
+**Rule:** strong foundation first. No Spring deep-dive, no design-pattern marathon, no JPA until the layers below feel easy.
+
+Toy words: **class** = cookie cutter · **object** = cookie · **method** = what it can do.
+
+Sheet: [`projects/docs/java/`](../projects/docs/java/README.md) · Hub: [`tracks/java/`](../tracks/java/index.html)
+
+#### Layer A — Language foundation (must lock in)
+
+| Learn | Hub / CS | Prove it |
+|-------|----------|----------|
+| Setup, folders, files, `javac` / `java` | Getting started · project layout | Compile a one-file program |
+| Syntax, packages, imports | Syntax fundamentals | Second file in a package |
+| Data types, primitives vs references | Types and variables · CS `stack-heap-gc` | Explain stack vs heap in one sentence |
+| Operators, control flow | Operators · control flow | Small menu loop |
+| Methods | Methods | Extract a method and call it |
+| Classes and objects | Classes and objects | Cookie-cutter story out loud |
+| Arrays | Arrays · CS `arrays` | Fill and print an array |
+| Strings | Strings and text | `equals` vs `==` on strings |
+
+**Gate A:** You create folders, put classes in a package, compile from the terminal, and explain class vs object.
+
+#### Layer B — Types you use every day + algorithms (light)
+
+| Learn | Where | Prove it |
+|-------|-------|----------|
+| `ArrayList`, `HashMap`, `HashSet` | Hub collections · CS lists/maps/sets | Build a multi-file console list |
+| When array vs list vs map | Same + CS `big-o-notation` (skim) | Pick the right type for a task |
+| Exceptions, basic I/O | Hub exceptions · I/O | Fail safely, read/write a small file |
+| Simple algorithms | CS searching/sorting skim · practice projects | Linear search or sort a small list |
+
+**Gate B:** You use `ArrayList` and `HashMap` without copy-paste panic.
+
+#### Layer C — Java features that finish the base
+
+Stay practical. Still not Spring.
+
+| Learn | Notes |
+|-------|--------|
+| Interfaces, enums, `equals` / `hashCode` | Hub gaps to add (P0) · needed before maps as keys |
+| Maven layout, classpath, multi-module-ish folders | Hub build tools · `src/main/java` |
+| JUnit basics | Real `@Test` before trusting Spring tests |
+| REST as vocabulary + one HTTP client | Hub REST · [`projects/05-java-weather-cli`](../projects/05-java-weather-cli/) |
+
+**Gate C:** Weather CLI works. You know GET vs POST. Project uses a clear folder layout.
+
+#### Layer D — How a server is structured (still foundation)
+
+Picture the jobs before frameworks go deep:
+
+```text
+Request
+  → Controller   (HTTP in/out, status codes)
+  → Service      (business rules)
+  → Repository   (talk to DB)
+       ↑
+  DTO            (data shape on the wire)
+  Entity         (data shape in the DB / domain)
+```
+
+| Learn | Where |
+|-------|--------|
+| What each layer owns | Sheet [`projects/docs/java/server-layers.md`](../projects/docs/java/server-layers.md) · then todo-e2e CODE-TOUR |
+| Postgres: tables, SQL CRUD | CS `database-sql-fundamentals` |
+| Connect from Java (JDBC) | Hub JDBC gap · try-with-resources |
+| Docker for Postgres (and later the app) | CS Docker · project 02 · todo-e2e compose |
+
+**Gate D:** You can point at controller / service / repo / DTO / entity and say what each is for. You run Postgres in Docker and run one SQL `SELECT`.
+
+#### Layer E — First fullstack apps (apply foundation)
+
+| App | Why now |
+|-----|---------|
+| [`apps/todo-e2e`](../apps/todo-e2e/) | Controllers + JdbcTemplate + Postgres. No JPA yet. |
+| [`apps/pokedex`](../apps/pokedex/) | Same idea + JPA entities after JDBC feels clear |
+
+#### Layer F — Deeper knowledge (only after Gates A–D)
+
+Open these **after** the foundation feels boring (good sign):
+
+| Deeper | Where |
+|--------|--------|
+| JVM GC detail, concurrency | Hub JVM · concurrency light · CS concurrency |
+| Design patterns catalog | Hub patterns (after interfaces/enums) |
+| Spring Boot product path | [`tracks/spring-boot`](../tracks/spring-boot/) ParcelPilot |
+| Architecture tradeoffs | [`tracks/architecture`](../tracks/architecture/) |
+| Streams, Optional, sealed, advanced generics | Hub P1/P2 gaps |
+
+#### Still missing in the hub (build these into Layers A–D)
+
+| Priority | Topic |
+|----------|--------|
+| P0 | Packages + multi-file layout drills |
+| P0 | Interfaces, enums, `equals` / `hashCode` |
+| P0 | Collections depth (ArrayList / HashMap day-to-day) |
+| P0 | JDBC + Postgres connect |
+| P0 | Server layers lesson (controller → … → entity) |
+| P0 | JUnit 5 basics |
+| P1 | Maven `src/main/java` as default layout |
+| P1 | Optional, Streams, `java.time` |
+
+### Phase 5 — Docker apply (static site)
+
+Do when Layer D needs container practice, or after Gate C.
+
 | | |
 |---|---|
-| **Sheet bridge** | [`projects/docs/java/`](../projects/docs/java/README.md) — objects like toy boxes |
-| **Deep read** | [`tracks/java/`](../tracks/java/index.html) — getting-started → … → collections → exceptions → build tools |
-| **Keep going** | REST & HTTP · design patterns · JVM memory (as the hub orders them) |
-| **Project** | [`projects/05-java-weather-cli/`](../projects/05-java-weather-cli/) — same Open-Meteo API in Java (~3–5 h) |
-| **Checkpoint** | You compile/run with `javac`/`java` or Maven; a class is a stamp, an object is one stamp print |
-
-Explain Java like toys: **class** = cookie cutter, **object** = cookie, **method** = what the cookie can do.
-
-### Phase 5 — Infra apply (small)
-
-| | |
-|---|---|
-| **Sheet** | CS Docker lesson (canonical) · thin apply notes in [`projects/docs/docker/`](../projects/docs/docker/README.md) |
-| **Project** | [`projects/02-docker-portfolio/`](../projects/02-docker-portfolio/) — containerize `00` or a tiny static site (~4–6 h) |
-| **Checkpoint** | `docker run -p 8080:80 …` shows your site |
+| **Sheet** | CS Docker · [`projects/docs/docker/`](../projects/docs/docker/README.md) |
+| **Project** | [`projects/02-docker-portfolio/`](../projects/02-docker-portfolio/) |
+| **Checkpoint** | Site or Postgres runs in Docker |
 
 ### Phase 6 — Optional web depth (Node / React / TS)
 
-Do this **after** Java basics feel comfortable — or skip straight to Phase 7.
+Only after Java Layers A–B feel solid. Or skip.
 
 | | |
 |---|---|
-| **Optional** | [`projects/03-cli-tool/`](../projects/03-cli-tool/) — Node weather CLI only (~4–8 h) |
-| **Sheet** | [`projects/docs/react/`](../projects/docs/react/README.md) |
-| **Project** | [`projects/04-react-todo-app/`](../projects/04-react-todo-app/) — keep scope to add / complete / filter (~6–10 h) |
-| **Sheet** | [`projects/docs/typescript/`](../projects/docs/typescript/README.md) → practice in CodeStep |
+| **Optional** | [`projects/03-cli-tool/`](../projects/03-cli-tool/) · [`projects/04-react-todo-app/`](../projects/04-react-todo-app/) |
 
-### Phase 7 — Java fullstack ladder
+### Phase 7 — Java apps and Spring course
 
-| | |
-|---|---|
-| **App** | [`apps/todo-e2e/`](../apps/todo-e2e/README.md) — HTML + Spring + SQL (JdbcTemplate) |
-| **App** | [`apps/pokedex/`](../apps/pokedex/README.md) — React + Spring + JPA |
-| **Course** | [`tracks/spring-boot/`](../tracks/spring-boot/README.md) — ParcelPilot (build services) |
+Same as Layers E–F: todo-e2e → pokedex → spring-boot. No shortcut past Gates A–D.
 
 ### Phase 8 — Architecture & system design basics
 
@@ -135,14 +220,20 @@ Do this **after** Java basics feel comfortable — or skip straight to Phase 7.
 
 ## Project map (small on purpose)
 
-| # | Folder | After sheet… | Hours |
-|---|--------|--------------|-------|
-| 00 | `00-static-page` | HTML + CSS sheets | 2–4 |
-| 01 | `01-weather-dashboard` | JS drills + HTTP | 6–10 |
-| 05 | `05-java-weather-cli` | Java hub REST | 3–5 |
-| 02 | `02-docker-portfolio` | CS Docker | 4–6 |
-| 03 | `03-cli-tool` (optional) | Node sheets | 4–8 |
-| 04 | `04-react-todo-app` (optional) | React sheet | 6–10 |
+| # | Folder | Layer / phase | Sheet scope | Hours |
+|---|--------|---------------|-------------|-------|
+| 00 | `00-static-page` | Phase 2 (web) | html + css only | 2–4 |
+| 01 | `01-weather-dashboard` | Phase 3 (JS) | drills + HTTP · not Java | 6–10 |
+| 05 | `05-java-weather-cli` | Java **C** | java sheet + hub REST | 3–5 |
+| 02 | `02-docker-portfolio` | Phase 5 / Java **D** | CS Docker + docker apply | 4–6 |
+| 03 | `03-cli-tool` | Phase 6 optional | node + npm · off Java spine | 4–8 |
+| 04 | `04-react-todo-app` | Phase 6 optional | react · after Java A–B | 6–10 |
+
+| Apps (not under `projects/`) | Layer | After |
+|------------------------------|-------|--------|
+| `apps/todo-e2e` | **E** | Gates A–D · server-layers · SQL |
+| `apps/pokedex` | **E** | todo-e2e / JDBC comfort |
+| `tracks/spring-boot` | **F** | Gates A–D · ideally todo-e2e |
 
 Detail checklist: [`projects/docs/roadmap.md`](../projects/docs/roadmap.md).
 

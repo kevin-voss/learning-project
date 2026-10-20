@@ -1,5 +1,7 @@
 # Beginner todo app (end-to-end)
 
+**Prerequisites:** [LEARNING_PATH](../../docs/LEARNING_PATH.md) Gates A–D (Java foundation, [server-layers](../../projects/docs/java/server-layers.md) sheet, Postgres/Docker/SQL). This app applies that foundation. It is not a beginner Java syntax course.
+
 A small **todo list** you can run on your machine. No login. No Hibernate.
 The point is to *see* three ideas that every web app uses:
 

@@ -1,8 +1,10 @@
 # React
 
-**When:** Project 4. Read sections as the [roadmap](../roadmap.md) points you — not before Project 3 is done.
+**Scope:** Phase 6 optional. Off the main Java spine. Only after Java Layers A–B feel solid (or skip).
 
-**Start:** [Project 4 Phase 1](../roadmap.md#phase-1--scaffold-1-h)
+**When:** Optional project 04. Read sections as the [roadmap](../roadmap.md) points you.
+
+**Start:** [roadmap → Project 04](../roadmap.md)
 
 ---
 

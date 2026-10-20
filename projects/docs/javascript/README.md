@@ -1,21 +1,23 @@
 # JavaScript — topic index
 
-You already know **arrays, functions, and loops**. New syntax appears **per project** — read only the section for where you are.
+**Scope:** Phase 3 apply notes for project 01 (and light notes for 02). Not Java. Drills are canonical for syntax: [`drills/javascript`](../../../drills/javascript/).
+
+You already know **arrays, functions, and loops** from drills. New syntax appears **per web project**. Read only the section for where you are.
 
 ## Main reference
 
-**[By project →](./by-project.md)** — concepts mapped to each build phase (use this with the [roadmap](../roadmap.md))
+**[By project →](./by-project.md)** — with the [roadmap](../roadmap.md)
 
 ## When to open which section
 
 | You're on… | Read in by-project.md |
 |------------|------------------------|
-| Project 1 Phase 2 | Project 1 — DOM, objects (skip async) |
-| Project 1 Phase 3 | Project 1 — fetch, promises, async |
-| Project 1 Phase 6 | Syntax — JSON, spread (preview) |
-| Project 2 | Project 2 — paths only |
-| Project 3 | Project 3 — Node, modules, process |
-| Project 4 | Project 4 — JSX patterns, immutable updates |
+| Project 01 UI | Project 1 — DOM, objects (skip async) |
+| Project 01 API | Project 1 — fetch, promises, async |
+| Project 01 polish | JSON, spread (preview) |
+| Project 02 | Project 2 — paths only |
+| Optional 03 | Project 3 — Node (Phase 6 only) |
+| Optional 04 | Project 4 — JSX (Phase 6 only) |
 
 ## MDN bookmarks (open when stuck)
 

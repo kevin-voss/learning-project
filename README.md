@@ -1,6 +1,6 @@
 # learning-project
 
-Local curriculum: **CS from the ground up → web basics → Java (focus) → small projects → Spring / architecture.**
+Local curriculum: **CS → web basics → Java Layers A–D → projects 00→01→05→02 → Layer E (todo-e2e) → Layer F (Spring / architecture).** Optional React last.
 
 **Start:** [`docs/LEARNING_PATH.md`](docs/LEARNING_PATH.md) · visual index: [`hub/index.html`](hub/index.html)
 

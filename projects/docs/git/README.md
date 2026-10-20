@@ -1,5 +1,7 @@
 # Git — apply sheet
 
+**Scope:** anytime after setup. Apply only; CS holds the theory.
+
 Git saves snapshots of your project so you can undo mistakes, push backups to GitHub, and show employers real history. Use it on every project here after each meaningful change.
 
 ## Commands for these projects

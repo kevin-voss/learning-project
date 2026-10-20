@@ -1,19 +1,21 @@
-# Step-by-Step — Weather Dashboard
+# Step-by-Step - Weather Dashboard
 
-Follow phases in order. **Don't read all topic docs upfront** — each phase links what you need.
+Follow phases in order. **Don't read all topic docs upfront** - each phase links what you need.
 
-**Big picture:** [Roadmap — Project 1](../../docs/roadmap.md#project-1--weather-dashboard)
+> **Scope:** Phase 3 JavaScript apply. About 6–10 hours. Optional before Java; HTTP ideas help Layer C later. No Java in this guide.
 
-**API:** [Open-Meteo](https://open-meteo.com/) — no account, no API key.
+**Big picture:** [Learning path - Phase 3](../../../docs/LEARNING_PATH.md#phase-3--javascript)
+
+**API:** [Open-Meteo](https://open-meteo.com/) - no account, no API key. Browser `fetch` only.
 
 ## How to use this guide
 
 Each phase has:
 
-- **Goal** — what you are trying to make
-- **Why** — why this matters
-- **Do** — exact actions and commands
-- **Checkpoint** — how to know it worked
+- **Goal** - what you are trying to make
+- **Why** - why this matters
+- **Do** - exact actions and commands
+- **Checkpoint** - how to know it worked
 
 Do not rush. If a checkpoint fails, fix that before moving on.
 

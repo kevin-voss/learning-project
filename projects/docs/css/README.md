@@ -1,5 +1,6 @@
 # CSS — sheet (style project 00)
 
+**Scope:** Phase 2 / before Java Layer A (web craft).  
 **Time:** ~15 minutes. **Apply on:** [`../../00-static-page/`](../../00-static-page/).
 
 CSS paints the dollhouse: colors, space, size. Same HTML, nicer look.

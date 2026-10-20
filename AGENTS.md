@@ -4,7 +4,7 @@ Short orientation for AI agents. Full map: **[README.md](README.md)** and **[doc
 
 ## What this repo is
 
-A monorepo of **drills**, **tracks**, **apps**, **projects** (sheet → small build), and **programs**. **One spine:** [`docs/LEARNING_PATH.md`](docs/LEARNING_PATH.md) — CS → web basics → **Java focus** → infra/architecture/Spring. Root holds meta + `hub/` only.
+A monorepo of **drills**, **tracks**, **apps**, **projects** (sheet → small build), and **programs**. **One spine:** [`docs/LEARNING_PATH.md`](docs/LEARNING_PATH.md): CS → web basics → **Java Layers A–F** (foundation A–D, apps E, deeper F) → infra/architecture/Spring. Root holds meta + `hub/` only.
 
 ## Layout
 

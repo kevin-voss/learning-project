@@ -1,8 +1,10 @@
-# Step-by-Step — Static About-Me Page
+# Step-by-Step - Static About-Me Page
 
 Follow phases in order. Each phase has **Goal → Why → Do → Checkpoint**.
 
-**Big picture:** [Learning path — Phase 2](../../../docs/LEARNING_PATH.md#phase-2--html--css-sheets--tiny-site)
+> **Scope:** Phase 2 web craft (HTML + CSS only). About 2–4 hours. Not a Java project. Do before Java Layer A, or early in parallel.
+
+**Big picture:** [Learning path - Phase 2](../../../docs/LEARNING_PATH.md#phase-2--html--css-sheets--tiny-site)
 
 **Sheets:** [HTML](../../docs/html/README.md) · [CSS](../../docs/css/README.md)
 
@@ -79,7 +81,7 @@ In `css/styles.css`:
 - [ ] Set a background color on `body`
 - [ ] Style `.card` (or your main box): padding, max-width, background, maybe border-radius
 - [ ] Use flex on `body` (or a full-page wrapper): center the card horizontally and vertically
-  - Hint ideas: `display: flex`, `min-height: 100vh`, `justify-content: center`, `align-items: center`
+ - Hint ideas: `display: flex`, `min-height: 100vh`, `justify-content: center`, `align-items: center`
 - [ ] Refresh the browser — hard refresh if styles look stuck (`Cmd+Shift+R` / `Ctrl+Shift+R`)
 
 **Checkpoint:** Content sits in a clear card near the middle of the page. Changing a color in CSS changes what you see after refresh.

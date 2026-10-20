@@ -1,19 +1,31 @@
 # Project 3: CLI Tool
 
-**Command-line mastery and Node.js beyond the browser.**
+**Optional Node.js practice - command-line weather, not on the main Java spine.**
 
-Build a **Weather CLI** — a terminal program that fetches weather (same API ideas as Project 1). You'll learn npm, Node.js, and how real developer tools work.
+Build a **Weather CLI** - a terminal program that fetches weather (same API ideas as Project 1). You learn npm, Node.js, and how real developer tools work.
+
+> **Scope**
+>
+> | | |
+> |---|---|
+> | **Phase** | Phase 6 (**optional**) |
+> | **Hours** | about 10–15 |
+> | **Java path** | **Off** the main spine. Only after Java Layers A–B feel solid. Or skip. Java HTTP CLI is [05](../05-java-weather-cli/), not this project. |
 
 ## Status
 
 This folder contains **guides only**. You create all JavaScript, `package.json`, and project files yourself.
 
+## Where this sits
+
+[Learning path - Phase 6 (optional web depth)](../../docs/LEARNING_PATH.md#phase-6--optional-web-depth-node--react--ts)
+
 ## Prerequisites
 
+- Java Layers A–B solid (or you accept this is side practice)
 - Finished [Project 1](../01-weather-dashboard/) (API concepts carry over)
-- [Learning Roadmap](../docs/roadmap.md) — **phase order**
-- [Node.js](../docs/nodejs/README.md) — Project 3 Phase 1
-- [npm](../docs/npm/README.md) — Project 3 Phase 2
+- [Node.js](../docs/nodejs/README.md) - Phase 1 of this project
+- [npm](../docs/npm/README.md) - Phase 2 of this project
 - Node.js LTS installed (`node -v`, `npm -v`)
 
 ## What you'll build
@@ -29,9 +41,7 @@ $ weather paris --unit imperial --forecast
 $ weather --help
 ```
 
-**Time estimate:** 10–15 hours
-
-Older options (task manager, file organizer) are **removed** — follow Weather CLI only.
+Older options (task manager, file organizer) are **removed** - follow Weather CLI only.
 
 ## Goal in plain words
 
@@ -66,7 +76,7 @@ User types command -> Node.js prints an answer
 │   ├── utils/
 │   └── config/
 ├── package.json
-├── .env                    # Optional — not needed for weather CLI
+├── .env                    # Optional - not needed for weather CLI
 ├── .gitignore              # already here
 └── README.md
 ```
@@ -95,9 +105,8 @@ npm -v
 
 Then:
 
-1. Open [Roadmap — Project 3 Phase 1](../docs/roadmap.md#phase-1--environment-1-h).
-2. Skim [Weather CLI](./docs/options/weather-cli.md).
-3. Follow [step-by-step](./docs/step-by-step.md).
+1. Skim [Weather CLI](./docs/options/weather-cli.md).
+2. Follow [step-by-step](./docs/step-by-step.md).
 
 ## Resources
 
@@ -105,6 +114,6 @@ Then:
 - [npm docs](https://docs.npmjs.com/)
 - [Commander.js](https://github.com/tj/commander.js)
 
-## Previous / next
+## Next
 
-← [02 Docker Portfolio](../02-docker-portfolio/) · [04 React Todo App](../04-react-todo-app/) →
+Optional sibling: [04 React Todo App](../04-react-todo-app/). Main spine stays Java → Layer D → [todo-e2e](../../apps/todo-e2e/).

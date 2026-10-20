@@ -1,8 +1,16 @@
 # Project 05: Java Weather CLI
 
-**Same weather idea as the browser dashboard — but in the terminal with Java.**
+**Same weather idea as the browser dashboard - but in the terminal with Java.**
 
 Build a small command-line program that asks Open-Meteo for a city, then prints the temperature. No API key. No Spring yet.
+
+> **Scope**
+>
+> | | |
+> |---|---|
+> | **Layer** | Java **Layer C** only (HTTP client apply) |
+> | **Hours** | about 3–5 |
+> | **Java path** | **On** the main spine. Finish Gates A–B first. Next is Layer D (server layers + Postgres), not todo-e2e yet. |
 
 ## Status
 
@@ -10,16 +18,24 @@ This folder is **guides only**. You write every `.java` file yourself.
 
 ## Where this sits
 
-[Learning path — Phase 4 (Java)](../../docs/LEARNING_PATH.md#phase-4--java-main-focus)
+[Learning path - Phase 4, Layer C](../../docs/LEARNING_PATH.md#layer-c--java-features-that-finish-the-base)
 
-Same public API as [01-weather-dashboard](../01-weather-dashboard/) — city → coordinates → forecast — only now with `HttpClient` instead of browser `fetch`.
+Same public API as [01-weather-dashboard](../01-weather-dashboard/) - city → coordinates → forecast - only now with `HttpClient` instead of browser `fetch`.
 
 ## Prerequisites
 
-1. [Java sheet](../docs/java/README.md) — class / object / `main` in toy words
-2. [Java hub](../../tracks/java/) through **basics** (getting started → classes/objects is enough to start; keep going as needed)
-3. Hub topic **REST & HTTP** — [`tracks/java/topics/rest-and-http/`](../../tracks/java/topics/rest-and-http/)
-4. **Ubuntu + Java 21** — follow the hub setup:
+**Gates A–B** from the learning path (must feel comfortable):
+
+- Packages, classes, compile from the terminal
+- `ArrayList` / `HashMap` without copy-paste panic
+- Exceptions idea (fail safely)
+
+Also:
+
+1. [Java sheet](../docs/java/README.md) - class / object / `main` in toy words
+2. [Java hub](../../tracks/java/) through basics as needed
+3. Hub topic **REST & HTTP** - [`tracks/java/topics/rest-and-http/`](../../tracks/java/topics/rest-and-http/)
+4. **Ubuntu + Java 21** - follow the hub setup:
 
 ```bash
 sudo apt update
@@ -41,15 +57,13 @@ $ java WeatherCli London
 London: 15.2°C
 ```
 
-(Your class name and args style can differ — see [structure.md](./docs/structure.md).)
-
-**Time estimate:** about 3–5 hours
+(Your class name and args style can differ - see [structure.md](./docs/structure.md).)
 
 ## Read this order
 
 | Doc | Read when |
 |-----|-----------|
-| [Project structure](./docs/structure.md) | First — packages and files you will create |
+| [Project structure](./docs/structure.md) | First - packages and files you will create |
 | [Step-by-step plan](./docs/step-by-step.md) | **Main build guide** |
 
 ## First terminal commands
@@ -88,6 +102,12 @@ When finished, you can explain:
 curl "https://geocoding-api.open-meteo.com/v1/search?name=London&count=1"
 ```
 
-## Next
+## Next (Layer D, then fullstack)
 
-Keep going in [tracks/java](../../tracks/java/) (collections, exceptions, build tools), then later Spring path projects in the learning spine.
+You are finishing **Layer C**. Do not jump to todo-e2e or Spring yet.
+
+1. Read [`../docs/java/server-layers.md`](../docs/java/server-layers.md) (controller → service → repository).
+2. Postgres + Docker + JDBC (Layer D). Project [02-docker-portfolio](../02-docker-portfolio/) helps with Docker practice.
+3. **Gate D**, then [`apps/todo-e2e`](../../apps/todo-e2e/).
+
+**Exit check:** GET vs POST, bad HTTP status handled, clear folder layout. You already passed Gates A–B before starting this project.

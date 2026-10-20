@@ -1,8 +1,16 @@
 # Project 00: Static About-Me Page
 
-**Your first real web page — no JavaScript yet.**
+**Your first real web page - no JavaScript yet.**
 
 Build a simple “about me” page with HTML and CSS. One card in the middle, a bit of color, and a layout that still looks okay on a phone.
+
+> **Scope**
+>
+> | | |
+> |---|---|
+> | **Phase** | Phase 2 (HTML & CSS) |
+> | **Hours** | about 2–4 |
+> | **Java path** | **Not** a Java project. Do this before Java Layer A, or early in parallel. Sheets: [HTML](../docs/html/README.md) + [CSS](../docs/css/README.md) only. |
 
 ## Status
 
@@ -10,7 +18,7 @@ This folder is **guides only**. You write every HTML and CSS file yourself.
 
 ## Where this sits
 
-[Learning path — Phase 2 (HTML & CSS)](../../docs/LEARNING_PATH.md#phase-2--html--css-sheets--tiny-site)
+[Learning path - Phase 2 (HTML & CSS)](../../docs/LEARNING_PATH.md#phase-2--html--css-sheets--tiny-site)
 
 ## Prerequisites
 
@@ -19,7 +27,7 @@ Read these sheets first (short):
 1. [HTML sheet](../docs/html/README.md)
 2. [CSS sheet](../docs/css/README.md)
 
-You do **not** need JavaScript for this project.
+You do **not** need JavaScript or Java for this project.
 
 ## Project goal
 
@@ -29,14 +37,12 @@ By the end you should have:
 - A linked `css/styles.css` that centers a card with flexbox
 - One media query so the page still looks fine on a narrow screen
 
-**Time estimate:** about 2–4 hours
-
 ## Read this order
 
 | Doc | Read when |
 |-----|-----------|
-| [Project structure](./docs/structure.md) | First — create folders and empty files |
-| [Step-by-step plan](./docs/step-by-step.md) | **Main build guide** — follow while coding |
+| [Project structure](./docs/structure.md) | First - create folders and empty files |
+| [Step-by-step plan](./docs/step-by-step.md) | **Main build guide** - follow while coding |
 
 ## First terminal commands
 

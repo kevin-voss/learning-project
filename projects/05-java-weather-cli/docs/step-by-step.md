@@ -1,12 +1,14 @@
-# Step-by-Step — Java Weather CLI
+# Step-by-Step - Java Weather CLI
 
 Follow phases in order. Each phase has **Goal → Why → Do → Checkpoint**.
 
-**Big picture:** [Learning path — Phase 4](../../../docs/LEARNING_PATH.md#phase-4--java-main-focus)
+> **Scope:** Java Layer C only (HTTP client). About 3–5 hours. Prerequisites: Gates A–B. Next after this guide: Layer D (server layers + Postgres), not todo-e2e yet.
+
+**Big picture:** [Learning path - Layer C](../../../docs/LEARNING_PATH.md#layer-c--java-features-that-finish-the-base)
 
 **Sheets / hub:** [Java sheet](../../docs/java/README.md) · [Java hub](../../../tracks/java/) · [REST & HTTP](../../../tracks/java/topics/rest-and-http/)
 
-**API:** [Open-Meteo](https://open-meteo.com/) — no account, no API key. Same idea as the browser weather project.
+**API:** [Open-Meteo](https://open-meteo.com/) - no account, no API key. Same idea as the browser weather project.
 
 ## Toy words (keep these in your head)
 
@@ -14,7 +16,7 @@ Follow phases in order. Each phase has **Goal → Why → Do → Checkpoint**.
 |-----------|-------------|
 | Class | Cookie cutter |
 | Object | One cookie |
-| `main` | Front door — program starts here |
+| `main` | Front door - program starts here |
 | `HttpClient` | A messenger bike that fetches a letter (HTTP response) |
 | JSON | A labeled lunchbox of data from the server |
 
@@ -78,9 +80,9 @@ https://geocoding-api.open-meteo.com/v1/search?name=CITY&count=1
 **Do:**
 
 1. **Pull lat/lon** from the geocoding JSON  
-   - Beginner-friendly options:
-     - A small JSON library (e.g. org.json) **or**
-     - Manual parse of one field (careful string search / simple regex) — OK for learning, not for huge APIs later
+ - Beginner-friendly options:
+ - A small JSON library (e.g. org.json) **or**
+ - Manual parse of one field (careful string search / simple regex) — OK for learning, not for huge APIs later
 2. **Second GET** to the forecast API:
 
 ```text

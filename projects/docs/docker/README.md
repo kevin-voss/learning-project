@@ -1,5 +1,7 @@
 # Docker — apply sheet
 
+**Scope:** Phase 5 / Layer D. Apply only; CS holds the theory.
+
 Docker packages your app so it runs the same on your machine and elsewhere. Use this for Project 2 (static portfolio site).
 
 ## Concepts (short)

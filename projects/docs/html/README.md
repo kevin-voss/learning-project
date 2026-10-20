@@ -1,5 +1,6 @@
 # HTML — sheet (read before project 00)
 
+**Scope:** Phase 2 / before Java Layer A (web craft).  
 **Time:** ~10 minutes. **Next:** [`../../00-static-page/`](../../00-static-page/).
 
 HTML is the **skeleton** of a page. CSS is paint. JavaScript is muscles. Today only the skeleton.

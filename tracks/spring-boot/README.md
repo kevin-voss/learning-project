@@ -1,5 +1,7 @@
 # Spring Boot System Design: Build One Product, One Step at a Time
 
+**Start after** [LEARNING_PATH](../../docs/LEARNING_PATH.md) Gates A–D, and ideally after [todo-e2e](../../apps/todo-e2e/README.md). The [Java hub](../java/index.html) is the canonical language path. This course builds services (Layer F).
+
 This course teaches you how a small backend grows into a real system.
 
 You build one product: **ParcelPilot**, a tiny parcel-tracking service. At first it is only a small program that can describe one parcel. Step by step, it learns more: how to remember parcels, how to answer another program, how to survive mistakes, and how to grow when the work becomes bigger.

@@ -1,8 +1,10 @@
 # TypeScript
 
-**When:** **After** all four projects (or parallel reading once Project 4 is underway). **Zero knowledge is fine.**
+**Scope:** Phase 6 optional (with React / CodeStep). Not required for Java Layers A–F.
 
-This curriculum uses **plain JavaScript** on purpose. TypeScript is where you're heading — not where you start.
+**When:** After optional project 04, or when you open [`apps/codestep`](../../../apps/codestep/). Zero knowledge is fine.
+
+Projects 00–04 use **plain JavaScript** on purpose. TypeScript is a side deepen, not the Java spine.
 
 ---
 

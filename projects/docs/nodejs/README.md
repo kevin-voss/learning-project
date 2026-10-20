@@ -1,8 +1,10 @@
 # Node.js
 
-**When:** Project 3 (CLI tool). Skim browser-vs-Node before that; deep read during Project 3 Phase 1.
+**Scope:** Phase 6 optional (project 03). Off the main Java spine. Only after Java Layers A–B, or skip.
 
-**Roadmap:** [Project 3 Phase 1](../roadmap.md#phase-1--environment-1-h)
+**When:** Optional Node weather CLI. Skim browser-vs-Node first. Deep read during project 03.
+
+**Roadmap:** [roadmap → Project 03](../roadmap.md)
 
 ---
 

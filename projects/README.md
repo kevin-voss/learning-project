@@ -4,7 +4,7 @@ Repo order (Java focus): **[../docs/LEARNING_PATH.md](../docs/LEARNING_PATH.md)*
 
 **Pattern:** read a short sheet (5–20 min) → build the linked project (hours, not weeks) → checkpoint → next.
 
-Docs only — you write all code. No pre-filled apps.
+Docs only: you write all code. No pre-filled apps. Each project is a small sheet→build loop, measured in hours.
 
 ---
 
@@ -20,18 +20,21 @@ Sheet  →  Build  →  Checkpoint  →  Next
 
 ---
 
-## Project order (small on purpose)
+## Project order (learning spine)
 
-| # | Project | After you read… | Hours |
-|---|---------|-----------------|-------|
-| 00 | [Static page](./00-static-page/) | [html](./docs/html/) + [css](./docs/css/) sheets | 2–4 |
-| 01 | [Weather dashboard](./01-weather-dashboard/) | JS drills + HTTP (CS) | 6–10 |
-| 05 | [Java weather CLI](./05-java-weather-cli/) | [java](./docs/java/) sheet + Java hub REST | 3–5 |
-| 02 | [Docker portfolio](./02-docker-portfolio/) | CS Docker + [docker](./docs/docker/) apply notes | 4–6 |
-| 03 | [Node weather CLI](./03-cli-tool/) *(optional)* | [nodejs](./docs/nodejs/) + [npm](./docs/npm/) | 4–8 |
-| 04 | [React todo](./04-react-todo-app/) *(optional)* | [react](./docs/react/) sheet | 6–10 |
+| # | Project | After you read… | Hours | Spine |
+|---|---------|-----------------|-------|-------|
+| 00 | [Static page](./00-static-page/) | [html](./docs/html/) + [css](./docs/css/) sheets | 2–4 | Phase 2 |
+| 01 | [Weather dashboard](./01-weather-dashboard/) | JS drills + HTTP (CS) | 6–10 | Phase 3 |
+| — | Java foundation (no numbered build yet) | [java](./docs/java/) Layers A–C + [server-layers](./docs/java/server-layers.md) | sheets | Phase 4 Layers A–C |
+| 05 | [Java weather CLI](./05-java-weather-cli/) | Java Layers A–C + hub REST | 3–5 | Gate C |
+| 02 | [Docker portfolio](./02-docker-portfolio/) | CS Docker + [docker](./docs/docker/) apply notes | 4–6 | Phase 5 / Layer D |
+| 03 | [Node weather CLI](./03-cli-tool/) *(optional)* | [nodejs](./docs/nodejs/) + [npm](./docs/npm/) | 4–8 | Phase 6 |
+| 04 | [React todo](./04-react-todo-app/) *(optional)* | [react](./docs/react/) sheet | 6–10 | Phase 6 |
 
-**Main career path after 00 → 01 → 05 → 02:** Java hub depth → [`apps/todo-e2e`](../apps/todo-e2e/) → [`apps/pokedex`](../apps/pokedex/) → [`tracks/spring-boot`](../tracks/spring-boot/).
+**Main path after 00 → 01 → Java foundation → 05:** Layer D ([server-layers](./docs/java/server-layers.md)) → [`apps/todo-e2e`](../apps/todo-e2e/) (JdbcTemplate + Postgres) → [`apps/pokedex`](../apps/pokedex/) → [`tracks/spring-boot`](../tracks/spring-boot/). Not React.
+
+Optional 03/04 are Phase 6 side paths. Skip them on the Java career track.
 
 ---
 
@@ -39,17 +42,17 @@ Sheet  →  Build  →  Checkpoint  →  Next
 
 | Sheet | Folder | Used by |
 |-------|--------|---------|
-| HTML | [docs/html/](./docs/html/) | Project 00 |
-| CSS | [docs/css/](./docs/css/) | Project 00 |
-| Java (toys) | [docs/java/](./docs/java/) | Project 05 + hub |
+| HTML | [docs/html/](./docs/html/) | Project 00 (Phase 2) |
+| CSS | [docs/css/](./docs/css/) | Project 00 (Phase 2) |
+| Java (Layers A–C + Layer D picture) | [docs/java/](./docs/java/) · [server-layers](./docs/java/server-layers.md) | Foundation → 05 → todo-e2e |
 | Setup | [docs/setup/](./docs/setup/) | Early projects |
 | JavaScript (apply notes) | [docs/javascript/](./docs/javascript/) | Project 01 |
 | Git (apply only) | [docs/git/](./docs/git/) | Links CS Git |
-| Docker (apply only) | [docs/docker/](./docs/docker/) | Links CS Docker |
+| Docker (apply only) | [docs/docker/](./docs/docker/) | Links CS Docker · project 02 |
 | Node / npm | [docs/nodejs/](./docs/nodejs/) · [npm](./docs/npm/) | Optional 03 |
 | React / TS | [docs/react/](./docs/react/) · [typescript](./docs/typescript/) | Optional 04 |
 
-Deep theory for networks, Docker, Git lives in **`tracks/computer-science/`** — not recopied here.
+Deep theory for networks, Docker, Git lives in **`tracks/computer-science/`**. Not recopied here.
 
 ---
 
@@ -62,9 +65,10 @@ Deep theory for networks, Docker, Git lives in **`tracks/computer-science/`** �
 
 ---
 
-## After projects
+## After the spine projects
 
-- TypeScript practice: [docs/typescript](./docs/typescript/) + [`apps/codestep`](../apps/codestep/)  
-- Java ladder: hub → todo-e2e → Pokédex → Spring Boot  
+**Main (Java):** Gates A–D → [`apps/todo-e2e`](../apps/todo-e2e/) → [`apps/pokedex`](../apps/pokedex/) → [`tracks/spring-boot`](../tracks/spring-boot/) (Layers E–F).
+
+**Optional (Phase 6):** [typescript](./docs/typescript/) + [`apps/codestep`](../apps/codestep/) if you took React.
 
 **→ [Roadmap](./docs/roadmap.md)** · **→ [LEARNING_PATH](../docs/LEARNING_PATH.md)**

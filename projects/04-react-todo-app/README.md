@@ -1,20 +1,31 @@
 # Project 4: React Todo App
 
-**Modern component-based UI development.**
+**Optional React practice - not on the main Java spine.**
 
-Build a todo app with add, complete, delete, filter, edit, and localStorage persistence — using React, JSX, and hooks.
+Build a todo app with add, complete, delete, filter, edit, and localStorage persistence - using React, JSX, and hooks.
+
+> **Scope**
+>
+> | | |
+> |---|---|
+> | **Phase** | Phase 6 (**optional**) |
+> | **Hours** | about 12–18 |
+> | **Java path** | **Off** the main spine. Only after Java Layers A–B feel solid. Or skip. Fullstack todos in Java come later via [todo-e2e](../../apps/todo-e2e/). |
 
 ## Status
 
 This folder contains **guides only**. You scaffold the Vite + React project yourself and write every component.
 
+## Where this sits
+
+[Learning path - Phase 6 (optional web depth)](../../docs/LEARNING_PATH.md#phase-6--optional-web-depth-node--react--ts)
+
 ## Prerequisites
 
-- Finished Projects 1–3 (or at least 1 and 3 for JS + npm comfort)
-- [Learning Roadmap](../docs/roadmap.md) — **phase order**
-- [React](../docs/react/README.md) — read per phase, not all upfront
-- [npm](../docs/npm/README.md) — Vite scripts in Phase 1
-- [JavaScript: Project 4](../docs/javascript/by-project.md#project-4--react-todo-app)
+- Java Layers A–B solid (or you accept this is side practice)
+- Comfort with JS from Project 1; npm from Project 3 helps but is not required if you already use Vite elsewhere
+- [React](../docs/react/README.md) - read per phase, not all upfront
+- [npm](../docs/npm/README.md) - Vite scripts in Phase 1
 - React Developer Tools browser extension installed
 
 ## What you'll build
@@ -29,8 +40,6 @@ This folder contains **guides only**. You scaffold the Vite + React project your
 | Persist todos | useEffect + localStorage |
 | Component tree | Props, lifting state up |
 | Responsive UI | CSS in React project |
-
-**Time estimate:** 12–18 hours
 
 ## Goal in plain words
 
@@ -53,7 +62,7 @@ Kid version: React is like building with blocks. One block is the header, one bl
 
 ## Files you will create
 
-Scaffold with Vite first — then you add:
+Scaffold with Vite first - then you add:
 
 ```
 04-react-todo-app/
@@ -97,10 +106,7 @@ node -v
 npm -v
 ```
 
-Then:
-
-1. Read [Roadmap — Project 4 Phase 1](../docs/roadmap.md#phase-1--scaffold-1-h).
-2. Open [step-by-step](./docs/step-by-step.md) and scaffold with Vite when instructed.
+Then open [step-by-step](./docs/step-by-step.md) and scaffold with Vite when instructed.
 
 ## Resources
 
@@ -108,10 +114,6 @@ Then:
 - [Vite guide](https://vite.dev/guide/)
 - [React DevTools](https://react.dev/learn/react-developer-tools)
 
-## Previous project
+## Next
 
-← [03 CLI Tool](../03-cli-tool/)
-
-## After this curriculum
-
-Convert Weather Dashboard to React, add React Router, or explore TypeScript in [`apps/codestep/`](../../apps/codestep/).
+Back to the Java spine: Layer D → [todo-e2e](../../apps/todo-e2e/). Or more React/TS in [`apps/codestep/`](../../apps/codestep/).

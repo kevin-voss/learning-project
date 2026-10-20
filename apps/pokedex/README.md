@@ -27,6 +27,8 @@ Port **8082** is used instead of 8080 because 8080 is often taken by other apps 
 
 ## Prerequisites
 
+**Learning path:** [LEARNING_PATH](../../docs/LEARNING_PATH.md) Layer E. Finish [todo-e2e](../todo-e2e/README.md) ideas (JdbcTemplate) first, or have clear JDBC comfort. JPA here goes deeper than todo-e2e.
+
 - [Docker](https://www.docker.com/) (for PostgreSQL + Adminer)
 - [Node.js](https://nodejs.org/) 18+ and `npm` (for frontend and seed script)
 - [Java 21](https://adoptium.net/) and Maven (or use `./mvnw` in `backend/`)

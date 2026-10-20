@@ -1,0 +1,79 @@
+/* print — light palette, no chrome, expanded code, clean page breaks */
+@media print {
+  :root {
+    --bg: #ffffff;
+    --bg-soft: #ffffff;
+    --panel: #f6f7f9;
+    --panel-2: #eef0f4;
+    --edge: #d7dbe2;
+    --edge-2: #c4cad4;
+    --txt: #1a1f29;
+    --txt-strong: #000208;
+    --dim: #454e5c;
+    --faint: #6a7484;
+    --mint: #147a43;
+    --sky: #0b6a9e;
+    --amber: #8a5a00;
+    --deny: #a32222;
+    --teal: #0d7268;
+    --grape: #574a9e;
+    --tk-k: #7c3aad;
+    --tk-s: #1d7a33;
+    --tk-f: #1d54c0;
+    --tk-n: #b3411d;
+    --tk-c: #77808f;
+    --tk-t: #0b6a9e;
+    --tk-a: #8a5a00;
+    --code-bg: #f4f5f8;
+    --code-edge: #d7dbe2;
+    --shadow: none;
+  }
+
+  html { scroll-behavior: auto; }
+
+  /* chrome off */
+  .topbar, .sidebar, #progress, #tooltip, .cc-btn, .hero-chips,
+  .loopnote svg, .scrollcue { display: none !important; }
+
+  body {
+    background: #fff !important;
+    color: var(--txt);
+    font-size: 10.5pt;
+    line-height: 1.5;
+  }
+
+  .main { margin: 0; padding: 0; }
+  .content { max-width: none; }
+
+  /* expand every code card, never clip horizontally */
+  .code-card pre, pre.code {
+    max-height: none !important;
+    overflow: visible !important;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .code-card:not(.open) .cc-body::after { display: none; }
+  .code-card, pre.code { break-inside: avoid; }
+
+  /* topic starts on a fresh page, headings stay with content */
+  section.topic { break-before: page; border-top: 0; margin-top: 0; padding-top: 0; }
+  section.topic:first-of-type { break-before: auto; }
+  h2, h3, h4 { break-after: avoid; }
+  .beat, .beat-block, .wcard, .note, .warn, .danger, .tbl-wrap, .diagram, .flow { break-inside: avoid; }
+  table { font-size: 9pt; }
+  thead { display: table-header-group; }
+  tr { break-inside: avoid; }
+
+  .hero .sub, .topic-head .lead { color: var(--dim); }
+  .term { color: var(--sky); }
+  .wcard, .beat, .beat-block { background: var(--panel); }
+  .cc-dots { display: none; }
+
+  /* mermaid renders as svg; keep it inside the sheet */
+  .diagram { overflow: visible; }
+  .diagram svg { max-width: 100% !important; height: auto; }
+  pre.mermaid:not([data-processed]) { color: var(--dim); font-size: 8.5pt; }
+
+  a { color: var(--sky); }
+  .footer { color: var(--faint); }
+}

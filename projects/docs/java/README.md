@@ -1,19 +1,21 @@
-# Java — sheet (before the Java hub)
+# Java — foundation sheet
 
-**Time:** ~15 minutes. **Next deep track:** [`../../../tracks/java/`](../../../tracks/java/index.html).  
-**Small apply project:** [`../../05-java-weather-cli/`](../../05-java-weather-cli/).
+**Rule:** lock the base before frameworks and deep theory.
 
-This sheet uses **toy words**. The Java hub has the full path (types, methods, objects, collections, REST…).
+Full layered path: [`../../../docs/LEARNING_PATH.md`](../../../docs/LEARNING_PATH.md) Phase 4 (Layers A–F).  
+Hub: [`../../../tracks/java/`](../../../tracks/java/index.html)  
+Server picture: [`server-layers.md`](./server-layers.md)  
+HTTP apply: [`../../05-java-weather-cli/`](../../05-java-weather-cli/)
 
 ## Toy story
 
-| Real Java word | Toy picture |
-|----------------|-------------|
-| **Class** | Cookie cutter (the shape) |
-| **Object** | One cookie you stamped |
-| **Field** | What is written on that cookie (name, age) |
-| **Method** | What the cookie can *do* (“say hello”) |
-| **`main`** | The front door — Java starts here |
+| Word | Picture |
+|------|---------|
+| **Class** | Cookie cutter |
+| **Object** | One cookie |
+| **Field** | Writing on the cookie |
+| **Method** | What the cookie can do |
+| **`main`** | Front door |
 
 ```java
 public class Dog {
@@ -24,38 +26,84 @@ public class Dog {
   }
 
   public static void main(String[] args) {
-    Dog d = new Dog();   // stamp one cookie
+    Dog d = new Dog();
     d.name = "Rex";
     d.bark();
   }
 }
 ```
 
-## Compile then run (Ubuntu / terminal)
-
-Java is not “save and refresh.” You **bake** then **eat**:
-
 ```bash
-javac Dog.java    # cutter → .class (bytecode)
-java Dog          # run
+javac Dog.java
+java Dog
 ```
 
-Or use the hub’s Java 21 setup: [`tracks/java/README.md`](../../../tracks/java/README.md).
+## What “foundation” means here
 
-## Why Java is the focus here
+### 1. Language base
 
-1. Clear types — fewer “mystery” bugs for beginners.  
-2. Same language from tiny `main` → Spring services.  
-3. This monorepo’s deep path is Java hub → todo-e2e → Pokédex → Spring Boot.
+- Data types (primitives and references)
+- Methods and classes
+- Control flow
+- Arrays and strings
 
-## What to do next (order)
+### 2. Folders, files, packages
 
-1. Open [`tracks/java/index.html`](../../../tracks/java/index.html) — follow the curriculum path.  
-2. Prefer **simple examples** in the terminal every lesson.  
-3. When you reach REST/HTTP in the hub, build [`05-java-weather-cli`](../../05-java-weather-cli/) (same weather API as the browser project).
+```text
+my-app/
+  src/main/java/com/example/demo/
+    DemoApp.java          ← package com.example.demo
+    model/
+      Item.java
+```
 
-## Checkpoint
+- One public class per file (usual rule)
+- Folder path matches package name
+- `javac` / `java` (then Maven later)
 
-You can say out loud: class = cutter, object = cookie, `javac` then `java`.
+### 3. Everyday types
 
-**Not duplicated here:** full OOP, collections, Spring — those live in `tracks/java` and `tracks/spring-boot`.
+| Type | Use when |
+|------|----------|
+| array | Fixed size, simple list of same type |
+| `ArrayList` | Growable list |
+| `HashMap` | Key → value lookup |
+| `HashSet` | Unique values only |
+
+Pair with CS: arrays, hash tables, Big-O skim.
+
+### 4. Algorithms (light)
+
+- Walk a list (search)
+- Sort a small list
+- Count with a map
+
+Deep algorithm courses stay in [`tracks/computer-science`](../../../tracks/computer-science/). Java applies them with lists and maps.
+
+### 5. Java features (base set)
+
+Interfaces, enums, `equals` / `hashCode`, exceptions, try-with-resources.  
+Streams / advanced generics / concurrency wait until Layer F.
+
+### 6. Server shape (before Spring deep-dive)
+
+Read [`server-layers.md`](./server-layers.md): controller → service → repository, plus DTO and entity.  
+Then Postgres + Docker + JDBC. Then todo-e2e.
+
+## Gates (honest checkpoints)
+
+| Gate | You can… |
+|------|----------|
+| A | Packages, compile, class vs object |
+| B | Use `ArrayList` and `HashMap` in a small program |
+| C | Weather CLI + GET vs POST |
+| D | Name controller / service / repo / DTO / entity · Postgres in Docker · one SQL `SELECT` |
+
+Only after **A–D** go deep (JVM detail, patterns catalog, Spring Boot course, JPA-heavy Pokédex).
+
+## Next clicks
+
+1. Hub Layer A topics (getting started → classes)  
+2. Collections + multi-file console practice  
+3. REST topic → project 05  
+4. [`server-layers.md`](./server-layers.md) → JDBC / Postgres / Docker → [`apps/todo-e2e`](../../../apps/todo-e2e/)

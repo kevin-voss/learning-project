@@ -16,7 +16,7 @@ Browser (HTML/CSS/JS)  --HTTP-->  Java Spring Boot  --SQL-->  PostgreSQL
 You need **Docker Desktop**. Java and Maven run inside Docker, so you do not install them to start the app.
 
 ```bash
-cd e2e-project
+cd apps/todo-e2e
 make
 ```
 
@@ -50,14 +50,14 @@ In another terminal, `make logs` shows the real SQL Spring sent to PostgreSQL.
 ## Folders
 
 ```text
-e2e-project/
+apps/todo-e2e/
 ├── Makefile                 # the one command: make
 ├── docker-compose.yml       # PostgreSQL + Java app in Docker
 ├── README.md                # this file
 ├── docs/
 │   ├── HOW-IT-WORKS.md      # one request from click → SQL → JSON
 │   └── CODE-TOUR.md         # what each source file is for
-├── frontend/                # what the browser runs
+├── apps/codestep/                # what the browser runs
 │   ├── index.html
 │   ├── css/styles.css
 │   └── js/app.js
@@ -65,7 +65,7 @@ e2e-project/
     ├── Dockerfile           # how Docker builds and runs the Java app
     ├── pom.xml              # libraries (Web + JDBC, not JPA/Hibernate)
     └── src/main/
-        ├── java/com/learning/todo/
+        ├── tracks/java/com/learning/todo/
         └── resources/
             ├── application.properties
             └── schema.sql   # CREATE TABLE todos

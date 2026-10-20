@@ -16,7 +16,7 @@ Build it in layers. An afternoon that only does `2 + 3` is the right first versi
 ## Where it lives
 
 ```text
-cleaning-projects/solutions/08-calculator/
+programs/code-for-cleaning/solutions/08-calculator/
   Main.java     prompt loop, exit, print the result or a readable error
   Parser.java   the index into the text, expression, term, factor. No Scanner.
 ```

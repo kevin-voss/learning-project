@@ -47,7 +47,7 @@ It works and is the simplest possible recipe, but the image ships Maven, the JDK
 | Debuggability inside the container | full toolbox (Maven, JDK, shell utilities) | leaner image, fewer tools available |
 | Ship to others / production | ships build tools you don't want in prod | runtime only, smaller attack surface |
 
-**When single-stage is fine:** learning what images and layers even are, quick local experiments, and throwaway prototypes. The moment an image is shared or deployed, prefer multi-stage. Step 09 walks the course's multi-stage Dockerfile instruction by instruction in [dockerfile-line-by-line.md](../topics/09-docker/dockerfile-line-by-line.md).
+**When single-stage is fine:** learning what images and layers even are, quick local experiments, and throwaway prototypes. The moment an image is shared or deployed, prefer multi-stage. Step 09 walks the course's multi-stage Dockerfile instruction by instruction in [dockerfile-line-by-line.md](../../topics/09-docker/dockerfile-line-by-line.md).
 
 ## A multi-stage Java Dockerfile
 

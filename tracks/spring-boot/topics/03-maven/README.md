@@ -62,7 +62,7 @@ applications/parcelpilot/
             └── ParcelTrackerTest.java
 ```
 
-> **Package note:** the `com/parcelpilot/` folders match a line `package com.parcelpilot;` you add at the top of each `.java` file. A **package** is just a namespace/folder that groups related classes. New to packages and imports? Read [Packages, imports, and project structure](packages-imports-structure.md): it explains the `package` line, when you need `import`, and why folders must match. For the bigger arc (how ParcelPilot moves from loose files to packages and, later, layers) see [Code organization: from one file to a layered app](../../references/code-organization.md).
+> **Package note:** the `com/parcelpilot/` folders match a line `package com.parcelpilot;` you add at the top of each `.java` file. A **package** is just a namespace/folder that groups related classes. New to packages and imports? Read [Packages, imports, and project structure](packages-imports-structure.md): it explains the `package` line, when you need `import`, and why folders must match. For the bigger arc (how ParcelPilot moves from loose files to packages and, later, layers) see [Code organization: from one file to a layered app](../../references/architecture/code-organization.md).
 
 ## Why do it? Pros and cons
 
@@ -241,7 +241,7 @@ Alternatives include Gradle, Ant, and Bazel. This course chose Maven because its
 
 ## Reflect (stretch)
 
-You now change code, run `mvn test`, and instantly know if you broke something. That safety net is what makes every later step (Spring, database, queues) survivable. See the [Maven reference](../../references/maven.md) for the Maven Wrapper (`./mvnw`) and dependency tips.
+You now change code, run `mvn test`, and instantly know if you broke something. That safety net is what makes every later step (Spring, database, queues) survivable. See the [Maven reference](../../references/tooling/maven.md) for the Maven Wrapper (`./mvnw`) and dependency tips.
 
 ## Tests you'll grow later
 

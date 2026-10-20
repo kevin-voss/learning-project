@@ -48,7 +48,7 @@ public record CreateParcelRequest(
 ResponseEntity<ParcelResponse> create(@Valid @RequestBody CreateParcelRequest req) { ... }
 ```
 
-Constraints live on the DTO; `@Valid` on the `@RequestBody` makes Spring run them after JSON parsing and before your method. Failures throw `MethodArgumentNotValidException`, which you translate into a `400` with field errors. The full walkthrough (lifecycle diagram, constraint tour, custom constraints) is in [Bean Validation explained](../topics/05-validation-and-inputs/bean-validation-explained.md); the hands-on build is [Step 05](../topics/05-validation-and-inputs/README.md).
+Constraints live on the DTO; `@Valid` on the `@RequestBody` makes Spring run them after JSON parsing and before your method. Failures throw `MethodArgumentNotValidException`, which you translate into a `400` with field errors. The full walkthrough (lifecycle diagram, constraint tour, custom constraints) is in [Bean Validation explained](../../topics/05-validation-and-inputs/bean-validation-explained.md); the hands-on build is [Step 05](../../topics/05-validation-and-inputs/README.md).
 
 ## Designing good error messages
 
@@ -77,7 +77,7 @@ Two kinds of rules, two homes:
 | **Failure becomes** | `400` + field errors | domain exception → e.g. `409 Conflict` |
 | **Protects against** | careless clients | *every* caller, including your own code |
 
-One firm rule: **never validate a persistence entity from HTTP directly.** A JPA entity (databases arrive in [Step 10](../topics/10-persistence/README.md)) models how data is *stored*; a DTO models what clients *send*. Hanging HTTP validation on the entity welds the API contract to the database schema — then every storage refactor is silently an API change, and every API rule constrains your storage. Keep a DTO in between; it looks like duplication and is actually decoupling.
+One firm rule: **never validate a persistence entity from HTTP directly.** A JPA entity (databases arrive in [Step 10](../../topics/10-persistence/README.md)) models how data is *stored*; a DTO models what clients *send*. Hanging HTTP validation on the entity welds the API contract to the database schema — then every storage refactor is silently an API change, and every API rule constrains your storage. Keep a DTO in between; it looks like duplication and is actually decoupling.
 
 ## Consistency of messages
 
@@ -85,7 +85,7 @@ Rules and wording drift when they're scattered. Cheap habits that prevent it:
 
 - One phrasing pattern for one kind of rule, everywhere: if blank recipients get `"recipient must not be blank"`, blank ids get `"id must not be blank"` — not `"missing id"` on one endpoint and `"id is required"` on another.
 - If the same rule appears in several DTOs, give it one home: a shared constant for the regex, or a custom constraint like `@ValidParcelId` that carries its own message.
-- One error *schema* for the whole API — the same JSON shape for validation failures, missing resources, and conflicts. Getting there is [Step 06](../topics/06-error-handling/README.md)'s job, and the status-code side of the story is in [Error handling and HTTP statuses](error-handling-and-http-statuses.md).
+- One error *schema* for the whole API — the same JSON shape for validation failures, missing resources, and conflicts. Getting there is [Step 06](../../topics/06-error-handling/README.md)'s job, and the status-code side of the story is in [Error handling and HTTP statuses](error-handling-and-http-statuses.md).
 
 ## Pros and cons
 
@@ -98,10 +98,10 @@ Rules and wording drift when they're scattered. Cheap habits that prevent it:
 
 ## ParcelPilot tie-in
 
-At [Step 05](../topics/05-validation-and-inputs/README.md), ParcelPilot's boundary is `POST /parcels` and `PATCH /parcels/{id}/status`. Constraints on `CreateParcelRequest` turn `{}` into a `400` naming both fields instead of a `500` from the `Parcel` constructor; the constructor keeps its own checks as the domain's last line of defense; and the transition rule (`409` on illegal status change) stays in `Parcel`, because it needs the parcel's current state. Later steps raise the stakes: persistence ([Step 10](../topics/10-persistence/README.md)) makes stored garbage permanent, and splitting into services ([Step 13](../topics/13-split-services/README.md)) makes "which boundary validates?" a real architectural question.
+At [Step 05](../../topics/05-validation-and-inputs/README.md), ParcelPilot's boundary is `POST /parcels` and `PATCH /parcels/{id}/status`. Constraints on `CreateParcelRequest` turn `{}` into a `400` naming both fields instead of a `500` from the `Parcel` constructor; the constructor keeps its own checks as the domain's last line of defense; and the transition rule (`409` on illegal status change) stays in `Parcel`, because it needs the parcel's current state. Later steps raise the stakes: persistence ([Step 10](../../topics/10-persistence/README.md)) makes stored garbage permanent, and splitting into services ([Step 13](../../topics/13-split-services/README.md)) makes "which boundary validates?" a real architectural question.
 
 ## Where to go
 
-- Build it: [Step 05: validation and trustworthy inputs](../topics/05-validation-and-inputs/README.md) · [validation lab](../topics/05-validation-and-inputs/validation-lab.md)
-- Mechanics: [Bean Validation explained](../topics/05-validation-and-inputs/bean-validation-explained.md)
+- Build it: [Step 05: validation and trustworthy inputs](../../topics/05-validation-and-inputs/README.md) · [validation lab](../../topics/05-validation-and-inputs/validation-lab.md)
+- Mechanics: [Bean Validation explained](../../topics/05-validation-and-inputs/bean-validation-explained.md)
 - What happens when things go wrong anyway: [Error handling and HTTP statuses](error-handling-and-http-statuses.md)

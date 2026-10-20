@@ -102,8 +102,8 @@ Vite template: `npm create vite@latest my-app -- --template react-ts`
 | Area | Language |
 |------|----------|
 | Projects 1–4 curriculum | JavaScript |
-| [`frontend/`](../../frontend/) CodeStep app | TypeScript |
-| [`beginner-js/`](../../beginner-js/) drills | JavaScript |
+| [`apps/codestep/`](../../apps/codestep/) CodeStep app | TypeScript |
+| [`drills/javascript/`](../../drills/javascript/) drills | JavaScript |
 
 Learning path: **JS projects → TS in frontend/** or convert todo app to `react-ts`.
 

@@ -23,7 +23,7 @@ docker stop <container> # ...stop it instead
 
 Or run on another port: `server.port=8081` in `application.properties`.
 
-**Usually bites at:** [step 04](../topics/04-first-spring-api/README.md) onward — any step where you run the API.
+**Usually bites at:** [step 04](../../topics/04-first-spring-api/README.md) onward — any step where you run the API.
 
 ## `Connection refused` when calling localhost
 
@@ -45,7 +45,7 @@ docker ps                                   # PORTS column must show 0.0.0.0:808
 docker run --rm -p 8080:8080 parcelpilot-api:dev
 ```
 
-**Usually bites at:** steps [04](../topics/04-first-spring-api/README.md) and [09](../topics/09-docker/README.md).
+**Usually bites at:** steps [04](../../topics/04-first-spring-api/README.md) and [09](../../topics/09-docker/README.md).
 
 ## `Connection refused` between containers
 
@@ -57,7 +57,7 @@ Connection to localhost:5432 refused. Check that the hostname and port are corre
 
 **Likely cause:** the classic trap — **inside a container, `localhost` means the container itself**, not your host machine and not the other container. Your API is looking for PostgreSQL inside its own box.
 
-**Fix:** put both containers on a user-defined network and use the other container's **name** as the host (full explanation: [Running several containers in the GUIDE](../GUIDE.md#running-several-containers-read-before-step-10)):
+**Fix:** put both containers on a user-defined network and use the other container's **name** as the host (full explanation: [Running several containers in the GUIDE](../../GUIDE.md#running-several-containers-read-before-step-10)):
 
 ```bash
 docker network create parcelpilot-net
@@ -68,7 +68,7 @@ docker run --network parcelpilot-net --name parcelpilot-api \
 
 In Docker Compose (step 14) the network is automatic — but the rule stands: use the **service name** (`parcel-db`), never `localhost`.
 
-**Usually bites at:** [step 10](../topics/10-persistence/README.md) (API + database) and again at [13](../topics/13-split-services/README.md)/[14](../topics/14-compose-and-observe/README.md).
+**Usually bites at:** [step 10](../../topics/10-persistence/README.md) (API + database) and again at [13](../../topics/13-split-services/README.md)/[14](../../topics/14-compose-and-observe/README.md).
 
 ## Flyway migration failed / checksum mismatch
 
@@ -87,7 +87,7 @@ Migration checksum mismatch for migration version 1
 docker compose down -v      # or docker volume rm <volume>
 ```
 
-**Usually bites at:** [step 10](../topics/10-persistence/README.md).
+**Usually bites at:** [step 10](../../topics/10-persistence/README.md).
 
 ## RabbitMQ not ready when the app starts
 
@@ -112,7 +112,7 @@ services:
 
 (Plain `depends_on` without a condition only orders *startup*, not *readiness*.)
 
-**Usually bites at:** [step 12](../topics/12-queues/README.md), then again when Compose starts everything together at [step 14](../topics/14-compose-and-observe/README.md).
+**Usually bites at:** [step 12](../../topics/12-queues/README.md), then again when Compose starts everything together at [step 14](../../topics/14-compose-and-observe/README.md).
 
 ## Docker `permission denied` (Linux)
 
@@ -132,7 +132,7 @@ newgrp docker           # or log out and back in
 docker info             # must now succeed without sudo
 ```
 
-**Usually bites at:** [step 00](../topics/00-start-here/README.md)/[09](../topics/09-docker/README.md), first Docker use on Ubuntu.
+**Usually bites at:** [step 00](../../topics/00-start-here/README.md)/[09](../../topics/09-docker/README.md), first Docker use on Ubuntu.
 
 ## `mvn: command not found` / wrong Java version
 
@@ -153,9 +153,9 @@ sudo apt install -y maven openjdk-21-jdk
 mvn -version    # must print Maven 3.x AND "Java version: 21"
 ```
 
-If `mvn -version` shows the wrong Java, point `JAVA_HOME` at JDK 21. Full install steps: [Step 00 install section](../topics/00-start-here/README.md#if-your-tools-are-not-installed-yet); background: [maven.md](maven.md).
+If `mvn -version` shows the wrong Java, point `JAVA_HOME` at JDK 21. Full install steps: [Step 00 install section](../../topics/00-start-here/README.md#if-your-tools-are-not-installed-yet); background: [maven.md](../tooling/maven.md).
 
-**Usually bites at:** [step 03](../topics/03-maven/README.md).
+**Usually bites at:** [step 03](../../topics/03-maven/README.md).
 
 ## JSON request rejected: 400 vs 415
 
@@ -177,7 +177,7 @@ curl -i -X POST http://localhost:8080/parcels \
 
 Rule of thumb: **415** = wrong/missing content type, **400** = wrong content.
 
-**Usually bites at:** steps [04](../topics/04-first-spring-api/README.md) and [05](../topics/05-validation-and-inputs/README.md).
+**Usually bites at:** steps [04](../../topics/04-first-spring-api/README.md) and [05](../../topics/05-validation-and-inputs/README.md).
 
 ## JWT: 401 vs 403 confusion
 
@@ -196,9 +196,9 @@ curl -i http://localhost:8080/parcels/P-1 -H "Authorization: Bearer <token>"
 # 403 → the token works; check the role/claims your endpoint requires
 ```
 
-Details in [step 16](../topics/16-jwt-authentication/README.md) and [authentication.md](authentication.md).
+Details in [step 16](../../topics/16-jwt-authentication/README.md) and [authentication.md](../web-and-api/authentication.md).
 
-**Usually bites at:** [step 16](../topics/16-jwt-authentication/README.md).
+**Usually bites at:** [step 16](../../topics/16-jwt-authentication/README.md).
 
 ## Not listed here?
 

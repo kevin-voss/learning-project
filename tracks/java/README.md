@@ -1,6 +1,10 @@
 # Java Learning Hub
 
+**Main language focus of this repo.** Whole-repo order: [`docs/LEARNING_PATH.md`](../../docs/LEARNING_PATH.md) · toy intro sheet: [`projects/docs/java/`](../../projects/docs/java/README.md) · small apply build: [`projects/05-java-weather-cli/`](../../projects/05-java-weather-cli/).
+
 Static interactive learner for Java topics. Open [`index.html`](index.html) in a browser or serve the folder locally. The student environment is **Ubuntu Linux only**. All runnable Java examples target **Java 21 LTS** only: no preview features, incubator APIs, Windows commands, or macOS-only setup.
+
+Prefer **simple examples** (cookie-cutter = class, cookie = object). Run every snippet in the Ubuntu terminal with `javac` / `java`.
 
 ## Ubuntu Setup
 

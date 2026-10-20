@@ -1,125 +1,40 @@
-# Git & GitHub
+# Git — apply sheet
 
-Version control for all four projects. Read sections **when the roadmap points you there** — not all at once.
+Git saves snapshots of your project so you can undo mistakes, push backups to GitHub, and show employers real history. Use it on every project here after each meaningful change.
 
-**First use:** [Roadmap → Project 1 Phase 1](../roadmap.md#phase-1--setup-1-h)
+## Commands for these projects
 
----
+```bash
+git init                          # start tracking a project folder
+git status                        # what changed?
+git add .                         # stage files for the next snapshot
+git commit -m "Add weather form"  # save a snapshot (imperative message)
+git remote add origin <url>       # point at your GitHub repo (once)
+git push -u origin main           # upload (first time); later: git push
+git pull                          # download updates
+git log --oneline                 # recent history
+```
 
-## Why Git?
-
-- **History** — undo mistakes, see what changed
-- **Backup** — push to GitHub
-- **Portfolio** — employers look at your repos
-- **Collaboration** — branch and merge (later)
-
-## Core concepts
-
-| Term | Meaning |
-|------|---------|
-| **Repository (repo)** | Project folder tracked by Git |
-| **Commit** | Snapshot of your code at one moment |
-| **Stage** | Mark files to include in next commit (`git add`) |
-| **Branch** | Parallel line of work (`main` is default) |
-| **Remote** | Copy on GitHub (`origin`) |
-| **Push / pull** | Upload / download commits |
-
-## First-time setup (per project)
-
-**When:** Project 1 Phase 1.
+Typical Project 1 start:
 
 ```bash
 cd projects/01-weather-dashboard
-git init
-git add .
-git commit -m "Initial commit: project docs and gitignore"
-```
-
-Create a repo on GitHub (empty, no README), then:
-
-```bash
+git init && git add . && git commit -m "Initial commit"
+# create empty GitHub repo, then:
 git remote add origin https://github.com/YOUR_USERNAME/weather-dashboard.git
-git branch -M main
-git push -u origin main
+git branch -M main && git push -u origin main
 ```
-
-## Daily workflow
-
-**When:** After every meaningful change.
-
-```bash
-git status
-git diff
-git add index.html js/app.js    # or: git add .
-git commit -m "Add weather search form and basic styles"
-git push
-```
-
-## Good commit messages
-
-Imperative mood (like a command):
-
-- ✅ `Add Open-Meteo fetch helper`
-- ✅ `Fix empty city validation on submit`
-- ❌ `fixed stuff` · ❌ `WIP`
 
 ## `.gitignore`
 
-Each project includes a template. Never commit:
+Never commit `.env`, API keys, `node_modules/`, `.DS_Store`, or `dist/`. Each project ships a template — use it before the first code commit.
 
-- API keys (`.env`, hard-coded keys)
-- `node_modules/`
-- OS junk (`.DS_Store`)
-- Build output (`dist/`)
+## Learn the theory (canonical)
 
-If you commit a secret: revoke at provider, remove from code, rotate key.
+Open the **CS roadmap Git lesson** (not this sheet for deep theory):
 
-## GitHub Pages (Project 1 deploy)
+**[tracks/computer-science/index.html](../../tracks/computer-science/index.html)** — find the Git lesson in the roadmap.
 
-**When:** Project 1 Phase 9.
-
-1. Push project to GitHub
-2. Repo → Settings → Pages
-3. Source: branch `main`, folder `/ (root)`
-4. Visit `https://YOUR_USERNAME.github.io/REPO_NAME/`
-
-Client-side API keys are visible in browser — OK for learning on free tier.
-
-## Useful commands later
-
-```bash
-git log --oneline
-git restore file.js      # discard changes to one file
-git pull
-```
-
-Avoid until comfortable: `rebase`, `reset --hard`, force push.
-
-## Branching (optional)
-
-```bash
-git checkout -b feature/forecast
-git commit -m "Add 5-day forecast section"
-git checkout main
-git merge feature/forecast
-```
-
-## Connecting projects to your portfolio
-
-**When:** Project 2+ and after all four.
-
-- Pin repos on GitHub profile
-- Link live demos in README (Pages, Docker Hub, npm)
-- Describe each project on portfolio site (Project 2)
-
-## Checklist
-
-- [ ] Git installed with name/email
-- [ ] GitHub account
-- [ ] One repo per project (recommended)
-- [ ] `.gitignore` before first code commit
-- [ ] No API keys in any commit
-
-## See also
+Also useful: **[tracks/java/topics/git-basics/](../../tracks/java/topics/git-basics/)** for a short Java-track walkthrough.
 
 [Roadmap](../roadmap.md) · [Setup](../setup/getting-started.md)

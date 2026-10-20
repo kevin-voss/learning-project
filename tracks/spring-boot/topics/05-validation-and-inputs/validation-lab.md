@@ -199,5 +199,5 @@ You now reject malformed input with named field errors before it touches your do
 
 - Back to [Step 05 README](README.md) to tick the acceptance criteria.
 - How the machinery works: [Bean Validation explained](bean-validation-explained.md).
-- The big picture on contracts and error design: [Validation and API contracts](../../references/validation-and-api-contracts.md).
+- The big picture on contracts and error design: [Validation and API contracts](../../references/web-and-api/validation-and-api-contracts.md).
 - One error schema for everything: [Step 06: error handling](../06-error-handling/README.md).

@@ -155,6 +155,6 @@ Rule of thumb: **iterate with the IDE, verify with Maven.** If the IDE says gree
 ## Next
 
 - Something red or broken? [Common build failures](common-build-failures.md) decodes the error messages.
-- Maven Wrapper and dependency tips: [Maven reference](../../references/maven.md).
+- Maven Wrapper and dependency tips: [Maven reference](../../references/tooling/maven.md).
 - Your test suite grows beyond unit tests — HTTP-level and database-level testing — in [Step 08](../08-testing/README.md).
 - Back to [Step 03](README.md).

@@ -6,7 +6,7 @@
 
 ParcelPilot doesn't exist yet. Before any web server or database, we need the smallest possible thing: a way to represent **one parcel** in code and show it on screen. If you've never programmed, this step teaches the absolute basics using our parcel as the example.
 
-> **Never written any code before?** Start with the companion [Java syntax basics](java-syntax-basics.md) first. It covers the raw building blocks (variables, types, `if`/`else`, loops, printing, and how to compile and run) with tiny runnable examples (including your first "Hello"). For a thorough tour of every type (primitives vs objects, ranges, casting, `String`, the money/overflow traps), see [Java data types in detail](data-types.md). And [general coding concepts](../../references/coding-concepts.md) teaches habits like **early return** and guard clauses. Come back here once those feel familiar, and this step will make much more sense.
+> **Never written any code before?** Start with the companion [Java syntax basics](java-syntax-basics.md) first. It covers the raw building blocks (variables, types, `if`/`else`, loops, printing, and how to compile and run) with tiny runnable examples (including your first "Hello"). For a thorough tour of every type (primitives vs objects, ranges, casting, `String`, the money/overflow traps), see [Java data types in detail](data-types.md). And [general coding concepts](../../references/java/coding-concepts.md) teaches habits like **early return** and guard clauses. Come back here once those feel familiar, and this step will make much more sense.
 
 ## First, what even is a Java program?
 
@@ -360,4 +360,4 @@ Try `new Parcel("", "")` in `main` and run again. The program happily prints ` -
 
 [Step 02](../02-oop-and-composition/README.md): make parcels change state safely (CREATED → PICKED_UP → DELIVERED) and meet your first design patterns.
 
-> **Curious how the project grows from here?** Right now everything is one or two loose files, and that's exactly right for this stage. [Code organization: from one file to a layered app](../../references/code-organization.md) shows the whole journey (one file → packages/imports → controllers/services → separate services) and *when* each stage is worth it. You don't need it yet. It's a map for the road ahead.
+> **Curious how the project grows from here?** Right now everything is one or two loose files, and that's exactly right for this stage. [Code organization: from one file to a layered app](../../references/architecture/code-organization.md) shows the whole journey (one file → packages/imports → controllers/services → separate services) and *when* each stage is worth it. You don't need it yet. It's a map for the road ahead.

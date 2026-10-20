@@ -1,0 +1,28 @@
+---
+description: Folder and file size limits for scalable repo layout
+globs:
+alwaysApply: true
+---
+
+# Structure limits
+
+## Directories
+
+- **Hard rule:** at most **5 non-hidden files** in a single directory. Use subfolders before adding a sixth file.
+- Subdirectories do not count toward the limit; only immediate file siblings.
+- Prefer **bucketed paths**: `drills/`, `apps/`, `tracks/`, `projects/`, `programs/`, `docs/`, `hub/`.
+
+## Files
+
+- **Soft cap ~400 lines** per source file (`.js`, `.ts`, `.tsx`, `.css`, `.md` lesson bodies). Split by topic, chapter, or concern when growing past that.
+- Generated or vendor blobs (e.g. question `raw/*.json`) may exceed the cap; keep them in dedicated `raw/` or `data/` subfolders.
+
+## No duplication
+
+- Each learning topic has **one canonical track**. Other areas link to it (see `docs/LEARNING_PATH.md`).
+- Do not add a second tutorial tree for the same skill (e.g. full JS syntax in both `projects/docs/` and `drills/`).
+
+## Repository root
+
+- Allowed: `README.md`, `AGENTS.md`, `Makefile`, `.gitignore`, dot-config (`.cursor/`, `.git/`).
+- Course content, landing HTML, and project sheets belong under `hub/`, `tracks/`, `projects/`, etc. — not at root.

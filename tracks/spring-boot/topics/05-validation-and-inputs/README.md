@@ -73,11 +73,11 @@ How the validator works under the hood, and the full tour of constraints, is in 
 You now have rules in two places, and that is correct. They have **different jobs**:
 
 - **Boundary validation** (this step) checks the *shape of the request*: fields present, not blank, right format. It protects clients from themselves and gives them a helpful `400`.
-- **Domain rules** (your `Parcel` constructor and status transitions from step 02) protect the *business truth*: a `Parcel` object must never exist in an invalid state, no matter who constructs it — a controller, a test, or (later) a message consumer. This is the "make invalid states impossible" habit from [Java best practices](../../references/java-best-practices.md#3-make-invalid-states-impossible).
+- **Domain rules** (your `Parcel` constructor and status transitions from step 02) protect the *business truth*: a `Parcel` object must never exist in an invalid state, no matter who constructs it — a controller, a test, or (later) a message consumer. This is the "make invalid states impossible" habit from [Java best practices](../../references/java/java-best-practices.md#3-make-invalid-states-impossible).
 
 Keep both. The boundary answers "is this request well-formed?"; the domain answers "is this operation ever allowed?". Deleting the constructor checks because "the DTO validates now" reopens the hole for every non-HTTP caller.
 
-One forward-looking rule: validate **DTOs**, never persistence entities. In step 10 you'll add JPA entities for the database — resist the urge to hang HTTP validation on them. Entities model storage; DTOs model the API contract. The full philosophy is in [Validation and API contracts](../../references/validation-and-api-contracts.md).
+One forward-looking rule: validate **DTOs**, never persistence entities. In step 10 you'll add JPA entities for the database — resist the urge to hang HTTP validation on them. Entities model storage; DTOs model the API contract. The full philosophy is in [Validation and API contracts](../../references/web-and-api/validation-and-api-contracts.md).
 
 ## Why do it? Pros and cons
 

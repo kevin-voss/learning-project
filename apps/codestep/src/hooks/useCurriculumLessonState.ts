@@ -10,6 +10,7 @@ import {
   saveLessonStepIdx,
 } from '@/hooks/codestepSettings'
 import { clampLessonStep } from '@/lib/clampLessonStep'
+import { track } from '@/lib/learnerMemory'
 
 const firstTopicId = curriculum[0]?.id ?? 'variables'
 
@@ -28,6 +29,14 @@ export function useCurriculumLessonState() {
 
   useEffect(() => {
     saveLastTopicId(topicId)
+  }, [topicId])
+
+  useEffect(() => {
+    track({
+      type: 'topic.visit',
+      surface: 'codestep',
+      topicId,
+    })
   }, [topicId])
 
   useEffect(() => {

@@ -60,7 +60,7 @@ applications/parcelpilot/
 ├── pom.xml
 └── src/
     ├── main/
-    │   ├── java/com/parcelpilot/       # your classes (package com.parcelpilot;)
+    │   ├── tracks/java/com/parcelpilot/       # your classes (package com.parcelpilot;)
     │   └── resources/                  # config files (later: application.properties)
     └── test/
         └── java/com/parcelpilot/       # tests mirror the same packages

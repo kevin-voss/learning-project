@@ -43,7 +43,7 @@ try {
 }
 ```
 
-One rule to carry into step 06: **only catch what you can meaningfully handle.** If the code at this level can't fix the problem, don't catch — let the exception travel to a level that can (in ParcelPilot: the `@RestControllerAdvice`). This is [Java best practice §6](../../references/java-best-practices.md#6-fail-loudly-and-specifically-with-exceptions).
+One rule to carry into step 06: **only catch what you can meaningfully handle.** If the code at this level can't fix the problem, don't catch — let the exception travel to a level that can (in ParcelPilot: the `@RestControllerAdvice`). This is [Java best practice §6](../../references/java/java-best-practices.md#6-fail-loudly-and-specifically-with-exceptions).
 
 ## The exception hierarchy
 
@@ -203,4 +203,4 @@ Rule of thumb: exceptions signal **exceptional** situations — a broken rule, a
 
 - Back to [Step 06](README.md): route these exceptions through one `@RestControllerAdvice`.
 - Hands-on: the [controller advice lab](controller-advice-lab.md) proves each exception→status mapping with `curl`.
-- Deep dive: [Error handling and HTTP statuses](../../references/error-handling-and-http-statuses.md) — the full exception→status decision table.
+- Deep dive: [Error handling and HTTP statuses](../../references/web-and-api/error-handling-and-http-statuses.md) — the full exception→status decision table.

@@ -111,4 +111,4 @@ The full comparison lives in [Locking explained](../10-persistence/locking-expla
 
 - The third tool of this step: [rate-limiting.md](rate-limiting.md)
 - Back to the step: [Step 15 README](README.md)
-- Concepts: [Locking explained](../10-persistence/locking-explained.md) · [Databases, caching, and locking](../../references/databases-caching-and-locking.md)
+- Concepts: [Locking explained](../10-persistence/locking-explained.md) · [Databases, caching, and locking](../../references/architecture/databases-caching-and-locking.md)

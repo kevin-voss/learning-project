@@ -5,7 +5,7 @@ Static interactive learner for beginner-friendly computer science: **52 lessons*
 ## Layout
 
 ```
-data-structures/
+tracks/computer-science/
 ├── index.html          # Shell — sidebar, content area, script load order (canonical curriculum order)
 ├── scripts/
 │   └── verify-demos.mjs  # Smoke test: every demoType resolves in init.js
@@ -22,10 +22,11 @@ data-structures/
     │   ├── concepts/   # Foundations, algorithms, web, security, extended lessons
     │   └── *.js        # Core data structure entries
     └── demos/
-        ├── ui.js       # Shared demo shell
-        ├── playground.js # Guided + freeform playground helper
-        ├── init.js     # DS.demoRunners registry
-        └── …           # One interactive demo per topic
+        ├── ui.js, playground.js, init.js   # Root shell + registry
+        ├── structures/   # core/, trees-graphs/ (≤5 demos each)
+        ├── algorithms/   # core/, advanced/
+        ├── systems/      # memory/, runtime/, overview/
+        └── web-infra/    # web/, data-security/, ops/, apis/
 ```
 
 ## Conventions
@@ -54,7 +55,7 @@ For each new lesson:
 ## Verify demos
 
 ```bash
-node data-structures/scripts/verify-demos.mjs
+node tracks/computer-science/scripts/verify-demos.mjs
 ```
 
 ## Playground pattern

@@ -97,7 +97,7 @@ If you omit it, you get the engine's default (like `must not be blank`) — corr
 
 (Messages can also live in a `messages.properties` file for translation. File that away; ParcelPilot doesn't need it.)
 
-More on treating messages as part of your API contract: [Validation and API contracts](../../references/validation-and-api-contracts.md).
+More on treating messages as part of your API contract: [Validation and API contracts](../../references/web-and-api/validation-and-api-contracts.md).
 
 ## Optional stretch: a custom constraint
 
@@ -190,5 +190,5 @@ Declarative constraints keep rules next to the data, report all failures in one 
 ## Next
 
 - Back to the step: [Step 05 README](README.md) · hands-on: [validation lab](validation-lab.md)
-- The philosophy (boundaries, contracts, error message design): [Validation and API contracts](../../references/validation-and-api-contracts.md)
+- The philosophy (boundaries, contracts, error message design): [Validation and API contracts](../../references/web-and-api/validation-and-api-contracts.md)
 - Where all errors get one shared shape: [Step 06: error handling](../06-error-handling/README.md)

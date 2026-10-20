@@ -1,0 +1,20 @@
+.DS_Store
+*.log
+*.pid
+
+# Dependencies & build output
+**/node_modules/
+**/dist/
+**/target/
+**/.run/
+
+# Env & secrets
+**/.env
+!**/.env.example
+
+# Code for Cleaning — solutions stay local
+programs/code-for-cleaning/solutions/
+**/*.class
+
+# Learner profile exports (local backup; personal store is separate)
+.learner/

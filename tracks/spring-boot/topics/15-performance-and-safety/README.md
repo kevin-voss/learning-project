@@ -71,7 +71,7 @@ public void updateStatus(String id, Status newStatus) {
 }
 ```
 
-The cache is a **proxy** in front of the database read. The rate limiter can pick its algorithm via a **strategy** (see [design patterns](../../references/design-patterns.md)).
+The cache is a **proxy** in front of the database read. The rate limiter can pick its algorithm via a **strategy** (see [design patterns](../../references/java/design-patterns.md)).
 
 ## Test it
 

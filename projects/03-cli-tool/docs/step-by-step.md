@@ -1,6 +1,6 @@
 # Step-by-Step — CLI Tool
 
-Choose **one** option: [Weather](./options/weather-cli.md) · [Task manager](./options/task-manager.md) · [File organizer](./options/file-organizer.md)
+Build the **[Weather CLI](./options/weather-cli.md)** (other options removed).
 
 Learn topics **per phase** — see [Roadmap — Project 3](../../docs/roadmap.md#project-3--cli-tool).
 
@@ -85,22 +85,9 @@ console.log('Hello from my CLI');
 **Learn:** [npm: node_modules rules](../../docs/npm/README.md#node_modules-rules)
 
 **Build:**
-Weather CLI:
 
 ```bash
 npm install commander chalk ora axios dotenv
-```
-
-Task manager:
-
-```bash
-npm install commander chalk inquirer
-```
-
-File organizer:
-
-```bash
-npm install commander chalk
 ```
 
 - [ ] Confirm `node_modules/` appeared
@@ -119,8 +106,8 @@ npm install commander chalk
 - [ ] Set up Commander in `bin/weather.js`
 - [ ] Program name, description, version
 - [ ] `--help` and `--version` work
-- [ ] Main argument: `<city>` (or subcommands for task/organize)
-- [ ] Options: `--unit`, `--forecast` (weather) or equivalent
+- [ ] Main argument: `<city>`
+- [ ] Options: `--unit`, `--forecast`
 - [ ] On missing required input: print help, `process.exit(1)`
 
 **Checkpoint:** `node bin/weather.js --help` shows usage.
@@ -131,13 +118,11 @@ Beginner check: if `--help` works, your CLI can listen to arguments.
 
 ## Phase 5: Core logic (≈4 hours)
 
-**Learn:** [JavaScript: Project 3](../../docs/javascript/by-project.md#project-3--cli-tool-nodejs) · your [option guide](./options/)
+**Learn:** [JavaScript: Project 3](../../docs/javascript/by-project.md#project-3--cli-tool-nodejs) · [Weather CLI guide](./options/weather-cli.md)
 
 **Build:**
-- [ ] Weather: API module + current weather command
-- [ ] Weather: forecast command (optional flag)
-- [ ] Task: read/write JSON file with `fs`
-- [ ] Organizer: scan directory, move files by extension
+- [ ] API module + current weather command
+- [ ] Forecast command (optional `--forecast` flag)
 
 - [ ] Use `try/catch` for errors
 - [ ] Meaningful `console.error` messages
@@ -162,9 +147,7 @@ Beginner check: if `--help` works, your CLI can listen to arguments.
 
 **Learn:** [Git: .gitignore](../../docs/git/README.md#gitignore) · [Node.js: env vars](../../docs/nodejs/README.md#environment-variables)
 
-**Build (weather CLI):** Skip `.env` — Open-Meteo needs no key. Optional: add `DEBUG=1` in `.env` to practice dotenv.
-
-**Build (other options):** Store task JSON in `src/storage/` — add path to `.gitignore` if personal data.
+**Build:** Skip `.env` — Open-Meteo needs no key. Optional: add `DEBUG=1` in `.env` to practice dotenv.
 
 - [ ] Optional: `.env.example` + `dotenv` with `DEBUG=1` to learn the pattern
 - [ ] Verify `.env` is in `.gitignore` if you use one
@@ -186,7 +169,7 @@ weather --help
 weather notrealcity999     # Should error gracefully
 ```
 
-- [ ] Test edge cases from option guide
+- [ ] Test edge cases from [Weather CLI guide](./options/weather-cli.md)
 - [ ] Test wrong flags
 - [ ] `npm unlink -g` when switching machines
 

@@ -42,10 +42,6 @@ chmod +x bin/weather.js
 
 Or always use: `node bin/weather.js`
 
-## Which option should I pick?
+## Which CLI should I build?
 
-- **Weather** — best continuity from Project 1
-- **Task manager** — best for learning file I/O
-- **File organizer** — most "real utility" feeling
-
-Only build one for the curriculum; try others later as practice.
+**Weather CLI only** — task manager and file organizer options were removed. Follow [weather-cli.md](../options/weather-cli.md).

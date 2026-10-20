@@ -134,5 +134,5 @@ If the operation is **naturally idempotent**, replaying it is already harmless a
 ## Next
 
 - What happens when a message doesn't just duplicate but *keeps failing*: [Retries and dead letters](retries-and-dead-letters.md).
-- Delivery-guarantee vocabulary in one place: [Messaging and queues](../../references/messaging-and-queues.md).
+- Delivery-guarantee vocabulary in one place: [Messaging and queues](../../references/architecture/messaging-and-queues.md).
 - Back to [Step 12](README.md).

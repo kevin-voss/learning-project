@@ -1,8 +1,8 @@
 # Project Structure — CLI Tool
 
-Layout depends slightly on which option you choose. Same core pattern for all.
+Layout for the **Weather CLI**.
 
-## Weather CLI (recommended)
+## Folders and files
 
 ```
 03-cli-tool/
@@ -22,39 +22,6 @@ Layout depends slightly on which option you choose. Same core pattern for all.
 ├── .env.example            # optional
 ├── .gitignore
 └── README.md
-```
-
-## Task manager CLI
-
-```
-03-cli-tool/
-├── bin/
-│   └── task.js
-├── src/
-│   ├── commands/
-│   │   ├── add.js
-│   │   ├── list.js
-│   │   ├── complete.js
-│   │   └── clear.js
-│   ├── storage/
-│   │   └── tasks.json      # Created at runtime — gitignore optional
-│   └── utils/
-│       └── format.js
-├── package.json
-└── ...
-```
-
-## File organizer CLI
-
-```
-03-cli-tool/
-├── bin/
-│   └── organize.js
-├── src/
-│   ├── organizer.js        # Main logic
-│   └── categories.js       # Extension → folder map
-├── package.json
-└── ...
 ```
 
 ## package.json essentials

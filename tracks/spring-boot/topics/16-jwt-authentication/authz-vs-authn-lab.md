@@ -135,5 +135,5 @@ The staleness trade-off is the JWT revocation problem from the README's cons, we
 ## Next
 
 - When any of this returns a status you didn't expect: [security-troubleshooting.md](security-troubleshooting.md)
-- Concepts: [Password authentication and JWT](../../references/authentication.md)
+- Concepts: [Password authentication and JWT](../../references/web-and-api/authentication.md)
 - Back to the step: [Step 16 README](README.md)

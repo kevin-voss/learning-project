@@ -104,5 +104,5 @@ Check the first line of each response (e.g. `HTTP/1.1 404`) against your predict
 ## Next
 
 - Right now the 400/409 responses carry unhelpful (or empty) bodies. [Step 05](../05-validation-and-inputs/README.md) makes `400` carry field-by-field validation errors, and [Step 06](../06-error-handling/README.md) gives every error a consistent JSON shape.
-- Quick reference for methods + statuses: [Spring and HTTP](../../references/spring-and-http.md).
+- Quick reference for methods + statuses: [Spring and HTTP](../../references/web-and-api/spring-and-http.md).
 - Back to [Step 04](README.md).

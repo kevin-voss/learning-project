@@ -14,7 +14,7 @@
 ## Where it lives
 
 ```text
-cleaning-projects/solutions/01-password/
+programs/code-for-cleaning/solutions/01-password/
   Main.java              asks the questions and prints
   PasswordFactory.java   builds and mixes the password
 ```

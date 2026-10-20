@@ -1,6 +1,6 @@
 # Security troubleshooting: symptom → cause → fix
 
-Companion to [Step 16](README.md). Spring Security fails *closed*: when something is misconfigured, you don't get a stack trace — you get a blank `401`/`403` and no explanation. This page is the field guide for every wall you're likely to hit during the build. Also useful: [When things break](../../references/when-things-break.md) for the general debugging method, and [the authentication reference](../../references/authentication.md) for the concepts.
+Companion to [Step 16](README.md). Spring Security fails *closed*: when something is misconfigured, you don't get a stack trace — you get a blank `401`/`403` and no explanation. This page is the field guide for every wall you're likely to hit during the build. Also useful: [When things break](../../references/operations/when-things-break.md) for the general debugging method, and [the authentication reference](../../references/web-and-api/authentication.md) for the concepts.
 
 ## First: is it a 401 or a 403?
 
@@ -51,7 +51,7 @@ Careful with padding: base64url payloads aren't always a multiple of 4 character
 
 | Symptom | Cause | Fix |
 |---|---|---|
-| Tokens stop working after every service restart | The signing secret is generated randomly at startup, so each restart signs with a new key — every old token's signature no longer verifies. | Configure a fixed secret via an environment variable (see [configuration.md](../../references/configuration.md)); the same key must verify that signed. |
+| Tokens stop working after every service restart | The signing secret is generated randomly at startup, so each restart signs with a new key — every old token's signature no longer verifies. | Configure a fixed secret via an environment variable (see [configuration.md](../../references/tooling/configuration.md)); the same key must verify that signed. |
 | Startup or signing fails with a key-length error (`The specified key byte array is 128 bits which is not secure enough…`) | HS256 requires a key of at least 256 bits (32 bytes). Your secret is too short. | Use a longer secret — at least 32 characters for a local dev value. |
 | `401` and the log says signature verification failed | Different secret between the service that signed and the code that verifies (common after editing config in one place but not the other, or a stale container built with old config). | Rebuild/restart so everything reads the same secret; confirm with the debug logging below. |
 
@@ -82,6 +82,6 @@ Restart, repeat the failing request, and read the story: which filter matched, w
 ## Next
 
 - The 401-vs-403 distinction, hands-on: [authz-vs-authn-lab.md](authz-vs-authn-lab.md)
-- Concepts: [Password authentication and JWT](../../references/authentication.md)
-- General debugging method: [When things break](../../references/when-things-break.md)
+- Concepts: [Password authentication and JWT](../../references/web-and-api/authentication.md)
+- General debugging method: [When things break](../../references/operations/when-things-break.md)
 - Back to the step: [Step 16 README](README.md)

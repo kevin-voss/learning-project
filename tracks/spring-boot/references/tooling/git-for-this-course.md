@@ -4,9 +4,9 @@ Git is a **version control system**: a tool that records snapshots of your proje
 
 ## Why you need it before step 13
 
-At [step 13](../topics/13-split-services/README.md) you split the ParcelPilot monolith into two services. That reshapes the whole project, and [PROJECT-STORY.md](../PROJECT-STORY.md) asks you to **preserve the final monolith as a tagged commit first** — a permanent, named snapshot you can always return to or show someone ("this is what the app looked like before microservices"). Without version control, "preserve" means copy-pasting folders and hoping. With Git, it is one command.
+At [step 13](../../topics/13-split-services/README.md) you split the ParcelPilot monolith into two services. That reshapes the whole project, and [PROJECT-STORY.md](../../PROJECT-STORY.md) asks you to **preserve the final monolith as a tagged commit first** — a permanent, named snapshot you can always return to or show someone ("this is what the app looked like before microservices"). Without version control, "preserve" means copy-pasting folders and hoping. With Git, it is one command.
 
-Step 13 has a short companion walkthrough for exactly that moment: [git-tag-checkpoint.md](../topics/13-split-services/git-tag-checkpoint.md). This page is the background reading that makes the walkthrough obvious.
+Step 13 has a short companion walkthrough for exactly that moment: [git-tag-checkpoint.md](../../topics/13-split-services/git-tag-checkpoint.md). This page is the background reading that makes the walkthrough obvious.
 
 ## Key words
 

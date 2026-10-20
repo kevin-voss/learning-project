@@ -14,7 +14,7 @@ A calendar has to say which meetings overlap, and where the day still has room. 
 ## Where it lives
 
 ```text
-cleaning-projects/solutions/05-calendar/
+programs/code-for-cleaning/solutions/05-calendar/
   Main.java           reads lines and prints the two reports
   Appointment.java    start and end in minutes, parses HH:MM
   Schedule.java       sort, overlapping pairs, free windows

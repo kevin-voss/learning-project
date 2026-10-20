@@ -14,7 +14,7 @@ Focus: **Java**, from a first real console program to classes, files, and a smal
 4. [Round 1](round-01/README.md) — the 8 tasks for these two weeks.
 5. After each Sunday: fill in [progress](progress.md). The next round is written from that.
 
-Solutions stay off git. Put code under `cleaning-projects/solutions/` (that folder is in `.gitignore`).
+Solutions stay off git. Put code under `programs/code-for-cleaning/solutions/` (that folder is in `.gitignore`).
 
 ## Rhythm
 

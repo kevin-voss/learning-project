@@ -25,17 +25,23 @@ import { usePlaygroundRunner } from '@/hooks/usePlaygroundRunner'
 import { usePlayback } from '@/hooks/usePlayback'
 import { useSound } from '@/hooks/useSound'
 import { PLAYBACK_SPEED_MS } from '@/lib/playbackSpeed'
+import { track } from '@/lib/learnerMemory'
 import type { PlaygroundTask } from '@/types/playground'
 
 import styles from '@/components/practice/PlaygroundView.module.css'
 
 type Props = {
   task: PlaygroundTask
+  topicId?: string
   /** Label `for` / `id` on the editor (avoid duplicates if multiple instances could mount) */
   editorId?: string
 }
 
-export function PracticeExercise({ task, editorId = 'playground-code' }: Props) {
+export function PracticeExercise({
+  task,
+  topicId,
+  editorId = 'playground-code',
+}: Props) {
   const [code, setCode] = useState(task.starterCode)
   /** Source snapshot aligned with `result.steps` line highlights */
   const [replayCode, setReplayCode] = useState<string | null>(null)
@@ -199,6 +205,22 @@ export function PracticeExercise({ task, editorId = 'playground-code' }: Props) 
     }
     pbRef.current.togglePlay()
   }, [running, playbackReady, code, run, afterSuccessfulRun])
+
+  const attemptLoggedRef = useRef<string | null>(null)
+
+  useEffect(() => {
+    if (status !== 'done' || !result || !topicId) return
+    const runKey = `${task.id}:${result.cases.map((c) => c.pass).join(',')}`
+    if (attemptLoggedRef.current === runKey) return
+    attemptLoggedRef.current = runKey
+    const passed = result.cases.length > 0 && result.cases.every((c) => c.pass)
+    track({
+      type: 'playground.attempt',
+      surface: 'codestep',
+      topicId,
+      payload: { taskId: task.id, passed },
+    })
+  }, [status, result, topicId, task.id])
 
   useEffect(() => {
     pbRef.current = pb

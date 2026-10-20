@@ -49,7 +49,7 @@ When the app dies during startup, Spring Boot usually prints an `APPLICATION FAI
 | You see | Likely cause | Fix |
 |---|---|---|
 | `Web server failed to start. Port 8080 was already in use.` | Another process (often your own previous run or a forgotten container) holds the port | See the [full port-8080 recipe](#the-port-8080-already-in-use-recipe) below |
-| `Error creating bean with name 'dataSource'` + `Connection ... refused` | Database not running, or wrong `spring.datasource.url` | Start PostgreSQL (`docker ps` to check), verify the URL in [configuration](configuration.md) |
+| `Error creating bean with name 'dataSource'` + `Connection ... refused` | Database not running, or wrong `spring.datasource.url` | Start PostgreSQL (`docker ps` to check), verify the URL in [configuration](../tooling/configuration.md) |
 | `Parameter 0 of constructor in ... required a bean of type '...' that could not be found.` | Spring cannot find a class to inject — usually a missing `@Service`/`@Repository` annotation, or the class sits outside the main package | Annotate the class; keep all code under the application's base package |
 | `java.lang.ClassNotFoundException` / `NoClassDefFoundError` | A dependency your code uses is not in `pom.xml` | Add the dependency (or starter) to `pom.xml`, rerun `mvn package` |
 
@@ -91,13 +91,13 @@ How to tell them apart at a glance: **compilation** errors mention `.java` files
 | `Unable to find image 'parcelpilot:latest' locally` then a pull error | You ran an image name you never built, or a typo | `docker images` to list what exists; `docker build -t parcelpilot .` first; check spelling |
 | `Bind for 0.0.0.0:8080 failed: port is already allocated` | Another **container** already publishes 8080 | `docker ps` to find it, `docker stop <name>`, or publish differently: `-p 8081:8080` |
 | Container exits immediately after `docker run` | The process inside crashed at startup (often a Spring startup failure) | `docker logs <container>` — the container's stdout holds the same stack trace you would see locally. This command is the single most important Docker debugging habit. |
-| `permission denied while trying to connect to the Docker daemon socket` (Linux) | Your user is not in the `docker` group | `sudo usermod -aG docker "$USER"`, then log out/in or `newgrp docker` — see the [Step 00 install section](../topics/00-start-here/README.md#if-your-tools-are-not-installed-yet) |
+| `permission denied while trying to connect to the Docker daemon socket` (Linux) | Your user is not in the `docker` group | `sudo usermod -aG docker "$USER"`, then log out/in or `newgrp docker` — see the [Step 00 install section](../../topics/00-start-here/README.md#if-your-tools-are-not-installed-yet) |
 
 The mental shift: a container failing is not a new category of problem. It is usually your normal app failing, *hidden* inside a box — and `docker logs` opens the box.
 
 ## The "port 8080 already in use" recipe
 
-This one earns its own section because it bites at nearly every step from [04](../topics/04-first-spring-api/README.md) on.
+This one earns its own section because it bites at nearly every step from [04](../../topics/04-first-spring-api/README.md) on.
 
 **Cause:** exactly one process may listen on a port. A previous run of your app (still running in another terminal), or a container with `-p 8080:8080`, is holding it.
 
@@ -115,7 +115,7 @@ docker ps               # look for 0.0.0.0:8080->8080
 docker stop <container>
 ```
 
-Or sidestep it: change your app's port with `server.port=8081` in `application.properties` (see [configuration.md](configuration.md)) — then remember to `curl` port 8081.
+Or sidestep it: change your app's port with `server.port=8081` in `application.properties` (see [configuration.md](../tooling/configuration.md)) — then remember to `curl` port 8081.
 
 ## A general debugging method
 
@@ -134,9 +134,9 @@ flowchart LR
 2. **Read the actual error.** Not the vibe of it — the words. Which exception? Which file and line? What does the `Caused by` at the bottom say?
 3. **Isolate.** Shrink the failing case: does it fail with one parcel instead of ten? Outside Docker? With the database ruled out?
 4. **Change one thing.** If you change three things and it works, you learned nothing and probably kept two mistakes.
-5. **Verify.** Rerun the *same* command from step 1. If you use Git, `git diff` shows precisely what you changed since it last worked ([git-for-this-course.md](git-for-this-course.md)).
+5. **Verify.** Rerun the *same* command from step 1. If you use Git, `git diff` shows precisely what you changed since it last worked ([git-for-this-course.md](../tooling/git-for-this-course.md)).
 
-**Print/log vs debugger:** adding a `System.out.println` (later, a log line) to see a value is a legitimate, professional technique — fast and good enough for most bugs in this course. A **debugger** (pausing the program and inspecting variables in the IDE) is stronger when the logic is tangled. Step 01 walks you through both on a real bug: [debugging your first program](../topics/01-java-basics/debugging-your-first-program.md).
+**Print/log vs debugger:** adding a `System.out.println` (later, a log line) to see a value is a legitimate, professional technique — fast and good enough for most bugs in this course. A **debugger** (pausing the program and inspecting variables in the IDE) is stronger when the logic is tangled. Step 01 walks you through both on a real bug: [debugging your first program](../../topics/01-java-basics/debugging-your-first-program.md).
 
 ## When to ask for help
 

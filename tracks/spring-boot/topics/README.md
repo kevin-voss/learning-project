@@ -45,4 +45,4 @@ Every step ends with a short quiz. Treat it as the real gate for "did I understa
 ## Two rules
 
 - Add **only** what the step asks for. Do not pull in next-step abstractions early.
-- If a keyword or pattern doesn't solve the step's stated problem, it waits. The full pattern catalog is in [../references/design-patterns.md](../references/design-patterns.md).
+- If a keyword or pattern doesn't solve the step's stated problem, it waits. The full pattern catalog is in [../references/java/design-patterns.md](../references/java/design-patterns.md).

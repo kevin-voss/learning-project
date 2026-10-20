@@ -1,6 +1,6 @@
 # CodeStep — Implementation Overview
 
-This document is the single source of truth for the **JavaScript interactive learning app** (guided code walkthroughs + playground with in-browser tests). Work is delivered in **four sequential phases**; see [`01.md`](01.md), [`02.md`](02.md), [`03.md`](03.md), and [`04.md`](04.md).
+This document is the single source of truth for the **JavaScript interactive learning app** (guided code walkthroughs + playground with in-browser tests). Work is delivered in **phases** [`01.md`](01.md)–[`04.md`](04.md) (platform + content) and [`05-learner-memory.md`](05-learner-memory.md) (feedback-driven memory).
 
 ---
 
@@ -22,7 +22,7 @@ This document is the single source of truth for the **JavaScript interactive lea
 | Language | TypeScript recommended |
 | Styles | CSS modules or plain CSS with design tokens (`tokens.css`) |
 
-Reference prototype: [`frontend/init_example.html`](../../frontend/init_example.html) (behavior to preserve conceptually; not the long-term entry point).
+Reference prototype: [`frontend/init_example.html`](../../apps/codestep/init_example.html) (behavior to preserve conceptually; not the long-term entry point).
 
 ---
 
@@ -433,7 +433,7 @@ flowchart LR
 
 When **01–04** are done:
 
-- App runs with `cd frontend && bun install && bun run dev`.
+- App runs with `cd apps/codestep && bun install && bun run dev`.
 - Learners can use **Learn** mode with stepping, speed, sound toggle, explanations, highlighted lines/segments.
 - Learners can use **Practice** mode with running code in-browser, captured console, and passing/failing tests.
 - Variables-only tasks never require teaching `return` before it is taught (use binding mode or equivalent).

@@ -21,7 +21,7 @@ You do not have to finish all eight tasks. Each accepted task is cleaned on its 
 Keep solutions on your machine, not in git:
 
 ```text
-cleaning-projects/solutions/01-password/
+programs/code-for-cleaning/solutions/01-password/
   Main.java
   PasswordFactory.java
 ```
@@ -36,7 +36,7 @@ Open Terminal. These commands are the same idea on macOS and Linux.
 |---------|----------------|
 | `pwd` | Prints the folder you are in right now. |
 | `ls` | Lists files in that folder. |
-| `cd cleaning-projects/solutions` | Moves into a folder. |
+| `cd programs/code-for-cleaning/solutions` | Moves into a folder. |
 | `mkdir 01-password` | Creates a folder. |
 | `cd 01-password` | Moves into the new folder. |
 | `cd ..` | Moves up one folder. |
@@ -125,7 +125,7 @@ If `java Main` says it could not find the main class: you are in the wrong folde
 
 ## Ask Cursor without getting the answer
 
-In Cursor chat, type `/` and pick a command. The files are `cleaning-projects/.cursor/commands/`. Open the `cleaning-projects` folder as the Cursor window so that menu can see them. A command may explain an idea or show an unrelated example. It will not write your task.
+In Cursor chat, type `/` and pick a command. The files are `programs/code-for-cleaning/.cursor/commands/`. Open the `programs/code-for-cleaning` folder as the Cursor window so that menu can see them. A command may explain an idea or show an unrelated example. It will not write your task.
 
 | Type this | When |
 |-----------|------|

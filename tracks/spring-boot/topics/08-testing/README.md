@@ -90,7 +90,7 @@ void deliver_afterPickup_setsStatusToDelivered() {
 - **Loaded:** the named controller, every `@RestControllerAdvice` (your `GlobalErrorHandler`), validation, JSON converters, MockMvc itself.
 - **Not loaded:** `@Service` and `@Repository` beans, database configuration, anything unrelated to HTTP.
 
-That's why slice tests start in a second or two instead of loading the whole app. In ParcelPilot today this works out especially simply: the controller still holds its `ConcurrentHashMap` itself, so there is nothing else to provide. From step 10 on, when a repository exists, a `@WebMvcTest` will need a `@MockBean` for it — see the [testing reference](../../references/testing.md).
+That's why slice tests start in a second or two instead of loading the whole app. In ParcelPilot today this works out especially simply: the controller still holds its `ConcurrentHashMap` itself, so there is nothing else to provide. From step 10 on, when a repository exists, a `@WebMvcTest` will need a `@MockBean` for it — see the [testing reference](../../references/web-and-api/testing.md).
 
 **And `@SpringBootTest`?** It loads the *entire* application context — every bean, every configuration. Use it sparingly: it's the right tool when you genuinely need everything wired together (a handful of whole-app smoke tests), but it is many times slower per class, and if most tests use it, `mvn test` crawls. Rule of thumb: slice by default, `@SpringBootTest` only when the slice can't express what you're testing.
 
@@ -140,7 +140,7 @@ Still one project: `applications/parcelpilot`. No new dependencies — `spring-b
 
 ### 1. Re-read your unit tests from steps 02–03
 
-Open `src/test/java/com/parcelpilot/ParcelTrackerTest.java`. Notice it already follows today's ideas: a `FixedClock` makes time predictable ([step 02](../02-oop-and-composition/README.md)'s composition paying off), and `assertThrows` pins the illegal-transition rule. That's the "test behavior, and test the rules" habit from [Java best practices](../../references/java-best-practices.md#10-test-behavior-and-test-the-rules). These tests stay exactly as they are — they're the base of your pyramid.
+Open `src/test/java/com/parcelpilot/ParcelTrackerTest.java`. Notice it already follows today's ideas: a `FixedClock` makes time predictable ([step 02](../02-oop-and-composition/README.md)'s composition paying off), and `assertThrows` pins the illegal-transition rule. That's the "test behavior, and test the rules" habit from [Java best practices](../../references/java/java-best-practices.md#10-test-behavior-and-test-the-rules). These tests stay exactly as they are — they're the base of your pyramid.
 
 ### 2. Create the MockMvc test class
 

@@ -1,6 +1,6 @@
 # Testing
 
-Deep-dive reference for automated testing in Java and Spring Boot. Introduced step by step in [topic 03](../topics/03-maven/README.md) (first unit tests) and [topic 08](../topics/08-testing/README.md) (test pyramid, MockMvc, slices). This page is the fuller catalog to return to.
+Deep-dive reference for automated testing in Java and Spring Boot. Introduced step by step in [topic 03](../../topics/03-maven/README.md) (first unit tests) and [topic 08](../../topics/08-testing/README.md) (test pyramid, MockMvc, slices). This page is the fuller catalog to return to.
 
 ## The test pyramid
 
@@ -20,7 +20,7 @@ flowchart TB
 | Integration | `ParcelControllerTest` (`@WebMvcTest`), `ParcelRepositoryTest` (Testcontainers, after topic 10) | Do the parts connect and honor the contract? |
 | E2E | A `curl` create-then-read against the running app/image | Does the assembled system work at all? |
 
-Write each test at the **lowest** level that can catch the bug you're worried about. The inverted shape (many E2E, few unit — the "ice cream cone") is dissected in [unit vs integration vs E2E](../topics/08-testing/unit-vs-integration-vs-e2e.md).
+Write each test at the **lowest** level that can catch the bug you're worried about. The inverted shape (many E2E, few unit — the "ice cream cone") is dissected in [unit vs integration vs E2E](../../topics/08-testing/unit-vs-integration-vs-e2e.md).
 
 ## JUnit 5 essentials
 
@@ -117,7 +117,7 @@ class ParcelControllerTest {
 }
 ```
 
-MockMvc performs a *simulated* HTTP request: no port and no real network, but routing, `@Valid`, Jackson, and the error handler all genuinely run. Debug tip: chain `.andDo(print())` to dump the full request/response. Full walk-through: the [MockMvc lab](../topics/08-testing/mockmvc-lab.md).
+MockMvc performs a *simulated* HTTP request: no port and no real network, but routing, `@Valid`, Jackson, and the error handler all genuinely run. Debug tip: chain `.andDo(print())` to dump the full request/response. Full walk-through: the [MockMvc lab](../../topics/08-testing/mockmvc-lab.md).
 
 ### `@DataJpaTest` — the persistence slice (from topic 10 on)
 
@@ -160,7 +160,7 @@ when(repository.findById("P-1"))                       // scripting: "when asked
 verify(repository).save(any(ParcelEntity.class));      // inspecting: "was save(...) called?"
 ```
 
-Mock what is **slow, external, or not yet built** — a database in a web-slice test, a remote service, a clock. **Over-mocking warning:** never mock the thing the test claims to verify, and be suspicious of tests where every collaborator is a mock — they verify your scripting, not your code, and stay green while the real wiring is broken. A concrete bad-example/good-example pair is in [unit vs integration vs E2E](../topics/08-testing/unit-vs-integration-vs-e2e.md). Note also that ParcelPilot's `FixedClock` from topic 02 needed no Mockito: a tiny hand-written fake of a one-method interface is often simpler and clearer than a mock.
+Mock what is **slow, external, or not yet built** — a database in a web-slice test, a remote service, a clock. **Over-mocking warning:** never mock the thing the test claims to verify, and be suspicious of tests where every collaborator is a mock — they verify your scripting, not your code, and stay green while the real wiring is broken. A concrete bad-example/good-example pair is in [unit vs integration vs E2E](../../topics/08-testing/unit-vs-integration-vs-e2e.md). Note also that ParcelPilot's `FixedClock` from topic 02 needed no Mockito: a tiny hand-written fake of a one-method interface is often simpler and clearer than a mock.
 
 ## `@SpringBootTest`
 
@@ -181,7 +181,7 @@ Use it sparingly: each distinct context configuration costs a full application s
 
 Starts real infrastructure (for us: PostgreSQL) in throwaway Docker containers per test run, so repository tests hit the same engine as production instead of an in-memory imitation like H2 whose SQL dialect differs. Requires Docker (topic 09) and a database to test (topic 10).
 
-Key pieces: `@Testcontainers` + a `@Container PostgreSQLContainer` field to manage the container's lifecycle, `@DynamicPropertySource` to hand Spring the container's random port and credentials, and `Replace.NONE` on `@DataJpaTest` so Spring doesn't swap the container out for an embedded database. Full code, proof commands, and the H2-lies-to-you argument: the [Testcontainers lab](../topics/08-testing/testcontainers-lab.md).
+Key pieces: `@Testcontainers` + a `@Container PostgreSQLContainer` field to manage the container's lifecycle, `@DynamicPropertySource` to hand Spring the container's random port and credentials, and `Replace.NONE` on `@DataJpaTest` so Spring doesn't swap the container out for an embedded database. Full code, proof commands, and the H2-lies-to-you argument: the [Testcontainers lab](../../topics/08-testing/testcontainers-lab.md).
 
 ## Flaky tests: causes and avoidance
 
@@ -213,8 +213,8 @@ Continuous Integration (mentioned since topic 03) is a server that runs `mvn tes
 
 | Topic | What it added to testing |
 |---|---|
-| [02](../topics/02-oop-and-composition/README.md) | The injectable `Clock` — the design decision that makes time testable |
-| [03](../topics/03-maven/README.md) | First unit tests, `assertThrows`, `mvn test` as the single command |
-| [08](../topics/08-testing/README.md) | The pyramid, Given-When-Then naming, MockMvc contract tests for 201/400/404/409 |
-| 10 (persistence) | A real database — and with it the [Testcontainers lab](../topics/08-testing/testcontainers-lab.md) |
+| [02](../../topics/02-oop-and-composition/README.md) | The injectable `Clock` — the design decision that makes time testable |
+| [03](../../topics/03-maven/README.md) | First unit tests, `assertThrows`, `mvn test` as the single command |
+| [08](../../topics/08-testing/README.md) | The pyramid, Given-When-Then naming, MockMvc contract tests for 201/400/404/409 |
+| 10 (persistence) | A real database — and with it the [Testcontainers lab](../../topics/08-testing/testcontainers-lab.md) |
 | 11 (monolith) | The refactor that the topic 08 suite makes safe: green tests = unchanged API behavior |

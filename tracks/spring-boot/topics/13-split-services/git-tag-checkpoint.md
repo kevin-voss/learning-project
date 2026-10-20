@@ -10,7 +10,7 @@ Step 13 doesn't add a file or two; it **reshapes the whole project**. You'll mov
 
 ## The solution: version control + a tag
 
-Put the monolith under **Git** and pin a **tag** — a permanent, human-readable name on this exact state — before splitting anything. This is precisely what [PROJECT-STORY.md](../../PROJECT-STORY.md) asks for at this point ("preserve the final monolith as a tagged Git commit"). Background on what Git is and the handful of commands this course needs: [Git for this course](../../references/git-for-this-course.md).
+Put the monolith under **Git** and pin a **tag** — a permanent, human-readable name on this exact state — before splitting anything. This is precisely what [PROJECT-STORY.md](../../PROJECT-STORY.md) asks for at this point ("preserve the final monolith as a tagged Git commit"). Background on what Git is and the handful of commands this course needs: [Git for this course](../../references/tooling/git-for-this-course.md).
 
 ## Do it, command by command
 
@@ -128,9 +128,9 @@ The README mentions the alternative — copying to `checkpoints/08-event-driven-
 | Later payoff | `git diff` shows exactly what the split changed; a commit per finished step from now on | none — it's a frozen copy |
 | Learning cost | you must meet Git today | zero |
 
-If Git feels like too much on top of a big refactor day, the folder copy is honestly fine. But Git pays off immediately: from this point on you can commit after every green acceptance checklist and never again lose more than one step of work — the habit is described in [Git for this course](../../references/git-for-this-course.md).
+If Git feels like too much on top of a big refactor day, the folder copy is honestly fine. But Git pays off immediately: from this point on you can commit after every green acceptance checklist and never again lose more than one step of work — the habit is described in [Git for this course](../../references/tooling/git-for-this-course.md).
 
 ## Next
 
 - Back to the split: [Step 13 README](README.md)
-- Deep dive: [Git for this course](../../references/git-for-this-course.md)
+- Deep dive: [Git for this course](../../references/tooling/git-for-this-course.md)

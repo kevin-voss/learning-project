@@ -140,29 +140,6 @@ module.exports = getCurrentWeather;
 
 ---
 
-## Task manager — storage helper
-
-```javascript
-const fs = require('fs');
-const path = require('path');
-
-const DATA_FILE = path.join(__dirname, '../storage/tasks.json');
-
-function loadTasks() {
-  if (!fs.existsSync(DATA_FILE)) return [];
-  return JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
-}
-
-function saveTasks(tasks) {
-  fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true });
-  fs.writeFileSync(DATA_FILE, JSON.stringify(tasks, null, 2));
-}
-
-module.exports = { loadTasks, saveTasks };
-```
-
----
-
 ## Optional: `.env` exercise (not needed for weather)
 
 If you want to practice env vars without a real secret:

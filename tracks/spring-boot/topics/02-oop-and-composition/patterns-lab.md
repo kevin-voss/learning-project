@@ -246,4 +246,4 @@ Otherwise: just call `new`. It's not a design failure — it's the simplest thin
 
 ## Where the other patterns live
 
-Adapter, decorator, facade, proxy, composite, observer, strategy, command, and iterator each appear in the step where they solve a real ParcelPilot problem. The full catalog with examples is in [Design patterns](../../references/design-patterns.md).
+Adapter, decorator, facade, proxy, composite, observer, strategy, command, and iterator each appear in the step where they solve a real ParcelPilot problem. The full catalog with examples is in [Design patterns](../../references/java/design-patterns.md).

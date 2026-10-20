@@ -66,7 +66,7 @@ public class GlobalErrorHandler {
 }
 ```
 
-Which exception should map to which status? The full decision table (400 vs 404 vs 409 vs 500) lives in the [error handling reference](../../references/error-handling-and-http-statuses.md), and the status codes themselves are summarized in [Spring and HTTP](../../references/spring-and-http.md).
+Which exception should map to which status? The full decision table (400 vs 404 vs 409 vs 500) lives in the [error handling reference](../../references/web-and-api/error-handling-and-http-statuses.md), and the status codes themselves are summarized in [Spring and HTTP](../../references/web-and-api/spring-and-http.md).
 
 ## Why do it? Pros and cons
 
@@ -86,7 +86,7 @@ Which exception should map to which status? The full decision table (400 vs 404 
 
 **When not, and what never to do:**
 
-- Don't **catch-and-ignore**: `catch (Exception e) {}` turns one clear failure into a mystery later. If you can't recover meaningfully, don't catch — let the advice map it. (This is [best practice §6](../../references/java-best-practices.md#6-fail-loudly-and-specifically-with-exceptions).)
+- Don't **catch-and-ignore**: `catch (Exception e) {}` turns one clear failure into a mystery later. If you can't recover meaningfully, don't catch — let the advice map it. (This is [best practice §6](../../references/java/java-best-practices.md#6-fail-loudly-and-specifically-with-exceptions).)
 - Never map everything to **`200 OK` with an error flag in the body** (`{"success": false, ...}`). Status codes are the part of HTTP that every client, cache, monitor, and retry library already understands. A `200`-that-is-really-an-error breaks all of them: caches store the failure, monitoring sees a healthy API while users see errors, and clients must parse every body to learn what the status line should have said.
 - Don't add per-exception handlers for cases the framework already gets right; start from the four failures ParcelPilot actually has.
 

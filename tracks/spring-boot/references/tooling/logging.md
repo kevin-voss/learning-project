@@ -1,6 +1,6 @@
 # Logging
 
-Reference deep dive. The hands-on path is [Step 07](../topics/07-logging-and-observability-basics/README.md) with its [level guide](../topics/07-logging-and-observability-basics/slf4j-and-log-levels.md) and [lab](../topics/07-logging-and-observability-basics/logging-lab.md); come here for the fuller picture.
+Reference deep dive. The hands-on path is [Step 07](../../topics/07-logging-and-observability-basics/README.md) with its [level guide](../../topics/07-logging-and-observability-basics/slf4j-and-log-levels.md) and [lab](../../topics/07-logging-and-observability-basics/logging-lab.md); come here for the fuller picture.
 
 ## Why logs exist
 
@@ -29,7 +29,7 @@ private static final Logger log = LoggerFactory.getLogger(ParcelController.class
 log.info("Created parcel {}", id);
 ```
 
-Conventions that matter: one logger per class, named after the class (pass the class, not a string); levels set in configuration (`logging.level.com.parcelpilot=DEBUG` in `application.properties`), not code. Full walkthrough with the facade diagram and per-level decision table: [SLF4J and log levels](../topics/07-logging-and-observability-basics/slf4j-and-log-levels.md).
+Conventions that matter: one logger per class, named after the class (pass the class, not a string); levels set in configuration (`logging.level.com.parcelpilot=DEBUG` in `application.properties`), not code. Full walkthrough with the facade diagram and per-level decision table: [SLF4J and log levels](../../topics/07-logging-and-observability-basics/slf4j-and-log-levels.md).
 
 ## Levels in one table
 
@@ -91,7 +91,7 @@ try {
 }
 ```
 
-With the console pattern including `%X{requestId}`, grepping for one ID yields one request's complete story. Step 07's [stretch exercise](../topics/07-logging-and-observability-basics/README.md#build-it-in-parcelpilot) builds exactly this. The idea scales up: once ParcelPilot is split into services (step 13), the same ID must travel *between* services in headers so one story spans processes — that's a **correlation ID**, covered in [step 14's correlation IDs guide](../topics/14-compose-and-observe/correlation-ids.md).
+With the console pattern including `%X{requestId}`, grepping for one ID yields one request's complete story. Step 07's [stretch exercise](../../topics/07-logging-and-observability-basics/README.md#build-it-in-parcelpilot) builds exactly this. The idea scales up: once ParcelPilot is split into services (step 13), the same ID must travel *between* services in headers so one story spans processes — that's a **correlation ID**, covered in [step 14's correlation IDs guide](../../topics/14-compose-and-observe/correlation-ids.md).
 
 ## Log security
 
@@ -110,7 +110,7 @@ Safe habit: log **identifiers** (parcel ID, order number) and look up the sensit
 
 Old habit: apps write to log *files* they manage themselves (paths, rotation, permissions). Modern habit, codified by the [twelve-factor app](https://12factor.net/logs) methodology: the app writes to **standard output** and treats logs as an event stream; *the environment* decides where the stream goes. Docker captures container stdout automatically (`docker logs`, see [Docker reference](docker.md)), and platforms forward it to central collectors — all with zero logging code in the app.
 
-Spring Boot's default is already stdout, so ParcelPilot is container-ready without changes: the same lines you read in `mvn spring-boot:run` show up in `docker logs` in [step 09](../topics/09-docker/README.md) and in `docker compose logs` in [step 14](../topics/14-compose-and-observe/README.md). Don't add file appenders inside a container.
+Spring Boot's default is already stdout, so ParcelPilot is container-ready without changes: the same lines you read in `mvn spring-boot:run` show up in `docker logs` in [step 09](../../topics/09-docker/README.md) and in `docker compose logs` in [step 14](../../topics/14-compose-and-observe/README.md). Don't add file appenders inside a container.
 
 ## Retention and volume cost
 
@@ -131,10 +131,10 @@ The lever you control as a developer is *what you emit*: INFO that reads like a 
 
 | Step | What logging does there |
 |---|---|
-| [07](../topics/07-logging-and-observability-basics/README.md) | INFO at business moments, ERROR + stack trace in `GlobalErrorHandler`, request-ID stretch |
-| [08](../topics/08-testing/README.md) | Test failures print alongside app logs, so a red test comes with its story |
-| [09](../topics/09-docker/README.md) | stdout logging pays off: `docker logs` shows the same lines with zero config |
-| [13](../topics/13-split-services/README.md) | Two services, two log streams — the reason correlation IDs must cross process boundaries |
-| [14](../topics/14-compose-and-observe/README.md) | `docker compose logs`, correlation IDs across services, and metrics for the questions logs can't answer |
+| [07](../../topics/07-logging-and-observability-basics/README.md) | INFO at business moments, ERROR + stack trace in `GlobalErrorHandler`, request-ID stretch |
+| [08](../../topics/08-testing/README.md) | Test failures print alongside app logs, so a red test comes with its story |
+| [09](../../topics/09-docker/README.md) | stdout logging pays off: `docker logs` shows the same lines with zero config |
+| [13](../../topics/13-split-services/README.md) | Two services, two log streams — the reason correlation IDs must cross process boundaries |
+| [14](../../topics/14-compose-and-observe/README.md) | `docker compose logs`, correlation IDs across services, and metrics for the questions logs can't answer |
 
-See also: [Production thinking](production-thinking.md) for where logs sit among health checks, metrics, and traces.
+See also: [Production thinking](../operations/production-thinking.md) for where logs sit among health checks, metrics, and traces.

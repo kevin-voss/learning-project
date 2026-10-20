@@ -93,7 +93,7 @@ void handleDelivery(String id) {
 
 ## 7. Separation of concerns
 
-Different *kinds* of work belong in different places: HTTP handling, business rules, and database access shouldn't be tangled in one class. This is exactly the controller / service / repository split in [Code organization](code-organization.md). Each concern can then change (or be tested) on its own.
+Different *kinds* of work belong in different places: HTTP handling, business rules, and database access shouldn't be tangled in one class. This is exactly the controller / service / repository split in [Code organization](../architecture/code-organization.md). Each concern can then change (or be tested) on its own.
 
 ## 8. Fail fast
 
@@ -174,5 +174,5 @@ Before a tricky edit, first *refactor* so the change becomes simple, then do it.
 ## See also
 
 - [Java best practices (and why)](java-best-practices.md)
-- [Code organization](code-organization.md)
+- [Code organization](../architecture/code-organization.md)
 - [Java and OOP](java-and-oop.md)

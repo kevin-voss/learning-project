@@ -156,6 +156,6 @@ Don't reach for metrics to debug **one request** — "why did *this* PATCH fail?
 
 ## Next
 
-- The production mindset behind all of this: [Production thinking](../../references/production-thinking.md)
+- The production mindset behind all of this: [Production thinking](../../references/operations/production-thinking.md)
 - Back to the step: [Step 14 README](README.md)
 - Next step: [Step 15](../15-performance-and-safety/README.md) — caching, locking, and rate limiting.

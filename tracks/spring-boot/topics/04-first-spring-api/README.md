@@ -167,7 +167,7 @@ public record ParcelResponse(String id, String recipient, String status) {}
 
 ### 4. Write the controller (the heart of this step)
 
-Every annotation is explained in comments below, and in depth in [Annotations and imports in Spring Boot](annotations-imports.md) (what `@RestController`, `@GetMapping`, `@RequestBody`, etc. mean, and why imports matter). It's fine for now that this one class holds the data and the endpoints. A real database arrives in step 10, and you'll split responsibilities into controller/service/repository **layers** in step 11. Want to see that layering shape (and why we don't do it yet)? See Stage 4 of [Code organization](../../references/code-organization.md).
+Every annotation is explained in comments below, and in depth in [Annotations and imports in Spring Boot](annotations-imports.md) (what `@RestController`, `@GetMapping`, `@RequestBody`, etc. mean, and why imports matter). It's fine for now that this one class holds the data and the endpoints. A real database arrives in step 10, and you'll split responsibilities into controller/service/repository **layers** in step 11. Want to see that layering shape (and why we don't do it yet)? See Stage 4 of [Code organization](../../references/architecture/code-organization.md).
 
 ```java
 package com.parcelpilot;

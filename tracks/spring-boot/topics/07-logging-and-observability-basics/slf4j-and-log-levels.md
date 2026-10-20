@@ -156,4 +156,4 @@ The [logging lab](logging-lab.md) turns each section above into an exercise: com
 
 - Back to the step: [Step 07 README](README.md)
 - Practice: [Logging lab](logging-lab.md)
-- Deeper reference (structured logs, MDC, retention, anti-patterns): [../../references/logging.md](../../references/logging.md)
+- Deeper reference (structured logs, MDC, retention, anti-patterns): [../../references/tooling/logging.md](../../references/tooling/logging.md)

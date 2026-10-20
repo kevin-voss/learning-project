@@ -14,7 +14,7 @@ A list in memory dies when the program exits. This one writes a file on quit and
 ## Where it lives
 
 ```text
-cleaning-projects/solutions/07-budget/
+programs/code-for-cleaning/solutions/07-budget/
   Main.java          menu and questions. It does not split CSV.
   Booking.java       one booking, toCsvLine(), parse one line
   BudgetBook.java    the list, load, save, reports. Only this class knows the path.

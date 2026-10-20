@@ -197,7 +197,7 @@ The system runs, but it isn't yet *robust* or *safe*: repeated reads hit the dat
 
 ## What comes after this course
 
-Once ParcelPilot is complete, natural next topics are: retries + dead-letter queues + the transactional outbox, API versioning, metrics + tracing + correlation IDs, cloud deployment, and Kafka/SQS where their properties fit. See [Production thinking](../../references/production-thinking.md).
+Once ParcelPilot is complete, natural next topics are: retries + dead-letter queues + the transactional outbox, API versioning, metrics + tracing + correlation IDs, cloud deployment, and Kafka/SQS where their properties fit. See [Production thinking](../../references/operations/production-thinking.md).
 
 ## Next
 

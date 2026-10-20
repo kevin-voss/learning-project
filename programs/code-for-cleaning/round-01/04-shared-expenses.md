@@ -14,7 +14,7 @@ Sometimes one person pays for everyone, sometimes for one other person. At the e
 ## Where it lives
 
 ```text
-cleaning-projects/solutions/04-shared-expenses/
+programs/code-for-cleaning/solutions/04-shared-expenses/
   Main.java       menu and questions. No balance math.
   Expense.java    who paid, amount in cents, participant names
   Ledger.java     people, balances, transfers

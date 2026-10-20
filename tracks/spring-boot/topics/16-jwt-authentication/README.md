@@ -1,6 +1,6 @@
 # Step 16: Password login & JWT protection
 
-> In this step: add a small, safe login and protect an operator action with a token. ~90 minutes. Required reading: [Password authentication and JWT](../../references/authentication.md).
+> In this step: add a small, safe login and protect an operator action with a token. ~90 minutes. Required reading: [Password authentication and JWT](../../references/web-and-api/authentication.md).
 
 ## The problem right now
 
@@ -152,8 +152,8 @@ It's security-sensitive and easiest to get right once you understand the whole s
 
 ## Reflect (stretch)
 
-You implemented only short-lived access tokens. Real systems also need HTTPS, refresh tokens + revocation, brute-force protection, secret rotation, and audit logs. You now know enough to read those topics safely. See [Password authentication and JWT](../../references/authentication.md).
+You implemented only short-lived access tokens. Real systems also need HTTPS, refresh tokens + revocation, brute-force protection, secret rotation, and audit logs. You now know enough to read those topics safely. See [Password authentication and JWT](../../references/web-and-api/authentication.md).
 
 ## You finished the roadmap
 
-ParcelPilot grew from one Java file into an observable, secured, multi-service system, one problem at a time. Revisit [Production thinking](../../references/production-thinking.md) for what to explore next.
+ParcelPilot grew from one Java file into an observable, secured, multi-service system, one problem at a time. Revisit [Production thinking](../../references/operations/production-thinking.md) for what to explore next.

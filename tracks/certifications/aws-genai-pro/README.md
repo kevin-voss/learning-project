@@ -26,7 +26,7 @@ python3 -m http.server 8080
 # then open http://127.0.0.1:8080/
 ```
 
-Or from the repo root: `python3 -m http.server 8765` and open `/certificates/aws-genai-pro/index.html`.
+Or from the repo root: `python3 -m http.server 8765` and open `/tracks/certifications/aws-genai-pro/index.html`.
 
 - **Chrome / Edge / Android:** sidebar **Install app**, or the browser install icon in the address bar.
 - **iPhone / iPad:** Share → **Add to Home Screen**.
@@ -47,7 +47,7 @@ The app shell, chapters, and question bank are precached. Google Fonts cache aft
 ## Folder layout
 
 ```
-certificates/aws-genai-pro/
+tracks/certifications/aws-genai-pro/
 ├── index.html
 ├── manifest.webmanifest # PWA install metadata
 ├── sw.js                # offline cache (http/https only)
@@ -65,8 +65,8 @@ certificates/aws-genai-pro/
 │   ├── content/         # one file per chapter
 │   └── questions/
 │       ├── practice.js          # original practice items
-│       ├── examtopics-p01.js …  # ExamTopics pages (stubs OK)
-│       ├── certsafari-p01.js … p36.js  # CertSafari import (358 items, sorted)
+│       ├── examtopics/p01…p03/  # ExamTopics pages (≤5 files per batch folder)
+│       ├── certsafari/p01…p08/  # CertSafari import (358 items, sorted)
 │       └── raw/                 # optional scrape dumps
 └── README.md
 ```

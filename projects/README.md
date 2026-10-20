@@ -1,111 +1,70 @@
-# Beginner Project Curriculum
+# Projects — sheets then small builds
 
-Four hands-on projects that build on each other. You know **HTML**, **CSS**, and basic **JavaScript** (arrays, functions, loops). Everything else is learned **while you build**.
+Repo order (Java focus): **[../docs/LEARNING_PATH.md](../docs/LEARNING_PATH.md)**.
 
-**Important:** Documentation and scaffolding only — you write all code yourself.
+**Pattern:** read a short sheet (5–20 min) → build the linked project (hours, not weeks) → checkpoint → next.
 
----
-
-## Start here (don't read everything first)
-
-1. Open the **[Learning Roadmap](./docs/roadmap.md)** — project-first path with learn → build → apply per phase.
-2. Begin **[Project 1](./01-weather-dashboard/)** Phase 1.
-3. When a phase says **Learn**, open that topic page (5–15 min), then code.
-
-```
-Roadmap phase  →  Read linked topic page  →  Build  →  Next phase
-```
-
-Topic library (reference, not a prerequisite list): **[docs/](./docs/README.md)**
-
-## Beginner rule: type, check, understand
-
-For every project:
-
-1. **Type the terminal commands yourself.** Do not just read them.
-2. **Check where you are** with `pwd` before creating files.
-3. **Check what exists** with `ls` after creating files.
-4. **Ask why this file exists** before adding code to it.
-5. **Stop at checkpoints.** A broken checkpoint usually means the next phase will be confusing.
-
-Tiny example:
-
-```bash
-cd projects/01-weather-dashboard
-pwd
-ls
-```
-
-If `pwd` shows the wrong folder, fix that before running `mkdir`, `touch`, `npm`, or `docker` commands.
+Docs only — you write all code. No pre-filled apps.
 
 ---
 
-## Project order
+## Start here
 
-| # | Project | Focus | Time |
-|---|---------|-------|------|
-| 1 | [Weather Dashboard](./01-weather-dashboard/) | APIs, fetch, async/await, localStorage | 8–12 h |
-| 2 | [Docker Portfolio](./02-docker-portfolio/) | Docker, Nginx, terminal | 6–10 h |
-| 3 | [CLI Tool](./03-cli-tool/) | Node.js, npm, CLI | 10–15 h |
-| 4 | [React Todo App](./04-react-todo-app/) | Components, hooks, JSX | 12–18 h |
-
-**Total:** ~47–60 hours.
-
----
-
-## Topic folders (read when roadmap says so)
-
-| Topic | Folder | First needed |
-|-------|--------|--------------|
-| Setup & tools | [docs/setup/](./docs/setup/) | Project 1 |
-| JavaScript (new syntax) | [docs/javascript/](./docs/javascript/) | Project 1 Phase 2+ |
-| Git | [docs/git/](./docs/git/) | Project 1 Phase 1 |
-| Docker | [docs/docker/](./docs/docker/) | Project 2 |
-| Node.js | [docs/nodejs/](./docs/nodejs/) | Project 3 |
-| npm | [docs/npm/](./docs/npm/) | Project 3–4 |
-| React | [docs/react/](./docs/react/) | Project 4 |
-| TypeScript | [docs/typescript/](./docs/typescript/) | After Project 4 |
-
----
-
-## Each project folder
-
-```
-project-name/
-├── README.md
-├── docs/
-│   ├── concepts.md
-│   ├── step-by-step.md    ← build checklist (+ learn links per phase)
-│   ├── structure.md
-│   └── help/
-└── .gitignore
-```
-
-1. Project **README** — overview  
-2. **[Roadmap](./docs/roadmap.md)** — where you are in the big picture  
-3. **step-by-step.md** — what to build this session  
-4. **help/** — when stuck  
-
-Most project guides now use this rhythm:
+1. Follow **[LEARNING_PATH](../docs/LEARNING_PATH.md)** Phases 0–2 first (CS + HTML/CSS), unless you already know those.
+2. Open **[docs/roadmap.md](./docs/roadmap.md)** for phase checklists.
+3. When a phase says **Learn**, open that sheet, then code.
 
 ```text
-Goal -> Why -> Do -> Checkpoint
+Sheet  →  Build  →  Checkpoint  →  Next
 ```
 
-That means you should know what you are building, why it matters, exactly what to type or edit, and how to know it worked before moving on.
+---
+
+## Project order (small on purpose)
+
+| # | Project | After you read… | Hours |
+|---|---------|-----------------|-------|
+| 00 | [Static page](./00-static-page/) | [html](./docs/html/) + [css](./docs/css/) sheets | 2–4 |
+| 01 | [Weather dashboard](./01-weather-dashboard/) | JS drills + HTTP (CS) | 6–10 |
+| 05 | [Java weather CLI](./05-java-weather-cli/) | [java](./docs/java/) sheet + Java hub REST | 3–5 |
+| 02 | [Docker portfolio](./02-docker-portfolio/) | CS Docker + [docker](./docs/docker/) apply notes | 4–6 |
+| 03 | [Node weather CLI](./03-cli-tool/) *(optional)* | [nodejs](./docs/nodejs/) + [npm](./docs/npm/) | 4–8 |
+| 04 | [React todo](./04-react-todo-app/) *(optional)* | [react](./docs/react/) sheet | 6–10 |
+
+**Main career path after 00 → 01 → 05 → 02:** Java hub depth → [`apps/todo-e2e`](../apps/todo-e2e/) → [`apps/pokedex`](../apps/pokedex/) → [`tracks/spring-boot`](../tracks/spring-boot/).
 
 ---
 
-## What you will NOT find
+## Sheets (topic library)
 
-- Pre-written `index.html`, `.css`, `.js`, or `.jsx` files  
-- A finished app you run without building it  
+| Sheet | Folder | Used by |
+|-------|--------|---------|
+| HTML | [docs/html/](./docs/html/) | Project 00 |
+| CSS | [docs/css/](./docs/css/) | Project 00 |
+| Java (toys) | [docs/java/](./docs/java/) | Project 05 + hub |
+| Setup | [docs/setup/](./docs/setup/) | Early projects |
+| JavaScript (apply notes) | [docs/javascript/](./docs/javascript/) | Project 01 |
+| Git (apply only) | [docs/git/](./docs/git/) | Links CS Git |
+| Docker (apply only) | [docs/docker/](./docs/docker/) | Links CS Docker |
+| Node / npm | [docs/nodejs/](./docs/nodejs/) · [npm](./docs/npm/) | Optional 03 |
+| React / TS | [docs/react/](./docs/react/) · [typescript](./docs/typescript/) | Optional 04 |
+
+Deep theory for networks, Docker, Git lives in **`tracks/computer-science/`** — not recopied here.
 
 ---
 
-## After all four
+## Beginner rule
 
-- Fetch APIs, Dockerize sites, build CLIs, build React apps  
-- Next: [TypeScript](./docs/typescript/README.md) or [`frontend/`](../frontend/) CodeStep  
+1. Type commands yourself.  
+2. `pwd` / `ls` before creating files.  
+3. Stop at checkpoints.  
+4. Prefer one small win per session.
 
-**→ [Open the Roadmap — Project 1 Phase 1](./docs/roadmap.md#project-1--weather-dashboard)**
+---
+
+## After projects
+
+- TypeScript practice: [docs/typescript](./docs/typescript/) + [`apps/codestep`](../apps/codestep/)  
+- Java ladder: hub → todo-e2e → Pokédex → Spring Boot  
+
+**→ [Roadmap](./docs/roadmap.md)** · **→ [LEARNING_PATH](../docs/LEARNING_PATH.md)**

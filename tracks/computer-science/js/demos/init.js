@@ -1,54 +1,74 @@
+/**
+ * Demo runner registry. Topic scripts live under js/demos/:
+ *   ui.js, playground.js, init.js (root)
+ *   structures/{core,trees-graphs}/
+ *   algorithms/{core,advanced}/
+ *   systems/{memory,runtime,overview}/
+ *   web-infra/{web,data-security,ops,apis}/
+ */
 window.DS = window.DS || {};
 DS.demos = DS.demos || {};
 
 DS.demoRunners = function (demoScenario) {
   return {
-    // Short demoType aliases (used in data files)
+    // structures/core
     'array': DS.demos.array,
     'linkedlist': DS.demos['linked-list'],
     'hashtable': DS.demos['hash-table'],
     'stack': DS.demos.stack,
     'queue': DS.demos.queue,
+    // structures/trees-graphs
     'tree': DS.demos.tree,
     'graph': DS.demos.graph,
     'set': DS.demos.set,
-    'pointer': DS.demos.pointer,
-    'recursion': DS.demos.recursion,
-    'logic': DS.demos.logic,
+    // algorithms/core
     'search': DS.demos.search,
     'sorting': DS.demos.sorting,
+    'recursion': DS.demos.recursion,
+    'logic': DS.demos.logic,
+    // web-infra/web
     'web-foundations': DS.demos.webFoundations,
     'http': DS.demos.http,
     'linux-terminal': DS.demos.linuxTerminal,
+    'git-playground': DS.demos.gitPlayground,
+    'testing-debugging': DS.demos.testingDebugging,
+    // web-infra/data-security
     'database-sql': (el) => DS.demos.databaseSql(el, demoScenario),
     'encryption': (el) => DS.demos.encryption(el, demoScenario),
     'auth-identity': (el) => DS.demos.authIdentity(el, demoScenario),
     'security-threats': (el) => DS.demos.securityThreats(el, demoScenario),
+    'nosql-basics': DS.demos.nosqlBasics,
+    // web-infra/ops
     'docker-compose': DS.demos.dockerCompose,
     'observability': DS.demos.observability,
     'cloud-hosting': DS.demos.cloudHosting,
+    'caching-strategies': DS.demos.cachingStrategies,
+    'message-queues': DS.demos.messageQueues,
+    // web-infra/apis
+    'rest-api-design': DS.demos.restApi,
+    'abstraction-apis': DS.demos.abstractionApis,
+    // algorithms/core
     'big-o': DS.demos.bigO,
+    // systems/memory
     'memory-model': DS.demos.memoryModel,
-    'heaps-priority-queues': DS.demos.heap,
-    'buffers-ring-buffers': DS.demos.ringBuffer,
-    'compiler-runtime': DS.demos.compilerRuntime,
-    'os-kernel-queues': DS.demos.osKernelQueues,
-    'cs-foundations': DS.demos.csFoundations,
-    'roadmap-explorer': DS.demos.roadmapExplorer,
-    'git-playground': DS.demos.gitPlayground,
     'binary-encoding': DS.demos.binaryEncoding,
     'number-bases': DS.demos.numberBases,
     'stack-heap-gc': DS.demos.stackHeapGc,
+    'pointer': DS.demos.pointer,
+    // structures/trees-graphs
+    'heaps-priority-queues': DS.demos.heap,
+    'buffers-ring-buffers': DS.demos.ringBuffer,
+    // systems/runtime
+    'compiler-runtime': DS.demos.compilerRuntime,
+    'os-kernel-queues': DS.demos.osKernelQueues,
+    'concurrency-async': DS.demos.concurrencyAsync,
+    // systems/overview
+    'cs-foundations': DS.demos.csFoundations,
+    'roadmap-explorer': DS.demos.roadmapExplorer,
+    // algorithms/advanced
     'graph-algorithms': DS.demos.graphAlgorithms,
     'dynamic-programming-intro': DS.demos.dynamicProgramming,
     'greedy-algorithms': DS.demos.greedyAlgorithms,
-    'concurrency-async': DS.demos.concurrencyAsync,
-    'caching-strategies': DS.demos.cachingStrategies,
-    'rest-api-design': DS.demos.restApi,
-    'message-queues': DS.demos.messageQueues,
-    'nosql-basics': DS.demos.nosqlBasics,
-    'abstraction-apis': DS.demos.abstractionApis,
-    'testing-debugging': DS.demos.testingDebugging,
     // Lesson-id fallbacks
     'arrays': DS.demos.array,
     'linked-lists': DS.demos['linked-list'],

@@ -1,5 +1,7 @@
 # Concepts — Weather Dashboard
 
+**Apply notes for this build.** Deep HTTP / networks / JSON theory: [`tracks/computer-science/`](../../../tracks/computer-science/index.html) (web & networking lessons). Below = Open-Meteo + what you need to wire the page.
+
 Keywords explained for beginners. Read before writing code.
 
 ## API (Application Programming Interface)

@@ -1,6 +1,6 @@
 # Error handling and HTTP statuses
 
-How a backend turns "something went wrong in the code" into "a response a client can act on". This is the deep-dive companion to [Step 06](../topics/06-error-handling/README.md); come back to it whenever you're deciding *which status* or *what error shape* a new failure deserves.
+How a backend turns "something went wrong in the code" into "a response a client can act on". This is the deep-dive companion to [Step 06](../../topics/06-error-handling/README.md); come back to it whenever you're deciding *which status* or *what error shape* a new failure deserves.
 
 ## Exceptions as control-flow signals
 
@@ -13,7 +13,7 @@ flowchart LR
   H -->|status + ErrorResponse JSON| C[Client acts:<br/>fix input, retry, give up]
 ```
 
-Two disciplines make this work (details and hierarchy in [Exceptions in Java](../topics/06-error-handling/exceptions-in-java.md)):
+Two disciplines make this work (details and hierarchy in [Exceptions in Java](../../topics/06-error-handling/exceptions-in-java.md)):
 
 - **Throw specifically.** `IllegalStateException` for a rule the current state breaks, `IllegalArgumentException` for bad input, a custom class (`ParcelNotFoundException`) when a handler must treat the case distinctly. A generic `throw new Exception("error")` gives the handler nothing to map on.
 - **Catch only where you can respond.** Intermediate layers that catch "just in case" break the signal before it reaches the translator.
@@ -62,7 +62,7 @@ There is a standardized answer to "what shape should error bodies have": **RFC 7
 Whatever shape you pick, four principles hold:
 
 1. **One shape everywhere.** The value of an error contract is that clients write the parsing code once. A single exception to the rule (one endpoint with a bare string body) reintroduces per-endpoint handling.
-2. **Machine part + human part.** A stable `code` for programs to switch on; a `message` for humans, free to be reworded. Clients that parse messages break on every rewording (see the [lab's stretch section](../topics/06-error-handling/controller-advice-lab.md#stretch-an-error-code-catalog)).
+2. **Machine part + human part.** A stable `code` for programs to switch on; a `message` for humans, free to be reworded. Clients that parse messages break on every rewording (see the [lab's stretch section](../../topics/06-error-handling/controller-advice-lab.md#stretch-an-error-code-catalog)).
 3. **Structured details where fields matter.** Validation errors are *about* fields, so a `details` map (`field → problem`) beats one concatenated sentence. Keep it an empty map otherwise, so the shape never varies.
 4. **Say nothing internal.** No stack traces, exception class names, SQL, or file paths — those help attackers and confuse clients. The generic-message-for-500 rule is the sharpest instance of this.
 
@@ -72,7 +72,7 @@ ParcelPilot's contract checks all four with four fields: `code`, `message`, `det
 
 | Anti-pattern | What it looks like | Why it hurts |
 |---|---|---|
-| **Catch-and-ignore** | `catch (Exception e) {}` | The failure still happened; now it surfaces later, far from its cause, with no evidence. ([Best practice §6](java-best-practices.md#6-fail-loudly-and-specifically-with-exceptions)) |
+| **Catch-and-ignore** | `catch (Exception e) {}` | The failure still happened; now it surfaces later, far from its cause, with no evidence. ([Best practice §6](../java/java-best-practices.md#6-fail-loudly-and-specifically-with-exceptions)) |
 | **Catch-and-print-and-continue** | `catch (Exception e) { e.printStackTrace(); }` then proceed | The code continues in a state the author never reasoned about; the printout scrolls away unstructured (step 07 fixes *where* evidence goes, not the continuing) |
 | **200-with-error-flag** | `200 OK` + `{"success": false}` | Lies to every layer that reads statuses: caches store failures, monitors see green, retry logic never fires, and every client must parse every body |
 | **Over-broad mapping** | one handler for `RuntimeException` → 400 | Collapses genuinely different failures (bug vs bad input vs conflict) into one status; real bugs hide as client errors |
@@ -91,7 +91,7 @@ The status code also answers a question you'll care about from step 12 on: **is 
 | 502, 503, 504 | **Yes, with backoff** | "Temporarily unavailable" is the definition; wait, then retry |
 | 429 | Yes, **after waiting** | You were told to slow down (rate limiting, step 15) |
 
-Retrying safely also depends on the method being **idempotent** (see [HTTP methods](../topics/04-first-spring-api/http-methods.md)) — retrying a `POST` can create duplicates. This becomes central in [step 12 (queues)](../topics/12-queues/README.md), where a message consumer *automatically* retries failed work and must know which failures are worth retrying.
+Retrying safely also depends on the method being **idempotent** (see [HTTP methods](../../topics/04-first-spring-api/http-methods.md)) — retrying a `POST` can create duplicates. This becomes central in [step 12 (queues)](../../topics/12-queues/README.md), where a message consumer *automatically* retries failed work and must know which failures are worth retrying.
 
 ## ParcelPilot tie-ins at a glance
 
@@ -101,15 +101,15 @@ Retrying safely also depends on the method being **idempotent** (see [HTTP metho
 | Custom exception → distinct status | `ParcelNotFoundException` → 404 (step 06) |
 | One error contract | the `ErrorResponse` record (step 06) |
 | Central translation | `GlobalErrorHandler` `@RestControllerAdvice` (step 06) |
-| Validation errors in `details` | re-homed `MethodArgumentNotValidException` handler (steps [05](../topics/05-validation-and-inputs/README.md) → 06) |
-| Stack traces belong in logs | catch-all 500 handler + [step 07](../topics/07-logging-and-observability-basics/README.md) |
-| Retry-aware failure handling | queue consumers ([step 12](../topics/12-queues/README.md)) |
+| Validation errors in `details` | re-homed `MethodArgumentNotValidException` handler (steps [05](../../topics/05-validation-and-inputs/README.md) → 06) |
+| Stack traces belong in logs | catch-all 500 handler + [step 07](../../topics/07-logging-and-observability-basics/README.md) |
+| Retry-aware failure handling | queue consumers ([step 12](../../topics/12-queues/README.md)) |
 
 ## See also
 
-- [Step 06: Error handling & HTTP error contracts](../topics/06-error-handling/README.md) — build it
-- [Exceptions in Java, from scratch](../topics/06-error-handling/exceptions-in-java.md) — the language mechanics
-- [Controller advice lab](../topics/06-error-handling/controller-advice-lab.md) — prove every mapping with `curl`
+- [Step 06: Error handling & HTTP error contracts](../../topics/06-error-handling/README.md) — build it
+- [Exceptions in Java, from scratch](../../topics/06-error-handling/exceptions-in-java.md) — the language mechanics
+- [Controller advice lab](../../topics/06-error-handling/controller-advice-lab.md) — prove every mapping with `curl`
 - [Validation and API contracts](validation-and-api-contracts.md) — the 400s *before* the domain is reached
-- [Logging](logging.md) — where the details the client never sees must go
+- [Logging](../tooling/logging.md) — where the details the client never sees must go
 - [Spring and HTTP](spring-and-http.md) — methods, statuses, and controller basics

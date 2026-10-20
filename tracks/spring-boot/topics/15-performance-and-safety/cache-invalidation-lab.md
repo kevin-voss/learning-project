@@ -103,5 +103,5 @@ It sounds like a joke; it's a warning. The eviction you just wrote is trivial â€
 ## Next
 
 - The second safety tool of this step: [optimistic-locking-lab.md](optimistic-locking-lab.md)
-- Deep dive: [Databases, caching, and locking](../../references/databases-caching-and-locking.md)
+- Deep dive: [Databases, caching, and locking](../../references/architecture/databases-caching-and-locking.md)
 - Back to the step: [Step 15 README](README.md)

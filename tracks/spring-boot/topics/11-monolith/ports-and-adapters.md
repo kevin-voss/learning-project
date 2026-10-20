@@ -135,7 +135,7 @@ A small CRUD app — a controller, a repository, barely any rules — does not n
 
 ## Relation to layered architecture
 
-Layers (controller → service → repository) also separate concerns, but classic layering lets the service depend on the repository's *technology*. Ports and adapters keeps the separation and flips that one dependency: the core owns the interface, persistence implements it. How this interacts with package layout — and why the course packages by feature rather than by layer — is in [Layered vs feature packages](layered-vs-feature-packages.md) and the full journey in [Code organization](../../references/code-organization.md).
+Layers (controller → service → repository) also separate concerns, but classic layering lets the service depend on the repository's *technology*. Ports and adapters keeps the separation and flips that one dependency: the core owns the interface, persistence implements it. How this interacts with package layout — and why the course packages by feature rather than by layer — is in [Layered vs feature packages](layered-vs-feature-packages.md) and the full journey in [Code organization](../../references/architecture/code-organization.md).
 
 ## Back to the step
 

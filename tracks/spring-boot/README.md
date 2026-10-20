@@ -17,7 +17,7 @@ The rule for students is simple: **read the step, build the small change, prove 
 ## What is in this folder?
 
 ```text
-spring-boot-system-design/
+tracks/spring-boot/
 ├── GUIDE.md          # The path to follow, in order
 ├── PROJECT-STORY.md  # The simple story of what ParcelPilot becomes
 ├── applications/     # Empty at first; your code will grow here
@@ -35,7 +35,7 @@ Each numbered topic has the same rhythm:
 4. It gives you a way to check that the change worked.
 5. It ends with questions so you can explain the idea in your own words.
 
-If you see a word you do not know yet, do not panic. The lesson that needs the word will define it. The [glossary](references/glossary.md) is there when you want to look something up, not as homework before you start.
+If you see a word you do not know yet, do not panic. The lesson that needs the word will define it. The [glossary](references/java/glossary.md) is there when you want to look something up, not as homework before you start.
 
 ## Product scope
 

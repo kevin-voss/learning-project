@@ -160,5 +160,5 @@ Default to the global advice — a consistent contract is worth more than per-en
 ## Next
 
 - Back to [Step 06](README.md) for the acceptance criteria and quiz.
-- Deep dive: [Error handling and HTTP statuses](../../references/error-handling-and-http-statuses.md) — status decision table, RFC 7807, retry-ability.
+- Deep dive: [Error handling and HTTP statuses](../../references/web-and-api/error-handling-and-http-statuses.md) — status decision table, RFC 7807, retry-ability.
 - Coming up: [Step 07](../07-logging-and-observability-basics/README.md) puts the details your generic `500` hides into logs you can search.

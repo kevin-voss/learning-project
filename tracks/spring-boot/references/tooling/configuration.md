@@ -22,7 +22,7 @@ applications/parcelpilot/
 ├── pom.xml
 └── src/
     └── main/
-        ├── java/...
+        ├── tracks/java/...
         └── resources/
             └── application.properties   ← here
 ```
@@ -88,7 +88,7 @@ services:
       SPRING_RABBITMQ_HOST: rabbitmq
 ```
 
-Note the host names: inside Compose, the database is `parcel-db` and the broker is `rabbitmq` — service names, never `localhost` (see [when-things-break.md](when-things-break.md)).
+Note the host names: inside Compose, the database is `parcel-db` and the broker is `rabbitmq` — service names, never `localhost` (see [when-things-break.md](../operations/when-things-break.md)).
 
 ## Profiles
 
@@ -152,8 +152,8 @@ The cons are the price of the pros. The precedence table above is the antidote t
 
 | Step | What you configure | How |
 |---|---|---|
-| [04 – first Spring API](../topics/04-first-spring-api/README.md) | The port, if 8080 is busy | `server.port=8081` in `application.properties` |
-| [07 – logging](../topics/07-logging-and-observability-basics/README.md) | Log verbosity per package | `logging.level.com.parcelpilot=DEBUG` |
-| [10 – persistence](../topics/10-persistence/README.md) | Where PostgreSQL is | `spring.datasource.*` keys |
-| [09 / 13 – Docker](../topics/09-docker/README.md) | Same image, different DB host | `-e SPRING_DATASOURCE_URL=...` on `docker run` |
-| [14 – Compose](../topics/14-compose-and-observe/README.md) | Every service's settings in one file | `environment:` blocks in `compose.yaml` |
+| [04 – first Spring API](../../topics/04-first-spring-api/README.md) | The port, if 8080 is busy | `server.port=8081` in `application.properties` |
+| [07 – logging](../../topics/07-logging-and-observability-basics/README.md) | Log verbosity per package | `logging.level.com.parcelpilot=DEBUG` |
+| [10 – persistence](../../topics/10-persistence/README.md) | Where PostgreSQL is | `spring.datasource.*` keys |
+| [09 / 13 – Docker](../../topics/09-docker/README.md) | Same image, different DB host | `-e SPRING_DATASOURCE_URL=...` on `docker run` |
+| [14 – Compose](../../topics/14-compose-and-observe/README.md) | Every service's settings in one file | `environment:` blocks in `compose.yaml` |

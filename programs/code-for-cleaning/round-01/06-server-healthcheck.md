@@ -14,7 +14,7 @@ You want a morning answer for a list of machines: which ones answer a ping, and 
 ## Where it lives
 
 ```text
-cleaning-projects/solutions/06-healthcheck/
+programs/code-for-cleaning/solutions/06-healthcheck/
   healthcheck.sh    shebang, loop, ping, summary, exit code
   hosts.txt         one hostname or IP per line. No shell commands.
 ```

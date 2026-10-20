@@ -14,7 +14,7 @@ The deal needs a page you can open on a phone: seven days, and which bathroom su
 ## Where it lives
 
 ```text
-cleaning-projects/solutions/03-cleaning-schedule/
+programs/code-for-cleaning/solutions/03-cleaning-schedule/
   index.html     the seven days and the jobs. No <style> and no <script> block.
   styles.css     layout and the .today look
   app.js         finds today and sets the class

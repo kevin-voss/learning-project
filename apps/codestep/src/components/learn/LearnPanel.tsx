@@ -179,6 +179,7 @@ export function LearnPanel({
             <PracticeExercise
               key={tasks[step.taskIndex]!.id}
               task={tasks[step.taskIndex]!}
+              topicId={topic.id}
               editorId="playground-code-roadmap"
             />
           ) : null}

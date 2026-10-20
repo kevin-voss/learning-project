@@ -1,0 +1,19 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*~
+
+# Logs
+*.log
+
+# Local env / secrets (habit — this project needs none)
+.env
+.env.local
+
+# Optional local notes
+*.local.md

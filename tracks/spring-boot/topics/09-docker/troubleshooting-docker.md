@@ -152,6 +152,6 @@ The app behaves differently inside the container than with `mvn spring-boot:run`
 
 ## Next
 
-- General debugging mindset (read errors bottom-up, change one thing at a time): [When things break](../../references/when-things-break.md).
+- General debugging mindset (read errors bottom-up, change one thing at a time): [When things break](../../references/operations/when-things-break.md).
 - Understand the build so failures make sense: [The Dockerfile, line by line](dockerfile-line-by-line.md).
 - Back to [Step 09](README.md).

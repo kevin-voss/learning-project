@@ -282,7 +282,7 @@ String label = maybe
         .orElse("no such parcel");             // fallback if the box is empty
 ```
 
-You don't need to practice it yet — it returns for real in step 10, where database repositories return `Optional<Parcel>` from `findById` precisely because "no row with that id" is a normal, expected outcome. For the wider strategy of keeping `null` out of your code, see [best practices #7: tame `null`](../../references/java-best-practices.md#7-tame-null-avoid-nullpointerexception).
+You don't need to practice it yet — it returns for real in step 10, where database repositories return `Optional<Parcel>` from `findById` precisely because "no row with that id" is a normal, expected outcome. For the wider strategy of keeping `null` out of your code, see [best practices #7: tame `null`](../../references/java/java-best-practices.md#7-tame-null-avoid-nullpointerexception).
 
 ## `var`: let Java infer the type
 
@@ -315,7 +315,7 @@ A class-level constant is usually `static final` in `UPPER_SNAKE_CASE`:
 public static final int MAX_PARCELS_PER_PAGE = 50;
 ```
 
-Prefer `final` for fields and locals you don't intend to change: it documents intent and prevents accidental reassignment. (See [best practices #2](../../references/java-best-practices.md#2-prefer-immutability-final-records).)
+Prefer `final` for fields and locals you don't intend to change: it documents intent and prevents accidental reassignment. (See [best practices #2](../../references/java/java-best-practices.md#2-prefer-immutability-final-records).)
 
 ## Default values (a subtle but common bug source)
 
@@ -337,7 +337,7 @@ void demo() {
 - True/false? → `boolean`.
 - Text? → `String`.
 - A fixed set of options (statuses, roles)? → an **`enum`** (see [Step 02](../02-oop-and-composition/README.md)).
-- A value that might be absent from a lookup? → `Optional<T>` instead of `null` (see [best practices #7](../../references/java-best-practices.md#7-tame-null-avoid-nullpointerexception)).
+- A value that might be absent from a lookup? → `Optional<T>` instead of `null` (see [best practices #7](../../references/java/java-best-practices.md#7-tame-null-avoid-nullpointerexception)).
 
 ## Say it like a developer
 
@@ -400,4 +400,4 @@ Local variables have **no default value** and must be assigned before use. (Fiel
 
 ## Next
 
-Back to the [Step 01 README](README.md) to put these types to work inside a `Parcel` class, then read [general coding concepts](../../references/coding-concepts.md) (early return, guard clauses, DRY) to write them cleanly.
+Back to the [Step 01 README](README.md) to put these types to work inside a `Parcel` class, then read [general coding concepts](../../references/java/coding-concepts.md) (early return, guard clauses, DRY) to write them cleanly.

@@ -107,7 +107,7 @@ Logs get copied, shipped, searched, and kept for months. Treat every log line as
 | Full personal data (addresses, emails, phone numbers) | Privacy laws and basic decency. Log the parcel **ID**, not the recipient's home address. |
 | Full request bodies "just in case" | They contain all of the above sooner or later. |
 
-For ParcelPilot: `recipient` is a name — borderline, fine for a learning project. When ParcelPilot grows real addresses, you'd log `parcelId` only. More in [the logging reference](../../references/logging.md).
+For ParcelPilot: `recipient` is a name — borderline, fine for a learning project. When ParcelPilot grows real addresses, you'd log `parcelId` only. More in [the logging reference](../../references/tooling/logging.md).
 
 ### Correlation IDs (a first look)
 

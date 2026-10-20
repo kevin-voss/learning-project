@@ -114,4 +114,4 @@ Then:
 
 ## After this curriculum
 
-Convert Weather Dashboard to React, add React Router, or explore TypeScript in [`frontend/`](../../frontend/).
+Convert Weather Dashboard to React, add React Router, or explore TypeScript in [`apps/codestep/`](../../apps/codestep/).

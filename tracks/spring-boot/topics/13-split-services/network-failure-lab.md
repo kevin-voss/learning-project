@@ -150,7 +150,7 @@ In 1994, engineers at Sun wrote down the assumptions that every newcomer to dist
 | Each service deploys and scales alone | Every arrow in the architecture diagram is now a network call that can hang, fail, or duplicate |
 | Failures are *visible* in queues and logs | You must go looking across multiple logs to see them (step 14 fixes this) |
 
-The monolith did not have these problems. It had *different* ones (shared deploys, shared fate, no independent scaling). Splitting is a trade, not an upgrade — see [Monoliths and microservices](../../references/monolith-and-microservices.md) for the full comparison.
+The monolith did not have these problems. It had *different* ones (shared deploys, shared fate, no independent scaling). Splitting is a trade, not an upgrade — see [Monoliths and microservices](../../references/architecture/monolith-and-microservices.md) for the full comparison.
 
 ## Next
 

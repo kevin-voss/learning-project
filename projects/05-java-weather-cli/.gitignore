@@ -1,0 +1,29 @@
+# Compiled Java
+*.class
+*.jar
+*.war
+*.ear
+
+# Build output
+out/
+build/
+target/
+bin/
+.classpath
+.project
+.settings/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*~
+
+# Logs / local env
+*.log
+.env
+.env.local

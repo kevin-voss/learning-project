@@ -24,7 +24,7 @@ ParcelPilot now does HTTP, parcel rules, storage, and (soon) notifications, ofte
 
 Think of one building with well-labeled rooms. You still live in one house (one deploy, no network between rooms), but each room has a clear purpose, so you can later move a room into its own building if needed.
 
-Organize **by feature**, not by generic layers (this is Stage 5 in [Code organization](../../references/code-organization.md), and it applies the [package-by-feature best practice](../../references/java-best-practices.md#12-organize-by-feature-not-by-layer) — the full side-by-side comparison of both layouts is in [Layered vs feature packages](layered-vs-feature-packages.md)):
+Organize **by feature**, not by generic layers (this is Stage 5 in [Code organization](../../references/architecture/code-organization.md), and it applies the [package-by-feature best practice](../../references/java/java-best-practices.md#12-organize-by-feature-not-by-layer) — the full side-by-side comparison of both layouts is in [Layered vs feature packages](layered-vs-feature-packages.md)):
 
 ```text
 parcel/

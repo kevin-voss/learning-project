@@ -1,4 +1,4 @@
-# JavaScript-Übungen mit Bun: beginner-js/<thema>/
+# JavaScript-Übungen mit Bun: drills/javascript/<thema>/
 #
 # Alle Themen testen:
 #   make test
@@ -24,31 +24,31 @@ help:
 	@echo "make variables-task-03 — eine Aufgabe (01–10) im Thema"
 
 test:
-	bun test beginner-js/
+	bun test drills/javascript/
 
 $(TOPICS):
-	bun test beginner-js/$@/
+	bun test drills/javascript/$@/
 
 variables-task-%:
-	bun test beginner-js/variables/tasks.test.js --test-name-pattern variables-task-$*
+	bun test drills/javascript/variables/tasks.test.js --test-name-pattern variables-task-$*
 
 math-task-%:
-	bun test beginner-js/math/tasks.test.js --test-name-pattern math-task-$*
+	bun test drills/javascript/math/tasks.test.js --test-name-pattern math-task-$*
 
 strings-task-%:
-	bun test beginner-js/strings/tasks.test.js --test-name-pattern strings-task-$*
+	bun test drills/javascript/strings/tasks.test.js --test-name-pattern strings-task-$*
 
 arrays-task-%:
-	bun test beginner-js/arrays/tasks.test.js --test-name-pattern arrays-task-$*
+	bun test drills/javascript/arrays/tasks.test.js --test-name-pattern arrays-task-$*
 
 conditionals-task-%:
-	bun test beginner-js/conditionals/tasks.test.js --test-name-pattern conditionals-task-$*
+	bun test drills/javascript/conditionals/tasks.test.js --test-name-pattern conditionals-task-$*
 
 loops-task-%:
-	bun test beginner-js/loops/tasks.test.js --test-name-pattern loops-task-$*
+	bun test drills/javascript/loops/tasks.test.js --test-name-pattern loops-task-$*
 
 functions-task-%:
-	bun test beginner-js/functions/tasks.test.js --test-name-pattern functions-task-$*
+	bun test drills/javascript/functions/tasks.test.js --test-name-pattern functions-task-$*
 
 objects-task-%:
-	bun test beginner-js/objects/tasks.test.js --test-name-pattern objects-task-$*
+	bun test drills/javascript/objects/tasks.test.js --test-name-pattern objects-task-$*

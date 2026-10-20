@@ -100,5 +100,5 @@ Retries only help failures that **time fixes**. A payload that can't be parsed t
 ## Next
 
 - Duplicates (the *other* redelivery problem, including why retries cause them): [Idempotency lab](idempotency-lab.md).
-- The delivery-guarantee vocabulary behind all of this: [Messaging and queues](../../references/messaging-and-queues.md).
+- The delivery-guarantee vocabulary behind all of this: [Messaging and queues](../../references/architecture/messaging-and-queues.md).
 - Back to [Step 12](README.md).

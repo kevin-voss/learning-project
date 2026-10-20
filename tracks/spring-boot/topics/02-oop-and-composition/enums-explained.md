@@ -82,7 +82,7 @@ status = Status.DELIVRED;   // ❌ compile error: no such constant
 status = 7;                       // ❌ compile error: int is not a Status
 ```
 
-**The whole universe of invalid values is unrepresentable.** This is the "make invalid states impossible" habit from [best practices #3](../../references/java-best-practices.md#3-make-invalid-states-impossible).
+**The whole universe of invalid values is unrepresentable.** This is the "make invalid states impossible" habit from [best practices #3](../../references/java/java-best-practices.md#3-make-invalid-states-impossible).
 
 ## Enums with fields and methods (the underused superpower)
 

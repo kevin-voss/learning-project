@@ -141,7 +141,7 @@ zsh: command not found: mvn
 
 **Cause:** Maven isn't installed, or it's installed but not on your shell's `PATH`.
 
-**Fix:** install it with `sudo apt install -y maven`, then verify with `mvn -version`. Alternatively, if a project ships the **Maven Wrapper**, run `./mvnw test` instead — the wrapper downloads its own Maven and needs no install (see the [Maven reference](../../references/maven.md)).
+**Fix:** install it with `sudo apt install -y maven`, then verify with `mvn -version`. Alternatively, if a project ships the **Maven Wrapper**, run `./mvnw test` instead — the wrapper downloads its own Maven and needs no install (see the [Maven reference](../../references/tooling/maven.md)).
 
 ## Not-quite-failures: plugin version warnings
 
@@ -173,6 +173,6 @@ zsh: command not found: mvn
 ## Next
 
 - How the `test` phase, Surefire, and reports work: [Testing with Maven](testing-with-maven.md).
-- Maven Wrapper and dependency habits: [Maven reference](../../references/maven.md).
-- A general method for debugging anything (read the error, form a hypothesis, test it): [Debugging and troubleshooting](../../references/debugging-and-troubleshooting.md).
+- Maven Wrapper and dependency habits: [Maven reference](../../references/tooling/maven.md).
+- A general method for debugging anything (read the error, form a hypothesis, test it): [Debugging and troubleshooting](../../references/operations/debugging-and-troubleshooting.md).
 - Back to [Step 03](README.md).

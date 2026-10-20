@@ -1,6 +1,6 @@
 # Debugging your first program
 
-> Your code will not work on the first try — nobody's does. This page teaches the three techniques for finding out *why*, for someone who has never debugged anything. ~45 minutes. Deeper toolbox (and later, Spring-specific debugging) lives in the [debugging and troubleshooting reference](../../references/debugging-and-troubleshooting.md).
+> Your code will not work on the first try — nobody's does. This page teaches the three techniques for finding out *why*, for someone who has never debugged anything. ~45 minutes. Deeper toolbox (and later, Spring-specific debugging) lives in the [debugging and troubleshooting reference](../../references/operations/debugging-and-troubleshooting.md).
 
 ## The problem
 
@@ -198,4 +198,4 @@ Treat the wrong output itself as the evidence: what exactly differs from the exp
 
 ## Next
 
-Back to [Step 01](README.md) — and from now on, when something breaks, hunt it instead of re-reading. More tools and recipes accumulate in the [debugging and troubleshooting reference](../../references/debugging-and-troubleshooting.md) as the course grows.
+Back to [Step 01](README.md) — and from now on, when something breaks, hunt it instead of re-reading. More tools and recipes accumulate in the [debugging and troubleshooting reference](../../references/operations/debugging-and-troubleshooting.md) as the course grows.

@@ -89,4 +89,4 @@ In the [modular monolith (step 11)](../11-monolith/README.md), the parcel module
 
 - Watch what happens when the network under the contract fails: [network-failure-lab.md](network-failure-lab.md)
 - Back to the step: [Step 13 README](README.md)
-- The bigger picture: [Monoliths and microservices](../../references/monolith-and-microservices.md)
+- The bigger picture: [Monoliths and microservices](../../references/architecture/monolith-and-microservices.md)

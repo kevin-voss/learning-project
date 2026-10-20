@@ -14,7 +14,7 @@ Before the store, you want the lines and the total. Each line is a name, a quant
 ## Where it lives
 
 ```text
-cleaning-projects/solutions/02-shopping-list/
+programs/code-for-cleaning/solutions/02-shopping-list/
   Main.java            menu and Scanner
   Item.java            one line: name, quantity, unit price, line total
   ShoppingList.java    the ArrayList: add, remove, table, total

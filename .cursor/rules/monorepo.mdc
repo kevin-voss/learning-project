@@ -1,29 +1,38 @@
 ---
-description: Monorepo layout, stacks, and where to edit for learning-project (CodeStep + drills)
+description: Monorepo layout, stacks, and where to edit for learning-project
 globs:
 alwaysApply: true
 ---
 
 # learning-project (monorepo)
 
-Canonical human overview: [README.md](../../README.md). Agent entry doc: [AGENTS.md](../../AGENTS.md).
+Canonical overview: [README.md](../../README.md). Learning order: [docs/LEARNING_PATH.md](../../docs/LEARNING_PATH.md). Agents: [AGENTS.md](../../AGENTS.md).
 
-## Packages and stacks
+## Buckets
 
-- **`frontend/`** — CodeStep app: **Vite, React 19, TypeScript, Tailwind v4**. Course domains and walkthrough logic live under `frontend/src/domains/` (each subdomain may have a short `README.md`). Prefer matching existing patterns there for learner-facing UI and examples.
-- **`beginner-js/`** — Topic folders with `tasks.js` / `tasks.test.js`. Root **`Makefile`** wraps **`bun test`** for topics and single-task targets (see Makefile comments).
-- **`docs/codestep/`** — Product overview and phased specs (`overview.md`, `01.md`–`04.md`); use when changing CodeStep behavior or roadmap-shaped work.
-- **`system-design/`** — Standalone static HTML/CSS/JS viewer; not part of the Vite app. Treat as a separate mini-site unless the task is explicitly there.
-- **`data-structures/`** — Standalone static HTML/CSS/JS CS roadmap (`css/`, `js/data/`, `js/demos/`) covering data structures, algorithms, computer internals, and beginner web/infra foundations; same mini-site pattern as `system-design/`.
-- **`java/`** — Standalone static HTML/CSS/JS Java learning hub (`css/`, `js/topics/`, `topics/`) with an Ubuntu-focused Java 21 LTS basics-first path plus REST/HTTP, UML, Git, and design-pattern topic pages; same mini-site pattern as `system-design/`.
-- **`certificates/aws-genai-pro/`** — Standalone static HTML/CSS/JS AIP-C01 prep (`css/`, `js/content/`, `js/questions/`). Example-first chapters around one company chat, not an A to Z AWS service catalog. Same mini-site pattern as `system-design/`.
-- **`e2e-project/`** — Beginner todo app: vanilla HTML/CSS/JS, Spring Boot with handwritten SQL (`JdbcTemplate`, no Hibernate), PostgreSQL in Docker. Start with `make` in that folder.
-- **`cleaning-projects/`** — Code for Cleaning: two-week task rounds (English briefs, Java-first, small HTML/CSS/JS and Linux tasks) traded for bathroom cleaning. Docs and checklists only, including `getting-started.md` for terminal I/O and several files without packages. Slash commands in `cleaning-projects/.cursor/commands/` (`/hint`, `/explain`, `/review`, `/error`, `/files`, `/run`, `/check`) must not write task solutions. Do not commit solutions. Next round is written from `progress.md`.
+| Bucket | Path | Notes |
+|--------|------|--------|
+| Hub | `hub/` | Landing only — no course files at repo root |
+| Drills | `drills/javascript/` | `tasks.js` / `tasks.test.js`; root **`Makefile`** → `bun test` |
+| Apps | `apps/codestep/`, `apps/todo-e2e/`, `apps/pokedex/` | Runnable projects |
+| Tracks | `tracks/java/`, `tracks/computer-science/`, `tracks/architecture/`, `tracks/spring-boot/`, `tracks/ai/`, `tracks/certifications/aws-genai-pro/` | Static or markdown curricula — **one canonical home per topic** (link, don’t duplicate) |
+| Projects | `projects/` | Sheets in `projects/docs/` → small builds (`00`…`05`); no duplicate CS/Java theory |
+| Programs | `programs/code-for-cleaning/` | Slash commands in `programs/code-for-cleaning/.cursor/commands/` must **not** write task solutions |
+| Product docs | `docs/codestep/` | CodeStep phases `01`–`05` |
+| Learner memory | `docs/learner-memory/` | Profile schema, events, Cursor skill `learner-memory` |
+
+## Stacks
+
+- **`apps/codestep/`** — CodeStep: **Vite, React 19, TypeScript, Tailwind v4**. Domains under `apps/codestep/src/domains/`.
+- **`drills/javascript/`** — Plain JS unless a file already uses something else.
+- **Static mini-sites** (`tracks/java/`, `tracks/computer-science/`, `tracks/architecture/`, `tracks/certifications/aws-genai-pro/`) — not the Vite app. CS demos: run `node tracks/computer-science/scripts/verify-demos.mjs` after demo changes.
+- **`tracks/spring-boot/`** — Markdown course; references live in `tracks/spring-boot/references/<area>/` (≤5 files per folder).
+- **`apps/todo-e2e/`** — Spring Boot + **JdbcTemplate**; `make` in that folder.
+- **`apps/pokedex/`** — Spring + **JPA** + React (portfolio step after todo e2e).
 
 ## Conventions
 
-- **TypeScript** in `frontend/`; **plain JS** in `beginner-js/` unless a file already uses something else.
-- **Docs:** Prefer updating the closest `README.md` or `docs/codestep/` when behavior or learner-facing flows change.
-- **Legacy:** `frontend/init_example.html` is reference-only; the maintained surface is the React app.
-
-When scope spans more than one top-level directory, say which areas you touched and keep cross-links (README, domain READMEs) in sync when behavior changes.
+- **TypeScript** in `apps/codestep/`; **plain JS** in drills unless noted.
+- **Legacy:** `apps/codestep/init_example.html` is reference-only.
+- **Structure:** See [structure.mdc](./structure.mdc) — max 5 files per folder, ~400-line soft cap.
+- When scope spans buckets, update README / LEARNING_PATH cross-links.

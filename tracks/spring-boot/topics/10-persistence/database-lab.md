@@ -43,4 +43,4 @@ Create a parcel, restart the API, and read it back. Then send two updates based 
 
 ## Next
 
-Read [Databases, caching, and locking](../../references/databases-caching-and-locking.md). Redis caching comes later, after the database behavior is clear.
+Read [Databases, caching, and locking](../../references/architecture/databases-caching-and-locking.md). Redis caching comes later, after the database behavior is clear.

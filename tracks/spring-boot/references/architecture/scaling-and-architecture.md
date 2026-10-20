@@ -77,7 +77,7 @@ At scale, failure is normal: networks drop, dependencies restart, messages arriv
 - **Idempotent** operations so a safe retry can't cause harm.
 - **Graceful degradation**: a cached/partial answer beats a hard failure when a non-critical dependency is down.
 
-See [Production thinking](production-thinking.md) for the operational side.
+See [Production thinking](../operations/production-thinking.md) for the operational side.
 
 ## The data-consistency trade-off (CAP, in plain words)
 
@@ -131,6 +131,6 @@ You'll be ready for these once ParcelPilot is complete. Each solves a specific p
 - [Monolith and microservices](monolith-and-microservices.md)
 - [Messaging and queues](messaging-and-queues.md)
 - [Databases, caching, and locking](databases-caching-and-locking.md)
-- [Authentication](authentication.md)
-- [Production thinking](production-thinking.md)
+- [Authentication](../web-and-api/authentication.md)
+- [Production thinking](../operations/production-thinking.md)
 - [Code organization](code-organization.md)

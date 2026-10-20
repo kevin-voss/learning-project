@@ -1,29 +1,39 @@
 # Agent instructions (learning-project)
 
-Short orientation for AI agents and humans automating this repo. Full structure and commands: **[README.md](README.md)**.
+Short orientation for AI agents. Full map: **[README.md](README.md)** and **[docs/LEARNING_PATH.md](docs/LEARNING_PATH.md)**.
 
 ## What this repo is
 
-Interactive **JavaScript learning** tooling: the main **CodeStep** learner UI (`frontend/`), **beginner-js** drill topics (`beginner-js/` + root `Makefile`), **Codestep product docs** (`docs/codestep/`), separate static viewers for **system-design** (`system-design/`), **data-structures** (`data-structures/`), **java** (`java/`), **AIP-C01 exam prep** (`certificates/aws-genai-pro/`), a beginner **todo e2e app** (`e2e-project/`), and **Code for Cleaning** task rounds (`cleaning-projects/`).
+A monorepo of **drills**, **tracks**, **apps**, **projects** (sheet → small build), and **programs**. **One spine:** [`docs/LEARNING_PATH.md`](docs/LEARNING_PATH.md) — CS → web basics → **Java focus** → infra/architecture/Spring. Root holds meta + `hub/` only.
 
-## Cursor configuration
+## Layout
 
-- **Rules:** `.cursor/rules/` — always-on or scoped guidance (e.g. monorepo layout).
-- **Skills:** `.cursor/skills/` — optional workflows (e.g. `caveman` for low-token communication when the user invokes it).
+| Area | Path | Stack / notes |
+|------|------|----------------|
+| Hub | `hub/` | Static landing |
+| Drills | `drills/javascript/` | Bun tests via root `Makefile` |
+| CodeStep | `apps/codestep/` | Vite, React, TS, Tailwind; domains under `src/domains/` |
+| Todo e2e | `apps/todo-e2e/` | HTML/CSS/JS + Spring + JdbcTemplate + Postgres |
+| Pokédex | `apps/pokedex/` | React + Spring + JPA |
+| Java hub | `tracks/java/` | Static HTML/CSS/JS |
+| CS roadmap | `tracks/computer-science/` | Static + demos (`verify-demos.mjs`) |
+| Architecture | `tracks/architecture/` | Small static explorer (not Spring course) |
+| Spring Boot | `tracks/spring-boot/` | Markdown topics + `references/<area>/` |
+| AIP-C01 | `tracks/certifications/aws-genai-pro/` | Static prep app |
+| Projects | `projects/` | Four brief-only curricula |
+| Cleaning | `programs/code-for-cleaning/` | Slash commands in `programs/code-for-cleaning/.cursor/commands/` |
+| CodeStep specs | `docs/codestep/` | Phases 01–05 |
+| Learner memory | `docs/learner-memory/` | Long-term profile; skill `learner-memory`, `/reflect` |
 
-Prefer the README’s project table and phase docs over duplicating long structure here.
+## Cursor
 
-## Stack summary
+- **Rules:** `.cursor/rules/` — `monorepo.mdc` (always on), `structure.mdc` (folder/line limits).
+- **Skills:** `.cursor/skills/caveman/` — optional compressed replies when invoked.
+- **Commands:** `.cursor/commands/` — repo-wide helpers; cleaning program keeps its own commands under `programs/code-for-cleaning/.cursor/commands/`.
 
-| Area | Stack / notes |
-|------|----------------|
-| `frontend/` | Vite, React, TypeScript, Tailwind; Vitest/ESLint per `frontend/package.json` |
-| `beginner-js/` | Bun-driven tests via `Makefile` |
-| `system-design/` | Static HTML/CSS/JS |
-| `data-structures/` | Static HTML/CSS/JS — CS roadmap with data structures, algorithms, web/infra foundations, and interactive demos |
-| `java/` | Static HTML/CSS/JS — Ubuntu-focused Java 21 LTS learning hub with basics, REST/HTTP, UML, Git, and design-pattern tracks |
-| `certificates/aws-genai-pro/` | Static HTML/CSS/JS — AIP-C01 example-first exam prep (Maya / Company Knowledge Assistant) with localStorage progress and quizzes |
-| `e2e-project/` | HTML/CSS/JS + Spring Boot (JdbcTemplate SQL, no Hibernate) + PostgreSQL beginner todo app; `make` in that folder starts everything |
-| `cleaning-projects/` | Code for Cleaning: English task briefs (Java-first, plus small web and Linux tasks) traded for bathroom cleaning. Docs only, including a beginner terminal I/O guide; solutions stay out of git. New round every two weeks from `progress.md`. |
+## Conventions
 
-Match existing style and file layout in the subtree you edit; domain logic for CodeStep belongs under `frontend/src/domains/`.
+- Match existing patterns in the subtree you edit.
+- **Max 5 files** per directory (split into subfolders when adding content).
+- **~400 lines** soft cap per file; split when practical.
+- Do not commit `programs/code-for-cleaning/solutions/` or secrets (`.env`).

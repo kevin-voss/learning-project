@@ -66,7 +66,7 @@ java Main
 
 ## Stage 3: Packages and imports (Step 03)
 
-Now you adopt Maven's standard layout and give files a **package**. A package is a namespace that groups related classes and prevents name clashes. See [Packages, imports, and structure](../topics/03-maven/packages-imports-structure.md).
+Now you adopt Maven's standard layout and give files a **package**. A package is a namespace that groups related classes and prevents name clashes. See [Packages, imports, and structure](../../topics/03-maven/packages-imports-structure.md).
 
 ```text
 applications/parcelpilot/
@@ -157,7 +157,7 @@ com/parcelpilot/
 
 The parcel module talks to notifications through a **small interface** (`Notifier`), not by reaching into its internals.
 
-**Why:** a change to "parcels" touches one folder. Features stay cohesive and loosely coupled, which is exactly what makes the next stage cheap. See [Step 11](../topics/11-monolith/README.md).
+**Why:** a change to "parcels" touches one folder. Features stay cohesive and loosely coupled, which is exactly what makes the next stage cheap. See [Step 11](../../topics/11-monolith/README.md).
 **What forces the next stage:** a feature needs to deploy, scale, or fail **independently**.
 
 ## Stage 6: Separate services (Step 13+)
@@ -171,7 +171,7 @@ applications/parcelpilot-services/
 └── compose.yaml
 ```
 
-**Why:** independent deploy/scale/failure, at the cost of network calls, more infrastructure, and eventual consistency. See [Step 13](../topics/13-split-services/README.md) and [monolith vs microservices](monolith-and-microservices.md).
+**Why:** independent deploy/scale/failure, at the cost of network calls, more infrastructure, and eventual consistency. See [Step 13](../../topics/13-split-services/README.md) and [monolith vs microservices](monolith-and-microservices.md).
 
 ---
 
@@ -190,7 +190,7 @@ Moving up a stage too early adds cost with no benefit. Moving up too late makes 
 
 ## See also
 
-- [Java best practices (and why)](java-best-practices.md)
-- [Packages, imports, and structure](../topics/03-maven/packages-imports-structure.md)
+- [Java best practices (and why)](../java/java-best-practices.md)
+- [Packages, imports, and structure](../../topics/03-maven/packages-imports-structure.md)
 - [Monolith and microservices](monolith-and-microservices.md)
-- [PROJECT-STORY.md](../PROJECT-STORY.md): the same journey from the product's point of view
+- [PROJECT-STORY.md](../../PROJECT-STORY.md): the same journey from the product's point of view

@@ -268,4 +268,4 @@ If you have several files: `javac *.java` compiles them all. From [Step 03](../0
 
 ## Next
 
-Now go back to [Step 01](README.md) and learn how to group this data and behavior into a **class**, the real starting point of ParcelPilot. Two optional companions deepen this step: [Java data types in detail](data-types.md) and [general coding concepts](../../references/coding-concepts.md) (early return, guard clauses, DRY) for writing clean logic.
+Now go back to [Step 01](README.md) and learn how to group this data and behavior into a **class**, the real starting point of ParcelPilot. Two optional companions deepen this step: [Java data types in detail](data-types.md) and [general coding concepts](../../references/java/coding-concepts.md) (early return, guard clauses, DRY) for writing clean logic.

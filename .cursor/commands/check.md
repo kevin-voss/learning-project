@@ -6,7 +6,7 @@ Follow [`.cursor/rules/tutor.mdc`](../rules/tutor.mdc): find the current task, s
 
 ## 1. Test it
 
-1. Run their code against every example the task gives (see "Running their code" in the tutor rules): the Aufgabe's test examples, the project's "You should see" lines and tests, `make <topic>` for a drill, the must-list and self-test for Code for Cleaning.
+1. Run their code against every example the task gives (see "Running their code" in the tutor rules): the student task's test examples, the project's "You should see" lines and tests, `make <topic>` for a drill, the must-list and self-test for Code for Cleaning.
 2. Show one table: input · expected · their output · ✅ or ❌. `1041,53` and `1041.53` count as the same.
 3. For every ❌, one sentence on **what** is different ("99 folders still pay shipping"), never how to fix it in code.
 4. Does not compile or run? Show the first error and say: `/stuck` with the red text.

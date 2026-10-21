@@ -23,7 +23,7 @@ The **Java hub** (`tracks/java/`) goes further: every lesson is in depth, so a s
 - Say "you". Use present tense.
 - Explain a new word the first time you use it, or link to the [glossary](../sheets/start/glossary.md).
 - No "simply", "just", "obviously", "trivial".
-- English everywhere on the path. Student tasks keep the original task text in its own language.
+- English everywhere, student tasks included: a sheet in another language is translated into English faithfully (same meaning, every number unchanged). Folder names, code, comments and program output are English too.
 - Never say "Phase", "Layer" or "Gate A–F". The path has **levels** and **stages**.
 
 ## Markdown boxes
@@ -57,7 +57,7 @@ Every topic is taught in exactly one place. Everywhere else writes one sentence 
 ## Files and folders
 
 - `kebab-case` names. A folder opens on `README.md` (or `index.html` for apps).
-- `NN-` prefix only where order matters: projects, Spring steps, student Übungen.
+- `NN-` prefix only where order matters: projects, Spring steps, student exercises.
 - A project folder: `README.md` (the brief and a check), `step-by-step.md`, `starter/`, `solution/`, and `help/` for extras.
 - At most 5 files per folder. About 400 lines per file at most.
 - Step ids in `hub/path.mjs` are never renamed or reused. Retire them in `RETIRED`.

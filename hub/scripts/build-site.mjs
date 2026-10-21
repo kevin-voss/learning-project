@@ -107,7 +107,7 @@ function withTheme(html) {
   return head.replace(/<body[^>]*>/, (body) => `${body}\n  ${HEADER}`).replace('</body>', `${THEME_BODY}\n</body>`)
 }
 
-// Source files next to a README are listed under it, so meine-loesung/ and musterloesung/
+// Source files next to a README are listed under it, so my-solution/ and solution/
 // pages show their code on the website too.
 function withCodeList(markdown, dir) {
   const files = readdirSync(join(ROOT, dir)).filter((name) => CODE[extname(name)]).sort()

@@ -21,9 +21,9 @@ Follow [`.cursor/rules/tutor.mdc`](../rules/tutor.mdc): find the current task, s
 
 ## The word, explained
 
-1. If the lesson or Übung page already explains it, use the same picture and link that section.
+1. If the lesson or exercise page already explains it, use the same picture and link that section.
 2. Four short parts: **Picture** (a real-life thing) · **Tiny code** (smallest example that runs, a different story than the task) · **Say it out loud** (one sentence they should be able to say) · **In your task** (where they will use it, without writing that code).
-3. A German word from the original sheet: also give the English word.
+3. A word from the student's paper sheet in another language: also give the English word.
 
 ## One hint
 

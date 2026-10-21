@@ -121,7 +121,7 @@ The page template every lesson should follow: **picture → one idea → one tin
 | CS data-structure lessons have no checklist | `arrays.js` 97, `linked-lists.js` 139, `stacks.js` 120, `queues.js` 110, `hash-tables.js` 123 | Add 3 "You understand this when…" items each | S |
 | CS lessons show class implementations as the example | Linked list and stack lessons show full classes | Keep the picture and demo. Fold the class code into a "Look inside" box | S |
 | Walls of text | `getting-started/js/lessons.js` 563 · `types-and-variables/js/lessons.js` 519 (overflow, casting, `var`) · Spring `07` README 419 · `java-patterns` 810 + 363 · `drills/javascript/tic-tac-toe.md` 687 | Split by "needed now" vs "look it up later". One lesson per screen | M |
-| Mixed language | `drills/javascript/**` (33 files, German incl. test names) · `Makefile` comments and help · German drill titles in the hub catalog · `students/becky/.../04-branches` | Translate drills and Makefile to English. Student tasks keep the original German text in `TASK.md` (rule in `students.mdc`) | M |
+| Mixed language | `drills/javascript/**` (33 files, German incl. test names) · `Makefile` comments and help · German drill titles in the hub catalog · `students/becky/.../04-branches` | Translate drills and Makefile to English. Student tasks are translated into English too, faithfully (rule in `students.mdc`) | M |
 | Too advanced for the stage | `cs-memory` (heap before variables), `web-http` (CORS), `cs-sql` (JOIN and GROUP BY in "1 h"), `java-rest` (QUERY method), Spring 12–16 | Fixed by the reorder in §2 and the basics/deeper split | — |
 | Missing check or wrong hint | `projects/docs/git/README.md` and `projects/docs/docker/README.md` have no check. `01-weather-dashboard/README.md` says run `git init`, but the git sheet says never | Add 3-question checks. Remove the `git init` line | S |
 | Old vocabulary | "Phase 2", "Layer A–F", "Gates A–D" in sheets and project READMEs; the hub says "stage" | One word: **stage**. Search and replace | S |
@@ -390,7 +390,7 @@ Every step can ship on its own and leaves `make site` green. Checks used:
 ## Decisions taken
 
 1. **Code for Cleaning** stays as it is (no solutions under `programs/`). The ladder has its own rewritten copies of the tasks with starters and solutions (projects 05–09, 12). The round files are grouped by reward.
-2. **Language:** English on the whole path, drills included. Student Übungen keep German where the teacher's task is German.
+2. **Language:** English on the whole path, drills included. Student exercise sheets are translated into English too.
 3. **Reader:** "6-year-old simple" is the writing style (short sentences, pictures first), not the real age. Examples are real-world, not childish.
 4. **Theme:** light-first warm paper with a dark mode, on every track.
 5. **Project 03 (Node weather CLI):** deleted. Node and npm stay as look-up sheets.

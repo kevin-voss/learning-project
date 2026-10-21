@@ -154,7 +154,7 @@ code { font-family: var(--lp-mono); font-size: 0.88em; padding: 1px 6px; border-
 }
 
 .card h4 { margin: var(--lp-s4) 0 var(--lp-s2); }
-.uebung { margin: var(--lp-s3) 0 var(--lp-s1); font-weight: 700; }
+.exercise { margin: var(--lp-s3) 0 var(--lp-s1); font-weight: 700; }
 .task-list { margin: 0; padding: 0; list-style: none; }
 .task-list li { display: flex; flex-wrap: wrap; align-items: center; gap: var(--lp-s2); padding: var(--lp-s2) 0; border-top: 1px solid var(--lp-line); font-size: 15px; }
 .task-num { color: var(--lp-text-muted); font: 700 13px / 1 var(--lp-mono); }

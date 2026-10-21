@@ -12,5 +12,5 @@ Follow [`.cursor/rules/tutor.mdc`](../rules/tutor.mdc): find the current task, s
    - **Done so far:** what already works, and the first open `TODO` or must-item (file and line).
    - **Next step:** exactly one small thing to do now.
    - **Read this if it is new:** the one lesson or section that explains it, with a link.
-3. Aufgabe still `todo` but started? Set it to `in progress` in the Übung README table.
+3. Student task still `todo` but started? Set it to `in progress` in the exercise README table.
 4. End with: stuck → `/stuck` · think it works → `/check`.

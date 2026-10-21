@@ -7,12 +7,12 @@ How it is sorted:
 ```text
 {{STUDENT}}/
 └── <subject>/                 e.g. computer-science
-    └── uebungen/              all Übungen of this subject
-        └── uebung-04-…/       one Übung = one exercise sheet
-            └── aufgabe-04-1-…/  one Aufgabe = one task
-                ├── README.md        the task, simply said, test examples
-                ├── meine-loesung/   your desk: write your code here
-                └── musterloesung/   the Musterlösung (peek only when done)
+    └── exercises/             all exercises of this subject
+        └── exercise-04-…/     one exercise = one exercise sheet
+            └── task-04-1-…/   one task
+                ├── README.md      the task, simply said, test examples
+                ├── my-solution/   your desk: write your code here
+                └── solution/      the sample solution (peek only when done)
 ```
 
 ## Subjects

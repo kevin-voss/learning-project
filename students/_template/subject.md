@@ -4,6 +4,6 @@ Everything for this subject lives in this folder.
 
 | Folder | What is inside |
 |--------|----------------|
-| [`uebungen/`](uebungen/README.md) | The Übungen. One folder per Übung, one subfolder per Aufgabe |
+| [`exercises/`](exercises/README.md) | The exercise sheets. One folder per exercise, one subfolder per task |
 
 Back to [{{STUDENT_NAME}}](../README.md).

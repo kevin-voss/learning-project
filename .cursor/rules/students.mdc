@@ -1,37 +1,38 @@
 ---
-description: Layout of students/ and the writing style for Übungen and Aufgaben
+description: Layout of students/ and the writing style for exercises and tasks
 globs: students/**
 alwaysApply: false
 ---
 
 # Students bucket
 
-Per-student Übungen only. Shared lessons live on the learning path (`hub/path.mjs`): link to them, do not copy them here.
+Per-student exercise sheets only. Shared lessons live on the learning path (`hub/path.mjs`): link to them, do not copy them here.
 
 ## Layout (fixed)
 
 ```text
 students/<student>/README.md                          the student's room: list of subjects
   <subject>/README.md                                 the subject: list of folders
-    uebungen/README.md                                table of Übungen
-      uebung-<NN>-<slug>/README.md                    story, every new idea explained, Aufgaben table with status, words to know
-        aufgabe-<NN>-<k>-<slug>/README.md             original task, simply said, test examples, helpers, done when
-          meine-loesung/                              the student's desk: README (how to run) + half-ready files with TODOs
-          musterloesung/                              README (walkthrough, real test output, common mistakes) + full solution
+    exercises/README.md                               table of exercises
+      exercise-<NN>-<slug>/README.md                  story, every new idea explained, tasks table with status, words to know
+        task-<NN>-<k>-<slug>/README.md                the task from the sheet, simply said, test examples, helpers, done when
+          my-solution/                                the student's desk: README (how to run) + half-ready files with TODOs
+          solution/                                   README (walkthrough, real test output, common mistakes) + sample solution
 ```
 
-- Aufgabe ids are written `04_1`, folders `aufgabe-04-1-<slug>`. Status lives in the Übung README table: `todo` → `in progress` → `done`.
-- Create Übungen and Aufgaben only with `/new-uebung` or `make new-uebung` (`students/scripts/new-uebung.mjs`) so every index page and the landing page stay in sync.
-- Templates: `students/_template/`. Change the template, not every Aufgabe, when the format changes.
-- `meine-loesung/` must never contain the answer. `musterloesung/` is the only place for it.
+- Task ids are written `04_1`, folders `task-04-1-<slug>`. Status lives in the exercise README table: `todo` → `in progress` → `done`.
+- Create exercises and tasks only with `/new-exercise` or `make new-exercise` (`students/scripts/new-exercise.mjs`) so every index page and the landing page stay in sync.
+- Templates: `students/_template/`. Change the template, not every task, when the format changes.
+- `my-solution/` must never contain the answer. `solution/` is the only place for it.
 - Every folder has a `README.md`.
 
 ## Writing style
 
+- English only: text, folder names, code identifiers, comments and program output.
 - Explain like for a 6-year-old: short sentences, one idea per paragraph, real-life picture first, code second.
-- Keep the original task text unchanged; translate hard words in the Übung's "Words to know" table.
-- Solutions use only what the Übung teaches. No clever tricks a beginner has not seen.
+- A sheet in another language is translated into English faithfully: same meaning, every number and value unchanged. "Words to know" explains the English terms; list a term from the paper sheet next to its English meaning only when it really helps the student match the paper (prefer English only).
+- Solutions use only what the exercise teaches. No clever tricks a beginner has not seen.
 
 ## Helping a student
 
-Students use `/next` → `/stuck` → `/check` → `/done`. How to find their Aufgabe, what you may read and the "never give the solution" rules are in [`tutor.mdc`](./tutor.mdc).
+Students use `/next` → `/stuck` → `/check` → `/done`. How to find their task, what you may read and the "never give the solution" rules are in [`tutor.mdc`](./tutor.mdc).

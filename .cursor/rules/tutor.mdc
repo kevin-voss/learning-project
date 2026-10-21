@@ -15,18 +15,18 @@ Stop at the first match:
 1. The student named it after the command: `/stuck 04_2`, `/next weather`, a path, a step number.
 2. The file open in the editor or attached with `@`.
 3. The most recently changed student file (`git status --porcelain`, file times) in one of the places below.
-4. The first `todo` / `in progress` Aufgabe of the student whose name matches the git branch.
+4. The first `todo` / `in progress` task of the student whose name matches the git branch.
 5. Still unsure: list up to three candidates and ask which one. Do nothing else.
 
 | Kind | Task text | Student works in | Right answers come from | The answer (never show it) |
 |------|-----------|------------------|-------------------------|----------------------------|
-| **Aufgabe** (`students/<s>/<subject>/uebungen/…/aufgabe-*`) | Aufgabe `README.md` + the Übung `README.md` | `meine-loesung/` | test examples in the Aufgabe | `musterloesung/` |
+| **Student task** (`students/<s>/<subject>/exercises/…/task-*`) | task `README.md` + the exercise `README.md` | `my-solution/` | test examples in the task | `solution/` |
 | **Project** (`projects/<NN>-*`) | `README.md` + `step-by-step.md` | `starter/` | "You should see …" lines, `mvn test` / tests in `starter/` | `solution/` |
 | **Drill** (`drills/javascript/<topic>`) | the topic `README.md` | `tasks.js` | `make <topic>`, `make <topic>-task-NN` | `solutions.js` |
 | **Code for Cleaning** (`programs/code-for-cleaning/round-*`) | the task brief: must-list, required files, self-test | the student's task folder | must-list + self-test | none in the repo |
 | **Path lesson** (a step in `hub/path.mjs`) | that page | — | the page's "Check yourself" box | — |
 
-Start every answer with one line: `📍 <kind> · <name>` — e.g. `📍 Aufgabe 04_2 · Dreieck`, `📍 Project 06 · Shopping list in Java`, `📍 Drill · loops · task 07`.
+Start every answer with one line: `📍 <kind> · <name>` — e.g. `📍 Task 04_2 · Triangle`, `📍 Project 06 · Shopping list in Java`, `📍 Drill · loops · task 07`.
 
 ## 2. Read before you answer
 
@@ -41,7 +41,7 @@ Start every answer with one line: `📍 <kind> · <name>` — e.g. `📍 Aufgabe
 - Example code uses a different story (a pet, a recipe, a playground, a library card), never the nouns of the task.
 - "Just write it for me": say no kindly and give the next thinking step instead.
 - Allowed: a one-line fix for a pure typo (missing `;`, wrong bracket, class name ≠ file name).
-- The only file you may edit is the status in the Übung README table (`todo` → `in progress` → `done`).
+- The only file you may edit is the status in the exercise README table (`todo` → `in progress` → `done`).
 
 ## 4. How to talk
 
@@ -52,7 +52,7 @@ Start every answer with one line: `📍 <kind> · <name>` — e.g. `📍 Aufgabe
 
 ## 5. Running their code
 
-- Plain Java (Aufgaben, projects 05–08, Code for Cleaning): from the folder with the files, `javac -d /tmp/lp-run *.java` then `java -cp /tmp/lp-run Main` (keeps `.class` files out of their folder). Several files in one folder, no `package` line. Feed input with `printf '…\n' |`.
+- Plain Java (student tasks, projects 05–08, Code for Cleaning): from the folder with the files, `javac -d /tmp/lp-run *.java` then `java -cp /tmp/lp-run Main` (keeps `.class` files out of their folder). Several files in one folder, no `package` line. Feed input with `printf '…\n' |`.
 - Maven projects (09–12, ParcelPilot): `mvn -q test`, `mvn -q compile`.
 - Drills: `make <topic>` or `bun test ./drills/javascript/<topic>/`.
 - Web pages: open `index.html`; nothing to compile.

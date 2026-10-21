@@ -5,7 +5,7 @@
 //   catalog   "look it up": every course, sheet, project, practice set and doc on disk
 // Only the path order is written by hand; new folders show up by themselves.
 //
-// Runs inside build-site.mjs and students/scripts/new-uebung.mjs. By hand, from anywhere:
+// Runs inside build-site.mjs and students/scripts/new-exercise.mjs. By hand, from anywhere:
 //   node hub/scripts/catalog.mjs
 
 import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
@@ -163,11 +163,11 @@ const grid = (cards) => `<div class="card-grid">
           ${cards.join('\n          ')}
         </div>`
 
-// Status per Aufgabe comes from the Übung README table:
-//   | 04_1 | [Aktenordner](aufgabe-04-1-aktenordner/README.md) | todo |
-function aufgabeStatus(uebungDir) {
+// Status per task comes from the exercise README table:
+//   | 04_1 | [File folders](task-04-1-file-folders/README.md) | todo |
+function taskStatus(exerciseDir) {
   const status = {}
-  for (const match of read(join(uebungDir, 'README.md')).matchAll(/^\|[^|\n]*\|\s*\[[^\]]*\]\(([^/)]+)\/[^)]*\)\s*\|\s*([^|\n]+?)\s*\|/gm)) {
+  for (const match of read(join(exerciseDir, 'README.md')).matchAll(/^\|[^|\n]*\|\s*\[[^\]]*\]\(([^/)]+)\/[^)]*\)\s*\|\s*([^|\n]+?)\s*\|/gm)) {
     status[match[1]] = match[2]
   }
   return status
@@ -175,29 +175,29 @@ function aufgabeStatus(uebungDir) {
 
 const subfolders = (dir, prefix) => children(dir).filter((name) => name.startsWith(prefix) && isDir(join(dir, name)))
 
-// students/<student>/<subject>/uebungen/uebung-NN-…/aufgabe-NN-k-…/
+// students/<student>/<subject>/exercises/exercise-NN-…/task-NN-k-…/
 function studentCard(studentDir) {
   const subjects = cardDirs(studentDir).map((subjectDir) => {
-    const uebungenDir = join(subjectDir, 'uebungen')
-    const uebungen = isDir(uebungenDir) ? subfolders(uebungenDir, 'uebung-') : []
-    const blocks = uebungen.map((uebung) => {
-      const uebungDir = join(uebungenDir, uebung)
-      const status = aufgabeStatus(uebungDir)
-      const rows = subfolders(uebungDir, 'aufgabe-').map((aufgabe) => {
-        const dir = join(uebungDir, aufgabe)
-        const state = status[aufgabe] ?? 'todo'
-        const [, nn, k] = aufgabe.split('-')
-        const links = [['Meine Lösung', 'meine-loesung/README.md'], ['Musterlösung', 'musterloesung/README.md']]
+    const exercisesDir = join(subjectDir, 'exercises')
+    const exercises = isDir(exercisesDir) ? subfolders(exercisesDir, 'exercise-') : []
+    const blocks = exercises.map((exercise) => {
+      const exerciseDir = join(exercisesDir, exercise)
+      const status = taskStatus(exerciseDir)
+      const rows = subfolders(exerciseDir, 'task-').map((task) => {
+        const dir = join(exerciseDir, task)
+        const state = status[task] ?? 'todo'
+        const [, nn, k] = task.split('-')
+        const links = [['My solution', 'my-solution/README.md'], ['Sample solution', 'solution/README.md']]
           .filter(([, file]) => existsSync(join(ROOT, dir, file)))
           .map(([label, file]) => `<a href="${href(join(dir, file))}">${label}</a>`)
-        const title = pageTitle(join(dir, 'README.md')).replace(/^Aufgabe\s+\S+\s*·\s*/, '')
+        const title = pageTitle(join(dir, 'README.md')).replace(/^Task\s+\S+\s*·\s*/, '')
         return `<li><span class="task-num">${escape(`${nn}_${k}`)}</span><a class="task-title" href="${href(join(dir, 'README.md'))}">${escape(title)}</a><span class="status ${escape(state.replace(/\s+/g, '-'))}">${escape(state)}</span><span class="task-links">${links.join('')}</span></li>`
       })
-      return `<p class="uebung"><a href="${href(join(uebungDir, 'README.md'))}">${escape(pageTitle(join(uebungDir, 'README.md')))}</a></p>
-            <ul class="task-list">${rows.join('') || '<li>No Aufgaben yet.</li>'}</ul>`
+      return `<p class="exercise"><a href="${href(join(exerciseDir, 'README.md'))}">${escape(pageTitle(join(exerciseDir, 'README.md')))}</a></p>
+            <ul class="task-list">${rows.join('') || '<li>No tasks yet.</li>'}</ul>`
     })
     return `<h4><a href="${href(join(subjectDir, 'README.md'))}">${escape(pageTitle(join(subjectDir, 'README.md')).split(' · ').pop())}</a></h4>
-            ${blocks.join('\n            ') || '<p>No Übungen yet.</p>'}`
+            ${blocks.join('\n            ') || '<p>No exercises yet.</p>'}`
   })
   return `<article class="card student">
             <div class="card-path">${escape(studentDir)}/</div>

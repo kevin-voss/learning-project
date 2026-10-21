@@ -22,7 +22,7 @@ cd learning-project
 git switch -c your-name
 ```
 
-Personal Übungen from a teacher are in [`students/<your-name>/`](students/README.md): one folder per Übung, one per Aufgabe. Write your code in the Aufgabe's `meine-loesung/`, compare with `musterloesung/`, commit and push. In Cursor, four commands help without giving the answer (below).
+Personal exercise sheets from a teacher are in [`students/<your-name>/`](students/README.md): one folder per exercise, one per task. Write your code in the task's `my-solution/`, compare with `solution/`, commit and push. In Cursor, four commands help without giving the answer (below).
 
 ## Structure
 
@@ -35,7 +35,7 @@ Personal Übungen from a teacher are in [`students/<your-name>/`](students/READM
 | [`projects/`](projects/README.md) | The project ladder `01`–`12` (`README`, `step-by-step.md`, `starter/`, `solution/`) plus `extras/` | Do steps |
 | [`tracks/`](tracks/) | Deep courses: computer science, Java, Spring Boot ParcelPilot, architecture, AI field guide, AWS GenAI Pro | Read and Do steps |
 | [`programs/`](programs/code-for-cleaning/README.md) | Code for Cleaning: real-life Java task rounds | Extras |
-| [`students/`](students/README.md) | `<student>/<subject>/uebungen/uebung-NN-…/aufgabe-NN-k-…/` with README, `meine-loesung/`, `musterloesung/` | My tasks |
+| [`students/`](students/README.md) | `<student>/<subject>/exercises/exercise-NN-…/task-NN-k-…/` with README, `my-solution/`, `solution/` | My tasks |
 
 ```
 learning-project/
@@ -47,7 +47,7 @@ learning-project/
 ├── projects/       # 01 about-me → 02 shopping list → … → 11 parcel database → 12 calculator · extras/
 ├── tracks/         # computer-science · java · spring-boot · architecture · ai · certifications/
 ├── programs/       # code-for-cleaning/
-└── students/       # <student>/<subject>/uebungen/<uebung>/<aufgabe>/
+└── students/       # <student>/<subject>/exercises/<exercise>/<task>/
 ```
 
 ## The website
@@ -77,8 +77,8 @@ make test
 # Website: check the path, build dist/site, check links
 make site
 
-# New Übung with Aufgaben for a student (or /new-uebung in Cursor); also updates the landing page
-make new-uebung STUDENT=becky SUBJECT=computer-science NUMBER=05 TITLE="Schleifen" AUFGABEN="Einmaleins, Zahlenraten"
+# New exercise sheet with its tasks for a student (or /new-exercise in Cursor); also updates the landing page
+make new-exercise STUDENT=becky SUBJECT=computer-science NUMBER=05 TITLE="Loops" TASKS="Times table, Guess the number"
 
 # CS demos after edits
 node tracks/computer-science/scripts/verify-demos.mjs
@@ -86,7 +86,7 @@ node tracks/computer-science/scripts/verify-demos.mjs
 
 ## Cursor
 
-Type `/` in the Cursor chat. Four commands for students, in the order you need them, on any task (an Aufgabe, a project, a drill, a lesson). None of them writes your solution.
+Type `/` in the Cursor chat. Four commands for students, in the order you need them, on any task (a student task, a project, a drill, a lesson). None of them writes your solution.
 
 | Command | When |
 |---------|------|
@@ -95,6 +95,6 @@ Type `/` in the Cursor chat. Four commands for students, in the order you need t
 | `/check` | You think it works: it runs your examples and tells you what is good and what to improve |
 | `/done` | You are finished: last check, three questions, then what comes next |
 
-For teachers: `/new-uebung` (an exercise sheet for one student) and `/new-content` (a lesson, sheet, project or drill, in its one home). Rules: [`.cursor/rules/`](.cursor/rules/) (`tutor.mdc` for the student commands). Skills: `learner-memory`, `caveman`.
+For teachers: `/new-exercise` (an exercise sheet for one student) and `/new-content` (a lesson, sheet, project or drill, in its one home). Rules: [`.cursor/rules/`](.cursor/rules/) (`tutor.mdc` for the student commands). Skills: `learner-memory`, `caveman`.
 
 Agents: [`AGENTS.md`](AGENTS.md).

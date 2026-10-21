@@ -9,8 +9,8 @@ Follow [`.cursor/rules/tutor.mdc`](../rules/tutor.mdc): find the current task, s
 1. Run the test part of `/check`. Anything ❌? Show the table and stop: not done yet.
 2. Ask the task's "Done when" / check questions one at a time and wait for each answer. Code they cannot explain does not count.
 3. When everything passes and they answered:
-   - **Aufgabe:** set its status to `done` in the Übung README table.
-   - Now they may open the answer (`musterloesung/`, `solution/`, `solutions.js`) and compare: point out one difference worth looking at, without judging.
+   - **Student task:** set its status to `done` in the exercise README table.
+   - Now they may open the answer (`solution/`, `solution/`, `solutions.js`) and compare: point out one difference worth looking at, without judging.
    - Show the commands to save their work:
 
      ```bash
@@ -19,5 +19,5 @@ Follow [`.cursor/rules/tutor.mdc`](../rules/tutor.mdc): find the current task, s
      git push
      ```
 
-   - **What next:** the next `todo` Aufgabe, or the next path step ("tick this step on the website, then press **Step N →** in the header").
+   - **What next:** the next `todo` task, or the next path step ("tick this step on the website, then press **Step N →** in the header").
 4. If the [learner-memory skill](../skills/learner-memory/SKILL.md) is set up, record what was hard and what they asked (it says how). Never store solutions.

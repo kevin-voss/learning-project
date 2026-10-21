@@ -16,13 +16,13 @@
 
 TOPICS := variables math strings arrays conditionals loops functions objects
 
-.PHONY: test help new-uebung site catalog check-path $(TOPICS)
+.PHONY: test help new-exercise site catalog check-path $(TOPICS)
 
 help:
 	@echo "make test              — every drill topic"
 	@echo "make variables         — only variables/ (same for math, strings, …)"
 	@echo "make variables-task-03 — one task (01–11) of a topic"
-	@echo "make new-uebung STUDENT=becky SUBJECT=computer-science NUMBER=05 TITLE=\"Schleifen\" AUFGABEN=\"Einmaleins, Zahlenraten\" [LANGUAGE=Java]"
+	@echo "make new-exercise STUDENT=becky SUBJECT=computer-science NUMBER=05 TITLE=\"Loops\" TASKS=\"Times table, Guess the number\" [LANGUAGE=Java]"
 	@echo "make catalog           — rewrite the generated parts of hub/index.html"
 	@echo "make check-path        — check hub/path.mjs (ids, retired ids, links)"
 	@echo "make site              — check the path, build dist/site, check every link"
@@ -57,12 +57,12 @@ functions-task-%:
 objects-task-%:
 	bun test ./drills/javascript/objects/tasks.test.js --test-name-pattern objects-task-$*
 
-# New Übung with Aufgaben for a student
-# (students/<name>/<subject>/uebungen/uebung-<NN>-<title>/aufgabe-<NN>-<k>-<title>/)
-# The same NUMBER again adds Aufgaben to the existing Übung.
-new-uebung:
-	node students/scripts/new-uebung.mjs --student "$(STUDENT)" --subject "$(SUBJECT)" --number "$(NUMBER)" \
-		--title "$(TITLE)" --aufgaben "$(AUFGABEN)" $(if $(SLUG),--slug "$(SLUG)") $(if $(LANGUAGE),--language "$(LANGUAGE)")
+# New exercise sheet with its tasks for a student
+# (students/<name>/<subject>/exercises/exercise-<NN>-<title>/task-<NN>-<k>-<title>/)
+# The same NUMBER again adds tasks to the existing exercise.
+new-exercise:
+	node students/scripts/new-exercise.mjs --student "$(STUDENT)" --subject "$(SUBJECT)" --number "$(NUMBER)" \
+		--title "$(TITLE)" --tasks "$(TASKS)" $(if $(SLUG),--slug "$(SLUG)") $(if $(LANGUAGE),--language "$(LANGUAGE)")
 
 # Website: check the path, refresh the landing page, build dist/site, check links (same as Vercel)
 catalog:

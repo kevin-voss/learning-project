@@ -39,7 +39,7 @@ Every folder has a `README.md`, so you can always read where you are.
 
 ## How to work on an Aufgabe
 
-You need this repository on your computer and your own branch. If you have not done that yet, follow [Get set up](../projects/docs/setup/getting-started.md) first.
+You need this repository on your computer and your own branch. If you have not done that yet, follow [Get set up](../sheets/setup/README.md) first.
 
 1. Read the Übung `README.md` (the new ideas).
 2. Open the first Aufgabe and read its `README.md`.

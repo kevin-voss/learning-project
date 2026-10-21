@@ -14,7 +14,7 @@ The path itself lives in [`hub/path.mjs`](hub/path.mjs). The landing page is [`h
 
 ## On your computer
 
-Step 3 of the path ([Get set up](projects/docs/setup/getting-started.md)) does this with you:
+Step 3 of the path ([Get set up](sheets/setup/README.md)) does this with you:
 
 ```bash
 git clone https://github.com/kevin-voss/learning-project.git
@@ -31,7 +31,7 @@ Personal Übungen from a teacher are in [`students/<your-name>/`](students/READM
 | [`hub/`](hub/index.html) | Landing page, `path.mjs` (the step list), `progress.js`, `scripts/` | — |
 | [`docs/`](docs/LEARNING_PATH.md) | `LEARNING_PATH.md` (why the path has this order), learner memory | Look it up |
 | [`tracks/`](tracks/) | Deep courses: computer science, Java, Spring Boot, architecture, AI field guide, AWS GenAI Pro | Most Read steps |
-| [`projects/docs/`](projects/docs/README.md) | Sheets: short topic pages (HTML, CSS, JS, Java, Git, Docker, …) | Read steps before projects |
+| [`sheets/`](sheets/README.md) | Sheets: short topic pages (HTML, CSS, JS, Java, Git, Docker, …) | Read steps before projects |
 | [`projects/`](projects/README.md) | Small builds `00`–`05`, each with step-by-step docs | Do steps |
 | [`drills/`](drills/javascript/README.md) | JavaScript drills with tests | Stage 5 |
 | [`programs/`](programs/code-for-cleaning/README.md) | Code for Cleaning: real-life Java task rounds | Extras |

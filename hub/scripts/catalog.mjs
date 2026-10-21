@@ -23,23 +23,23 @@ const HIDDEN = new Set(['tracks/ai/content/README.md'])
 const META = {
   'tracks/computer-science': { tag: 'cs', title: 'Computer science', blurb: '52 interactive lessons: memory, data structures, algorithms, Linux, networks, Git and Docker intros.' },
   'tracks/java': { tag: 'java', title: 'Java hub', blurb: 'The main language path. One topic per page, from setup to design patterns.' },
-  'tracks/spring-boot': { tag: 'java', title: 'Spring Boot · ParcelPilot', blurb: 'Build one backend product step by step, from a first API to queues, services and JWT. Layer F.' },
+  'tracks/spring-boot': { tag: 'java', title: 'Spring Boot · ParcelPilot', blurb: 'Build one backend product step by step, from a first API to queues, services and JWT.' },
   'tracks/architecture': { tag: 'systems', title: 'Architecture & system design', blurb: 'Load balancing, caches, layers, data and messaging trade-offs, with diagrams.' },
   'tracks/ai': { tag: 'systems', title: 'AI engineering field guide', blurb: '31 chapters: LLM internals, tokens, RAG, tools and MCP, agents, memory, security, evals.' },
   'tracks/certifications/aws-genai-pro': { tag: 'certs', title: 'AWS GenAI Pro (AIP-C01)', blurb: 'Exam prep app: 28 chapters, question bank and mock exams.' },
   'drills/javascript': { tag: 'js', title: 'JavaScript drills', blurb: 'Eight topics with ten tested tasks each. Run them with make test.' },
   'programs/code-for-cleaning': { tag: 'java', title: 'Code for Cleaning', blurb: 'Real-life Java tasks in rounds: passwords, budgets, calendars, a small server check.' },
-  'projects/docs/java': { tag: 'java', blurb: 'Layers A–C in one page: files, packages, types, collections, Maven, plus the server picture for Layer D.' },
+  'sheets/java': { tag: 'java', blurb: 'Where each Java topic lives, plus the server picture: controller, service, repository.' },
+  'projects/extras': { tag: 'projects', title: 'Extra projects', blurb: 'Optional builds off the main path: Docker for your page, a React todo app.' },
   'docs/learner-memory': { tag: 'cs', title: 'Learner memory', blurb: 'The long-term learner profile: schema, events and integrations.' },
 }
 
 const ORDER = {
   tracks: ['computer-science', 'java', 'spring-boot', 'architecture', 'ai', 'certifications'],
-  'projects/docs': ['setup', 'git', 'html', 'css', 'javascript', 'java', 'docker', 'nodejs', 'npm', 'react', 'typescript'],
-  projects: ['00-static-page', '01-weather-dashboard', '05-java-weather-cli', '02-docker-portfolio', '03-cli-tool', '04-react-todo-app'],
+  sheets: ['start', 'setup', 'git', 'html', 'css', 'javascript', 'java', 'nodejs', 'npm', 'react', 'typescript'],
 }
 
-const SHEET_TAGS = { java: 'java', docker: 'systems', git: 'cs', setup: 'cs' }
+const SHEET_TAGS = { java: 'java', git: 'cs', setup: 'cs', start: 'cs' }
 
 const escape = (text) => String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 const read = (file) => readFileSync(join(ROOT, file), 'utf8')
@@ -272,8 +272,8 @@ function renderStudents() {
 function renderLibrary() {
   const groups = [
     ['Courses', 'Big topics with many lessons.', cardDirs('tracks').map((dir) => card(dir))],
-    ['Short sheets', 'One topic on one page.', cardDirs('projects/docs').map((dir) => card(dir, SHEET_TAGS[basename(dir)] ?? 'js'))],
-    ['Projects', 'Every build with all its help pages.', cardDirs('projects', (name) => /^\d+-/.test(name)).map((dir) => card(dir, 'projects'))],
+    ['Short sheets', 'One topic on one page.', cardDirs('sheets').map((dir) => card(dir, SHEET_TAGS[basename(dir)] ?? 'js'))],
+    ['Projects', 'Every build with all its help pages.', [...cardDirs('projects', (name) => /^\d+-/.test(name)), 'projects/extras'].map((dir) => card(dir, 'projects'))],
     ['Practice', 'Drills and task rounds.', [...cardDirs('drills'), ...cardDirs('programs')].map((dir) => card(dir, 'js'))],
     ['Docs', 'Background for teachers.', [
       `<article class="card cs">

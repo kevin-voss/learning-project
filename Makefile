@@ -1,30 +1,31 @@
-# JavaScript-Übungen mit Bun: drills/javascript/<thema>/
+# JavaScript drills with Bun: drills/javascript/<topic>/
 #
-# Alle Themen testen:
+# Test every topic:
 #   make test
 #
-# Ein ganzes Thema:
+# One whole topic:
 #   make variables
 #   make math | strings | arrays | conditionals | loops | functions | objects
 #
-# Eine einzelne Aufgabe (Nummer 01–10):
+# One single task (number 01–10):
 #   make variables-task-03
 #   make arrays-task-01
 #
-# Hinweis: „make test variables“ führt nacheinander „test“ und „variables“ aus.
-# Nur ein Thema: make variables
+# Note: "make test variables" runs "test" and then "variables".
+# For one topic only: make variables
 
 TOPICS := variables math strings arrays conditionals loops functions objects
 
-.PHONY: test help new-uebung site catalog $(TOPICS)
+.PHONY: test help new-uebung site catalog check-path $(TOPICS)
 
 help:
-	@echo "make test              — alle Themen"
-	@echo "make variables         — nur variables/ (ebenso: math, strings, …)"
-	@echo "make variables-task-03 — eine Aufgabe (01–10) im Thema"
+	@echo "make test              — every drill topic"
+	@echo "make variables         — only variables/ (same for math, strings, …)"
+	@echo "make variables-task-03 — one task (01–10) of a topic"
 	@echo "make new-uebung STUDENT=becky SUBJECT=computer-science NUMBER=05 TITLE=\"Schleifen\" AUFGABEN=\"Einmaleins, Zahlenraten\" [LANGUAGE=Java]"
-	@echo "make catalog           — Landing-Katalog (hub/index.html) aus den Ordnern neu schreiben"
-	@echo "make site              — Website bauen (dist/site) und alle Links prüfen"
+	@echo "make catalog           — rewrite the generated parts of hub/index.html"
+	@echo "make check-path        — check hub/path.mjs (ids, retired ids, links)"
+	@echo "make site              — check the path, build dist/site, check every link"
 
 test:
 	bun test drills/javascript/
@@ -56,17 +57,21 @@ functions-task-%:
 objects-task-%:
 	bun test drills/javascript/objects/tasks.test.js --test-name-pattern objects-task-$*
 
-# Neue Übung mit Aufgaben für eine:n Schüler:in
-# (students/<name>/<fach>/uebungen/uebung-<NN>-<titel>/aufgabe-<NN>-<k>-<titel>/)
-# Gleiche NUMBER nochmal = weitere Aufgaben zur bestehenden Übung.
+# New Übung with Aufgaben for a student
+# (students/<name>/<subject>/uebungen/uebung-<NN>-<title>/aufgabe-<NN>-<k>-<title>/)
+# The same NUMBER again adds Aufgaben to the existing Übung.
 new-uebung:
 	node students/scripts/new-uebung.mjs --student "$(STUDENT)" --subject "$(SUBJECT)" --number "$(NUMBER)" \
 		--title "$(TITLE)" --aufgaben "$(AUFGABEN)" $(if $(SLUG),--slug "$(SLUG)") $(if $(LANGUAGE),--language "$(LANGUAGE)")
 
-# Website: Katalog auf der Landing Page + dist/site bauen + Links prüfen (wie auf Vercel)
+# Website: check the path, refresh the landing page, build dist/site, check links (same as Vercel)
 catalog:
 	node hub/scripts/catalog.mjs
 
+check-path:
+	node hub/scripts/check-path.mjs
+
 site:
+	node hub/scripts/check-path.mjs
 	node hub/scripts/build-site.mjs
 	node hub/scripts/check-links.mjs

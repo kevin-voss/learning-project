@@ -5,9 +5,9 @@
 | Doc | Role |
 |-----|------|
 | [`docs/LEARNING_PATH.md`](../../docs/LEARNING_PATH.md) Phase 4 | Layers A–F (foundation → server → deep) |
-| [`projects/docs/java/`](../../projects/docs/java/README.md) | Foundation sheet |
-| [`projects/docs/java/server-layers.md`](../../projects/docs/java/server-layers.md) | Controller / service / repo / DTO / entity |
-| [`projects/05-java-weather-cli/`](../../projects/05-java-weather-cli/) | HTTP client apply after REST topic |
+| [`sheets/java/`](../../sheets/java/README.md) | Foundation sheet |
+| [`sheets/java/server-layers.md`](../../sheets/java/server-layers.md) | Controller / service / repo / DTO / entity |
+| [`projects/10-java-weather-cli/`](../../projects/10-java-weather-cli) | HTTP client apply after REST topic |
 
 **Order of mastery:** language + packages → Array / ArrayList / HashMap → Maven folders → HTTP client → server layers + Postgres + Docker → **only then** JVM deep, patterns catalog, Spring Boot course, JPA.
 

@@ -44,9 +44,9 @@ Skip rewriting Git/Docker/HTTP elsewhere — only deepen later.
 
 | | |
 |---|---|
-| **Sheet** | [`projects/docs/html/`](../projects/docs/html/README.md) |
-| **Project** | [`projects/00-static-page/`](../projects/00-static-page/) (~2–3 h) |
-| **Sheet** | [`projects/docs/css/`](../projects/docs/css/README.md) |
+| **Sheet** | [`sheets/html/`](../sheets/html/README.md) |
+| **Project** | [`projects/01-about-me/`](../projects/01-about-me) (~2–3 h) |
+| **Sheet** | [`sheets/css/`](../sheets/css/README.md) |
 | **Project** | Style the same page (flex + one media query) — still in `00-static-page` |
 | **Checkpoint** | A simple page looks good on phone and desktop |
 
@@ -56,7 +56,7 @@ Skip rewriting Git/Docker/HTTP elsewhere — only deepen later.
 |---|---|
 | **Drill** | [`drills/javascript/`](../drills/javascript/README.md) — `make test` (variables → objects) |
 | **Sheet** | CS web lessons (client/server, HTTP) if Phase 1 skimmed them |
-| **Project** | [`projects/01-weather-dashboard/`](../projects/01-weather-dashboard/) — browser `fetch` (~6–10 h) |
+| **Project** | [`projects/04-weather-dashboard/`](../projects/04-weather-dashboard) — browser `fetch` (~6–10 h) |
 | **Checkpoint** | Search a city → live weather; you can say what `async/await` is waiting for |
 
 ### Phase 4 — Java (main focus)
@@ -65,7 +65,7 @@ Skip rewriting Git/Docker/HTTP elsewhere — only deepen later.
 
 Toy words: **class** = cookie cutter · **object** = cookie · **method** = what it can do.
 
-Sheet: [`projects/docs/java/`](../projects/docs/java/README.md) · Hub: [`tracks/java/`](../tracks/java/index.html)
+Sheet: [`sheets/java/`](../sheets/java/README.md) · Hub: [`tracks/java/`](../tracks/java/index.html)
 
 #### Layer A — Language foundation (must lock in)
 
@@ -102,7 +102,7 @@ Stay practical. Still not Spring.
 | Interfaces, enums, `equals` / `hashCode` | Hub gaps to add (P0) · needed before maps as keys |
 | Maven layout, classpath, multi-module-ish folders | Hub build tools · `src/main/java` |
 | JUnit basics | Real `@Test` before trusting Spring tests |
-| REST as vocabulary + one HTTP client | Hub REST · [`projects/05-java-weather-cli`](../projects/05-java-weather-cli/) |
+| REST as vocabulary + one HTTP client | Hub REST · [`projects/10-java-weather-cli`](../projects/10-java-weather-cli) |
 
 **Gate C:** Weather CLI works. You know GET vs POST. Project uses a clear folder layout.
 
@@ -122,7 +122,7 @@ Request
 
 | Learn | Where |
 |-------|--------|
-| What each layer owns | Sheet [`projects/docs/java/server-layers.md`](../projects/docs/java/server-layers.md) |
+| What each layer owns | Sheet [`sheets/java/server-layers.md`](../sheets/java/server-layers.md) |
 | Postgres: tables, SQL CRUD | CS `database-sql-fundamentals` |
 | Connect from Java (JDBC) | Hub JDBC gap · try-with-resources |
 | Docker for Postgres (and later the app) | CS Docker · project 02 |
@@ -160,8 +160,8 @@ Do when Layer D needs container practice, or after Gate C.
 
 | | |
 |---|---|
-| **Sheet** | CS Docker · [`projects/docs/docker/`](../projects/docs/docker/README.md) |
-| **Project** | [`projects/02-docker-portfolio/`](../projects/02-docker-portfolio/) |
+| **Sheet** | CS Docker · [`sheets/docker/`](../projects/extras/docker-portfolio/README.md) |
+| **Project** | [`projects/extras/docker-portfolio/`](../projects/extras/docker-portfolio) |
 | **Checkpoint** | Site or Postgres runs in Docker |
 
 ### Phase 6 — Optional web depth (Node / React / TS)
@@ -170,7 +170,7 @@ Only after Java Layers A–B feel solid. Or skip.
 
 | | |
 |---|---|
-| **Optional** | [`projects/03-cli-tool/`](../projects/03-cli-tool/) · [`projects/04-react-todo-app/`](../projects/04-react-todo-app/) |
+| **Optional** | [`projects/03-cli-tool/`](../sheets/nodejs/README.md) · [`projects/extras/react-todo/`](../projects/extras/react-todo) |
 
 ### Phase 7 — Spring course
 
@@ -200,7 +200,7 @@ Same as Layer F: [`tracks/spring-boot`](../tracks/spring-boot/). No shortcut pas
 | Topic | Canonical | Everywhere else |
 |-------|-----------|-----------------|
 | CS foundations, networks, Docker intro, Git intro | `tracks/computer-science/` | Thin project notes + links |
-| HTML / CSS first page | `projects/docs/html` + `css` → project `00` | — |
+| HTML / CSS first page | `sheets/html` + `css` → project `00` | — |
 | JS syntax drills | `drills/javascript/` | Project sheets = apply only |
 | Java language & patterns | `tracks/java/` | Spring refs link; project `05` applies HTTP |
 | REST in Java | Java hub REST topic | Spring `web-and-api/` = Spring-flavored |
@@ -225,7 +225,7 @@ Same as Layer F: [`tracks/spring-boot`](../tracks/spring-boot/). No shortcut pas
 |--------------------------------|-------|--------|
 | `tracks/spring-boot` | **F** | Gates A–D · server-layers · SQL |
 
-Detail checklist: [`projects/docs/roadmap.md`](../projects/docs/roadmap.md).
+Detail checklist: [`docs/LEARNING_PATH.md`](LEARNING_PATH.md).
 
 ---
 

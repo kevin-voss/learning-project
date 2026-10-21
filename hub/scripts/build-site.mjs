@@ -12,8 +12,9 @@ import { pathSteps, writeCatalog } from './catalog.mjs'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const OUT = join(ROOT, 'dist/site')
-const BUCKETS = ['hub', 'docs', 'tracks', 'projects', 'drills', 'programs', 'students']
-const SKIP = new Set(['node_modules', 'dist', 'target', 'solutions', '_template'])
+const BUCKETS = ['hub', 'docs', 'sheets', 'tracks', 'projects', 'drills', 'programs', 'students']
+// scripts/ folders are tooling (builders, verifiers, scrapers), not pages.
+const SKIP = new Set(['node_modules', 'dist', 'target', 'solutions', '_template', 'scripts'])
 const CODE = { '.java': 'java', '.py': 'python', '.sql': 'sql', '.sh': 'bash', '.kt': 'kotlin', '.go': 'go' }
 const MARKED = 'https://cdnjs.cloudflare.com/ajax/libs/marked/15.0.12/marked.min.js'
 const HLJS = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0'

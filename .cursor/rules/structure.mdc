@@ -21,7 +21,7 @@ alwaysApply: true
 ## No duplication
 
 - Each learning topic has **one canonical track**. Other areas link to it (see `docs/LEARNING_PATH.md`).
-- Do not add a second tutorial tree for the same skill (e.g. full JS syntax in both `projects/docs/` and `drills/`).
+- Do not add a second tutorial tree for the same skill (e.g. full JS syntax in both `sheets/` and `drills/`).
 
 ## Repository root
 

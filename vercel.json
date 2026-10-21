@@ -1,10 +1,19 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
-  "buildCommand": "node hub/scripts/build-site.mjs && node hub/scripts/check-links.mjs",
+  "buildCommand": "node hub/scripts/check-path.mjs && node hub/scripts/build-site.mjs && node hub/scripts/check-links.mjs",
   "outputDirectory": "dist/site",
   "trailingSlash": true,
   "redirects": [
-    { "source": "/", "destination": "/hub/", "permanent": false }
+    { "source": "/", "destination": "/hub/", "permanent": false },
+    { "source": "/projects/docs/setup/getting-started.html", "destination": "/sheets/setup/", "permanent": true },
+    { "source": "/projects/docs/:path*", "destination": "/sheets/:path*", "permanent": true },
+    { "source": "/projects/00-static-page/:path*", "destination": "/projects/01-about-me/:path*", "permanent": true },
+    { "source": "/projects/01-weather-dashboard/:path*", "destination": "/projects/04-weather-dashboard/:path*", "permanent": true },
+    { "source": "/projects/05-java-weather-cli/:path*", "destination": "/projects/10-java-weather-cli/:path*", "permanent": true },
+    { "source": "/projects/02-docker-portfolio/:path*", "destination": "/projects/extras/docker-portfolio/:path*", "permanent": true },
+    { "source": "/projects/04-react-todo-app/:path*", "destination": "/projects/extras/react-todo/:path*", "permanent": true },
+    { "source": "/projects/03-cli-tool/:path*", "destination": "/sheets/nodejs/", "permanent": true },
+    { "source": "/drills/javascript/tic-tac-toe.html", "destination": "/projects/03-tic-tac-toe/", "permanent": true }
   ]
 }

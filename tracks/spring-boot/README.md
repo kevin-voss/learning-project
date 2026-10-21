@@ -1,6 +1,6 @@
 # Spring Boot System Design: Build One Product, One Step at a Time
 
-**Start after** [LEARNING_PATH](../../docs/LEARNING_PATH.md) Gates A–D and the [server-layers sheet](../../projects/docs/java/server-layers.md). The [Java hub](../java/index.html) is the canonical language path. This course builds services (Layer F).
+**Start after** [LEARNING_PATH](../../docs/LEARNING_PATH.md) Gates A–D and the [server-layers sheet](../../sheets/java/server-layers.md). The [Java hub](../java/index.html) is the canonical language path. This course builds services (Layer F).
 
 This course teaches you how a small backend grows into a real system.
 

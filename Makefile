@@ -7,7 +7,7 @@
 #   make variables
 #   make math | strings | arrays | conditionals | loops | functions | objects
 #
-# One single task (number 01–10):
+# One single task (number 01–11):
 #   make variables-task-03
 #   make arrays-task-01
 #
@@ -21,41 +21,41 @@ TOPICS := variables math strings arrays conditionals loops functions objects
 help:
 	@echo "make test              — every drill topic"
 	@echo "make variables         — only variables/ (same for math, strings, …)"
-	@echo "make variables-task-03 — one task (01–10) of a topic"
+	@echo "make variables-task-03 — one task (01–11) of a topic"
 	@echo "make new-uebung STUDENT=becky SUBJECT=computer-science NUMBER=05 TITLE=\"Schleifen\" AUFGABEN=\"Einmaleins, Zahlenraten\" [LANGUAGE=Java]"
 	@echo "make catalog           — rewrite the generated parts of hub/index.html"
 	@echo "make check-path        — check hub/path.mjs (ids, retired ids, links)"
 	@echo "make site              — check the path, build dist/site, check every link"
 
 test:
-	bun test drills/javascript/
+	bun test ./drills/javascript/
 
 $(TOPICS):
-	bun test drills/javascript/$@/
+	bun test ./drills/javascript/$@/
 
 variables-task-%:
-	bun test drills/javascript/variables/tasks.test.js --test-name-pattern variables-task-$*
+	bun test ./drills/javascript/variables/tasks.test.js --test-name-pattern variables-task-$*
 
 math-task-%:
-	bun test drills/javascript/math/tasks.test.js --test-name-pattern math-task-$*
+	bun test ./drills/javascript/math/tasks.test.js --test-name-pattern math-task-$*
 
 strings-task-%:
-	bun test drills/javascript/strings/tasks.test.js --test-name-pattern strings-task-$*
+	bun test ./drills/javascript/strings/tasks.test.js --test-name-pattern strings-task-$*
 
 arrays-task-%:
-	bun test drills/javascript/arrays/tasks.test.js --test-name-pattern arrays-task-$*
+	bun test ./drills/javascript/arrays/tasks.test.js --test-name-pattern arrays-task-$*
 
 conditionals-task-%:
-	bun test drills/javascript/conditionals/tasks.test.js --test-name-pattern conditionals-task-$*
+	bun test ./drills/javascript/conditionals/tasks.test.js --test-name-pattern conditionals-task-$*
 
 loops-task-%:
-	bun test drills/javascript/loops/tasks.test.js --test-name-pattern loops-task-$*
+	bun test ./drills/javascript/loops/tasks.test.js --test-name-pattern loops-task-$*
 
 functions-task-%:
-	bun test drills/javascript/functions/tasks.test.js --test-name-pattern functions-task-$*
+	bun test ./drills/javascript/functions/tasks.test.js --test-name-pattern functions-task-$*
 
 objects-task-%:
-	bun test drills/javascript/objects/tasks.test.js --test-name-pattern objects-task-$*
+	bun test ./drills/javascript/objects/tasks.test.js --test-name-pattern objects-task-$*
 
 # New Übung with Aufgaben for a student
 # (students/<name>/<subject>/uebungen/uebung-<NN>-<title>/aufgabe-<NN>-<k>-<title>/)

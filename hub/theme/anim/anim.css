@@ -1,0 +1,117 @@
+/* Styles for hub/theme/anim/player.js scenes. Items glide between places with a
+   CSS transition; with prefers-reduced-motion they jump. */
+
+.lp-anim {
+  margin: 0 0 var(--lp-s5);
+  padding: var(--lp-s4);
+  border: 1px solid var(--lp-line);
+  border-radius: var(--lp-radius);
+  background: var(--lp-surface);
+  color: var(--lp-text);
+  font-family: var(--lp-font);
+  box-shadow: var(--lp-shadow);
+}
+
+.lp-anim-title { margin: 0 0 var(--lp-s3) !important; font-weight: 700; font-size: 17px; }
+
+.lp-anim-stage {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--lp-radius-sm);
+  background:
+    radial-gradient(circle at 1px 1px, var(--lp-line) 1px, transparent 0) 0 0 / 18px 18px,
+    var(--lp-bg);
+}
+
+.lp-anim-place {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  border-radius: var(--lp-radius-sm);
+  transition: background var(--lp-speed), border-color var(--lp-speed), box-shadow var(--lp-speed);
+}
+
+.lp-anim-place.box { border: 2px solid var(--lp-line); background: var(--lp-surface); }
+.lp-anim-place.zone { border: 2px dashed var(--lp-line); }
+.lp-anim-place.floor { border-bottom: 3px solid var(--lp-line); border-radius: 0; height: 0 !important; }
+.lp-anim-place.lit { border-color: var(--lp-accent); background: var(--lp-accent-soft); box-shadow: 0 0 0 4px var(--lp-accent-soft); }
+
+.lp-anim-place-label {
+  position: absolute;
+  left: 50%;
+  bottom: 6px;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  color: var(--lp-text-muted);
+  font: 700 12px / 1 var(--lp-mono);
+}
+
+.lp-anim-item {
+  position: absolute;
+  z-index: 2;
+  transform: translate(-50%, -50%);
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--lp-accent);
+  color: var(--lp-on-accent);
+  font: 700 15px / 1.2 var(--lp-mono);
+  white-space: nowrap;
+  box-shadow: var(--lp-shadow);
+  transition: left 700ms cubic-bezier(.2, .8, .2, 1), top 700ms cubic-bezier(.2, .8, .2, 1), opacity 400ms, height 400ms, background 400ms;
+}
+
+.lp-anim-item.plain { background: none; box-shadow: none; color: var(--lp-text); }
+.lp-anim-item.big { font-size: 28px; padding: 2px 6px; background: none; box-shadow: none; }
+.lp-anim-item.note { background: var(--lp-picture-bg); color: var(--lp-text); border: 1px solid var(--lp-picture-line); }
+.lp-anim-item.ok { background: var(--lp-do); color: #fff; }
+.lp-anim-item.warn { background: var(--lp-warn); color: #fff; }
+.lp-anim-item.plate { border-radius: 6px; min-width: 120px; text-align: center; background: var(--lp-surface-2); color: var(--lp-text); border: 2px solid var(--lp-line); }
+.lp-anim-item.faded, .lp-anim-item.gone { opacity: 0.25; }
+.lp-anim-item.gone { opacity: 0; pointer-events: none; }
+
+.lp-anim-item.bar {
+  transform: translate(-50%, -100%);
+  top: auto;
+  width: 9%;
+  min-width: 26px;
+  padding: 4px 0 0;
+  border-radius: 6px 6px 0 0;
+  text-align: center;
+  background: var(--lp-read);
+}
+
+.lp-anim-item.bar.done { background: var(--lp-do); }
+
+.lp-anim-say { margin: var(--lp-s3) 0 var(--lp-s2) !important; min-height: 2.6em; font-size: 17px; }
+
+.lp-anim-code {
+  margin: 0 0 var(--lp-s3) !important;
+  padding: var(--lp-s2) var(--lp-s3) !important;
+  border-radius: var(--lp-radius-sm);
+  background: var(--lp-code-bg);
+  color: var(--lp-code-text);
+  font: 400 14px / 1.5 var(--lp-mono);
+  white-space: pre-wrap;
+}
+
+.lp-anim-controls { display: flex; align-items: center; gap: var(--lp-s2); flex-wrap: wrap; }
+
+.lp-anim-btn {
+  min-height: 38px;
+  padding: 0 var(--lp-s4);
+  border: 1px solid var(--lp-line);
+  border-radius: 999px;
+  background: var(--lp-surface);
+  color: var(--lp-text);
+  font: 700 14px / 1 var(--lp-font);
+  cursor: pointer;
+}
+
+.lp-anim-btn.primary { background: var(--lp-accent); border-color: var(--lp-accent); color: var(--lp-on-accent); }
+.lp-anim-btn:disabled { opacity: 0.4; cursor: default; }
+.lp-anim-count { margin-left: auto; color: var(--lp-text-muted); font: 700 13px / 1 var(--lp-mono); }
+
+.lp-anim.reduced .lp-anim-item, .lp-anim.reduced .lp-anim-place { transition: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .lp-anim-item, .lp-anim-place { transition: none; }
+}

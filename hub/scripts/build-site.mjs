@@ -34,59 +34,59 @@ function walk(dir, files = []) {
 
 const escape = (text) => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 
-function shell(title, file, body, head = '') {
+// One theme on every page (hub/theme/): tokens and components in <head>,
+// the animation player and the progress script at the end of <body>.
+const THEME_INIT = `<script>try { const t = JSON.parse(localStorage.getItem('learning-project:theme')); if (t) document.documentElement.dataset.theme = t } catch {}</script>`
+const THEME_HEAD = [THEME_INIT, ...['tokens.css', 'components.css', 'anim/anim.css']
+  .map((file) => `<link rel="stylesheet" href="/hub/theme/${file}">`)].join('\n  ')
+const THEME_BODY = ['/hub/theme/anim/scenes.js', '/hub/theme/anim/player.js', '/hub/progress.js']
+  .map((src) => `<script src="${src}" defer></script>`).join('\n  ')
+
+function shell(title, file, body) {
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${escape(title)} · Learning Project</title>
-  <link rel="stylesheet" href="/hub/landing.css">
-  ${head}
+  ${THEME_HEAD}
 </head>
-<body>
-  <main class="sheet">
-    <nav class="sheet-nav"><a href="/hub/">← Learning Project</a><span>${escape(file)}</span></nav>
+<body class="lp-page">
+  <nav class="lp-topnav"><a href="/hub/">← Path</a><span class="lp-crumb">${escape(file)}</span><button type="button" class="lp-theme-toggle" data-theme-toggle aria-label="Switch light or dark">◐</button></nav>
+  <main class="lp-sheet">
 ${body}
   </main>
-  ${PROGRESS}
+  <script src="${HLJS}/highlight.min.js" defer></script>
+  <script src="/hub/sheet.js" defer></script>
+  ${THEME_BODY}
 </body>
 </html>
 `
 }
 
+// The markdown is rendered in the browser by hub/sheet.js (boxes, code, links).
 function sheetPage(markdown, title, file) {
   const data = JSON.stringify(markdown).replace(/</g, '\\u003c')
   return shell(title, file, `    <article id="sheet">Loading…</article>
   <script type="application/json" id="sheet-md">${data}</script>
-  <script src="${MARKED}"></script>
-  <script>
-    const md = JSON.parse(document.getElementById('sheet-md').textContent)
-    const article = document.getElementById('sheet')
-    article.innerHTML = marked.parse(md)
-    for (const a of article.querySelectorAll('a[href]')) {
-      const href = a.getAttribute('href')
-      if (!/^[a-z]+:/i.test(href)) a.setAttribute('href', href.replace(/\\.md(?=$|[#?])/, '.html'))
-    }
-  </script>`)
+  <script src="${MARKED}"></script>`)
 }
 
 function codePage(source, file) {
   const language = CODE[extname(file)]
   const dir = dirname(join(ROOT, file))
   const folder = ['README.md', 'index.html'].some((name) => existsSync(join(dir, name))) ? '<a href="./">← Folder</a> · ' : ''
-  return shell(basename(file), file, `    <p>${folder}<a href="${basename(file)}" download>Download ${escape(basename(file))}</a></p>
-    <pre><code class="language-${language}">${escape(source)}</code></pre>
-  <script src="${HLJS}/highlight.min.js"></script>
-  <script>hljs.highlightAll()</script>`, `<link rel="stylesheet" href="${HLJS}/styles/github.min.css">`)
+  return shell(basename(file), file, `    <h1>${escape(basename(file))}</h1>
+    <p>${folder}<a href="${basename(file)}" download>Download ${escape(basename(file))}</a></p>
+    <pre><code class="language-${language}">${escape(source)}</code></pre>`)
 }
 
-// Every page outside the hub loads the progress script: it shows which path
-// step the page is and lets the student tick it (see hub/progress.js).
-const PROGRESS = '<script src="/hub/progress.js" defer></script>'
-
-function withProgress(html) {
-  return html.includes('</body>') ? html.replace('</body>', `${PROGRESS}\n</body>`) : html
+// Every page outside the hub gets the theme and the progress script: it shows
+// which path step the page is and lets the student tick it (see hub/progress.js).
+function withTheme(html) {
+  if (!html.includes('</body>')) return html
+  const head = html.includes('</head>') ? html.replace('</head>', `  ${THEME_HEAD}\n</head>`) : html
+  return head.replace('</body>', `${THEME_BODY}\n</body>`)
 }
 
 // Source files next to a README are listed under it, so meine-loesung/ and musterloesung/
@@ -117,7 +117,7 @@ for (const file of BUCKETS.flatMap((bucket) => walk(bucket))) {
     }
   } else if (file.endsWith('.html')) {
     const html = readFileSync(source, 'utf8').replace(MD_LINK, '$1$2.html$3"')
-    writeFileSync(target, file.startsWith('hub/') ? html : withProgress(html))
+    writeFileSync(target, file.startsWith('hub/') ? html : withTheme(html))
   } else {
     copyFileSync(source, target)
     if (CODE[extname(file)]) writeFileSync(`${target}.html`, codePage(readFileSync(source, 'utf8'), file))

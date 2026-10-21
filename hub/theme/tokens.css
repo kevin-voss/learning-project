@@ -1,0 +1,129 @@
+/* One theme for the whole site: "warm paper", light first, with a dark mode.
+   Every page uses these tokens. Tracks map their own variable names onto them
+   in tracks/<track>/css/bridge.css. Names start with --lp- so they never clash
+   with a track's own variables. Dark mode follows the system unless the reader
+   picked one (html[data-theme="light" | "dark"], saved by hub/progress.js). */
+
+@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap');
+
+:root {
+  color-scheme: light;
+
+  --lp-bg: #faf8f3;
+  --lp-surface: #ffffff;
+  --lp-surface-2: #f3efe6;
+  --lp-text: #1f2933;
+  --lp-text-muted: #5f6b7a;
+  --lp-line: #e4dfd3;
+  --lp-accent: #2f6fde;
+  --lp-accent-soft: #e6eefc;
+  --lp-on-accent: #ffffff;
+
+  /* Step types and boxes */
+  --lp-read: #2f6fde;
+  --lp-do: #1f9d55;
+  --lp-check: #b7791f;
+  --lp-warn: #c0392b;
+  --lp-picture-bg: #fff6d9;
+  --lp-picture-line: #f0c75e;
+  --lp-try-bg: #e9f7ef;
+  --lp-check-bg: #fdf3e1;
+  --lp-note-bg: #eaf1fd;
+  --lp-warn-bg: #fdecec;
+  --lp-current-bg: #fff6d9;
+
+  /* Code */
+  --lp-code-bg: #f4f1ea;
+  --lp-code-text: #24292f;
+  --lp-code-keyword: #b8326e;
+  --lp-code-string: #1a7f37;
+  --lp-code-number: #0b5cad;
+  --lp-code-comment: #7c8591;
+  --lp-code-title: #6f42c1;
+
+  /* Type */
+  --lp-font: 'Atkinson Hyperlegible', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --lp-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --lp-size: 18px;
+  --lp-leading: 1.6;
+  --lp-measure: 68ch;
+
+  /* Space, shape, depth */
+  --lp-s1: 4px;
+  --lp-s2: 8px;
+  --lp-s3: 12px;
+  --lp-s4: 16px;
+  --lp-s5: 24px;
+  --lp-s6: 32px;
+  --lp-s7: 48px;
+  --lp-radius: 12px;
+  --lp-radius-sm: 8px;
+  --lp-shadow: 0 1px 2px rgba(31, 41, 51, 0.06), 0 6px 20px rgba(31, 41, 51, 0.07);
+  --lp-speed: 240ms;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --lp-bg: #15171c;
+    --lp-surface: #1d2027;
+    --lp-surface-2: #252932;
+    --lp-text: #e8e6e1;
+    --lp-text-muted: #a3a9b4;
+    --lp-line: #333844;
+    --lp-accent: #6ea0ff;
+    --lp-accent-soft: #1d2a44;
+    --lp-on-accent: #0d1424;
+    --lp-read: #6ea0ff;
+    --lp-do: #4cc38a;
+    --lp-check: #e3b341;
+    --lp-warn: #ff7b72;
+    --lp-picture-bg: #2e2814;
+    --lp-picture-line: #8a6d1f;
+    --lp-try-bg: #15301f;
+    --lp-check-bg: #33291a;
+    --lp-note-bg: #1a2640;
+    --lp-warn-bg: #3a1d1d;
+    --lp-current-bg: #2e2814;
+    --lp-code-bg: #1b1e24;
+    --lp-code-text: #e6edf3;
+    --lp-code-keyword: #ff7ab2;
+    --lp-code-string: #7ee787;
+    --lp-code-number: #79c0ff;
+    --lp-code-comment: #8b949e;
+    --lp-code-title: #d2a8ff;
+    --lp-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 6px 20px rgba(0, 0, 0, 0.35);
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --lp-bg: #15171c;
+  --lp-surface: #1d2027;
+  --lp-surface-2: #252932;
+  --lp-text: #e8e6e1;
+  --lp-text-muted: #a3a9b4;
+  --lp-line: #333844;
+  --lp-accent: #6ea0ff;
+  --lp-accent-soft: #1d2a44;
+  --lp-on-accent: #0d1424;
+  --lp-read: #6ea0ff;
+  --lp-do: #4cc38a;
+  --lp-check: #e3b341;
+  --lp-warn: #ff7b72;
+  --lp-picture-bg: #2e2814;
+  --lp-picture-line: #8a6d1f;
+  --lp-try-bg: #15301f;
+  --lp-check-bg: #33291a;
+  --lp-note-bg: #1a2640;
+  --lp-warn-bg: #3a1d1d;
+  --lp-current-bg: #2e2814;
+  --lp-code-bg: #1b1e24;
+  --lp-code-text: #e6edf3;
+  --lp-code-keyword: #ff7ab2;
+  --lp-code-string: #7ee787;
+  --lp-code-number: #79c0ff;
+  --lp-code-comment: #8b949e;
+  --lp-code-title: #d2a8ff;
+  --lp-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 6px 20px rgba(0, 0, 0, 0.35);
+}

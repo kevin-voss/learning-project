@@ -1,10 +1,12 @@
 // Learning-path progress, saved in this browser (localStorage).
-// On the landing page: ticks, stage counts, "Continue" button, student picker.
+// On the landing page: ticks, stage and level counts, the "next step" card, student picker.
 // On every other page of the site: a small bar that says which step this is,
-// with "Done, next step" (steps come from /hub/path.json, written by build-site.mjs).
+// with "I did this" (steps come from /hub/path.json, written by build-site.mjs).
+// On every page: the light/dark toggle ([data-theme-toggle]).
 (function () {
   const KEY = 'learning-project:done'
   const STUDENT_KEY = 'learning-project:student'
+  const THEME_KEY = 'learning-project:theme'
 
   function load(key, fallback) {
     try {
@@ -25,6 +27,20 @@
 
   const done = new Set(load(KEY, []))
   const persist = () => save(KEY, [...done])
+
+  // Light or dark: the reader's choice wins, otherwise the system decides.
+  function theme() {
+    const root = document.documentElement
+    const saved = load(THEME_KEY, null)
+    if (saved) root.dataset.theme = saved
+    const isDark = () => root.dataset.theme === 'dark' || (!root.dataset.theme && matchMedia('(prefers-color-scheme: dark)').matches)
+    for (const button of document.querySelectorAll('[data-theme-toggle]')) {
+      button.addEventListener('click', () => {
+        root.dataset.theme = isDark() ? 'light' : 'dark'
+        save(THEME_KEY, root.dataset.theme)
+      })
+    }
+  }
 
   // "/tracks/java/topics/arrays/index.html" and "/tracks/java/topics/arrays/" are one page.
   function normalize(url) {
@@ -51,6 +67,12 @@
         stage.classList.toggle('complete', count === steps.length)
         if (openCurrent) stage.open = stage.contains(current) || (!current && stage.hasAttribute('data-optional'))
       }
+      for (const level of document.querySelectorAll('[data-level]')) {
+        const steps = [...level.querySelectorAll('[data-step]')]
+        const count = steps.filter((row) => done.has(row.dataset.step)).length
+        level.querySelector('.level-count').textContent = `${count} / ${steps.length} steps`
+        level.classList.toggle('complete', count === steps.length)
+      }
 
       const count = main.filter((row) => done.has(row.dataset.step)).length
       const percent = Math.round((count / main.length) * 100)
@@ -61,15 +83,31 @@
       pill.textContent = `${percent}%`
       pill.hidden = count === 0
 
+      const text = (id, value) => { document.getElementById(id).textContent = value }
       if (!current) {
-        continueButton.textContent = 'Path complete. Pick an extra'
+        text('next-label', 'Path complete 🎉')
+        text('next-where', 'You finished every level.')
+        text('next-title', 'Pick an extra, or go back to any step.')
+        document.getElementById('next-type').hidden = true
+        text('next-time', '')
+        continueButton.textContent = 'See the extras →'
         continueButton.href = '#path'
         return
       }
       const link = current.querySelector('.step-title a')
       const title = current.querySelector('.step-title').textContent.trim()
       const number = current.querySelector('.step-num').textContent
-      continueButton.textContent = count === 0 ? `Start with step 1: ${title}` : `Continue with step ${number}: ${title}`
+      const stage = current.closest('.stage')
+      const level = current.closest('[data-level]')
+      text('next-label', count === 0 ? 'Your first step' : 'Your next step')
+      text('next-where', [level?.dataset.levelTitle, `${stage.querySelector('.stage-num').textContent} · ${stage.querySelector('.stage-title').textContent}`].filter(Boolean).join(' · '))
+      text('next-title', title)
+      const tag = document.getElementById('next-type')
+      tag.hidden = false
+      tag.className = `lp-tag ${current.dataset.type}`
+      tag.textContent = current.querySelector('.step-type').textContent
+      text('next-time', current.dataset.time ?? '')
+      continueButton.textContent = `${count === 0 ? 'Start' : 'Continue with'} step ${number} →`
       continueButton.href = link ? link.getAttribute('href') : `#${current.id}`
     }
 
@@ -105,21 +143,7 @@
     render(true)
   }
 
-  const BAR_CSS = `
-    .lp-bar { position: fixed; left: 12px; bottom: 12px; z-index: 9999; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
-      max-width: calc(100vw - 24px); padding: 8px 10px 8px 14px; border-radius: 14px; background: #172033; color: #fff;
-      font: 500 13px/1.3 system-ui, -apple-system, "Segoe UI", sans-serif; box-shadow: 0 6px 24px rgba(0,0,0,.25); }
-    .lp-bar a { color: #fff; }
-    .lp-bar .lp-step { opacity: .8; }
-    .lp-bar button, .lp-bar .lp-next { border: 0; border-radius: 999px; padding: 6px 12px; font: 700 13px/1 system-ui, sans-serif;
-      cursor: pointer; text-decoration: none; background: #22c55e; color: #052e16; }
-    .lp-bar .lp-next { background: #fff; color: #172033; }
-    @media print { .lp-bar { display: none; } }`
-
   function stepBar(steps) {
-    const style = document.createElement('style')
-    style.textContent = BAR_CSS
-    document.head.appendChild(style)
     const bar = document.createElement('div')
     bar.className = 'lp-bar'
     document.body.appendChild(bar)
@@ -169,6 +193,7 @@
     render()
   }
 
+  theme()
   if (document.querySelector('[data-step]')) {
     landing()
   } else if (location.protocol.startsWith('http')) {

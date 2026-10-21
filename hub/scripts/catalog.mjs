@@ -10,7 +10,7 @@
 import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
 import { basename, dirname, join, relative, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { STAGES } from '../path.mjs'
+import { LEVELS, STAGES } from '../path.mjs'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const HUB = join(ROOT, 'hub')
@@ -237,27 +237,39 @@ const CS_LESSONS = lessonIds('tracks/computer-science/js/data')
 
 const TYPE_LABEL = { read: 'Read', do: 'Do', check: 'Check' }
 
-function renderPath() {
-  const steps = pathSteps()
-  return STAGES.map((stage, index) => {
-    const items = steps.filter((step) => step.stage === stage.id).map((step) => {
-      const label = step.href ? `<a href="${href(step.href)}">${escape(step.title)}</a>` : `<span>${escape(step.title)}</span>`
-      return `<li class="step ${step.type}" id="${step.id}" data-step="${step.id}"${step.optional ? ' data-optional' : ''}>
+function renderStage(stage, number, steps) {
+  const items = steps.filter((step) => step.stage === stage.id).map((step) => {
+    const label = step.href ? `<a href="${href(step.href)}">${escape(step.title)}</a>` : `<span>${escape(step.title)}</span>`
+    return `<li class="step ${step.type}" id="${step.id}" data-step="${step.id}" data-type="${step.type}"${step.time ? ` data-time="${escape(step.time)}"` : ''}${step.optional ? ' data-optional' : ''}>
             <input type="checkbox" aria-label="Done: ${escape(step.title)}">
             <span class="step-num">${step.n ?? '+'}</span>
             <span class="step-type">${TYPE_LABEL[step.type]}</span>
             <span class="step-title">${label}</span>
             ${step.time ? `<span class="step-time">${escape(step.time)}</span>` : ''}
           </li>`
-    })
-    return `<details class="stage" data-stage="${stage.id}"${stage.optional ? ' data-optional' : ''}>
-        <summary><span class="stage-num">${stage.optional ? 'Extra' : `Stage ${index + 1}`}</span><span class="stage-title">${escape(stage.title)}</span><span class="stage-count"></span></summary>
+  })
+  return `<details class="stage" data-stage="${stage.id}"${stage.optional ? ' data-optional' : ''}>
+        <summary><span class="stage-num">${stage.optional ? 'Extra' : `Stage ${number}`}</span><span class="stage-title">${escape(stage.title)}</span><span class="stage-count"></span></summary>
         <p class="stage-goal">${escape(stage.goal)}</p>
         <ol class="steps">
           ${items.join('\n          ')}
         </ol>
       </details>`
-  }).join('\n      ')
+}
+
+// Levels → stages → steps. Stage numbers run on across levels; extras come last.
+function renderPath() {
+  const steps = pathSteps()
+  const main = STAGES.filter((stage) => !stage.optional)
+  const levels = LEVELS.map((level, index) => {
+    const stages = main.filter((stage) => stage.level === level.id)
+    return `<section class="level" data-level="${level.id}" data-level-title="Level ${index + 1} · ${escape(level.title)}">
+        <header class="level-head"><span class="level-num">Level ${index + 1}</span><h3>${escape(level.title)}</h3><p>${escape(level.goal)}</p><span class="level-count"></span></header>
+        ${stages.map((stage) => renderStage(stage, main.indexOf(stage) + 1, steps)).join('\n        ')}
+      </section>`
+  })
+  const extras = STAGES.filter((stage) => stage.optional).map((stage) => renderStage(stage, null, steps))
+  return [...levels, ...extras].join('\n      ')
 }
 
 function renderStudents() {

@@ -4,40 +4,50 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Learning Project</title>
+  <meta name="description" content="Learn to code from zero: one numbered path from your first line of code to a real Java backend.">
+  <script>try { const t = JSON.parse(localStorage.getItem('learning-project:theme')); if (t) document.documentElement.dataset.theme = t } catch {}</script>
+  <link rel="stylesheet" href="theme/tokens.css">
+  <link rel="stylesheet" href="theme/components.css">
   <link rel="stylesheet" href="landing.css">
 </head>
-<body>
+<body class="lp-page">
   <header class="site-header">
     <div class="container nav">
-      <div class="brand"><div class="brand-mark">LP</div><span>Learning Project</span></div>
+      <a class="brand" href="#top"><span class="brand-mark">LP</span><span>Learning Project</span></a>
       <nav class="nav-links" aria-label="Primary">
         <a href="#path">The path</a>
         <a href="#tasks">My tasks</a>
         <a href="#lookup">Look it up</a>
-        <a href="#local">On your computer</a>
+        <a href="#help">Help</a>
       </nav>
       <span class="progress-pill" id="progress-pill" hidden></span>
+      <button type="button" class="lp-theme-toggle" data-theme-toggle aria-label="Switch light or dark">◐</button>
     </div>
   </header>
 
-  <main>
+  <main id="top">
     <section class="hero">
-      <div class="container">
-        <h1>Learn to code, one step at a time</h1>
-        <p class="hero-lead">Start at step 1 and go down the list. Nothing is skipped and nothing is assumed. When a step is done, tick it. This browser remembers where you are.</p>
-        <div class="hero-progress" id="hero-progress" hidden>
-          <div class="bar"><span id="progress-bar"></span></div>
-          <span id="progress-text"></span>
+      <div class="container hero-grid">
+        <div>
+          <h1>Learn to code from zero</h1>
+          <p class="hero-lead">One path with numbered steps, from your very first line of code to a real Java backend. You need no knowledge. Do the steps in order and tick each one. This browser remembers where you are.</p>
+          <ol class="how">
+            <li><span class="lp-tag read">Read</span>a short page</li>
+            <li><span class="lp-tag do">Do</span>build or practise it</li>
+            <li><span class="lp-tag check">Check</span>can you really do it?</li>
+          </ol>
         </div>
-        <div class="quick-actions">
-          <a class="button primary" id="continue" href="#path">Start with step 1</a>
-          <a class="button secondary" href="#tasks">My tasks</a>
-        </div>
-        <ol class="how">
-          <li><span class="step-type read-tag">Read</span>Read the page on this website.</li>
-          <li><span class="step-type do-tag">Do</span>Build or practise it on your computer.</li>
-          <li><span class="step-type check-tag">Check</span>Can you really do it? Then tick it and move on.</li>
-        </ol>
+        <aside class="next-card lp-card" aria-live="polite">
+          <p class="next-label" id="next-label">Your first step</p>
+          <p class="next-where" id="next-where">Level 1 · Beginner · Stage 1 · Welcome</p>
+          <p class="next-title" id="next-title">What is a program? A recipe for a computer</p>
+          <p class="next-meta"><span class="lp-tag read" id="next-type">Read</span><span id="next-time">10 min</span></p>
+          <a class="lp-btn" id="continue" href="#path">Start step 1 →</a>
+          <div class="hero-progress" id="hero-progress" hidden>
+            <div class="bar"><span id="progress-bar"></span></div>
+            <span id="progress-text"></span>
+          </div>
+        </aside>
       </div>
     </section>
 
@@ -45,22 +55,24 @@
       <div class="container">
         <div class="section-head">
           <h2>The path</h2>
-          <p>Stages open one after another. The highlighted step is where you are.</p>
+          <p>Four levels, one after the other. Your current stage is open and your next step is highlighted.</p>
         </div>
         <div class="stages">
       <!-- path:start -->
-      <details class="stage" data-stage="welcome">
+      <section class="level" data-level="beginner" data-level-title="Level 1 · Beginner">
+        <header class="level-head"><span class="level-num">Level 1</span><h3>Beginner</h3><p>Your first code and how the web works.</p><span class="level-count"></span></header>
+        <details class="stage" data-stage="welcome">
         <summary><span class="stage-num">Stage 1</span><span class="stage-title">Welcome</span><span class="stage-count"></span></summary>
         <p class="stage-goal">No knowledge needed. Find out what a program is and write your first one.</p>
         <ol class="steps">
-          <li class="step read" id="why-code" data-step="why-code">
+          <li class="step read" id="why-code" data-step="why-code" data-type="read" data-time="10 min">
             <input type="checkbox" aria-label="Done: What is a program? A recipe for a computer">
             <span class="step-num">1</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../sheets/start/README.md">What is a program? A recipe for a computer</a></span>
             <span class="step-time">10 min</span>
           </li>
-          <li class="step do" id="first-program" data-step="first-program">
+          <li class="step do" id="first-program" data-step="first-program" data-type="do" data-time="15 min">
             <input type="checkbox" aria-label="Done: Your first program: say hello in the browser">
             <span class="step-num">2</span>
             <span class="step-type">Do</span>
@@ -69,39 +81,39 @@
           </li>
         </ol>
       </details>
-      <details class="stage" data-stage="start">
+        <details class="stage" data-stage="start">
         <summary><span class="stage-num">Stage 2</span><span class="stage-title">Your computer</span><span class="stage-count"></span></summary>
         <p class="stage-goal">Learn the terminal and get this repository onto your computer.</p>
         <ol class="steps">
-          <li class="step do" id="terminal" data-step="terminal">
+          <li class="step do" id="terminal" data-step="terminal" data-type="do" data-time="1 h">
             <input type="checkbox" aria-label="Done: The terminal: try the first commands in the playground">
             <span class="step-num">3</span>
             <span class="step-type">Do</span>
             <span class="step-title"><a href="../tracks/computer-science/index.html#linux-terminal-os">The terminal: try the first commands in the playground</a></span>
             <span class="step-time">1 h</span>
           </li>
-          <li class="step do" id="setup-tools" data-step="setup-tools">
+          <li class="step do" id="setup-tools" data-step="setup-tools" data-type="do" data-time="1 h">
             <input type="checkbox" aria-label="Done: Get set up: GitHub, Git, an editor, this repo, your own branch">
             <span class="step-num">4</span>
             <span class="step-type">Do</span>
             <span class="step-title"><a href="../sheets/setup/README.md">Get set up: GitHub, Git, an editor, this repo, your own branch</a></span>
             <span class="step-time">1 h</span>
           </li>
-          <li class="step do" id="git-sheet" data-step="git-sheet">
+          <li class="step do" id="git-sheet" data-step="git-sheet" data-type="do" data-time="30 min">
             <input type="checkbox" aria-label="Done: Git sheet: commit and push your first change">
             <span class="step-num">5</span>
             <span class="step-type">Do</span>
             <span class="step-title"><a href="../sheets/git/README.md">Git sheet: commit and push your first change</a></span>
             <span class="step-time">30 min</span>
           </li>
-          <li class="step read" id="git-intro" data-step="git-intro">
+          <li class="step read" id="git-intro" data-step="git-intro" data-type="read" data-time="30 min">
             <input type="checkbox" aria-label="Done: What Git really does: snapshots and branches">
             <span class="step-num">6</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/computer-science/index.html#git-collaboration">What Git really does: snapshots and branches</a></span>
             <span class="step-time">30 min</span>
           </li>
-          <li class="step check" id="gate-start" data-step="gate-start">
+          <li class="step check" id="gate-start" data-step="gate-start" data-type="check">
             <input type="checkbox" aria-label="Done: I can move around with cd and ls, this repo is on my computer, and my branch is on GitHub.">
             <span class="step-num">7</span>
             <span class="step-type">Check</span>
@@ -110,39 +122,39 @@
           </li>
         </ol>
       </details>
-      <details class="stage" data-stage="html-css">
+        <details class="stage" data-stage="html-css">
         <summary><span class="stage-num">Stage 3</span><span class="stage-title">Your first web page</span><span class="stage-count"></span></summary>
         <p class="stage-goal">Build a page that looks good on a phone and on a laptop.</p>
         <ol class="steps">
-          <li class="step read" id="html-sheet" data-step="html-sheet">
+          <li class="step read" id="html-sheet" data-step="html-sheet" data-type="read" data-time="10 min">
             <input type="checkbox" aria-label="Done: HTML sheet">
             <span class="step-num">8</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../sheets/html/README.md">HTML sheet</a></span>
             <span class="step-time">10 min</span>
           </li>
-          <li class="step read" id="css-sheet" data-step="css-sheet">
+          <li class="step read" id="css-sheet" data-step="css-sheet" data-type="read" data-time="15 min">
             <input type="checkbox" aria-label="Done: CSS sheet">
             <span class="step-num">9</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../sheets/css/README.md">CSS sheet</a></span>
             <span class="step-time">15 min</span>
           </li>
-          <li class="step read" id="p00-intro" data-step="p00-intro">
+          <li class="step read" id="p00-intro" data-step="p00-intro" data-type="read" data-time="5 min">
             <input type="checkbox" aria-label="Done: Project 1: what you will build">
             <span class="step-num">10</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../projects/01-about-me/README.md">Project 1: what you will build</a></span>
             <span class="step-time">5 min</span>
           </li>
-          <li class="step do" id="p00-build" data-step="p00-build">
+          <li class="step do" id="p00-build" data-step="p00-build" data-type="do" data-time="2–4 h">
             <input type="checkbox" aria-label="Done: Project 1: build your About-me page, step by step">
             <span class="step-num">11</span>
             <span class="step-type">Do</span>
-            <span class="step-title"><a href="../projects/01-about-me/docs/step-by-step.md">Project 1: build your About-me page, step by step</a></span>
+            <span class="step-title"><a href="../projects/01-about-me/step-by-step.md">Project 1: build your About-me page, step by step</a></span>
             <span class="step-time">2–4 h</span>
           </li>
-          <li class="step check" id="gate-html" data-step="gate-html">
+          <li class="step check" id="gate-html" data-step="gate-html" data-type="check">
             <input type="checkbox" aria-label="Done: My page has headings, a link, a flex layout and one media query.">
             <span class="step-num">12</span>
             <span class="step-type">Check</span>
@@ -151,666 +163,801 @@
           </li>
         </ol>
       </details>
-      <details class="stage" data-stage="javascript">
+        <details class="stage" data-stage="javascript">
         <summary><span class="stage-num">Stage 4</span><span class="stage-title">First code: JavaScript</span><span class="stage-count"></span></summary>
         <p class="stage-goal">Variables, ifs, loops and functions, practised with small tests.</p>
         <ol class="steps">
-          <li class="step read" id="drills-intro" data-step="drills-intro">
+          <li class="step read" id="drills-intro" data-step="drills-intro" data-type="read" data-time="15 min">
             <input type="checkbox" aria-label="Done: How the drills work">
             <span class="step-num">13</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../drills/javascript/README.md">How the drills work</a></span>
             <span class="step-time">15 min</span>
           </li>
-          <li class="step do" id="drill-variables" data-step="drill-variables">
+          <li class="step do" id="drill-variables" data-step="drill-variables" data-type="do" data-time="1 h">
             <input type="checkbox" aria-label="Done: Drill: variables">
             <span class="step-num">14</span>
             <span class="step-type">Do</span>
             <span class="step-title"><a href="../drills/javascript/variables/README.md">Drill: variables</a></span>
             <span class="step-time">1 h</span>
           </li>
-          <li class="step do" id="drill-math" data-step="drill-math">
+          <li class="step do" id="drill-math" data-step="drill-math" data-type="do" data-time="1 h">
             <input type="checkbox" aria-label="Done: Drill: math">
             <span class="step-num">15</span>
             <span class="step-type">Do</span>
             <span class="step-title"><a href="../drills/javascript/math/README.md">Drill: math</a></span>
             <span class="step-time">1 h</span>
           </li>
-          <li class="step do" id="drill-strings" data-step="drill-strings">
+          <li class="step do" id="drill-strings" data-step="drill-strings" data-type="do" data-time="1 h">
             <input type="checkbox" aria-label="Done: Drill: strings">
             <span class="step-num">16</span>
             <span class="step-type">Do</span>
             <span class="step-title"><a href="../drills/javascript/strings/README.md">Drill: strings</a></span>
             <span class="step-time">1 h</span>
           </li>
-          <li class="step read" id="cs-logic" data-step="cs-logic">
+          <li class="step read" id="cs-logic" data-step="cs-logic" data-type="read" data-time="15 min">
             <input type="checkbox" aria-label="Done: True or false: and, or, not">
             <span class="step-num">17</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/computer-science/index.html#logical-operators">True or false: and, or, not</a></span>
             <span class="step-time">15 min</span>
           </li>
-          <li class="step do" id="drill-conditionals" data-step="drill-conditionals">
+          <li class="step do" id="drill-conditionals" data-step="drill-conditionals" data-type="do" data-time="1 h">
             <input type="checkbox" aria-label="Done: Drill: if / else">
             <span class="step-num">18</span>
             <span class="step-type">Do</span>
             <span class="step-title"><a href="../drills/javascript/conditionals/README.md">Drill: if / else</a></span>
             <span class="step-time">1 h</span>
           </li>
-          <li class="step do" id="drill-loops" data-step="drill-loops">
+          <li class="step do" id="drill-loops" data-step="drill-loops" data-type="do" data-time="1 h">
             <input type="checkbox" aria-label="Done: Drill: loops">
             <span class="step-num">19</span>
             <span class="step-type">Do</span>
             <span class="step-title"><a href="../drills/javascript/loops/README.md">Drill: loops</a></span>
             <span class="step-time">1 h</span>
           </li>
-          <li class="step do" id="drill-arrays" data-step="drill-arrays">
+          <li class="step do" id="drill-arrays" data-step="drill-arrays" data-type="do" data-time="1 h">
             <input type="checkbox" aria-label="Done: Drill: arrays">
             <span class="step-num">20</span>
             <span class="step-type">Do</span>
             <span class="step-title"><a href="../drills/javascript/arrays/README.md">Drill: arrays</a></span>
             <span class="step-time">1 h</span>
           </li>
-          <li class="step read" id="cs-arrays" data-step="cs-arrays">
+          <li class="step read" id="cs-arrays" data-step="cs-arrays" data-type="read" data-time="20 min">
             <input type="checkbox" aria-label="Done: Arrays: a shelf with numbered boxes">
             <span class="step-num">21</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/computer-science/index.html#arrays">Arrays: a shelf with numbered boxes</a></span>
             <span class="step-time">20 min</span>
           </li>
-          <li class="step do" id="drill-functions" data-step="drill-functions">
+          <li class="step do" id="drill-functions" data-step="drill-functions" data-type="do" data-time="1 h">
             <input type="checkbox" aria-label="Done: Drill: functions">
             <span class="step-num">22</span>
             <span class="step-type">Do</span>
             <span class="step-title"><a href="../drills/javascript/functions/README.md">Drill: functions</a></span>
             <span class="step-time">1 h</span>
           </li>
-          <li class="step do" id="drill-objects" data-step="drill-objects">
+          <li class="step do" id="drill-objects" data-step="drill-objects" data-type="do" data-time="1 h">
             <input type="checkbox" aria-label="Done: Drill: objects">
             <span class="step-num">23</span>
             <span class="step-type">Do</span>
             <span class="step-title"><a href="../drills/javascript/objects/README.md">Drill: objects</a></span>
             <span class="step-time">1 h</span>
           </li>
+          <li class="step check" id="gate-js-basics" data-step="gate-js-basics" data-type="check">
+            <input type="checkbox" aria-label="Done: I can write a function with an if and a loop inside, and its tests turn green.">
+            <span class="step-num">24</span>
+            <span class="step-type">Check</span>
+            <span class="step-title"><span>I can write a function with an if and a loop inside, and its tests turn green.</span></span>
+            
+          </li>
         </ol>
       </details>
-      <details class="stage" data-stage="web">
-        <summary><span class="stage-num">Stage 5</span><span class="stage-title">How the web works</span><span class="stage-count"></span></summary>
+        <details class="stage" data-stage="dom">
+        <summary><span class="stage-num">Stage 5</span><span class="stage-title">Make pages come alive</span><span class="stage-count"></span></summary>
+        <p class="stage-goal">Your JavaScript changes the page: clicks, lists that grow, a game.</p>
+        <ol class="steps">
+          <li class="step read" id="js-dom" data-step="js-dom" data-type="read" data-time="20 min">
+            <input type="checkbox" aria-label="Done: The page tree: clicks and changes">
+            <span class="step-num">25</span>
+            <span class="step-type">Read</span>
+            <span class="step-title"><a href="../sheets/javascript/dom.md">The page tree: clicks and changes</a></span>
+            <span class="step-time">20 min</span>
+          </li>
+          <li class="step read" id="json" data-step="json" data-type="read" data-time="10 min">
+            <input type="checkbox" aria-label="Done: JSON: data in a parcel">
+            <span class="step-num">26</span>
+            <span class="step-type">Read</span>
+            <span class="step-title"><a href="../sheets/javascript/json.md">JSON: data in a parcel</a></span>
+            <span class="step-time">10 min</span>
+          </li>
+          <li class="step do" id="p-shop-web" data-step="p-shop-web" data-type="do" data-time="2–3 h">
+            <input type="checkbox" aria-label="Done: Project 2: shopping list in the browser">
+            <span class="step-num">27</span>
+            <span class="step-type">Do</span>
+            <span class="step-title"><a href="../projects/02-shopping-list-web/README.md">Project 2: shopping list in the browser</a></span>
+            <span class="step-time">2–3 h</span>
+          </li>
+          <li class="step do" id="p-tictactoe" data-step="p-tictactoe" data-type="do" data-time="2–4 h">
+            <input type="checkbox" aria-label="Done: Project 3: tic-tac-toe">
+            <span class="step-num">28</span>
+            <span class="step-type">Do</span>
+            <span class="step-title"><a href="../projects/03-tic-tac-toe/README.md">Project 3: tic-tac-toe</a></span>
+            <span class="step-time">2–4 h</span>
+          </li>
+          <li class="step check" id="gate-dom" data-step="gate-dom" data-type="check">
+            <input type="checkbox" aria-label="Done: A click on my page changes the page, and my list is still there after a reload.">
+            <span class="step-num">29</span>
+            <span class="step-type">Check</span>
+            <span class="step-title"><span>A click on my page changes the page, and my list is still there after a reload.</span></span>
+            
+          </li>
+        </ol>
+      </details>
+        <details class="stage" data-stage="web">
+        <summary><span class="stage-num">Stage 6</span><span class="stage-title">How the web works</span><span class="stage-count"></span></summary>
         <p class="stage-goal">What happens between typing a URL and seeing a page. Then an app that talks to the internet.</p>
         <ol class="steps">
-          <li class="step read" id="web-big" data-step="web-big">
+          <li class="step read" id="web-big" data-step="web-big" data-type="read" data-time="15 min">
             <input type="checkbox" aria-label="Done: How the web fits together">
-            <span class="step-num">24</span>
+            <span class="step-num">30</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/computer-science/index.html#web-big-picture">How the web fits together</a></span>
             <span class="step-time">15 min</span>
           </li>
-          <li class="step read" id="web-client-server" data-step="web-client-server">
+          <li class="step read" id="web-client-server" data-step="web-client-server" data-type="read" data-time="15 min">
             <input type="checkbox" aria-label="Done: Client and server">
-            <span class="step-num">25</span>
+            <span class="step-num">31</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/computer-science/index.html#client-server">Client and server</a></span>
             <span class="step-time">15 min</span>
           </li>
-          <li class="step read" id="web-network" data-step="web-network">
+          <li class="step read" id="web-network" data-step="web-network" data-type="read" data-time="20 min">
             <input type="checkbox" aria-label="Done: Networks, IPs, ports and requests">
-            <span class="step-num">26</span>
+            <span class="step-num">32</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/computer-science/index.html#networks-ips-requests">Networks, IPs, ports and requests</a></span>
             <span class="step-time">20 min</span>
           </li>
-          <li class="step read" id="web-http" data-step="web-http">
+          <li class="step read" id="web-http" data-step="web-http" data-type="read" data-time="30 min">
             <input type="checkbox" aria-label="Done: HTTP requests and responses">
-            <span class="step-num">27</span>
+            <span class="step-num">33</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/computer-science/index.html#http-requests-responses">HTTP requests and responses</a></span>
             <span class="step-time">30 min</span>
           </li>
-          <li class="step read" id="js-sheet" data-step="js-sheet">
+          <li class="step read" id="js-sheet" data-step="js-sheet" data-type="read" data-time="15 min">
             <input type="checkbox" aria-label="Done: fetch and await: asking the internet">
-            <span class="step-num">28</span>
+            <span class="step-num">34</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../sheets/javascript/README.md">fetch and await: asking the internet</a></span>
             <span class="step-time">15 min</span>
           </li>
-          <li class="step read" id="p01-intro" data-step="p01-intro">
+          <li class="step read" id="p01-intro" data-step="p01-intro" data-type="read" data-time="5 min">
             <input type="checkbox" aria-label="Done: Project 4: what you will build">
-            <span class="step-num">29</span>
+            <span class="step-num">35</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../projects/04-weather-dashboard/README.md">Project 4: what you will build</a></span>
             <span class="step-time">5 min</span>
           </li>
-          <li class="step do" id="p01-build" data-step="p01-build">
+          <li class="step do" id="p01-build" data-step="p01-build" data-type="do" data-time="6–10 h">
             <input type="checkbox" aria-label="Done: Project 4: build the weather dashboard">
-            <span class="step-num">30</span>
+            <span class="step-num">36</span>
             <span class="step-type">Do</span>
-            <span class="step-title"><a href="../projects/04-weather-dashboard/docs/step-by-step.md">Project 4: build the weather dashboard</a></span>
+            <span class="step-title"><a href="../projects/04-weather-dashboard/step-by-step.md">Project 4: build the weather dashboard</a></span>
             <span class="step-time">6–10 h</span>
           </li>
-          <li class="step check" id="gate-web" data-step="gate-web">
+          <li class="step check" id="gate-web" data-step="gate-web" data-type="check">
             <input type="checkbox" aria-label="Done: I can say what a port is and what is inside an HTTP request.">
-            <span class="step-num">31</span>
+            <span class="step-num">37</span>
             <span class="step-type">Check</span>
             <span class="step-title"><span>I can say what a port is and what is inside an HTTP request.</span></span>
             
           </li>
-          <li class="step check" id="gate-js" data-step="gate-js">
+          <li class="step check" id="gate-js" data-step="gate-js" data-type="check">
             <input type="checkbox" aria-label="Done: I search a city and see live weather, and I can say what await waits for.">
-            <span class="step-num">32</span>
+            <span class="step-num">38</span>
             <span class="step-type">Check</span>
             <span class="step-title"><span>I search a city and see live weather, and I can say what await waits for.</span></span>
             
           </li>
         </ol>
       </details>
-      <details class="stage" data-stage="java-a">
-        <summary><span class="stage-num">Stage 6</span><span class="stage-title">Java 1 · The language</span><span class="stage-count"></span></summary>
+      </section>
+      <section class="level" data-level="java" data-level-title="Level 2 · Java">
+        <header class="level-head"><span class="level-num">Level 2</span><h3>Java</h3><p>The main language, from a first program to tested projects.</p><span class="level-count"></span></header>
+        <details class="stage" data-stage="java-a">
+        <summary><span class="stage-num">Stage 7</span><span class="stage-title">Java 1 · The language</span><span class="stage-count"></span></summary>
         <p class="stage-goal">Install Java, write a first program, then types, ifs, loops, methods and classes.</p>
         <ol class="steps">
-          <li class="step do" id="java-start" data-step="java-start">
+          <li class="step do" id="java-start" data-step="java-start" data-type="do" data-time="1 h">
             <input type="checkbox" aria-label="Done: Getting started: install Java, run your first program">
-            <span class="step-num">33</span>
+            <span class="step-num">39</span>
             <span class="step-type">Do</span>
             <span class="step-title"><a href="../tracks/java/topics/getting-started/index.html">Getting started: install Java, run your first program</a></span>
             <span class="step-time">1 h</span>
           </li>
-          <li class="step read" id="java-syntax" data-step="java-syntax">
+          <li class="step read" id="java-syntax" data-step="java-syntax" data-type="read" data-time="30 min">
             <input type="checkbox" aria-label="Done: Syntax fundamentals">
-            <span class="step-num">34</span>
+            <span class="step-num">40</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/java/topics/syntax-fundamentals/index.html">Syntax fundamentals</a></span>
             <span class="step-time">30 min</span>
           </li>
-          <li class="step read" id="java-types" data-step="java-types">
+          <li class="step read" id="java-types" data-step="java-types" data-type="read" data-time="30 min">
             <input type="checkbox" aria-label="Done: Types and variables">
-            <span class="step-num">35</span>
+            <span class="step-num">41</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/java/topics/types-and-variables/index.html">Types and variables</a></span>
             <span class="step-time">30 min</span>
           </li>
-          <li class="step read" id="java-operators" data-step="java-operators">
+          <li class="step read" id="java-operators" data-step="java-operators" data-type="read" data-time="30 min">
             <input type="checkbox" aria-label="Done: Operators">
-            <span class="step-num">36</span>
+            <span class="step-num">42</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/java/topics/operators/index.html">Operators</a></span>
             <span class="step-time">30 min</span>
           </li>
-          <li class="step read" id="java-control" data-step="java-control">
+          <li class="step read" id="java-control" data-step="java-control" data-type="read" data-time="45 min">
             <input type="checkbox" aria-label="Done: Control flow: if, switch, loops">
-            <span class="step-num">37</span>
+            <span class="step-num">43</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/java/topics/control-flow/index.html">Control flow: if, switch, loops</a></span>
             <span class="step-time">45 min</span>
           </li>
-          <li class="step read" id="java-methods" data-step="java-methods">
+          <li class="step read" id="java-methods" data-step="java-methods" data-type="read" data-time="30 min">
             <input type="checkbox" aria-label="Done: Methods">
-            <span class="step-num">38</span>
+            <span class="step-num">44</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/java/topics/methods/index.html">Methods</a></span>
             <span class="step-time">30 min</span>
           </li>
-          <li class="step read" id="java-arrays" data-step="java-arrays">
+          <li class="step read" id="java-arrays" data-step="java-arrays" data-type="read" data-time="30 min">
             <input type="checkbox" aria-label="Done: Arrays">
-            <span class="step-num">39</span>
+            <span class="step-num">45</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/java/topics/arrays/index.html">Arrays</a></span>
             <span class="step-time">30 min</span>
           </li>
-          <li class="step read" id="java-strings" data-step="java-strings">
+          <li class="step read" id="java-strings" data-step="java-strings" data-type="read" data-time="30 min">
             <input type="checkbox" aria-label="Done: Strings and text">
-            <span class="step-num">40</span>
+            <span class="step-num">46</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/java/topics/strings/index.html">Strings and text</a></span>
             <span class="step-time">30 min</span>
           </li>
-          <li class="step read" id="java-classes" data-step="java-classes">
+          <li class="step read" id="java-classes" data-step="java-classes" data-type="read" data-time="45 min">
             <input type="checkbox" aria-label="Done: Classes and objects">
-            <span class="step-num">41</span>
+            <span class="step-num">47</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/java/topics/classes-and-objects/index.html">Classes and objects</a></span>
             <span class="step-time">45 min</span>
           </li>
-          <li class="step read" id="cs-memory" data-step="cs-memory">
+          <li class="step read" id="cs-memory" data-step="cs-memory" data-type="read" data-time="20 min">
             <input type="checkbox" aria-label="Done: Where do my variables live? Memory and RAM">
-            <span class="step-num">42</span>
+            <span class="step-num">48</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/computer-science/index.html#memory-model">Where do my variables live? Memory and RAM</a></span>
             <span class="step-time">20 min</span>
           </li>
-          <li class="step read" id="cs-stack-heap" data-step="cs-stack-heap">
+          <li class="step read" id="cs-stack-heap" data-step="cs-stack-heap" data-type="read" data-time="20 min">
             <input type="checkbox" aria-label="Done: Stack, heap and garbage collection">
-            <span class="step-num">43</span>
+            <span class="step-num">49</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/computer-science/index.html#stack-heap-gc">Stack, heap and garbage collection</a></span>
             <span class="step-time">20 min</span>
           </li>
-          <li class="step check" id="gate-java-a" data-step="gate-java-a">
+          <li class="step do" id="p-password" data-step="p-password" data-type="do" data-time="2–3 h">
+            <input type="checkbox" aria-label="Done: Project 5: build a password generator">
+            <span class="step-num">50</span>
+            <span class="step-type">Do</span>
+            <span class="step-title"><a href="../projects/05-password-generator/README.md">Project 5: build a password generator</a></span>
+            <span class="step-time">2–3 h</span>
+          </li>
+          <li class="step check" id="gate-java-a" data-step="gate-java-a" data-type="check">
             <input type="checkbox" aria-label="Done: I put classes in a package, compile from the terminal, and explain class vs object.">
-            <span class="step-num">44</span>
+            <span class="step-num">51</span>
             <span class="step-type">Check</span>
             <span class="step-title"><span>I put classes in a package, compile from the terminal, and explain class vs object.</span></span>
             
           </li>
         </ol>
       </details>
-      <details class="stage" data-stage="java-b">
-        <summary><span class="stage-num">Stage 7</span><span class="stage-title">Java 2 · Everyday tools</span><span class="stage-count"></span></summary>
+        <details class="stage" data-stage="java-b">
+        <summary><span class="stage-num">Stage 8</span><span class="stage-title">Java 2 · Everyday tools</span><span class="stage-count"></span></summary>
         <p class="stage-goal">Lists, maps, errors and files: what real programs use every day.</p>
         <ol class="steps">
-          <li class="step read" id="java-collections" data-step="java-collections">
+          <li class="step read" id="java-collections" data-step="java-collections" data-type="read" data-time="1 h">
             <input type="checkbox" aria-label="Done: Collections: ArrayList, HashMap, HashSet">
-            <span class="step-num">45</span>
+            <span class="step-num">52</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/java/topics/collections/index.html">Collections: ArrayList, HashMap, HashSet</a></span>
             <span class="step-time">1 h</span>
           </li>
-          <li class="step read" id="cs-lists" data-step="cs-lists">
+          <li class="step read" id="cs-lists" data-step="cs-lists" data-type="read" data-time="20 min">
             <input type="checkbox" aria-label="Done: Linked lists">
-            <span class="step-num">46</span>
+            <span class="step-num">53</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/computer-science/index.html#linked-lists">Linked lists</a></span>
             <span class="step-time">20 min</span>
           </li>
-          <li class="step read" id="cs-stacks" data-step="cs-stacks">
+          <li class="step read" id="cs-stacks" data-step="cs-stacks" data-type="read" data-time="15 min">
             <input type="checkbox" aria-label="Done: Stacks">
-            <span class="step-num">47</span>
+            <span class="step-num">54</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/computer-science/index.html#stacks">Stacks</a></span>
             <span class="step-time">15 min</span>
           </li>
-          <li class="step read" id="cs-queues" data-step="cs-queues">
+          <li class="step read" id="cs-queues" data-step="cs-queues" data-type="read" data-time="15 min">
             <input type="checkbox" aria-label="Done: Queues">
-            <span class="step-num">48</span>
+            <span class="step-num">55</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/computer-science/index.html#queues">Queues</a></span>
             <span class="step-time">15 min</span>
           </li>
-          <li class="step read" id="cs-hash" data-step="cs-hash">
+          <li class="step read" id="cs-hash" data-step="cs-hash" data-type="read" data-time="20 min">
             <input type="checkbox" aria-label="Done: Hash tables: how a HashMap finds things fast">
-            <span class="step-num">49</span>
+            <span class="step-num">56</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/computer-science/index.html#hash-tables">Hash tables: how a HashMap finds things fast</a></span>
             <span class="step-time">20 min</span>
           </li>
-          <li class="step read" id="java-exceptions" data-step="java-exceptions">
+          <li class="step read" id="java-exceptions" data-step="java-exceptions" data-type="read" data-time="30 min">
             <input type="checkbox" aria-label="Done: Exceptions">
-            <span class="step-num">50</span>
+            <span class="step-num">57</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/java/topics/exceptions/index.html">Exceptions</a></span>
             <span class="step-time">30 min</span>
           </li>
-          <li class="step read" id="java-io" data-step="java-io">
+          <li class="step read" id="java-io" data-step="java-io" data-type="read" data-time="30 min">
             <input type="checkbox" aria-label="Done: Reading and writing files">
-            <span class="step-num">51</span>
+            <span class="step-num">58</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/java/topics/io-basics/index.html">Reading and writing files</a></span>
             <span class="step-time">30 min</span>
           </li>
-          <li class="step read" id="java-debugging" data-step="java-debugging">
+          <li class="step read" id="java-debugging" data-step="java-debugging" data-type="read" data-time="30 min">
             <input type="checkbox" aria-label="Done: Debugging">
-            <span class="step-num">52</span>
+            <span class="step-num">59</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/java/topics/debugging/index.html">Debugging</a></span>
             <span class="step-time">30 min</span>
           </li>
-          <li class="step check" id="gate-java-b" data-step="gate-java-b">
+          <li class="step do" id="p-shop-java" data-step="p-shop-java" data-type="do" data-time="2–4 h">
+            <input type="checkbox" aria-label="Done: Project 6: the shopping list in Java">
+            <span class="step-num">60</span>
+            <span class="step-type">Do</span>
+            <span class="step-title"><a href="../projects/06-shopping-list-java/README.md">Project 6: the shopping list in Java</a></span>
+            <span class="step-time">2–4 h</span>
+          </li>
+          <li class="step do" id="p-expenses" data-step="p-expenses" data-type="do" data-time="3–5 h">
+            <input type="checkbox" aria-label="Done: Project 7: shared expenses">
+            <span class="step-num">61</span>
+            <span class="step-type">Do</span>
+            <span class="step-title"><a href="../projects/07-shared-expenses/README.md">Project 7: shared expenses</a></span>
+            <span class="step-time">3–5 h</span>
+          </li>
+          <li class="step check" id="gate-java-b" data-step="gate-java-b" data-type="check">
             <input type="checkbox" aria-label="Done: I use ArrayList and HashMap without copying code from somewhere.">
-            <span class="step-num">53</span>
+            <span class="step-num">62</span>
             <span class="step-type">Check</span>
             <span class="step-title"><span>I use ArrayList and HashMap without copying code from somewhere.</span></span>
             
           </li>
         </ol>
       </details>
-      <details class="stage" data-stage="java-smart">
-        <summary><span class="stage-num">Stage 8</span><span class="stage-title">Java 3 · Smart code</span><span class="stage-count"></span></summary>
+        <details class="stage" data-stage="java-smart">
+        <summary><span class="stage-num">Stage 9</span><span class="stage-title">Java 3 · Smart code</span><span class="stage-count"></span></summary>
         <p class="stage-goal">How fast is my code? Searching, sorting, and shapes for your classes.</p>
         <ol class="steps">
-          <li class="step read" id="cs-what" data-step="cs-what">
+          <li class="step read" id="cs-what" data-step="cs-what" data-type="read" data-time="15 min">
             <input type="checkbox" aria-label="Done: The big map of computer science">
-            <span class="step-num">54</span>
+            <span class="step-num">63</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/computer-science/index.html#cs-foundations">The big map of computer science</a></span>
             <span class="step-time">15 min</span>
           </li>
-          <li class="step read" id="cs-bigo" data-step="cs-bigo">
+          <li class="step read" id="cs-bigo" data-step="cs-bigo" data-type="read" data-time="20 min">
             <input type="checkbox" aria-label="Done: Big-O: how fast is my code?">
-            <span class="step-num">55</span>
+            <span class="step-num">64</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/computer-science/index.html#big-o-notation">Big-O: how fast is my code?</a></span>
             <span class="step-time">20 min</span>
           </li>
-          <li class="step read" id="cs-search" data-step="cs-search">
+          <li class="step read" id="cs-search" data-step="cs-search" data-type="read" data-time="20 min">
             <input type="checkbox" aria-label="Done: Searching algorithms">
-            <span class="step-num">56</span>
+            <span class="step-num">65</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/computer-science/index.html#searching-algorithms">Searching algorithms</a></span>
             <span class="step-time">20 min</span>
           </li>
-          <li class="step read" id="cs-sort" data-step="cs-sort">
+          <li class="step read" id="cs-sort" data-step="cs-sort" data-type="read" data-time="30 min">
             <input type="checkbox" aria-label="Done: Sorting algorithms">
-            <span class="step-num">57</span>
+            <span class="step-num">66</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/computer-science/index.html#sorting-algorithms">Sorting algorithms</a></span>
             <span class="step-time">30 min</span>
           </li>
-          <li class="step read" id="cs-binary" data-step="cs-binary">
+          <li class="step read" id="java-interfaces" data-step="java-interfaces" data-type="read" data-time="30 min">
+            <input type="checkbox" aria-label="Done: Interfaces: a promise a class keeps">
+            <span class="step-num">67</span>
+            <span class="step-type">Read</span>
+            <span class="step-title"><a href="../tracks/java/topics/interfaces/index.html">Interfaces: a promise a class keeps</a></span>
+            <span class="step-time">30 min</span>
+          </li>
+          <li class="step read" id="java-enums" data-step="java-enums" data-type="read" data-time="30 min">
+            <input type="checkbox" aria-label="Done: Enums: a fixed list of choices">
+            <span class="step-num">68</span>
+            <span class="step-type">Read</span>
+            <span class="step-title"><a href="../tracks/java/topics/enums/index.html">Enums: a fixed list of choices</a></span>
+            <span class="step-time">30 min</span>
+          </li>
+          <li class="step read" id="cs-binary" data-step="cs-binary" data-type="read" data-time="20 min">
             <input type="checkbox" aria-label="Done: Binary, hex and text encoding">
-            <span class="step-num">58</span>
+            <span class="step-num">69</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/computer-science/index.html#binary-encoding">Binary, hex and text encoding</a></span>
             <span class="step-time">20 min</span>
           </li>
-          <li class="step check" id="gate-computers" data-step="gate-computers">
+          <li class="step do" id="p-calendar" data-step="p-calendar" data-type="do" data-time="3–5 h">
+            <input type="checkbox" aria-label="Done: Project 8: calendar conflicts">
+            <span class="step-num">70</span>
+            <span class="step-type">Do</span>
+            <span class="step-title"><a href="../projects/08-calendar-conflicts/README.md">Project 8: calendar conflicts</a></span>
+            <span class="step-time">3–5 h</span>
+          </li>
+          <li class="step check" id="gate-computers" data-step="gate-computers" data-type="check">
             <input type="checkbox" aria-label="Done: I can explain array vs linked list, and why a hash table finds things fast.">
-            <span class="step-num">59</span>
+            <span class="step-num">71</span>
             <span class="step-type">Check</span>
             <span class="step-title"><span>I can explain array vs linked list, and why a hash table finds things fast.</span></span>
             
           </li>
         </ol>
       </details>
-      <details class="stage" data-stage="java-c">
-        <summary><span class="stage-num">Stage 9</span><span class="stage-title">Java 4 · Real projects</span><span class="stage-count"></span></summary>
+        <details class="stage" data-stage="java-c">
+        <summary><span class="stage-num">Stage 10</span><span class="stage-title">Java 4 · Real projects</span><span class="stage-count"></span></summary>
         <p class="stage-goal">Maven, tests and HTTP. Then a Java program that fetches live weather.</p>
         <ol class="steps">
-          <li class="step read" id="java-build" data-step="java-build">
+          <li class="step read" id="java-build" data-step="java-build" data-type="read" data-time="45 min">
             <input type="checkbox" aria-label="Done: Build tools: Maven">
-            <span class="step-num">60</span>
+            <span class="step-num">72</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/java/topics/build-tools/index.html">Build tools: Maven</a></span>
             <span class="step-time">45 min</span>
           </li>
-          <li class="step read" id="java-testing" data-step="java-testing">
+          <li class="step read" id="java-testing" data-step="java-testing" data-type="read" data-time="45 min">
             <input type="checkbox" aria-label="Done: Testing with JUnit">
-            <span class="step-num">61</span>
+            <span class="step-num">73</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/java/topics/testing/index.html">Testing with JUnit</a></span>
             <span class="step-time">45 min</span>
           </li>
-          <li class="step read" id="java-rest" data-step="java-rest">
+          <li class="step do" id="p-budget" data-step="p-budget" data-type="do" data-time="4–6 h">
+            <input type="checkbox" aria-label="Done: Project 9: household budget with files and tests">
+            <span class="step-num">74</span>
+            <span class="step-type">Do</span>
+            <span class="step-title"><a href="../projects/09-household-budget/README.md">Project 9: household budget with files and tests</a></span>
+            <span class="step-time">4–6 h</span>
+          </li>
+          <li class="step read" id="java-rest" data-step="java-rest" data-type="read" data-time="45 min">
             <input type="checkbox" aria-label="Done: REST and HTTP methods">
-            <span class="step-num">62</span>
+            <span class="step-num">75</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/java/topics/rest-and-http/index.html">REST and HTTP methods</a></span>
             <span class="step-time">45 min</span>
           </li>
-          <li class="step read" id="p05-intro" data-step="p05-intro">
+          <li class="step read" id="p05-intro" data-step="p05-intro" data-type="read" data-time="5 min">
             <input type="checkbox" aria-label="Done: Project 10: what you will build">
-            <span class="step-num">63</span>
+            <span class="step-num">76</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../projects/10-java-weather-cli/README.md">Project 10: what you will build</a></span>
             <span class="step-time">5 min</span>
           </li>
-          <li class="step do" id="p05-build" data-step="p05-build">
+          <li class="step do" id="p05-build" data-step="p05-build" data-type="do" data-time="3–5 h">
             <input type="checkbox" aria-label="Done: Project 10: build the Java weather CLI">
-            <span class="step-num">64</span>
+            <span class="step-num">77</span>
             <span class="step-type">Do</span>
-            <span class="step-title"><a href="../projects/10-java-weather-cli/docs/step-by-step.md">Project 10: build the Java weather CLI</a></span>
+            <span class="step-title"><a href="../projects/10-java-weather-cli/step-by-step.md">Project 10: build the Java weather CLI</a></span>
             <span class="step-time">3–5 h</span>
           </li>
-          <li class="step check" id="gate-java-c" data-step="gate-java-c">
+          <li class="step check" id="gate-java-c" data-step="gate-java-c" data-type="check">
             <input type="checkbox" aria-label="Done: My weather CLI works, and I know GET vs POST.">
-            <span class="step-num">65</span>
+            <span class="step-num">78</span>
             <span class="step-type">Check</span>
             <span class="step-title"><span>My weather CLI works, and I know GET vs POST.</span></span>
             
           </li>
         </ol>
       </details>
-      <details class="stage" data-stage="java-d">
-        <summary><span class="stage-num">Stage 10</span><span class="stage-title">Data and servers</span><span class="stage-count"></span></summary>
+      </section>
+      <section class="level" data-level="backend" data-level-title="Level 3 · Backend">
+        <header class="level-head"><span class="level-num">Level 3</span><h3>Backend</h3><p>Databases, servers and a real Spring Boot product.</p><span class="level-count"></span></header>
+        <details class="stage" data-stage="java-d">
+        <summary><span class="stage-num">Stage 11</span><span class="stage-title">Data and servers</span><span class="stage-count"></span></summary>
         <p class="stage-goal">How a backend is built: layers, SQL, and a database in a container.</p>
         <ol class="steps">
-          <li class="step read" id="server-layers" data-step="server-layers">
+          <li class="step read" id="server-layers" data-step="server-layers" data-type="read" data-time="20 min">
             <input type="checkbox" aria-label="Done: How a Java server is structured">
-            <span class="step-num">66</span>
+            <span class="step-num">79</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../sheets/java/server-layers.md">How a Java server is structured</a></span>
             <span class="step-time">20 min</span>
           </li>
-          <li class="step read" id="cs-sql" data-step="cs-sql">
+          <li class="step read" id="cs-sql" data-step="cs-sql" data-type="read" data-time="1 h">
             <input type="checkbox" aria-label="Done: Databases and SQL">
-            <span class="step-num">67</span>
+            <span class="step-num">80</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/computer-science/index.html#database-sql-fundamentals">Databases and SQL</a></span>
             <span class="step-time">1 h</span>
           </li>
-          <li class="step read" id="cs-docker" data-step="cs-docker">
+          <li class="step read" id="cs-docker" data-step="cs-docker" data-type="read" data-time="30 min">
             <input type="checkbox" aria-label="Done: Docker and containers">
-            <span class="step-num">68</span>
+            <span class="step-num">81</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/computer-science/index.html#docker-containers">Docker and containers</a></span>
             <span class="step-time">30 min</span>
           </li>
-          <li class="step check" id="gate-java-d" data-step="gate-java-d">
+          <li class="step do" id="p-parcel-db" data-step="p-parcel-db" data-type="do" data-time="3–4 h">
+            <input type="checkbox" aria-label="Done: Project 11: parcel database (Postgres, Docker, JDBC)">
+            <span class="step-num">82</span>
+            <span class="step-type">Do</span>
+            <span class="step-title"><a href="../projects/11-parcel-database/README.md">Project 11: parcel database (Postgres, Docker, JDBC)</a></span>
+            <span class="step-time">3–4 h</span>
+          </li>
+          <li class="step check" id="gate-java-d" data-step="gate-java-d" data-type="check">
             <input type="checkbox" aria-label="Done: I can point at controller, service and repository, and I ran Postgres in Docker.">
-            <span class="step-num">69</span>
+            <span class="step-num">83</span>
             <span class="step-type">Check</span>
             <span class="step-title"><span>I can point at controller, service and repository, and I ran Postgres in Docker.</span></span>
             
           </li>
         </ol>
       </details>
-      <details class="stage" data-stage="spring">
-        <summary><span class="stage-num">Stage 11</span><span class="stage-title">Spring Boot · ParcelPilot</span><span class="stage-count"></span></summary>
+        <details class="stage" data-stage="spring">
+        <summary><span class="stage-num">Stage 12</span><span class="stage-title">Spring Boot · ParcelPilot</span><span class="stage-count"></span></summary>
         <p class="stage-goal">One product, built step by step: a web API with validation, tests, Docker and a database.</p>
         <ol class="steps">
-          <li class="step read" id="spring-intro" data-step="spring-intro">
+          <li class="step read" id="spring-intro" data-step="spring-intro" data-type="read" data-time="10 min">
             <input type="checkbox" aria-label="Done: Course intro: what is ParcelPilot?">
-            <span class="step-num">70</span>
+            <span class="step-num">84</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/spring-boot/README.md">Course intro: what is ParcelPilot?</a></span>
             <span class="step-time">10 min</span>
           </li>
-          <li class="step do" id="spring-00" data-step="spring-00">
+          <li class="step do" id="spring-00" data-step="spring-00" data-type="do" data-time="1 h">
             <input type="checkbox" aria-label="Done: Step 00: your tools">
-            <span class="step-num">71</span>
+            <span class="step-num">85</span>
             <span class="step-type">Do</span>
             <span class="step-title"><a href="../tracks/spring-boot/topics/00-start-here/README.md">Step 00: your tools</a></span>
             <span class="step-time">1 h</span>
           </li>
-          <li class="step do" id="spring-01" data-step="spring-01">
+          <li class="step do" id="spring-01" data-step="spring-01" data-type="do" data-time="1–2 h">
             <input type="checkbox" aria-label="Done: Step 01: describe one parcel in Java">
-            <span class="step-num">72</span>
+            <span class="step-num">86</span>
             <span class="step-type">Do</span>
             <span class="step-title"><a href="../tracks/spring-boot/topics/01-java-basics/README.md">Step 01: describe one parcel in Java</a></span>
             <span class="step-time">1–2 h</span>
           </li>
-          <li class="step do" id="spring-02" data-step="spring-02">
+          <li class="step do" id="spring-02" data-step="spring-02" data-type="do" data-time="2–4 h">
             <input type="checkbox" aria-label="Done: Step 02: OOP, composition, first patterns">
-            <span class="step-num">73</span>
+            <span class="step-num">87</span>
             <span class="step-type">Do</span>
             <span class="step-title"><a href="../tracks/spring-boot/topics/02-oop-and-composition/README.md">Step 02: OOP, composition, first patterns</a></span>
             <span class="step-time">2–4 h</span>
           </li>
-          <li class="step do" id="spring-03" data-step="spring-03">
+          <li class="step do" id="spring-03" data-step="spring-03" data-type="do" data-time="2 h">
             <input type="checkbox" aria-label="Done: Step 03: Maven, a repeatable build">
-            <span class="step-num">74</span>
+            <span class="step-num">88</span>
             <span class="step-type">Do</span>
             <span class="step-title"><a href="../tracks/spring-boot/topics/03-maven/README.md">Step 03: Maven, a repeatable build</a></span>
             <span class="step-time">2 h</span>
           </li>
-          <li class="step do" id="spring-04" data-step="spring-04">
+          <li class="step do" id="spring-04" data-step="spring-04" data-type="do" data-time="3–5 h">
             <input type="checkbox" aria-label="Done: Step 04: the first web API">
-            <span class="step-num">75</span>
+            <span class="step-num">89</span>
             <span class="step-type">Do</span>
             <span class="step-title"><a href="../tracks/spring-boot/topics/04-first-spring-api/README.md">Step 04: the first web API</a></span>
             <span class="step-time">3–5 h</span>
           </li>
-          <li class="step do" id="spring-05" data-step="spring-05">
+          <li class="step do" id="spring-05" data-step="spring-05" data-type="do" data-time="2 h">
             <input type="checkbox" aria-label="Done: Step 05: validation">
-            <span class="step-num">76</span>
+            <span class="step-num">90</span>
             <span class="step-type">Do</span>
             <span class="step-title"><a href="../tracks/spring-boot/topics/05-validation-and-inputs/README.md">Step 05: validation</a></span>
             <span class="step-time">2 h</span>
           </li>
-          <li class="step do" id="spring-06" data-step="spring-06">
+          <li class="step do" id="spring-06" data-step="spring-06" data-type="do" data-time="2 h">
             <input type="checkbox" aria-label="Done: Step 06: error handling">
-            <span class="step-num">77</span>
+            <span class="step-num">91</span>
             <span class="step-type">Do</span>
             <span class="step-title"><a href="../tracks/spring-boot/topics/06-error-handling/README.md">Step 06: error handling</a></span>
             <span class="step-time">2 h</span>
           </li>
-          <li class="step do" id="spring-07" data-step="spring-07">
+          <li class="step do" id="spring-07" data-step="spring-07" data-type="do" data-time="2 h">
             <input type="checkbox" aria-label="Done: Step 07: logging">
-            <span class="step-num">78</span>
+            <span class="step-num">92</span>
             <span class="step-type">Do</span>
             <span class="step-title"><a href="../tracks/spring-boot/topics/07-logging-and-observability-basics/README.md">Step 07: logging</a></span>
             <span class="step-time">2 h</span>
           </li>
-          <li class="step do" id="spring-08" data-step="spring-08">
+          <li class="step do" id="spring-08" data-step="spring-08" data-type="do" data-time="3 h">
             <input type="checkbox" aria-label="Done: Step 08: testing">
-            <span class="step-num">79</span>
+            <span class="step-num">93</span>
             <span class="step-type">Do</span>
             <span class="step-title"><a href="../tracks/spring-boot/topics/08-testing/README.md">Step 08: testing</a></span>
             <span class="step-time">3 h</span>
           </li>
-          <li class="step do" id="spring-09" data-step="spring-09">
+          <li class="step do" id="spring-09" data-step="spring-09" data-type="do" data-time="2 h">
             <input type="checkbox" aria-label="Done: Step 09: Docker">
-            <span class="step-num">80</span>
+            <span class="step-num">94</span>
             <span class="step-type">Do</span>
             <span class="step-title"><a href="../tracks/spring-boot/topics/09-docker/README.md">Step 09: Docker</a></span>
             <span class="step-time">2 h</span>
           </li>
-          <li class="step do" id="spring-10" data-step="spring-10">
+          <li class="step do" id="spring-10" data-step="spring-10" data-type="do" data-time="4–6 h">
             <input type="checkbox" aria-label="Done: Step 10: persistence with PostgreSQL">
-            <span class="step-num">81</span>
+            <span class="step-num">95</span>
             <span class="step-type">Do</span>
             <span class="step-title"><a href="../tracks/spring-boot/topics/10-persistence/README.md">Step 10: persistence with PostgreSQL</a></span>
             <span class="step-time">4–6 h</span>
           </li>
+          <li class="step check" id="gate-spring-core" data-step="gate-spring-core" data-type="check">
+            <input type="checkbox" aria-label="Done: ParcelPilot saves parcels in Postgres, answers with clear errors, and its tests pass.">
+            <span class="step-num">96</span>
+            <span class="step-type">Check</span>
+            <span class="step-title"><span>ParcelPilot saves parcels in Postgres, answers with clear errors, and its tests pass.</span></span>
+            
+          </li>
         </ol>
       </details>
-      <details class="stage" data-stage="spring-pro">
-        <summary><span class="stage-num">Stage 12</span><span class="stage-title">ParcelPilot at scale</span><span class="stage-count"></span></summary>
+      </section>
+      <section class="level" data-level="pro" data-level-title="Level 4 · Pro">
+        <header class="level-head"><span class="level-num">Level 4</span><h3>Pro</h3><p>Queues, services, login, and the ideas behind big systems.</p><span class="level-count"></span></header>
+        <details class="stage" data-stage="spring-pro">
+        <summary><span class="stage-num">Stage 13</span><span class="stage-title">ParcelPilot at scale</span><span class="stage-count"></span></summary>
         <p class="stage-goal">The same product grows up: modules, queues, a second service, caching and login.</p>
         <ol class="steps">
-          <li class="step do" id="spring-11" data-step="spring-11">
+          <li class="step do" id="spring-11" data-step="spring-11" data-type="do" data-time="3 h">
             <input type="checkbox" aria-label="Done: Step 11: the modular monolith">
-            <span class="step-num">82</span>
+            <span class="step-num">97</span>
             <span class="step-type">Do</span>
             <span class="step-title"><a href="../tracks/spring-boot/topics/11-monolith/README.md">Step 11: the modular monolith</a></span>
             <span class="step-time">3 h</span>
           </li>
-          <li class="step do" id="spring-12" data-step="spring-12">
+          <li class="step do" id="spring-12" data-step="spring-12" data-type="do" data-time="3–5 h">
             <input type="checkbox" aria-label="Done: Step 12: queues">
-            <span class="step-num">83</span>
+            <span class="step-num">98</span>
             <span class="step-type">Do</span>
             <span class="step-title"><a href="../tracks/spring-boot/topics/12-queues/README.md">Step 12: queues</a></span>
             <span class="step-time">3–5 h</span>
           </li>
-          <li class="step do" id="spring-13" data-step="spring-13">
+          <li class="step do" id="spring-13" data-step="spring-13" data-type="do" data-time="4 h">
             <input type="checkbox" aria-label="Done: Step 13: split out a microservice">
-            <span class="step-num">84</span>
+            <span class="step-num">99</span>
             <span class="step-type">Do</span>
             <span class="step-title"><a href="../tracks/spring-boot/topics/13-split-services/README.md">Step 13: split out a microservice</a></span>
             <span class="step-time">4 h</span>
           </li>
-          <li class="step do" id="spring-14" data-step="spring-14">
+          <li class="step do" id="spring-14" data-step="spring-14" data-type="do" data-time="3 h">
             <input type="checkbox" aria-label="Done: Step 14: Docker Compose and observing">
-            <span class="step-num">85</span>
+            <span class="step-num">100</span>
             <span class="step-type">Do</span>
             <span class="step-title"><a href="../tracks/spring-boot/topics/14-compose-and-observe/README.md">Step 14: Docker Compose and observing</a></span>
             <span class="step-time">3 h</span>
           </li>
-          <li class="step do" id="spring-15" data-step="spring-15">
+          <li class="step do" id="spring-15" data-step="spring-15" data-type="do" data-time="3–5 h">
             <input type="checkbox" aria-label="Done: Step 15: caching, locking, rate limiting">
-            <span class="step-num">86</span>
+            <span class="step-num">101</span>
             <span class="step-type">Do</span>
             <span class="step-title"><a href="../tracks/spring-boot/topics/15-performance-and-safety/README.md">Step 15: caching, locking, rate limiting</a></span>
             <span class="step-time">3–5 h</span>
           </li>
-          <li class="step do" id="spring-16" data-step="spring-16">
+          <li class="step do" id="spring-16" data-step="spring-16" data-type="do" data-time="4 h">
             <input type="checkbox" aria-label="Done: Step 16: login and JWT">
-            <span class="step-num">87</span>
+            <span class="step-num">102</span>
             <span class="step-type">Do</span>
             <span class="step-title"><a href="../tracks/spring-boot/topics/16-jwt-authentication/README.md">Step 16: login and JWT</a></span>
             <span class="step-time">4 h</span>
           </li>
-          <li class="step check" id="gate-spring" data-step="gate-spring">
+          <li class="step check" id="gate-spring" data-step="gate-spring" data-type="check">
             <input type="checkbox" aria-label="Done: ParcelPilot runs in Docker Compose with a database, a queue and login.">
-            <span class="step-num">88</span>
+            <span class="step-num">103</span>
             <span class="step-type">Check</span>
             <span class="step-title"><span>ParcelPilot runs in Docker Compose with a database, a queue and login.</span></span>
             
           </li>
         </ol>
       </details>
-      <details class="stage" data-stage="deeper">
-        <summary><span class="stage-num">Stage 13</span><span class="stage-title">Go deeper</span><span class="stage-count"></span></summary>
+        <details class="stage" data-stage="deeper">
+        <summary><span class="stage-num">Stage 14</span><span class="stage-title">Go deeper</span><span class="stage-count"></span></summary>
         <p class="stage-goal">Now the advanced topics make sense: JVM, patterns, threads, system design.</p>
         <ol class="steps">
-          <li class="step read" id="java-jvm" data-step="java-jvm">
+          <li class="step read" id="java-recursion" data-step="java-recursion" data-type="read" data-time="30 min">
+            <input type="checkbox" aria-label="Done: Recursion: a method that calls itself">
+            <span class="step-num">104</span>
+            <span class="step-type">Read</span>
+            <span class="step-title"><a href="../tracks/java/topics/recursion/index.html">Recursion: a method that calls itself</a></span>
+            <span class="step-time">30 min</span>
+          </li>
+          <li class="step do" id="p-calculator" data-step="p-calculator" data-type="do" data-time="4–8 h">
+            <input type="checkbox" aria-label="Done: Project 12: calculator with a recursive parser">
+            <span class="step-num">105</span>
+            <span class="step-type">Do</span>
+            <span class="step-title"><a href="../projects/12-calculator/README.md">Project 12: calculator with a recursive parser</a></span>
+            <span class="step-time">4–8 h</span>
+          </li>
+          <li class="step read" id="java-jvm" data-step="java-jvm" data-type="read" data-time="45 min">
             <input type="checkbox" aria-label="Done: JVM and memory">
-            <span class="step-num">89</span>
+            <span class="step-num">106</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/java/topics/jvm-memory/index.html">JVM and memory</a></span>
             <span class="step-time">45 min</span>
           </li>
-          <li class="step read" id="java-patterns" data-step="java-patterns">
+          <li class="step read" id="java-patterns" data-step="java-patterns" data-type="read" data-time="1–2 h">
             <input type="checkbox" aria-label="Done: Design patterns: the full catalog">
-            <span class="step-num">90</span>
+            <span class="step-num">107</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/java/topics/design-patterns/index.html">Design patterns: the full catalog</a></span>
             <span class="step-time">1–2 h</span>
           </li>
-          <li class="step read" id="java-uml" data-step="java-uml">
+          <li class="step read" id="java-uml" data-step="java-uml" data-type="read" data-time="30 min">
             <input type="checkbox" aria-label="Done: UML diagrams">
-            <span class="step-num">91</span>
+            <span class="step-num">108</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/java/topics/uml-diagrams/index.html">UML diagrams</a></span>
             <span class="step-time">30 min</span>
           </li>
-          <li class="step read" id="cs-concurrency" data-step="cs-concurrency">
+          <li class="step read" id="cs-concurrency" data-step="cs-concurrency" data-type="read" data-time="30 min">
             <input type="checkbox" aria-label="Done: Concurrency, threads and async">
-            <span class="step-num">92</span>
+            <span class="step-num">109</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/computer-science/index.html#concurrency-async">Concurrency, threads and async</a></span>
             <span class="step-time">30 min</span>
           </li>
-          <li class="step read" id="architecture" data-step="architecture">
+          <li class="step read" id="architecture" data-step="architecture" data-type="read" data-time="2–4 h">
             <input type="checkbox" aria-label="Done: Architecture and system design">
-            <span class="step-num">93</span>
+            <span class="step-num">110</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/architecture/index.html">Architecture and system design</a></span>
             <span class="step-time">2–4 h</span>
           </li>
         </ol>
       </details>
+      </section>
       <details class="stage" data-stage="extras" data-optional>
         <summary><span class="stage-num">Extra</span><span class="stage-title">Extras (any time, optional)</span><span class="stage-count"></span></summary>
         <p class="stage-goal">Not needed for the path. Pick one when you want more practice or a new topic.</p>
         <ol class="steps">
-          <li class="step do" id="cleaning" data-step="cleaning" data-optional>
+          <li class="step do" id="cleaning" data-step="cleaning" data-type="do" data-time="1–15 h each" data-optional>
             <input type="checkbox" aria-label="Done: Code for Cleaning: real-life Java tasks">
             <span class="step-num">+</span>
             <span class="step-type">Do</span>
             <span class="step-title"><a href="../programs/code-for-cleaning/README.md">Code for Cleaning: real-life Java tasks</a></span>
             <span class="step-time">1–15 h each</span>
           </li>
-          <li class="step do" id="p02" data-step="p02" data-optional>
+          <li class="step do" id="p02" data-step="p02" data-type="do" data-time="4–6 h" data-optional>
             <input type="checkbox" aria-label="Done: Ship your About-me page in Docker">
             <span class="step-num">+</span>
             <span class="step-type">Do</span>
             <span class="step-title"><a href="../projects/extras/docker-portfolio/README.md">Ship your About-me page in Docker</a></span>
             <span class="step-time">4–6 h</span>
           </li>
-          <li class="step do" id="p04" data-step="p04" data-optional>
+          <li class="step do" id="p04" data-step="p04" data-type="do" data-time="6–10 h" data-optional>
             <input type="checkbox" aria-label="Done: React todo app">
             <span class="step-num">+</span>
             <span class="step-type">Do</span>
             <span class="step-title"><a href="../projects/extras/react-todo/README.md">React todo app</a></span>
             <span class="step-time">6–10 h</span>
           </li>
-          <li class="step read" id="ai-guide" data-step="ai-guide" data-optional>
+          <li class="step read" id="ai-guide" data-step="ai-guide" data-type="read" data-time="31 chapters" data-optional>
             <input type="checkbox" aria-label="Done: AI engineering field guide">
             <span class="step-num">+</span>
             <span class="step-type">Read</span>
             <span class="step-title"><a href="../tracks/ai/index.html">AI engineering field guide</a></span>
             <span class="step-time">31 chapters</span>
           </li>
-          <li class="step read" id="aws-genai" data-step="aws-genai" data-optional>
+          <li class="step read" id="aws-genai" data-step="aws-genai" data-type="read" data-time="weeks" data-optional>
             <input type="checkbox" aria-label="Done: AWS GenAI Pro exam prep">
             <span class="step-num">+</span>
             <span class="step-type">Read</span>
@@ -868,13 +1015,13 @@
             <div class="card-path">tracks/java/</div>
             <h3><a href="../tracks/java/index.html">Java hub</a></h3>
             <p>The main language path. One topic per page, from setup to design patterns.</p>
-            <details><summary>Show 21 pages</summary><ul class="tree"><li><a href="../tracks/java/topics/arrays/index.html">Arrays</a></li><li><a href="../tracks/java/topics/build-tools/index.html">Maven &amp; Gradle Basics</a></li><li><a href="../tracks/java/topics/classes-and-objects/index.html">Classes &amp; Objects</a></li><li><a href="../tracks/java/topics/collections/index.html">Collections</a></li><li><a href="../tracks/java/topics/control-flow/index.html">Control Flow</a></li><li><a href="../tracks/java/topics/debugging/index.html">Debugging</a></li><li><a href="../tracks/java/topics/design-patterns/index.html">Design Patterns Roadmap</a></li><li><a href="../tracks/java/topics/exceptions/index.html">Exceptions</a></li><li><a href="../tracks/java/topics/getting-started/index.html">Getting Started on Ubuntu</a></li><li><a href="../tracks/java/topics/git-basics/index.html">Git Basics</a></li><li><a href="../tracks/java/topics/io-basics/index.html">I/O Basics</a></li><li><a href="../tracks/java/topics/jvm-memory/index.html">JVM &amp; Memory</a></li><li><a href="../tracks/java/topics/methods/index.html">Methods</a></li><li><a href="../tracks/java/topics/operators/index.html">Operators</a></li><li><a href="../tracks/java/topics/practice-projects/index.html">Practice Projects</a></li><li><a href="../tracks/java/topics/rest-and-http/index.html">REST &amp; HTTP Methods</a></li><li><a href="../tracks/java/topics/strings/index.html">Strings &amp; Text</a></li><li><a href="../tracks/java/topics/syntax-fundamentals/index.html">Syntax Fundamentals</a></li><li><a href="../tracks/java/topics/testing/index.html">Testing</a></li><li><a href="../tracks/java/topics/types-and-variables/index.html">Types &amp; Variables</a></li><li><a href="../tracks/java/topics/uml-diagrams/index.html">UML Diagrams</a></li></ul></details>
+            <details><summary>Show 22 pages</summary><ul class="tree"><li><a href="../tracks/java/topics/arrays/index.html">Arrays</a></li><li><a href="../tracks/java/topics/build-tools/index.html">Maven &amp; Gradle Basics</a></li><li><a href="../tracks/java/topics/classes-and-objects/index.html">Classes &amp; Objects</a></li><li><a href="../tracks/java/topics/collections/index.html">Collections</a></li><li><a href="../tracks/java/topics/control-flow/index.html">Control Flow</a></li><li><a href="../tracks/java/topics/debugging/index.html">Debugging</a></li><li><a href="../tracks/java/topics/design-patterns/index.html">Design Patterns Roadmap</a></li><li><a href="../tracks/java/topics/enums/index.html">Enums</a></li><li><a href="../tracks/java/topics/exceptions/index.html">Exceptions</a></li><li><a href="../tracks/java/topics/getting-started/index.html">Getting Started on Ubuntu</a></li><li><a href="../tracks/java/topics/interfaces/index.html">Interfaces</a></li><li><a href="../tracks/java/topics/io-basics/index.html">I/O Basics</a></li><li><a href="../tracks/java/topics/jvm-memory/index.html">JVM &amp; Memory</a></li><li><a href="../tracks/java/topics/methods/index.html">Methods</a></li><li><a href="../tracks/java/topics/operators/index.html">Operators</a></li><li><a href="../tracks/java/topics/recursion/index.html">Recursion</a></li><li><a href="../tracks/java/topics/rest-and-http/index.html">REST &amp; HTTP Methods</a></li><li><a href="../tracks/java/topics/strings/index.html">Strings &amp; Text</a></li><li><a href="../tracks/java/topics/syntax-fundamentals/index.html">Syntax Fundamentals</a></li><li><a href="../tracks/java/topics/testing/index.html">Testing</a></li><li><a href="../tracks/java/topics/types-and-variables/index.html">Types &amp; Variables</a></li><li><a href="../tracks/java/topics/uml-diagrams/index.html">UML Diagrams</a></li></ul></details>
           </article>
           <article class="card java">
             <div class="card-path">tracks/spring-boot/</div>
             <h3><a href="../tracks/spring-boot/README.md">Spring Boot · ParcelPilot</a></h3>
             <p>Build one backend product step by step, from a first API to queues, services and JWT.</p>
-            <details><summary>Show 99 pages</summary><ul class="tree"><li><a href="../tracks/spring-boot/GUIDE.md">ParcelPilot roadmap</a></li><li><a href="../tracks/spring-boot/PROJECT-STORY.md">The ParcelPilot project story</a></li><li><span>References</span><ul class="tree"><li><span>Architecture</span><ul class="tree"><li><a href="../tracks/spring-boot/references/architecture/code-organization.md">Code organization: from one file to a layered app</a></li><li><a href="../tracks/spring-boot/references/architecture/databases-caching-and-locking.md">Databases, caching, hashing, and locking</a></li><li><a href="../tracks/spring-boot/references/architecture/messaging-and-queues.md">Messaging and queues</a></li><li><a href="../tracks/spring-boot/references/architecture/monolith-and-microservices.md">Monoliths and microservices</a></li><li><a href="../tracks/spring-boot/references/architecture/scaling-and-architecture.md">System design &amp; scaling: the big picture</a></li></ul></li><li><span>Java</span><ul class="tree"><li><a href="../tracks/spring-boot/references/java/coding-concepts.md">General coding concepts (that apply in any language)</a></li><li><a href="../tracks/spring-boot/references/java/design-patterns.md">Java design patterns: use names after seeing the problem</a></li><li><a href="../tracks/spring-boot/references/java/glossary.md">Glossary</a></li><li><a href="../tracks/spring-boot/references/java/java-and-oop.md">Java, OOP, composition, and singleton</a></li><li><a href="../tracks/spring-boot/references/java/java-best-practices.md">Java best practices (and why)</a></li></ul></li><li><span>Operations</span><ul class="tree"><li><a href="../tracks/spring-boot/references/operations/debugging-and-troubleshooting.md">Debugging and troubleshooting</a></li><li><a href="../tracks/spring-boot/references/operations/production-thinking.md">Production thinking</a></li><li><a href="../tracks/spring-boot/references/operations/when-things-break.md">When things break</a></li></ul></li><li><span>Tooling</span><ul class="tree"><li><a href="../tracks/spring-boot/references/tooling/configuration.md">Configuration</a></li><li><a href="../tracks/spring-boot/references/tooling/docker.md">Docker</a></li><li><a href="../tracks/spring-boot/references/tooling/git-for-this-course.md">Git for this course</a></li><li><a href="../tracks/spring-boot/references/tooling/logging.md">Logging</a></li><li><a href="../tracks/spring-boot/references/tooling/maven.md">Maven</a></li></ul></li><li><span>Web and api</span><ul class="tree"><li><a href="../tracks/spring-boot/references/web-and-api/authentication.md">Password authentication and JWT</a></li><li><a href="../tracks/spring-boot/references/web-and-api/error-handling-and-http-statuses.md">Error handling and HTTP statuses</a></li><li><a href="../tracks/spring-boot/references/web-and-api/spring-and-http.md">Spring Boot and HTTP</a></li><li><a href="../tracks/spring-boot/references/web-and-api/testing.md">Testing</a></li><li><a href="../tracks/spring-boot/references/web-and-api/validation-and-api-contracts.md">Validation and API contracts</a></li></ul></li></ul></li><li><a href="../tracks/spring-boot/topics/README.md">How to use a topic</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/00-start-here/README.md">Step 00: Your tools (no code yet)</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/00-start-here/editor-and-terminal.md">Editor and terminal setup</a></li></ul></li><li><a href="../tracks/spring-boot/topics/01-java-basics/README.md">Step 01: describe one parcel in Java</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/01-java-basics/collections-basics.md">Collections basics: List, Map, Set</a></li><li><a href="../tracks/spring-boot/topics/01-java-basics/data-types.md">Java data types in detail</a></li><li><a href="../tracks/spring-boot/topics/01-java-basics/debugging-your-first-program.md">Debugging your first program</a></li><li><a href="../tracks/spring-boot/topics/01-java-basics/exceptions-intro.md">Exceptions: first contact</a></li><li><a href="../tracks/spring-boot/topics/01-java-basics/how-java-works.md">How Java works (the flow)</a></li><li><a href="../tracks/spring-boot/topics/01-java-basics/java-syntax-basics.md">Java syntax basics (your very first Java)</a></li></ul></li><li><a href="../tracks/spring-boot/topics/02-oop-and-composition/README.md">Step 02: OOP rules, composition, and first patterns</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/02-oop-and-composition/composition-vs-inheritance.md">Composition vs inheritance</a></li><li><a href="../tracks/spring-boot/topics/02-oop-and-composition/enums-explained.md">Enums explained</a></li><li><a href="../tracks/spring-boot/topics/02-oop-and-composition/interfaces-and-abstractions.md">Interfaces and abstractions</a></li><li><a href="../tracks/spring-boot/topics/02-oop-and-composition/patterns-lab.md">Pattern lab: Builder and Factory</a></li></ul></li><li><a href="../tracks/spring-boot/topics/03-maven/README.md">Step 03: Maven for a repeatable, tested build</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/03-maven/build-tools-compared.md">Build tools compared: why Maven (for now)</a></li><li><a href="../tracks/spring-boot/topics/03-maven/common-build-failures.md">Common build failures (and how to read them)</a></li><li><a href="../tracks/spring-boot/topics/03-maven/packages-imports-structure.md">Packages, imports, and project structure</a></li><li><a href="../tracks/spring-boot/topics/03-maven/testing-with-maven.md">Testing with Maven: what really happens when you type mvn test</a></li></ul></li><li><a href="../tracks/spring-boot/topics/04-first-spring-api/README.md">Step 04: Spring Boot, the first web API</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/04-first-spring-api/annotations-imports.md">Annotations and imports in Spring Boot</a></li><li><a href="../tracks/spring-boot/topics/04-first-spring-api/dependency-injection-walkthrough.md">Dependency injection walkthrough: who creates your objects?</a></li><li><a href="../tracks/spring-boot/topics/04-first-spring-api/http-methods.md">HTTP methods explained (GET, POST, PUT, PATCH, DELETE, QUERY)</a></li><li><a href="../tracks/spring-boot/topics/04-first-spring-api/http-status-codes-lab.md">HTTP status codes lab: say what actually happened</a></li><li><a href="../tracks/spring-boot/topics/04-first-spring-api/json-and-dtos.md">JSON and DTOs: how objects become text (and back)</a></li><li><a href="../tracks/spring-boot/topics/04-first-spring-api/rest-api.md">REST API lab: resources, commands, and queries</a></li></ul></li><li><a href="../tracks/spring-boot/topics/05-validation-and-inputs/README.md">Step 05: Validation and trustworthy inputs</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/05-validation-and-inputs/bean-validation-explained.md">Bean Validation explained: annotations, the validator, and the request lifecycle</a></li><li><a href="../tracks/spring-boot/topics/05-validation-and-inputs/validation-lab.md">Validation lab: break it, then guard it</a></li></ul></li><li><a href="../tracks/spring-boot/topics/06-error-handling/README.md">Step 06: Error handling &amp; HTTP error contracts</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/06-error-handling/controller-advice-lab.md">Controller advice lab: one error shape, proven with curl</a></li><li><a href="../tracks/spring-boot/topics/06-error-handling/exceptions-in-java.md">Exceptions in Java, from scratch</a></li></ul></li><li><a href="../tracks/spring-boot/topics/07-logging-and-observability-basics/README.md">Step 07: Logging you can actually read</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/07-logging-and-observability-basics/logging-lab.md">Logging lab: from silent 500 to a story you can read</a></li><li><a href="../tracks/spring-boot/topics/07-logging-and-observability-basics/slf4j-and-log-levels.md">SLF4J and log levels, in depth</a></li></ul></li><li><a href="../tracks/spring-boot/topics/08-testing/README.md">Step 08: Testing beyond mvn test</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/08-testing/mockmvc-lab.md">Lab: MockMvc, your curl checklist as code</a></li><li><a href="../tracks/spring-boot/topics/08-testing/testcontainers-lab.md">Lab: Testcontainers, a real PostgreSQL for your tests</a></li><li><a href="../tracks/spring-boot/topics/08-testing/unit-vs-integration-vs-e2e.md">Unit vs integration vs end-to-end tests</a></li></ul></li><li><a href="../tracks/spring-boot/topics/09-docker/README.md">Step 09: Docker, ship the API as one unit</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/09-docker/dockerfile-line-by-line.md">The Dockerfile, line by line</a></li><li><a href="../tracks/spring-boot/topics/09-docker/troubleshooting-docker.md">Troubleshooting Docker</a></li></ul></li><li><a href="../tracks/spring-boot/topics/10-persistence/README.md">Step 10: Persistence, keep the parcels</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/10-persistence/database-lab.md">Database lab: PostgreSQL, migrations, and concurrent updates</a></li><li><a href="../tracks/spring-boot/topics/10-persistence/flyway-migrations-explained.md">Flyway migrations explained</a></li><li><a href="../tracks/spring-boot/topics/10-persistence/indexes-intro.md">Indexes: why queries get fast</a></li><li><a href="../tracks/spring-boot/topics/10-persistence/jpa-and-repositories.md">JPA, entities, and repositories</a></li><li><a href="../tracks/spring-boot/topics/10-persistence/locking-explained.md">Locking explained (optimistic vs pessimistic)</a></li><li><a href="../tracks/spring-boot/topics/10-persistence/sql-and-databases.md">Databases and SQL basics</a></li></ul></li><li><a href="../tracks/spring-boot/topics/11-monolith/README.md">Step 11: The modular monolith</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/11-monolith/layered-vs-feature-packages.md">Layered vs feature packages: where does this file go?</a></li><li><a href="../tracks/spring-boot/topics/11-monolith/module-boundaries-lab.md">Module boundaries lab: draw lines you can enforce</a></li><li><a href="../tracks/spring-boot/topics/11-monolith/ports-and-adapters.md">Ports and adapters (hexagonal architecture)</a></li></ul></li><li><a href="../tracks/spring-boot/topics/12-queues/README.md">Step 12: Queues, do slow work later</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/12-queues/event-driven-lab.md">Event-driven lab: observer, command, adapter, and idempotency</a></li><li><a href="../tracks/spring-boot/topics/12-queues/idempotency-lab.md">Idempotency lab: surviving duplicate messages</a></li><li><a href="../tracks/spring-boot/topics/12-queues/retries-and-dead-letters.md">Retries and dead letters: when a message keeps failing</a></li><li><a href="../tracks/spring-boot/topics/12-queues/what-is-a-queue.md">What is a queue, really?</a></li></ul></li><li><a href="../tracks/spring-boot/topics/13-split-services/README.md">Step 13: Extract the notification microservice</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/13-split-services/git-tag-checkpoint.md">Git tag checkpoint: save the monolith before you break it</a></li><li><a href="../tracks/spring-boot/topics/13-split-services/network-failure-lab.md">Network failure lab: partial failure is the default now</a></li><li><a href="../tracks/spring-boot/topics/13-split-services/service-contracts.md">Service contracts: the agreement that no compiler checks</a></li></ul></li><li><a href="../tracks/spring-boot/topics/14-compose-and-observe/README.md">Step 14: Docker Compose &amp; observing the system</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/14-compose-and-observe/correlation-ids.md">Correlation IDs: one thread of identity across two services</a></li><li><a href="../tracks/spring-boot/topics/14-compose-and-observe/metrics-intro.md">Metrics intro: from stories to numbers</a></li><li><a href="../tracks/spring-boot/topics/14-compose-and-observe/reading-logs-across-services.md">Reading logs across services</a></li></ul></li><li><a href="../tracks/spring-boot/topics/15-performance-and-safety/README.md">Step 15: Caching, locking, and rate limiting</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/15-performance-and-safety/cache-invalidation-lab.md">Cache invalidation lab: the parcel that wouldn't update</a></li><li><a href="../tracks/spring-boot/topics/15-performance-and-safety/optimistic-locking-lab.md">Optimistic locking lab: when two operators race</a></li><li><a href="../tracks/spring-boot/topics/15-performance-and-safety/rate-limiting.md">Rate limiting lab</a></li></ul></li><li><a href="../tracks/spring-boot/topics/16-jwt-authentication/README.md">Step 16: Password login &amp; JWT protection</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/16-jwt-authentication/authz-vs-authn-lab.md">Authn vs authz lab: who you are vs what you may do</a></li><li><a href="../tracks/spring-boot/topics/16-jwt-authentication/security-troubleshooting.md">Security troubleshooting: symptom → cause → fix</a></li></ul></li></ul></li></ul></details>
+            <details><summary>Show 81 pages</summary><ul class="tree"><li><a href="../tracks/spring-boot/GUIDE.md">ParcelPilot roadmap</a></li><li><a href="../tracks/spring-boot/PROJECT-STORY.md">The ParcelPilot project story</a></li><li><span>References</span><ul class="tree"><li><span>Architecture</span><ul class="tree"><li><a href="../tracks/spring-boot/references/architecture/code-organization.md">Code organization: from one file to a layered app</a></li><li><a href="../tracks/spring-boot/references/architecture/databases-caching-and-locking.md">Databases, caching, and locking</a></li><li><a href="../tracks/spring-boot/references/architecture/messaging-and-queues.md">Messaging and queues</a></li><li><a href="../tracks/spring-boot/references/architecture/monolith-and-microservices.md">Monoliths and microservices</a></li><li><a href="../tracks/spring-boot/references/architecture/scaling-and-architecture.md">Scaling: the big picture</a></li></ul></li><li><span>Java</span><ul class="tree"><li><a href="../tracks/spring-boot/references/java/coding-concepts.md">General coding concepts (that apply in any language)</a></li><li><a href="../tracks/spring-boot/references/java/design-patterns.md">Patterns in ParcelPilot</a></li><li><a href="../tracks/spring-boot/references/java/glossary.md">Spring and backend glossary</a></li><li><a href="../tracks/spring-boot/references/java/java-best-practices.md">Java best practices (and why)</a></li></ul></li><li><span>Operations</span><ul class="tree"><li><a href="../tracks/spring-boot/references/operations/debugging-and-troubleshooting.md">Debugging and troubleshooting</a></li><li><a href="../tracks/spring-boot/references/operations/production-thinking.md">Production thinking</a></li><li><a href="../tracks/spring-boot/references/operations/when-things-break.md">When things break</a></li></ul></li><li><span>Tooling</span><ul class="tree"><li><a href="../tracks/spring-boot/references/tooling/configuration.md">Configuration</a></li><li><a href="../tracks/spring-boot/references/tooling/docker.md">Docker</a></li><li><a href="../tracks/spring-boot/references/tooling/git-for-this-course.md">Git for this course: tags and .gitignore</a></li></ul></li><li><span>Web and api</span><ul class="tree"><li><a href="../tracks/spring-boot/references/web-and-api/authentication.md">Password login and JWT</a></li><li><a href="../tracks/spring-boot/references/web-and-api/error-handling-and-http-statuses.md">Error handling and HTTP statuses</a></li><li><a href="../tracks/spring-boot/references/web-and-api/spring-and-http.md">Spring Boot: controllers and dependency injection</a></li><li><a href="../tracks/spring-boot/references/web-and-api/testing.md">Spring testing cheat sheet</a></li><li><a href="../tracks/spring-boot/references/web-and-api/validation-and-api-contracts.md">Validation and API contracts</a></li></ul></li></ul></li><li><span>Topics</span><ul class="tree"><li><a href="../tracks/spring-boot/topics/00-start-here/README.md">Step 00: your tools</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/00-start-here/editor-and-terminal.md">The two-terminal workflow</a></li></ul></li><li><a href="../tracks/spring-boot/topics/01-java-basics/README.md">Step 01: describe one parcel in Java</a></li><li><a href="../tracks/spring-boot/topics/02-oop-and-composition/README.md">Step 02: OOP rules, composition, and first patterns</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/02-oop-and-composition/composition-vs-inheritance.md">Composition vs inheritance</a></li><li><a href="../tracks/spring-boot/topics/02-oop-and-composition/patterns-lab.md">Pattern lab: Builder and Factory</a></li></ul></li><li><a href="../tracks/spring-boot/topics/03-maven/README.md">Step 03: Maven for a repeatable, tested build</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/03-maven/common-build-failures.md">Common build failures (and how to read them)</a></li><li><a href="../tracks/spring-boot/topics/03-maven/testing-with-maven.md">Testing with Maven: what really happens when you type mvn test</a></li></ul></li><li><a href="../tracks/spring-boot/topics/04-first-spring-api/README.md">Step 04: Spring Boot, the first web API</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/04-first-spring-api/annotations-imports.md">Annotations and imports in Spring Boot</a></li><li><a href="../tracks/spring-boot/topics/04-first-spring-api/dependency-injection-walkthrough.md">Dependency injection walkthrough: who creates your objects?</a></li><li><a href="../tracks/spring-boot/topics/04-first-spring-api/json-and-dtos.md">JSON and DTOs: how objects become text (and back)</a></li><li><a href="../tracks/spring-boot/topics/04-first-spring-api/rest-api.md">REST API lab: change a status, then read the status codes</a></li></ul></li><li><a href="../tracks/spring-boot/topics/05-validation-and-inputs/README.md">Step 05: Validation and trustworthy inputs</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/05-validation-and-inputs/bean-validation-explained.md">Bean Validation explained: annotations, the validator, and the request lifecycle</a></li><li><a href="../tracks/spring-boot/topics/05-validation-and-inputs/validation-lab.md">Validation lab: break it, then guard it</a></li></ul></li><li><a href="../tracks/spring-boot/topics/06-error-handling/README.md">Step 06: Error handling &amp; HTTP error contracts</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/06-error-handling/controller-advice-lab.md">Controller advice lab: one error shape, proven with curl</a></li><li><a href="../tracks/spring-boot/topics/06-error-handling/exceptions-in-java.md">Exceptions in ParcelPilot</a></li></ul></li><li><a href="../tracks/spring-boot/topics/07-logging-and-observability-basics/README.md">Step 07: Logging you can actually read</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/07-logging-and-observability-basics/logging-lab.md">Logging lab: from silent 500 to a story you can read</a></li><li><a href="../tracks/spring-boot/topics/07-logging-and-observability-basics/slf4j-and-log-levels.md">SLF4J, levels and log rules</a></li></ul></li><li><a href="../tracks/spring-boot/topics/08-testing/README.md">Step 08: Testing beyond mvn test</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/08-testing/mockmvc-lab.md">Lab: MockMvc, your curl checklist as code</a></li><li><a href="../tracks/spring-boot/topics/08-testing/testcontainers-lab.md">Lab: Testcontainers, a real PostgreSQL for your tests</a></li><li><a href="../tracks/spring-boot/topics/08-testing/unit-vs-integration-vs-e2e.md">Unit vs integration vs end-to-end tests</a></li></ul></li><li><a href="../tracks/spring-boot/topics/09-docker/README.md">Step 09: Docker, ship the API as one unit</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/09-docker/dockerfile-line-by-line.md">The Dockerfile, line by line</a></li><li><a href="../tracks/spring-boot/topics/09-docker/troubleshooting-docker.md">Troubleshooting Docker</a></li></ul></li><li><a href="../tracks/spring-boot/topics/10-persistence/README.md">Step 10: Persistence, keep the parcels</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/10-persistence/flyway-migrations-explained.md">Flyway migrations explained</a></li><li><a href="../tracks/spring-boot/topics/10-persistence/indexes-intro.md">EXPLAIN and the N+1 problem</a></li><li><a href="../tracks/spring-boot/topics/10-persistence/jpa-and-repositories.md">JPA, entities, and repositories</a></li><li><a href="../tracks/spring-boot/topics/10-persistence/locking-explained.md">Locking explained (optimistic vs pessimistic)</a></li></ul></li><li><a href="../tracks/spring-boot/topics/11-monolith/README.md">Step 11: The modular monolith</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/11-monolith/layered-vs-feature-packages.md">Layered vs feature packages: where does this file go?</a></li><li><a href="../tracks/spring-boot/topics/11-monolith/module-boundaries-lab.md">Module boundaries lab: draw lines you can enforce</a></li><li><a href="../tracks/spring-boot/topics/11-monolith/ports-and-adapters.md">Ports and adapters (hexagonal architecture)</a></li></ul></li><li><a href="../tracks/spring-boot/topics/12-queues/README.md">Step 12: Queues, do slow work later</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/12-queues/event-driven-lab.md">Event-driven lab: observer, command, adapter, and idempotency</a></li><li><a href="../tracks/spring-boot/topics/12-queues/idempotency-lab.md">Idempotency lab: surviving duplicate messages</a></li><li><a href="../tracks/spring-boot/topics/12-queues/retries-and-dead-letters.md">Retries and dead letters: when a message keeps failing</a></li><li><a href="../tracks/spring-boot/topics/12-queues/what-is-a-queue.md">What is a queue, really?</a></li></ul></li><li><a href="../tracks/spring-boot/topics/13-split-services/README.md">Step 13: Extract the notification microservice</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/13-split-services/git-tag-checkpoint.md">Git tag checkpoint: save the monolith before you break it</a></li><li><a href="../tracks/spring-boot/topics/13-split-services/network-failure-lab.md">Network failure lab: partial failure is the default now</a></li><li><a href="../tracks/spring-boot/topics/13-split-services/service-contracts.md">Service contracts: the agreement that no compiler checks</a></li></ul></li><li><a href="../tracks/spring-boot/topics/14-compose-and-observe/README.md">Step 14: Docker Compose &amp; observing the system</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/14-compose-and-observe/correlation-ids.md">Correlation IDs: one thread of identity across two services</a></li><li><a href="../tracks/spring-boot/topics/14-compose-and-observe/metrics-intro.md">Metrics intro: from stories to numbers</a></li><li><a href="../tracks/spring-boot/topics/14-compose-and-observe/reading-logs-across-services.md">Reading logs across services</a></li></ul></li><li><a href="../tracks/spring-boot/topics/15-performance-and-safety/README.md">Step 15: Caching, locking, and rate limiting</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/15-performance-and-safety/cache-invalidation-lab.md">Cache invalidation lab: the parcel that wouldn't update</a></li><li><a href="../tracks/spring-boot/topics/15-performance-and-safety/optimistic-locking-lab.md">Optimistic locking lab: when two operators race</a></li><li><a href="../tracks/spring-boot/topics/15-performance-and-safety/rate-limiting.md">Rate limiting lab</a></li></ul></li><li><a href="../tracks/spring-boot/topics/16-jwt-authentication/README.md">Step 16: Password login &amp; JWT protection</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/16-jwt-authentication/authz-vs-authn-lab.md">Authn vs authz lab: who you are vs what you may do</a></li><li><a href="../tracks/spring-boot/topics/16-jwt-authentication/security-troubleshooting.md">Security troubleshooting: symptom → cause → fix</a></li></ul></li></ul></li></ul></details>
           </article>
           <article class="card systems">
             <div class="card-path">tracks/architecture/</div>
@@ -907,36 +1054,36 @@
           <article class="card cs">
             <div class="card-path">sheets/setup/</div>
             <h3><a href="../sheets/setup/README.md">Get set up</a></h3>
-            <p>At the end you have a terminal, an editor, Git, and this whole repository on your computer.</p>
+            <p>You need a computer and internet. Nothing else. You do this once.</p>
             
           </article>
           <article class="card cs">
             <div class="card-path">sheets/git/</div>
-            <h3><a href="../sheets/git/README.md">Git — apply sheet</a></h3>
-            <p>Git saves snapshots of your project so you can undo mistakes, push backups to GitHub, and show employers real history. Use it on every project…</p>
+            <h3><a href="../sheets/git/README.md">Git: your daily loop</a></h3>
+            <p>You already cloned this repository in Get set up and made your own branch. So:</p>
             
           </article>
           <article class="card js">
             <div class="card-path">sheets/html/</div>
-            <h3><a href="../sheets/html/README.md">HTML — sheet (read before project 00)</a></h3>
-            <p>HTML is the skeleton of a page. CSS is paint. JavaScript is muscles. Today only the skeleton.</p>
+            <h3><a href="../sheets/html/README.md">HTML: the skeleton of a page</a></h3>
+            <p>HTML is text with tags around it. A tag says what a piece of text is: a heading, a paragraph, a link. The browser reads the tags and draws the page.</p>
             
           </article>
           <article class="card js">
             <div class="card-path">sheets/css/</div>
-            <h3><a href="../sheets/css/README.md">CSS — sheet (style project 00)</a></h3>
-            <p>CSS paints the dollhouse: colors, space, size. Same HTML, nicer look.</p>
+            <h3><a href="../sheets/css/README.md">CSS: paint for the page</a></h3>
+            <p>A CSS rule has a selector (what you style) and properties (what changes). You put the rules in their own file and link it in &lt;head:</p>
             
           </article>
           <article class="card js">
             <div class="card-path">sheets/javascript/</div>
-            <h3><a href="../sheets/javascript/README.md">JavaScript — topic index</a></h3>
-            <p>You already know arrays, functions, and loops from drills. New syntax appears per web project. Read only the section for where you are.</p>
-            <details><summary>Show 1 page</summary><ul class="tree"><li><a href="../sheets/javascript/by-project.md">JavaScript by project</a></li></ul></details>
+            <h3><a href="../sheets/javascript/README.md">fetch and await: asking the internet</a></h3>
+            <p>fetch(url) sends an HTTP request to a server (see HTTP requests and responses).</p>
+            <details><summary>Show 2 pages</summary><ul class="tree"><li><a href="../sheets/javascript/dom.md">The page tree: clicks and changes</a></li><li><a href="../sheets/javascript/json.md">JSON: data in a parcel</a></li></ul></details>
           </article>
           <article class="card java">
             <div class="card-path">sheets/java/</div>
-            <h3><a href="../sheets/java/README.md">Java — foundation sheet</a></h3>
+            <h3><a href="../sheets/java/README.md">Java: where each topic lives</a></h3>
             <p>Where each Java topic lives, plus the server picture: controller, service, repository.</p>
             <details><summary>Show 1 page</summary><ul class="tree"><li><a href="../sheets/java/server-layers.md">How a Java server is structured</a></li></ul></details>
           </article>
@@ -961,7 +1108,7 @@
           <article class="card js">
             <div class="card-path">sheets/typescript/</div>
             <h3><a href="../sheets/typescript/README.md">TypeScript</a></h3>
-            <p>Projects 00–04 use plain JavaScript on purpose. TypeScript is a side deepen, not the Java spine.</p>
+            <p>TypeScript is JavaScript with optional type annotations — checked before your code runs.</p>
             
           </article>
         </div>
@@ -970,33 +1117,81 @@
         <div class="card-grid">
           <article class="card projects">
             <div class="card-path">projects/01-about-me/</div>
-            <h3><a href="../projects/01-about-me/README.md">Project 00: Static About-Me Page</a></h3>
-            <p>Your first real web page - no JavaScript yet.</p>
-            <details><summary>Show 2 pages</summary><ul class="tree"><li><a href="../projects/01-about-me/docs/step-by-step.md">Step-by-Step - Static About-Me Page</a></li><li><a href="../projects/01-about-me/docs/structure.md">Project Structure — Static About-Me Page</a></li></ul></details>
+            <h3><a href="../projects/01-about-me/README.md">Project 1: About-me page</a></h3>
+            <p>Your first real web page. No JavaScript yet: only HTML and CSS.</p>
+            <details><summary>Show 3 pages</summary><ul class="tree"><li><a href="../projects/01-about-me/solution/index.html">About Me</a></li><li><a href="../projects/01-about-me/starter/index.html">About Me</a></li><li><a href="../projects/01-about-me/step-by-step.md">Project 1: step by step</a></li></ul></details>
+          </article>
+          <article class="card projects">
+            <div class="card-path">projects/02-shopping-list-web/</div>
+            <h3><a href="../projects/02-shopping-list-web/README.md">Project 2: Shopping list in the browser</a></h3>
+            <p>Your first web page that does something. You type &quot;Milk&quot;, press Add, and it is on the list. Tomorrow it is still there.</p>
+            <details><summary>Show 3 pages</summary><ul class="tree"><li><a href="../projects/02-shopping-list-web/solution/index.html">Shopping list</a></li><li><a href="../projects/02-shopping-list-web/starter/index.html">Shopping list</a></li><li><a href="../projects/02-shopping-list-web/step-by-step.md">Project 2: step by step</a></li></ul></details>
           </article>
           <article class="card projects">
             <div class="card-path">projects/03-tic-tac-toe/</div>
-            <h3><a href="../projects/03-tic-tac-toe/README.md">Build Tic Tac Toe: JavaScript Logic Practice</a></h3>
-            <p>Goal: build a simple Tic Tac Toe game with HTML, CSS, and JavaScript.</p>
-            
+            <h3><a href="../projects/03-tic-tac-toe/README.md">Project 3: Tic-tac-toe</a></h3>
+            <p>Build the game for two players on one screen. X and O take turns on a 3×3 board. The game sees who wins, sees a draw, and starts again with one click.</p>
+            <details><summary>Show 4 pages</summary><ul class="tree"><li><span>Help</span><ul class="tree"><li><a href="../projects/03-tic-tac-toe/help/troubleshooting.md">Tic-tac-toe: troubleshooting</a></li></ul></li><li><a href="../projects/03-tic-tac-toe/solution/index.html">Tic-tac-toe</a></li><li><a href="../projects/03-tic-tac-toe/starter/index.html">Tic-tac-toe</a></li><li><a href="../projects/03-tic-tac-toe/step-by-step.md">Project 3: step by step</a></li></ul></details>
           </article>
           <article class="card projects">
             <div class="card-path">projects/04-weather-dashboard/</div>
-            <h3><a href="../projects/04-weather-dashboard/README.md">Project 1: Weather Dashboard</a></h3>
-            <p>Your first app that talks to the internet.</p>
-            <details><summary>Show 7 pages</summary><ul class="tree"><li><a href="../projects/04-weather-dashboard/docs/code-reference.md">Code Reference — Weather Dashboard</a></li><li><a href="../projects/04-weather-dashboard/docs/concepts.md">Concepts — Weather Dashboard</a></li><li><span>Help</span><ul class="tree"><li><a href="../projects/04-weather-dashboard/docs/help/faq.md">FAQ — Weather Dashboard</a></li><li><a href="../projects/04-weather-dashboard/docs/help/glossary.md">Glossary — Weather Dashboard</a></li><li><a href="../projects/04-weather-dashboard/docs/help/troubleshooting.md">Troubleshooting — Weather Dashboard</a></li></ul></li><li><a href="../projects/04-weather-dashboard/docs/step-by-step.md">Step-by-Step - Weather Dashboard</a></li><li><a href="../projects/04-weather-dashboard/docs/structure.md">Project Structure — Weather Dashboard</a></li></ul></details>
+            <h3><a href="../projects/04-weather-dashboard/README.md">Project 4: Weather dashboard</a></h3>
+            <p>Your first app that talks to the internet. You type a city, press Search, and see the real weather right now and for the next five days.</p>
+            <details><summary>Show 5 pages</summary><ul class="tree"><li><span>Help</span><ul class="tree"><li><a href="../projects/04-weather-dashboard/help/open-meteo.md">Open-Meteo: the weather service</a></li><li><a href="../projects/04-weather-dashboard/help/troubleshooting.md">Weather dashboard: troubleshooting and questions</a></li></ul></li><li><a href="../projects/04-weather-dashboard/solution/index.html">Weather dashboard</a></li><li><a href="../projects/04-weather-dashboard/starter/index.html">Weather dashboard</a></li><li><a href="../projects/04-weather-dashboard/step-by-step.md">Project 4: step by step</a></li></ul></details>
+          </article>
+          <article class="card projects">
+            <div class="card-path">projects/05-password-generator/</div>
+            <h3><a href="../projects/05-password-generator/README.md">Project 5: Password generator</a></h3>
+            <p>Your first real Java program. It asks a few questions in the terminal and prints a fresh, random password.</p>
+            <details><summary>Show 1 page</summary><ul class="tree"><li><a href="../projects/05-password-generator/step-by-step.md">Password generator: step by step</a></li></ul></details>
+          </article>
+          <article class="card projects">
+            <div class="card-path">projects/06-shopping-list-java/</div>
+            <h3><a href="../projects/06-shopping-list-java/README.md">Project 6: Shopping list in Java</a></h3>
+            <p>You built a shopping list in the browser in Project 2. Now you build the same app in Java, in the terminal. Same idea, new language.</p>
+            <details><summary>Show 1 page</summary><ul class="tree"><li><a href="../projects/06-shopping-list-java/step-by-step.md">Shopping list in Java: step by step</a></li></ul></details>
+          </article>
+          <article class="card projects">
+            <div class="card-path">projects/07-shared-expenses/</div>
+            <h3><a href="../projects/07-shared-expenses/README.md">Project 7: Shared expenses</a></h3>
+            <p>You build the money book for a group. It keeps a score per person in a HashMap, and it counts money in cents.</p>
+            <details><summary>Show 1 page</summary><ul class="tree"><li><a href="../projects/07-shared-expenses/step-by-step.md">Shared expenses: step by step</a></li></ul></details>
+          </article>
+          <article class="card projects">
+            <div class="card-path">projects/08-calendar-conflicts/</div>
+            <h3><a href="../projects/08-calendar-conflicts/README.md">Project 8: Calendar conflicts</a></h3>
+            <p>You build a day planner for the terminal. It finds clashing meetings and the free gaps in a day from 08:00 to 20:00.</p>
+            <details><summary>Show 1 page</summary><ul class="tree"><li><a href="../projects/08-calendar-conflicts/step-by-step.md">Calendar conflicts: step by step</a></li></ul></details>
+          </article>
+          <article class="card projects">
+            <div class="card-path">projects/09-household-budget/</div>
+            <h3><a href="../projects/09-household-budget/README.md">Project 9: Household budget</a></h3>
+            <p>You build a money book for a household. It saves to a CSV file when you quit, loads it again on the next start, and has JUnit tests that prove the…</p>
+            <details><summary>Show 1 page</summary><ul class="tree"><li><a href="../projects/09-household-budget/step-by-step.md">Household budget: step by step</a></li></ul></details>
           </article>
           <article class="card projects">
             <div class="card-path">projects/10-java-weather-cli/</div>
-            <h3><a href="../projects/10-java-weather-cli/README.md">Project 05: Java Weather CLI</a></h3>
-            <p>Same weather idea as the browser dashboard - but in the terminal with Java.</p>
-            <details><summary>Show 2 pages</summary><ul class="tree"><li><a href="../projects/10-java-weather-cli/docs/step-by-step.md">Step-by-Step - Java Weather CLI</a></li><li><a href="../projects/10-java-weather-cli/docs/structure.md">Project Structure — Java Weather CLI</a></li></ul></details>
+            <h3><a href="../projects/10-java-weather-cli/README.md">Project 10: Java weather CLI</a></h3>
+            <p>Same weather as your browser dashboard in Project 4, now in the terminal with Java.</p>
+            <details><summary>Show 1 page</summary><ul class="tree"><li><a href="../projects/10-java-weather-cli/step-by-step.md">Java weather CLI: step by step</a></li></ul></details>
+          </article>
+          <article class="card projects">
+            <div class="card-path">projects/11-parcel-database/</div>
+            <h3><a href="../projects/11-parcel-database/README.md">Project 11: Parcel database</a></h3>
+            <p>Until now your data lived in memory or in a CSV file. Now it lives in PostgreSQL, a real database. This is the first piece of ParcelPilot, the app…</p>
+            <details><summary>Show 1 page</summary><ul class="tree"><li><a href="../projects/11-parcel-database/step-by-step.md">Parcel database: step by step</a></li></ul></details>
+          </article>
+          <article class="card projects">
+            <div class="card-path">projects/12-calculator/</div>
+            <h3><a href="../projects/12-calculator/README.md">Project 12: Calculator</a></h3>
+            <p>You build a calculator that reads a whole line like 2 + 3 (4 - 1) and gets 11, not 15. Times before plus, brackets first. No library does the…</p>
+            <details><summary>Show 1 page</summary><ul class="tree"><li><a href="../projects/12-calculator/step-by-step.md">Calculator: step by step</a></li></ul></details>
           </article>
           <article class="card projects">
             <div class="card-path">projects/extras/</div>
             <h3>Extra projects</h3>
             <p>Optional builds off the main path: Docker for your page, a React todo app.</p>
-            <details><summary>Show 18 pages</summary><ul class="tree"><li><a href="../projects/extras/docker-portfolio/README.md">Project 2: Dockerized Portfolio</a><ul class="tree"><li><span>Docs</span><ul class="tree"><li><a href="../projects/extras/docker-portfolio/docs/code-reference.md">Code Reference — Docker Portfolio</a></li><li><a href="../projects/extras/docker-portfolio/docs/concepts.md">Concepts — Docker Portfolio</a></li><li><span>Help</span><ul class="tree"><li><a href="../projects/extras/docker-portfolio/docs/help/faq.md">FAQ — Docker Portfolio</a></li><li><a href="../projects/extras/docker-portfolio/docs/help/glossary.md">Glossary — Docker Portfolio</a></li><li><a href="../projects/extras/docker-portfolio/docs/help/terminal-cheatsheet.md">Terminal Cheat Sheet — Docker Project</a></li><li><a href="../projects/extras/docker-portfolio/docs/help/troubleshooting.md">Troubleshooting — Docker Portfolio</a></li></ul></li><li><a href="../projects/extras/docker-portfolio/docs/step-by-step.md">Step-by-Step — Docker Portfolio</a></li><li><a href="../projects/extras/docker-portfolio/docs/structure.md">Project Structure — Docker Portfolio</a></li></ul></li></ul></li><li><a href="../projects/extras/react-todo/README.md">Project 4: React Todo App</a><ul class="tree"><li><span>Docs</span><ul class="tree"><li><a href="../projects/extras/react-todo/docs/code-reference.md">Code Reference — React Todo App</a></li><li><a href="../projects/extras/react-todo/docs/component-guide.md">Component Guide — React Todo App</a></li><li><a href="../projects/extras/react-todo/docs/concepts.md">Concepts — React Todo App</a></li><li><span>Help</span><ul class="tree"><li><a href="../projects/extras/react-todo/docs/help/faq.md">FAQ — React Todo App</a></li><li><a href="../projects/extras/react-todo/docs/help/glossary.md">Glossary — React Todo App</a></li><li><a href="../projects/extras/react-todo/docs/help/troubleshooting.md">Troubleshooting — React Todo App</a></li></ul></li><li><a href="../projects/extras/react-todo/docs/step-by-step.md">Step-by-Step — React Todo App</a></li><li><a href="../projects/extras/react-todo/docs/structure.md">Project Structure — React Todo App</a></li></ul></li></ul></li></ul></details>
+            <details><summary>Show 15 pages</summary><ul class="tree"><li><a href="../projects/extras/docker-portfolio/README.md">Extra: ship your About-me page in Docker</a><ul class="tree"><li><span>Docs</span><ul class="tree"><li><a href="../projects/extras/docker-portfolio/docs/code-reference.md">Docker portfolio: code reference</a></li><li><a href="../projects/extras/docker-portfolio/docs/concepts.md">Docker portfolio: concepts</a></li><li><span>Help</span><ul class="tree"><li><a href="../projects/extras/docker-portfolio/docs/help/faq.md">Docker portfolio: FAQ</a></li><li><a href="../projects/extras/docker-portfolio/docs/help/terminal-cheatsheet.md">Terminal cheat sheet: Docker project</a></li><li><a href="../projects/extras/docker-portfolio/docs/help/troubleshooting.md">Docker portfolio: troubleshooting</a></li></ul></li><li><a href="../projects/extras/docker-portfolio/docs/step-by-step.md">Docker portfolio: step by step</a></li></ul></li></ul></li><li><a href="../projects/extras/react-todo/README.md">Extra: React todo app</a><ul class="tree"><li><span>Docs</span><ul class="tree"><li><a href="../projects/extras/react-todo/docs/code-reference.md">Code Reference — React Todo App</a></li><li><a href="../projects/extras/react-todo/docs/component-guide.md">Component Guide — React Todo App</a></li><li><a href="../projects/extras/react-todo/docs/concepts.md">Concepts — React Todo App</a></li><li><span>Help</span><ul class="tree"><li><a href="../projects/extras/react-todo/docs/help/faq.md">FAQ — React Todo App</a></li><li><a href="../projects/extras/react-todo/docs/help/troubleshooting.md">Troubleshooting — React Todo App</a></li></ul></li><li><a href="../projects/extras/react-todo/docs/step-by-step.md">Step-by-Step — React Todo App</a></li><li><a href="../projects/extras/react-todo/docs/structure.md">Project Structure — React Todo App</a></li></ul></li></ul></li></ul></details>
           </article>
         </div>
         <h3 class="library-title">Practice</h3>
@@ -1006,7 +1201,7 @@
             <div class="card-path">drills/javascript/</div>
             <h3><a href="../drills/javascript/README.md">JavaScript drills</a></h3>
             <p>Eight topics with ten tested tasks each. Run them with make test.</p>
-            <details><summary>Show 8 pages</summary><ul class="tree"><li><a href="../drills/javascript/arrays/README.md">Thema: Arrays (Listen)</a></li><li><a href="../drills/javascript/conditionals/README.md">Thema: Verzweigungen (if / else)</a></li><li><a href="../drills/javascript/functions/README.md">Thema: Funktionen</a></li><li><a href="../drills/javascript/loops/README.md">Thema: Schleifen (for, while)</a></li><li><a href="../drills/javascript/math/README.md">Thema: Mathe mit Math</a></li><li><a href="../drills/javascript/objects/README.md">Thema: Objekte</a></li><li><a href="../drills/javascript/strings/README.md">Thema: Text (Strings)</a></li><li><a href="../drills/javascript/variables/README.md">Thema: Variablen (let, const)</a></li></ul></details>
+            <details><summary>Show 8 pages</summary><ul class="tree"><li><a href="../drills/javascript/arrays/README.md">Drill: arrays</a></li><li><a href="../drills/javascript/conditionals/README.md">Drill: if / else</a></li><li><a href="../drills/javascript/functions/README.md">Drill: functions</a></li><li><a href="../drills/javascript/loops/README.md">Drill: loops</a></li><li><a href="../drills/javascript/math/README.md">Drill: math</a></li><li><a href="../drills/javascript/objects/README.md">Drill: objects</a></li><li><a href="../drills/javascript/strings/README.md">Drill: strings</a></li><li><a href="../drills/javascript/variables/README.md">Drill: variables</a></li></ul></details>
           </article>
           <article class="card java">
             <div class="card-path">programs/code-for-cleaning/</div>
@@ -1034,25 +1229,25 @@
         </details>
       </div>
     </section>
-
-    <section class="section" id="local">
-      <div class="container">
-        <div class="section-head">
-          <h2>On your computer</h2>
-          <p>Steps marked <strong>Do</strong> happen on your computer. Get the repository once, then always work in it.</p>
-        </div>
-        <div class="workflow">
-          <div class="workflow-step"><strong>1 · Clone once</strong><span><code>git clone https://github.com/kevin-voss/learning-project.git</code> then <code>cd learning-project</code>. Every page here is a file in the same folder.</span></div>
-          <div class="workflow-step"><strong>2 · Drills</strong><span>Run <code>make test</code>, or one topic like <code>make variables</code>. Green means done.</span></div>
-          <div class="workflow-step"><strong>3 · Projects</strong><span>Open the project folder and follow its <code>docs/step-by-step.md</code>.</span></div>
-          <div class="workflow-step"><strong>4 · My tasks</strong><span>Write your code in the Aufgabe's <code>meine-loesung/</code>. Compare with <code>musterloesung/</code> when you are done. Then commit and push your branch.</span></div>
-        </div>
-      </div>
-    </section>
   </main>
 
-  <footer class="site-footer">
-    <div class="container">The order of the path lives in <code>hub/path.mjs</code>. The rest of this page is generated by <code>hub/scripts/catalog.mjs</code>.</div>
+  <footer class="site-footer" id="help">
+    <div class="container footer-grid">
+      <div>
+        <h2>On your computer</h2>
+        <ol class="workflow">
+          <li><strong>Get the repo once.</strong> <code>git clone https://github.com/kevin-voss/learning-project.git</code>, then <code>cd learning-project</code> and <code>git switch -c your-name</code>. Step 4 of the path does this with you.</li>
+          <li><strong>Drills.</strong> <code>make variables</code> runs one topic, <code>make test</code> runs all. Green means done.</li>
+          <li><strong>Projects.</strong> Open <code>projects/&lt;NN-name&gt;/</code>. Work in <code>starter/</code>, follow <code>step-by-step.md</code>, compare with <code>solution/</code> at the end.</li>
+          <li><strong>My tasks.</strong> Write your code in the Aufgabe's <code>meine-loesung/</code>. Then commit and push your branch.</li>
+        </ol>
+      </div>
+      <div>
+        <h2>For teachers</h2>
+        <p>The order of the path lives in <code>hub/path.mjs</code>; the rest of this page is generated by <code>make site</code>. New Übung for a student: <code>make new-uebung</code>. Writing rules: <a href="../docs/STYLE.md">docs/STYLE.md</a>. Why the path has this order: <a href="../docs/LEARNING_PATH.md">docs/LEARNING_PATH.md</a>.</p>
+        <p><a href="https://github.com/kevin-voss/learning-project">Source on GitHub</a></p>
+      </div>
+    </div>
   </footer>
   <script src="progress.js"></script>
 </body>

@@ -1,70 +1,122 @@
 # Content authoring contract
 
-One folder per topic group under `content/`. Each `.js` file registers one or more
-sections with `AI_PUSH` (defined by `js/app.js`, loaded before content files):
+One folder per topic group under `content/`. **One plain HTML page per topic**,
+named `<section-id>.html`. Pages share the shell (topbar, sidebar, pager) built by
+`../../js/app.js` and the styles in `../../css/`. The landing page is `../index.html`.
 
-```js
-AI_PUSH({
-  id: "tool-calling",        // unique url slug, kebab-case (see id map below)
-  part: 3,                   // 1-5, controls nav grouping
-  title: "Tool calling & structured output",  // renders as the H2
-  blurb: "one short line under the title",    // optional
-  html: `
-  <p class="lead">…plain-words opener…</p>
-  …beats, tables, code, diagrams…
-  `,
-});
-```
-
-The `html` string is a JS template literal:
-- Escape backticks as <code>\\`</code> and dollar-brace as <code>\\${</code>. Prefer avoiding them entirely.
-- Do NOT write the `<h2>` — the shell renders it from `title`. Start with `<p class="lead">`.
-- Never include `<script>` tags or inline `style=` attributes (the animated flow lanes of the old sheet are now static).
-
-## Topic flow (required per topic)
-
-Cover the loop with beats, in this order unless the topic demands better (then note why in a comment):
-
-1. `<div class="beat problem">` — what breaks without this
-2. `<div class="beat solution">` — the idea in plain words
-3. `<div class="beat how">` — mechanics, budgets, failure modes (H3 subtopics usually live here)
-4. `<div class="beat when">` — when to use / when not (use/avoid/watch table)
-5. `<div class="beat example">` — real world + tiny code
-6. `<div class="beat pitfalls">` — security, cost, latency, quality traps
-7. `<div class="beat checklist">` — 3-7 bullets to remember
-
-Beat markup:
+Page skeleton (already in place, do not restructure it — edit only the marked zone):
 
 ```html
-<div class="beat problem">
-  <div class="beat-h"><span class="bt">Problem</span><span class="bh">short hint line</span></div>
-  <ul><li><b>Lead word:</b> short sentence.</li></ul>
-</div>
+<main class="main">
+  <div class="content">
+    <header class="topic-head">
+      <div class="kicker">Part 3 · Tools & agents · 11/24</div>
+      <h1>Tool calling & structured output</h1>
+      <p class="lead">one short description sentence</p>
+    </header>
+    <!-- EDIT FROM HERE: the topic body -->
+
+    …stages: why → solutions → when → example…
+
+    <!-- EDIT TO HERE -->
+    <nav class="pager" id="pager"></nav>
+    <footer class="footer">…</footer>
+  </div>
+</main>
 ```
 
-Legacy `beat-block bb-*` classes from the old sheet also style correctly, but write new content with `.beat`.
+Keep the kicker, h1, lead, pager, footer and all `<head>`/chrome untouched.
+H3 subtopics get stable ids `SECTION-ID--slug` (already present, keep them).
+
+## Topic flow (REQUIRED, in this order)
+
+```html
+<div class="stage-label sl-why">Why you need it</div>
+<div class="why">
+  <ul><li><b>Lead word:</b> one short line.</li></ul>
+</div>
+
+<div class="stage-label sl-sol">Solutions</div>
+<p>one line framing the options…</p>
+<div class="sol-list">
+  <div class="sol-item">
+    <button class="sol-head" type="button">
+      <span class="sol-no">A</span>
+      <span class="sol-name">Solution name <span class="sol-tag best">default</span></span>
+      <span class="sol-sum">one-line summary, readable while closed</span>
+      <span class="sol-chev">▶</span>
+    </button>
+    <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+      <h4>How it works</h4>
+      <ul><li>mechanics, budgets, failure modes</li></ul>
+    </div></div></div>
+  </div>
+</div>
+
+<div class="stage-label sl-when">When to use · when not</div>
+<div class="pc">
+  <div class="pc-col pros"><h4 class="pc-h">Use when</h4><ul><li>…</li></ul></div>
+  <div class="pc-col cons"><h4 class="pc-h">Skip when</h4><ul><li>…</li></ul></div>
+</div>
+
+<div class="stage-label sl-ex">Example</div>
+<div class="example">
+  <p class="ex-note">what this shows and how to read it…</p>
+  <pre class="code" data-lang="python" data-file="demo.py"><code>…</code></pre>
+</div>
+
+<!-- optional compact closers -->
+<div class="stage-label sl-extra">Watch out</div>
+<div class="pit-list"><ul><li>trap</li></ul></div>
+<div class="stage-label sl-extra">Remember</div>
+<div class="remember"><ul><li>3-5 bullets</li></ul></div>
+```
+
+## Density rules (hard — the sheet must scan, not spam)
+
+- Lead: one sentence. Why: max 4 bullets, each one line.
+- Solutions: 2-5 items. `sol-sum` max ~10 words. Inside each item: 2-3 h4 groups,
+  each 3-5 short bullets (max ~14 words per bullet).
+- Pros/cons: max 4 items per column, one line each.
+- Example: 2-3 sentences of explanation + one code sample ≤ 25 lines.
+- Watch out + Remember: max 5 bullets each, one line each.
+- Target page body (between the edit markers): ≤ 150 lines of HTML.
+- Cut filler words. Every bullet must earn its line. Prefer concrete numbers and names.
+
+## Cross-page links
+
+`<a class="xl" href="same-folder-page.html">name</a>` or
+`<a class="xl" href="../04-tools-mcp/tool-calling.html">name</a>` for other folders.
+With subtopic: append `#SECTION-ID--slug`. Never `#section-id` bare (that was the old
+single-page format) and never `§01` numbers.
+
+## Diagrams (mermaid) — readability rules
+
+- Wrap: `<div class="diagram"><div class="diag-body"><pre class="mermaid">…</pre></div></div>`.
+- Diagrams render at 100% of the content width, so keep sources SIMPLE:
+  max 8 nodes, max 4 edge labels, max 4 sequence participants.
+- Labels: max 4 words per line, wrap with `&lt;br/&gt;`. No sentences in nodes.
+- Prefer `flowchart TD`. If a diagram does not earn its place, delete it.
 
 ## Writing rules (hard)
 
-- No em-dash (`—`) anywhere, including code comments and tooltips. Use `·` or `,` instead.
-- No semicolon (`;`) in prose or tooltips. Semicolons are fine inside `<pre>` code samples only.
+- No em-dash (`—`) anywhere, including code comments and tooltips. Use `·` or `,`.
+- No semicolon (`;`) in prose or tooltips. Only inside `<pre>` code samples.
 - Bullets and short sentences. No walls of text.
 - Simple first, then why, then technical depth.
-- Cross-reference other topics with `<a class="xl" href="#SECTION-ID">name</a>`, never `§01` numbers.
 
 ## Components
 
-- Code: `<pre class="code" data-lang="python" data-file="name.py"><code>…</code></pre>`, collapsed + copy wired by the shell. Highlight manually with spans: `tk-k` keyword, `tk-s` string, `tk-f` function, `tk-n` number, `tk-c` comment, `tk-t` type/tag, `tk-a` attribute.
-- Table: wrap in `<div class="tbl-wrap">`, columns `Use when / Avoid when / Watch out` with `td class="u"/"avoid"/"watch"` and `th class="hu"/"ha"/"hw"`.
+- Code: `<pre class="code" data-lang="python" data-file="name.py"><code>…</code></pre>`, collapsed + copy wired by app.js. Highlight manually with spans: `tk-k` keyword, `tk-s` string, `tk-f` function, `tk-n` number, `tk-c` comment, `tk-t` type/tag, `tk-a` attribute.
+- Table: wrap in `<div class="tbl-wrap">`, columns `Use when / Avoid when / Watch out` with `td class="u"/"avoid"/"watch"` and `th class="hu"/"ha"/"hw"`. Only for 4+ option comparisons.
 - Tooltip term: `<button class="term" type="button" data-tip="short definition">word</button>`.
-- Diagram: `<div class="diagram"><div class="diag-body"><pre class="mermaid">graph TD…</pre></div></div>` (mermaid from CDN, source shows offline).
 - Cards: `<div class="grid2"><div class="wcard"><h4>title</h4><ul>…</ul></div></div>`.
 - Chips: `<span class="wlabel why">why</span>`, `<span class="wlabel gotcha">gotcha</span>`.
 - Callouts: `<p class="note">`, `<p class="warn">`, `<p class="danger">`.
 
-## Section id map (do not invent new ids without updating this file)
+## Section id map (= file names)
 
-| id | part | topic |
+| id (file) | part | topic |
 |----|------|-------|
 | `llm-internals` | 1 | How LLMs actually work |
 | `ml-multimodal` | 1 | ML just enough + multimodal, vision, OCR |
@@ -89,10 +141,11 @@ Legacy `beat-block bb-*` classes from the old sheet also style correctly, but wr
 | `evals` | 5 | Evals and observability |
 | `architecture` | 5 | The AI system architecture |
 | `aws` | 5 | Full systems on AWS |
-| `quickref` | 5 | The 30-second layer |
+| `quickref` | 5 | The 30-second layer (summary cards, flow exempt) |
 
-## Limits and checks before you commit a file
+## Limits and checks before you commit a page
 
-- ≤ 400 lines per file (split into a second file in the same folder if needed).
+- ≤ 400 total lines per HTML file · body between edit markers ≤ 150 lines.
 - ≤ 5 files per folder (subfolders do not count).
-- Run `node --check <file>` (must pass) and `grep -n "—" <file>` (must be empty).
+- `grep -n "—" <file>` empty · `grep -c 'class="beat' <file>` zero ·
+  `grep -c 'sol-item' <file>` ≥ 2 (except quickref) · no `href="#` single-page anchors left.

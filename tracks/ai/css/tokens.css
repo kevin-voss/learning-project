@@ -1,56 +1,56 @@
-/* tokens — palette, type, spacing. All themes derive from here. */
+/* tokens — restrained dark palette: near-black, hairlines, one gold accent */
 :root {
   /* surfaces */
-  --bg: #0a0c10;
-  --bg-soft: #0d1016;
-  --panel: #10141b;
-  --panel-2: #151a23;
-  --edge: #222936;
-  --edge-2: #2f3848;
+  --bg: #0a0b0d;
+  --bg-soft: #0e1013;
+  --panel: #121419;
+  --panel-2: #171a20;
+  --edge: #1e222a;
+  --edge-2: #2b303b;
 
   /* text */
-  --txt: #d7dce5;
-  --txt-strong: #eef1f6;
-  --dim: #97a0b0;
-  --faint: #616b7d;
+  --txt: #c6ccd6;
+  --txt-strong: #f0f3f7;
+  --dim: #99a2b0;
+  --faint: #5d6673;
 
-  /* semantic accents (screen) */
-  --mint: #4ade80;          /* solution, positive */
-  --sky: #7dd3fc;           /* how it works, technical */
-  --amber: #fbbf24;         /* when to use, watch out */
-  --deny: #f87171;          /* problem, pitfall */
-  --teal: #2dd4bf;          /* example, real world */
-  --grape: #b1a5f5;         /* memory, misc (use sparingly) */
+  /* accents (use sparingly) */
+  --gold: #d3b78a;           /* single primary accent */
+  --gold-soft: rgba(211, 183, 138, .12);
+  --mint: #7fd6a4;           /* pros only */
+  --deny: #e58e8e;           /* cons / warnings only */
+  --info: #9db8d9;           /* links, quiet highlights */
 
   /* syntax tokens (dark screen values; print.css flips these) */
-  --tk-k: #c792ea;          /* keyword */
-  --tk-s: #a5d6a7;          /* string */
-  --tk-f: #82aaff;          /* function */
-  --tk-n: #f78c6c;          /* number */
-  --tk-c: #5d6b7e;          /* comment */
-  --tk-t: #7dd3fc;          /* type / tag */
-  --tk-a: #fbbf24;          /* attribute / annotation */
+  --tk-k: #c9a6e8;
+  --tk-s: #a9d8b4;
+  --tk-f: #8fb8f2;
+  --tk-n: #edb88a;
+  --tk-c: #5d6b7e;
+  --tk-t: #9dc3e8;
+  --tk-a: #d9c08a;
 
   /* code surfaces */
-  --code-bg: #0c0f15;
-  --code-edge: #1d2431;
+  --code-bg: #0c0e12;
+  --code-edge: #1b202a;
 
   /* type */
   --sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --serif: 'Fraunces', Georgia, 'Times New Roman', serif;
   --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
 
   /* rhythm */
   --r-xs: 4px;
   --r-sm: 8px;
-  --r-md: 14px;
-  --r-lg: 22px;
-  --r-xl: 34px;
-  --rad: 10px;
-  --rad-sm: 6px;
+  --r-md: 16px;
+  --r-lg: 26px;
+  --r-xl: 44px;
+  --rad: 12px;
+  --rad-sm: 8px;
 
   /* chrome */
-  --topbar-h: 52px;
-  --sidebar-w: 268px;
-  --content-w: 900px;
-  --shadow: 0 18px 50px -24px rgba(0, 0, 0, .8);
+  --topbar-h: 56px;
+  --sidebar-w: 280px;
+  --content-w: 880px;
+  --shadow: 0 24px 60px -30px rgba(0, 0, 0, .85);
 }

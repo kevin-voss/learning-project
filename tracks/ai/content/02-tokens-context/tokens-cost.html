@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tokens, cost and caching · AI Engineering Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../css/tokens.css">
+<link rel="stylesheet" href="../../css/base.css">
+<link rel="stylesheet" href="../../css/components.css">
+<link rel="stylesheet" href="../../css/flow.css">
+<link rel="stylesheet" href="../../css/print.css">
+</head>
+<body>
+
+<div id="progress"></div>
+
+<header class="topbar">
+  <button class="tbtn" id="nav-toggle" type="button" aria-label="Toggle navigation">☰</button>
+  <a class="brand" href="../../index.html"><b>ai</b>·field-guide</a>
+  <div class="tools">
+    <input id="toc-filter" type="search" placeholder="filter · /" aria-label="Filter topics">
+    <button class="tbtn" id="expand-all" type="button">expand</button>
+    <button class="tbtn" id="print-btn" type="button">print</button>
+  </div>
+</header>
+
+<nav class="sidebar" id="toc" aria-label="Topics"></nav>
+
+<main class="main">
+  <div class="content">
+    <header class="topic-head">
+      <div class="kicker">Part 1 · Foundations · 05/24</div>
+      <h1>Tokens, cost and caching</h1>
+      <p class="lead">Every request is metered twice: once for the tokens you send in, once for the tokens the model writes out. Cost control is four levers stacked, send less, cache what repeats, batch what can wait, cap the output.</p>
+    </header>
+
+  <div class="stage-label sl-why">Why you need it</div>
+  <div class="why">
+    <ul>
+      <li><b>Bills explode on two meters:</b> tokens <b>in</b> (your prompt) and tokens <b>out</b> (the answer), and volume multiplies both. Output runs 3 to 5x pricier per token than input.</li>
+      <li><b>Why the asymmetry:</b> input is <button class="term" type="button" data-tip="One parallel forward pass over the whole prompt before generation starts. Cheap per token, and cacheable.">prefill</button>, one parallel pass over the whole prompt. Output is decode, one serial pass per token attending over everything so far via the <button class="term" type="button" data-tip="Cached attention keys and values from prefill. Lets generation attend to the prompt without recomputing it, and lets providers discount repeated prefixes.">KV cache</button>. Serial compute, priced accordingly.</li>
+      <li><b>One formula:</b> <code>cost = tokens_in × rate_in + tokens_out × rate_out</code>. Nothing else enters it. Long <a class="xl" href="../05-agents-orchestration/agent-patterns.html">agent loops</a> multiply both meters per step.</li>
+      <li><b>Tokenization sets the bill:</b> roughly 4 characters of English per token. Code, JSON and non-English text tokenize denser, so the same visible text costs differently by format.</li>
+      <li><b>Hidden spend everywhere:</b> system prompts, tool schemas, retrieved docs, history. The 1k-token system prompt nobody touches is a permanent tax on every request.</li>
+      <li><b>The window is billed, not free.</b> A 200k context window still pays for every token sent, see <a class="xl" href="../01-foundations/llm-internals.html">how LLMs actually work</a>.</li>
+      <li><b>Repeat traffic pays full price</b> unless you cache it: same system prompt, same FAQs, near-identical questions, re-billed on every call.</li>
+      <li><b>Ballparks, per 1M tokens:</b> small fast tier $0.15 to $0.60 in, flagship tier $2 to $5 in, output 3 to 5x that, cached input 50 to 90% off, batch ~50% off both meters. Numbers drift quarterly, price from the provider's current page, never from memory.</li>
+    </ul>
+  </div>
+
+  <div class="stage-label sl-sol">Solutions</div>
+  <p class="lead">Four levers that stack: cache the prefix, replay the repeats, batch the patient, cap the output.</p>
+
+  <div class="diagram"><div class="diag-body"><pre class="mermaid">flowchart TD
+  Q["incoming request"] --> E{"exact&lt;br/&gt;cache hit"}
+  E -- hit --> A["replay stored&lt;br/&gt;answer · 0 tokens"]
+  E -- miss --> S{"semantic&lt;br/&gt;near-match"}
+  S -- hit --> A
+  S -- miss --> M["model call&lt;br/&gt;cached prefix"]
+  </pre></div></div>
+
+  <div class="sol-list">
+
+    <div class="sol-item">
+      <button class="sol-head" type="button">
+        <span class="sol-no">A</span>
+        <span class="sol-name">Provider prompt caching <span class="sol-tag best">default</span></span>
+        <span class="sol-sum">identical prefix cached server-side, 50 to 90% off input</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li><b><button class="term" type="button" data-tip="The provider caches identical prompt prefixes on their servers and bills cached tokens at a steep discount. Works because of the KV cache.">Prompt caching</button></b> reuses the provider-side KV cache for identical prefixes: cached input bills at 50 to 90% off and prefill latency mostly disappears.</li>
+          <li><b>Prefix matching only:</b> the cache hits when the first N tokens are identical. One changed character at position 10 invalidates everything after it.</li>
+          <li><b>Order is everything:</b> static content first (system prompt, tool schemas, few-shots), dynamic last (timestamps, per-user data, the query). Build one shared prefix, append user deltas.</li>
+          <li><b>OpenAI:</b> automatic for prompts over 1,024 tokens, roughly 50% off cached tokens, no code changes, still needs a stable prefix. <b>Anthropic:</b> explicit <code>cache_control</code>, writes ~1.25x once, reads ~0.1x, so a single reuse already wins. TTL 5 minutes, or 1 hour at 2x write cost.</li>
+          <li><b>What invalidates:</b> timestamps or request ids at the top, system prompt churn from A/B tests or per-user variations, tool schema re-ordering and version bumps.</li>
+        </ul>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><b>pro:</b> the cheapest lever, cuts latency as well as cost, works on existing traffic.</li>
+          <li><b>con:</b> demands stable-prefix discipline, and hit-rate loss when the prefix churns is silent, track cache hit rate next to cost per request.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+    <div class="sol-item">
+      <button class="sol-head" type="button">
+        <span class="sol-no">B</span>
+        <span class="sol-name">Response caches, exact + semantic <span class="sol-tag fast">skips the model</span></span>
+        <span class="sol-sum">repeats never reach the model, zero model tokens</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li><b>Exact layer first:</b> identical request, replay the stored answer. Cheapest to check, only for deterministic, cacheable outputs.</li>
+          <li><b>Semantic layer second:</b> <button class="term" type="button" data-tip="Turn text into a vector so similar meanings land close together in space.">embed</button> the incoming question, and if a stored one sits closer than a threshold (cosine ~0.95+), replay its answer. Millisecond latency, see <a class="xl" href="../03-rag-search/embeddings.html">embeddings</a>.</li>
+          <li><b>Where it pays:</b> support and doc traffic repeats heavily, realistic hit rates are 20 to 40%.</li>
+          <li><b>TTL everything:</b> prices, policies and docs age. A cached answer that outlives its source becomes confident misinformation.</li>
+          <li><span class="wlabel gotcha">gotcha</span> <b>Near-duplicate is not identical:</b> "refund for order 123" must not replay "refund for order 456". Keep personalization out of cached answers and bypass the cache for anything transactional.</li>
+        </ul>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><b>pro:</b> a hit skips the model entirely, the only free lunch in this business.</li>
+          <li><b>con:</b> a loose threshold replays answers to different questions, tune it and add a TTL.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+    <div class="sol-item">
+      <button class="sol-head" type="button">
+        <span class="sol-no">C</span>
+        <span class="sol-name">Batch API <span class="sol-tag cheap">half price</span></span>
+        <span class="sol-sum">~50% off both meters for a 24h delivery window</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li><b>~50% off for patience:</b> batch endpoints queue the work and deliver within ~24h, half price on both meters.</li>
+          <li><b>Perfect fits:</b> eval suites, embedding backfills, classification, summarizing archives. Anything where nobody waits on the answer.</li>
+          <li><b>Retry path:</b> failed batch items need handling, whole batch jobs fail sometimes.</li>
+        </ul>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><b>pro:</b> half price with zero cleverness, ideal for nightly work while nobody is awake to read it.</li>
+          <li><b>con:</b> never interactive. A 24h window on a chat reply is an outage, not a discount.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+    <div class="sol-item">
+      <button class="sol-head" type="button">
+        <span class="sol-no">D</span>
+        <span class="sol-name">Output discipline</span>
+        <span class="sol-sum">the expensive meter is output, cap it on every call</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li><b>Reasoning tokens are output:</b> thinking chains, tool-call arguments and JSON scaffolding all bill at the output rate before the user sees a word.</li>
+          <li><b>Set max_tokens on every call.</b> A request with 4k in and 500 out can still spend a third of its cost on output, that is the 4x premium at work.</li>
+          <li><b>Budget output before input.</b> The horror story every FinOps person knows: an agent loop thinking out loud for 20k tokens per answer with no cap, see <a class="xl" href="../05-agents-orchestration/ops.html">durable ops</a>.</li>
+          <li><b>Sibling lever, model downgrade:</b> route easy tasks to a small model. Cheap models are expensive when they fail twice, back the routing with <a class="xl" href="../08-evals/evals.html">evals</a>.</li>
+        </ul>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><b>pro:</b> caps the worst tail, free to implement.</li>
+          <li><b>con:</b> answers cut mid-sentence read as bugs, tune the cap per task.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+  </div>
+
+  <div class="stage-label sl-when">When to use · when not</div>
+  <div class="pc">
+    <div class="pc-col pros"><h4 class="pc-h">Use when</h4>
+      <ul>
+        <li>Any stable prefix exists (system prompt, tool schemas, few-shots), turn prompt caching on.</li>
+        <li>Traffic repeats (FAQs, doc search, support), add the response caches.</li>
+        <li>Nobody waits on the answer (evals, backfills, classification), send it to batch.</li>
+        <li>Always: cap output with max_tokens, it is the pricier meter.</li>
+        <li>Easy tasks at volume, route them to a small model with evals behind it.</li>
+      </ul>
+    </div>
+    <div class="pc-col cons"><h4 class="pc-h">Skip when</h4>
+      <ul>
+        <li>Prefixes are per-user and built dynamically, they break the prefix match.</li>
+        <li>Answers are personalized, transactional or time-sensitive, never replay them from a cache.</li>
+        <li>Anything interactive, a 24h batch window is an outage.</li>
+        <li>Quality-critical calls lack the <a class="xl" href="../08-evals/evals.html">evals</a> to back a model downgrade.</li>
+        <li>Cache hit rate is unmeasured, you cannot tune what you do not track.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="stage-label sl-ex">Example</div>
+  <div class="example">
+    <p class="ex-note">A support chatbot priced end to end. 50,000 requests/day, each 4,000 tokens in (system 800 + tool schemas 400 + history 1,500 + retrieved docs 1,200 + query 100) and 500 tokens out, at $2.50 per 1M in and $10.00 per 1M out. The estimator wires the cache lever in.</p>
+    <pre class="code" data-lang="python" data-file="cost_estimator.py"><code>IN, OUT = <span class="tk-n">2.50</span>, <span class="tk-n">10.00</span>   <span class="tk-c"># $ per 1M tokens, flagship class</span>
+
+<span class="tk-k">def</span> <span class="tk-f">cost</span>(tin, ans, cached=<span class="tk-k">False</span>):
+    <span class="tk-k">if</span> cached:            <span class="tk-c"># prompt cache hit, input at ~10%</span>
+        <span class="tk-k">return</span> tin * IN * <span class="tk-n">0.1</span> + ans * OUT
+    <span class="tk-k">return</span> tin * IN + ans * OUT
+
+req = <span class="tk-n">800</span> + <span class="tk-n">400</span> + <span class="tk-n">1500</span> + <span class="tk-n">1200</span> + <span class="tk-n">100</span>  <span class="tk-c"># sys + tools + history + docs + query</span>
+<span class="tk-f">print</span>(<span class="tk-f">cost</span>(req, <span class="tk-n">500</span>))               <span class="tk-c"># ~$0.015 per request</span>
+<span class="tk-f">print</span>(<span class="tk-f">cost</span>(req, <span class="tk-n">500</span>, cached=<span class="tk-k">True</span>))   <span class="tk-c"># ~$0.006 with a cache hit</span></code></pre>
+    <ul>
+      <li><b>Input:</b> 50k × 4,000 = 200M tokens/day × $2.50 = <b>$500/day</b>.</li>
+      <li><b>Output:</b> 50k × 500 = 25M tokens/day × $10.00 = <b>$250/day</b>.</li>
+      <li><b>Total: $750/day, about $22,500/month.</b> Output was only 11% of the tokens but 33% of the cost.</li>
+      <li><b>Now the levers:</b> prompt-cache the 1,200-token static prefix at ~90% off, replay 30% of FAQ traffic semantically, run the nightly suite on batch. Same traffic lands near $400/day, same product, half the bill.</li>
+    </ul>
+  </div>
+
+  <div class="stage-label sl-extra">Watch out</div>
+  <div class="pit-list"><ul>
+    <li><b>The timestamp at the top</b> · the most common cache killer · "Current time: ..." before the system prompt re-randomizes the prefix on every call</li>
+    <li><b>System prompt churn</b> · A/B tests, version banners, per-user variations quietly zero the hit rate</li>
+    <li><b>Loose semantic thresholds</b> · cosine 0.90 on short questions replays answers to different questions</li>
+    <li><b>Tool sprawl</b> · every added tool rides its schema on every request, see <a class="xl" href="../04-tools-mcp/tool-calling.html">tool calling</a> · fewer tools is a permanent discount</li>
+    <li><b>Prefix-splitting refactors</b> · per-user prompts and dynamic ordering can double the bill with no error raised anywhere</li>
+    <li><b>Unbounded output</b> · agent loops with no max_tokens burn the 3-to-5x meter</li>
+  </ul></div>
+
+  <div class="stage-label sl-extra">Remember</div>
+  <div class="remember"><ul>
+    <li>Write the formula down: tokens_in × rate_in + tokens_out × rate_out. Nothing else enters it.</li>
+    <li>Order every prompt static-first, dynamic-last.</li>
+    <li>Track cache hit rate as a first-class metric next to cost per request.</li>
+    <li>A cache hit is the only free lunch: discounted input or a skipped model call.</li>
+    <li>Set max_tokens on every call, budget output before input.</li>
+    <li>Send evals and backfills to the batch API.</li>
+    <li>Budget the window itself, see <a class="xl" href="context-budget.html">context budgeting</a>.</li>
+  </ul></div>
+  
+    <nav class="pager" id="pager"></nav>
+
+    <footer class="footer">
+      learning-project · tracks/ai · print this page from the browser dialog · diagrams load mermaid from CDN once online
+    </footer>
+  </div>
+</main>
+
+<script src="../../js/app.js"></script>
+</body>
+</html>

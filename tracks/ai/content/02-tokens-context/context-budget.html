@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Context engineering and budgeting · AI Engineering Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../css/tokens.css">
+<link rel="stylesheet" href="../../css/base.css">
+<link rel="stylesheet" href="../../css/components.css">
+<link rel="stylesheet" href="../../css/flow.css">
+<link rel="stylesheet" href="../../css/print.css">
+</head>
+<body>
+
+<div id="progress"></div>
+
+<header class="topbar">
+  <button class="tbtn" id="nav-toggle" type="button" aria-label="Toggle navigation">☰</button>
+  <a class="brand" href="../../index.html"><b>ai</b>·field-guide</a>
+  <div class="tools">
+    <input id="toc-filter" type="search" placeholder="filter · /" aria-label="Filter topics">
+    <button class="tbtn" id="expand-all" type="button">expand</button>
+    <button class="tbtn" id="print-btn" type="button">print</button>
+  </div>
+</header>
+
+<nav class="sidebar" id="toc" aria-label="Topics"></nav>
+
+<main class="main">
+  <div class="content">
+    <header class="topic-head">
+      <div class="kicker">Part 1 · Foundations · 04/24</div>
+      <h1>Context engineering and budgeting</h1>
+      <p class="lead">The model has no memory. What it knows of the conversation is exactly what you put in the window on this call. Context engineering is assembling that window on purpose, every turn, within a budget.</p>
+    </header>
+
+  <div class="stage-label sl-why">Why you need it</div>
+  <div class="why">
+    <ul>
+      <li><b>There is no memory.</b> The API takes a messages array (system, user, assistant, tool roles), no session object exists on the server. Your app owns the transcript, stores it, rebuilds the array for every call.</li>
+      <li><b>Miss one message and, for the model, it never happened.</b> No hidden state, no "it probably remembers".</li>
+      <li><b>The window silently fills.</b> At turn 40 the history alone can blow past the budget, and tool results plus retrieved docs arrive mid-run, after you already sized the prompt.</li>
+      <li><b>Quality drops before the limit.</b> <button class="term" type="button" data-tip="Per-fact accuracy degrades as the window fills, even before the hard limit.">Context rot</button> means more tokens can equal worse answers, see <a class="xl" href="../01-foundations/llm-internals.html">how LLMs actually work</a>.</li>
+      <li><b>Naive trimming cuts the wrong things:</b> "it" loses its antecedent, "as we discussed" points nowhere, the first turn's goal silently vanishes.</li>
+      <li><b>Users expect continuity anyway.</b> "Last week you said" must work. Cross-session facts are a separate system, see <a class="xl" href="../06-memory/memory.html">memory</a>. This topic is the window you build each turn.</li>
+    </ul>
+  </div>
+
+  <div class="stage-label sl-sol">Solutions</div>
+  <p class="lead">Treat the window as a budget: every slice gets a cap enforced in code, then spend it deliberately, summarize the old, keep the recent verbatim, place instructions early and data late.</p>
+
+  <div class="diagram"><div class="diag-body"><pre class="mermaid">flowchart TD
+  S["system prompt&lt;br/&gt;stable · early"] --&gt; W["the window&lt;br/&gt;budgeted"]
+  U["running summary&lt;br/&gt;old turns"] --&gt; W
+  K["last K turns&lt;br/&gt;verbatim"] --&gt; W
+  D["retrieved docs&lt;br/&gt;this query"] --&gt; W
+  R["output reserve&lt;br/&gt;max_tokens"] --&gt; W
+  W --&gt; M["model sees&lt;br/&gt;exactly this"]
+  </pre></div></div>
+
+  <div class="grid2">
+    <div class="wcard"><h4>System prompt · 5 to 10%</h4><ul>
+      <li>Rules, voice, format contracts</li>
+      <li>Stable across calls</li>
+    </ul></div>
+    <div class="wcard"><h4>Tool schemas · 2 to 5%</h4><ul>
+      <li>Every tool's JSON Schema rides every call, see <a class="xl" href="../04-tools-mcp/tool-calling.html">tool calling</a></li>
+      <li>Grows silently as you add tools</li>
+    </ul></div>
+    <div class="wcard"><h4>Retrieved docs · 30 to 40%</h4><ul>
+      <li>Only what this turn needs, chosen by <a class="xl" href="#rag-overview">retrieval</a></li>
+      <li>Never a "just in case" dump</li>
+    </ul></div>
+    <div class="wcard"><h4>History · 20 to 25%</h4><ul>
+      <li>Running summary plus the last K turns verbatim</li>
+      <li>The slice compaction manages</li>
+    </ul></div>
+    <div class="wcard"><h4>Output reserve · 20 to 25%</h4><ul>
+      <li>Room for the answer, thinking and tool-call arguments</li>
+      <li>Guarded by max_tokens</li>
+    </ul></div>
+    <div class="wcard"><h4>The rule</h4><ul>
+      <li>Every slice gets a cap, caps enforced in code</li>
+      <li>Caps sum below the window, money lives in <a class="xl" href="tokens-cost.html">tokens, cost and caching</a></li>
+    </ul></div>
+  </div>
+
+  <div class="sol-list">
+
+    <div class="sol-item">
+      <button class="sol-head" type="button">
+        <span class="sol-no">A</span>
+        <span class="sol-name">Summary + last-K hybrid <span class="sol-tag best">default</span></span>
+        <span class="sol-sum">running summary of old turns, last K verbatim</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li><b>Two history layers:</b> a running summary compresses the oldest turns, the last K turns stay word-for-word because users quote you on them.</li>
+          <li><b>Preserve anchors:</b> decisions made, names, numbers, open questions. A summary that loses the decision is worse than truncation.</li>
+          <li><b>Structure beats narrative:</b> a "decisions / open questions / facts" block outlives a flowing paragraph.</li>
+          <li><span class="wlabel gotcha">gotcha</span> <b>Drift:</b> summarizing the summary compounds errors over long chats. Periodically re-derive the summary from the original turns kept in your store.</li>
+          <li><b>Facts that must outlive the session</b> go to a long-term store, not the window, see <a class="xl" href="../06-memory/memory.html">memory</a>.</li>
+        </ul>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><b>pro:</b> the standard pattern for long sessions, keeps both recency and the old decisions.</li>
+          <li><b>con:</b> compaction is itself an LLM call, and drift needs a re-derivation schedule.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+    <div class="sol-item">
+      <button class="sol-head" type="button">
+        <span class="sol-no">B</span>
+        <span class="sol-name">Trimming ladder</span>
+        <span class="sol-sum">cheapest cut first, escalate only when needed</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li><b>1 · Sliding window:</b> keep the last N turns. Simple, loses everything older.</li>
+          <li><b>2 · Anchored trim:</b> keep the first turn (the goal) plus the last K. Cheap and surprisingly effective.</li>
+          <li><b>3 · Summarize the middle:</b> the hybrid above, the standard rung.</li>
+          <li><b>4 · Retrieve-on-demand:</b> embed past turns, fetch the relevant ones per query. History becomes retrieval over itself, see <a class="xl" href="../03-rag-search/embeddings.html">embeddings</a>.</li>
+          <li><b>Overflow runs the ladder:</b> trim first, then summarize, never silent truncation from the middle of a thought.</li>
+        </ul>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><b>pro:</b> mechanical, cheap, predictable, easy to reason about.</li>
+          <li><b>con:</b> rungs 1 and 2 lose middle detail without notice, rung 4 adds embedding cost.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+    <div class="sol-item">
+      <button class="sol-head" type="button">
+        <span class="sol-no">C</span>
+        <span class="sol-name">Placement discipline <span class="sol-tag cheap">free</span></span>
+        <span class="sol-sum">stable instructions early, data late and labeled</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li><b>Attention is uneven:</b> content at the start and end of the window is attended more reliably than the middle. Long windows bury their own facts.</li>
+          <li><b>Instructions: stable and early.</b> A static prefix at the top also feeds prompt caching, see <a class="xl" href="tokens-cost.html">tokens, cost and caching</a>.</li>
+          <li><b>Data: late and labeled.</b> Put evidence near the end, clearly marked as data.</li>
+          <li><b>What deserves the window:</b> recency (last turns verbatim) and relevance (fetch by similarity against the current query). Volume is not safety, selection is.</li>
+        </ul>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><b>pro:</b> free, improves quality and cache hits at the same time.</li>
+          <li><b>con:</b> demands a stable prompt structure, dynamic per-user ordering fights it.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+    <div class="sol-item">
+      <button class="sol-head" type="button">
+        <span class="sol-no">D</span>
+        <span class="sol-name">Compaction at 70%</span>
+        <span class="sol-sum">compact when history crosses 70%, never at overflow</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li><b>Trigger when history crosses ~70% of the window budget.</b> After the cliff quality has already dropped, waiting for the overflow error is too late.</li>
+          <li><b>Why headroom:</b> tool results and retrieved docs arrive mid-run, after you sized the prompt. An agent that fills the window before its tools answer truncates the very data it was about to need.</li>
+          <li><b>The compaction step</b> is an LLM call that merges the oldest turns into the running summary while the last K stay verbatim, code below.</li>
+        </ul>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><b>pro:</b> quality stays flat across long threads instead of degrading quietly.</li>
+          <li><b>con:</b> an extra LLM call per compaction, a small latency spike at the trigger.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+  </div>
+
+  <div class="stage-label sl-when">When to use · when not</div>
+  <div class="pc">
+    <div class="pc-col pros"><h4 class="pc-h">Use when</h4>
+      <ul>
+        <li>Long working sessions, research agents, copilots, the summary hybrid is the default.</li>
+        <li>Any chat, anchored trim is a quick win, the goal stays and recency stays.</li>
+        <li>Very long histories, retrieve-on-demand fetches only the relevant past turns.</li>
+        <li>Cross-session products, preferences and project facts go to a long-term store, see <a class="xl" href="../06-memory/memory.html">memory</a>.</li>
+      </ul>
+    </div>
+    <div class="pc-col cons"><h4 class="pc-h">Skip when</h4>
+      <ul>
+        <li>Short-lived FAQ chats, a sliding window is enough machinery.</li>
+        <li>Dense detail in the middle matters, anchored trim deletes it unseen.</li>
+        <li>Very long chats without a re-derivation schedule, drift wins.</li>
+        <li>Short chats, retrieve-on-demand adds embedding cost for nothing.</li>
+        <li>Regulated contexts or anonymous traffic, a long-term store is off the table.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="stage-label sl-ex">Example</div>
+  <div class="example">
+    <p class="ex-note">The compaction step that keeps long threads sane. It runs before every LLM call, triggers at 70% of the history budget, merges the oldest turns into the running summary and keeps the last 6 turns verbatim.</p>
+    <pre class="code" data-lang="python" data-file="compaction.py"><code>BUDGET = <span class="tk-n">100_000</span>                <span class="tk-c"># history token budget</span>
+
+<span class="tk-k">def</span> <span class="tk-f">maybe_compact</span>(state):            <span class="tk-c"># runs before every LLM call</span>
+    msgs = state[<span class="tk-s">"messages"</span>]
+    <span class="tk-k">if</span> <span class="tk-f">count_tokens</span>(msgs) &lt; BUDGET * <span class="tk-n">0.7</span>:
+        <span class="tk-k">return</span> state                  <span class="tk-c"># plenty of room, nothing to do</span>
+
+    old, recent = msgs[:-<span class="tk-n">6</span>], msgs[-<span class="tk-n">6</span>:]  <span class="tk-c"># last 6 turns stay verbatim</span>
+    state[<span class="tk-s">"summary"</span>] = <span class="tk-f">llm</span>(
+        <span class="tk-s">"Merge into the running summary. Keep every decision,"</span>
+        <span class="tk-s">" name, number and open question. Old summary:"</span>
+        + state.<span class="tk-f">get</span>(<span class="tk-s">"summary"</span>, <span class="tk-s">""</span>) + <span class="tk-s">" Turns: "</span> + <span class="tk-f">render</span>(old))
+    state[<span class="tk-s">"messages"</span>] = recent
+    <span class="tk-k">return</span> state
+<span class="tk-c"># prompt = system + summary block + recent turns + docs</span></code></pre>
+    <ul>
+      <li><b>Coding agents</b> assemble exactly this way: instructions early (AGENTS.md-style files), tool output late, old tool results compacted first because they age fastest.</li>
+      <li><b>Research agents</b> compact at 70% and re-derive the running summary from source turns on a schedule, drift is the difference between "it remembers" and "it confabulates".</li>
+      <li><b>Copilots</b> keep the last K turns verbatim no matter what, users quote what you said two turns ago and expect it honored.</li>
+    </ul>
+  </div>
+
+  <div class="stage-label sl-extra">Watch out</div>
+  <div class="pit-list"><ul>
+    <li><b>Silent truncation</b> · a hard cut mid-thought breaks references the user still holds · overflow must run the ladder</li>
+    <li><b>Summarizer drift</b> · summary-of-summary compounds errors · re-derive from source turns periodically</li>
+    <li><b>Stuffing the whole wiki "just in case"</b> · pays input cost to hurt accuracy, context rot charges interest</li>
+    <li><b>Slice squeeze</b> · tool schemas plus history crowd out docs and the output reserve, the model answers from stale memory</li>
+    <li><b>Losing the anchor</b> · the first turn states the goal, every trimming strategy must keep it explicitly</li>
+    <li><b>Counter mismatch</b> · your token counter differs from the provider's tokenizer, count with theirs or leave margin</li>
+  </ul></div>
+
+  <div class="stage-label sl-extra">Remember</div>
+  <div class="remember"><ul>
+    <li>The window is the world: what is not in it this call does not exist for the model.</li>
+    <li>Budget the window in slices, enforce the caps in code.</li>
+    <li>Compact at ~70%, keep headroom for mid-run tool results and docs.</li>
+    <li>Instructions early and stable, data late and labeled.</li>
+    <li>Keep the last K verbatim, summarize the middle, preserve anchors.</li>
+    <li>Re-derive running summaries from source turns on a schedule.</li>
+    <li>Cross-session facts belong in <a class="xl" href="../06-memory/memory.html">memory</a>, retrieval slices in <a class="xl" href="#rag-overview">RAG</a>, money in <a class="xl" href="tokens-cost.html">tokens and caching</a>.</li>
+  </ul></div>
+  
+    <nav class="pager" id="pager"></nav>
+
+    <footer class="footer">
+      learning-project · tracks/ai · print this page from the browser dialog · diagrams load mermaid from CDN once online
+    </footer>
+  </div>
+</main>
+
+<script src="../../js/app.js"></script>
+</body>
+</html>

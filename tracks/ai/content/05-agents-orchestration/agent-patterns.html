@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agent patterns · AI Engineering Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../css/tokens.css">
+<link rel="stylesheet" href="../../css/base.css">
+<link rel="stylesheet" href="../../css/components.css">
+<link rel="stylesheet" href="../../css/flow.css">
+<link rel="stylesheet" href="../../css/print.css">
+</head>
+<body>
+
+<div id="progress"></div>
+
+<header class="topbar">
+  <button class="tbtn" id="nav-toggle" type="button" aria-label="Toggle navigation">☰</button>
+  <a class="brand" href="../../index.html"><b>ai</b>·field-guide</a>
+  <div class="tools">
+    <input id="toc-filter" type="search" placeholder="filter · /" aria-label="Filter topics">
+    <button class="tbtn" id="expand-all" type="button">expand</button>
+    <button class="tbtn" id="print-btn" type="button">print</button>
+  </div>
+</header>
+
+<nav class="sidebar" id="toc" aria-label="Topics"></nav>
+
+<main class="main">
+  <div class="content">
+    <header class="topic-head">
+      <div class="kicker">Part 3 · Tools & agents · 12/24</div>
+      <h1>Agent patterns</h1>
+      <p class="lead">A chain runs a fixed sequence of prompts you wrote. An agent runs a goal: a loop that thinks, acts through tools, observes results and decides the next step itself. Extra agents are a team you may not need. This page is the ladder up, the handoff mechanics, and the honest reasons to climb.</p>
+    </header>
+
+  <div class="beat problem">
+    <div class="beat-h"><span class="bt">Problem</span><span class="bh">one call cannot do a job</span></div>
+    <ul>
+      <li><b>"Research this market and write a brief"</b> is steps, decisions, retries and memory. One prompt either stuffs everything into one shot or overflows the window.</li>
+      <li><b>Context landfill:</b> after 40 tool calls the transcript is a swamp of stale results and the model's attention drowns in its own history (<a class="xl" href="../02-tokens-context/context-budget.html">context budget</a>).</li>
+      <li><b>The real problem:</b> run a GOAL, not a prompt. Over steps, with memory, and without one polluted window.</li>
+    </ul>
+  </div>
+
+  <div class="beat solution">
+    <div class="beat-h"><span class="bt">Solution</span><span class="bh">a loop first, then (only if earned) a team</span></div>
+    <ul>
+      <li>An agent is <b>an LLM in a loop with tools and a goal:</b> think, act, observe, repeat until done. The <button class="term" type="button" data-tip="Reason + Act: interleave thinking steps and tool calls instead of answering in one shot. The founding pattern of all agents.">ReAct</button> pattern.</li>
+      <li><b>Chain vs agent is where control flow lives.</b> A chain is a flowchart you drew before runtime. An agent picks the next step at runtime from what it just observed. If you can draw the whole flowchart in advance, it is a chain and that is fine.</li>
+      <li>Five escalation patterns exist, from <b>one intern with a toolbox</b> to <b>teams with managers</b>.</li>
+      <li><b>Rule zero: start single-agent.</b> Every extra agent is a distributed-systems bug you chose to have. Escalate only when you can name what you are buying.</li>
+    </ul>
+    <div class="diagram">
+      <div class="diag-body">
+        <pre class="mermaid">
+flowchart TB
+  subgraph P1["1 · single agent + tools"]
+    U1["user"] --> A1["one agent&lt;br/&gt;ReAct loop"] --> T1["tools: search · code · files"]
+  end
+  subgraph P2["2 · router"]
+    R["classify once"] --> S2A["specialist A"]
+    R --> S2B["specialist B"]
+  end
+  subgraph P3["3 · supervisor"]
+    SUP["manager plans + assigns"] --> W1["worker: research"]
+    SUP --> W2["worker: write"]
+    W1 --> SUP
+    W2 --> SUP
+  end
+  subgraph P4["4 · hierarchical"]
+    SUP2["manager"] --> M1["team A lead"]
+    SUP2 --> M2["team B lead"]
+    M1 --> W3["workers"]
+    M2 --> W4["workers"]
+  end
+  subgraph P5["5 · swarm"]
+    SW1["billing agent"] -- "handoff" --> SW2["support agent"]
+    SW2 -- "handoff" --> SW3["sales agent"]
+  end
+  P1 ~~~ P2 ~~~ P3 ~~~ P4 ~~~ P5
+        </pre>
+      </div>
+    </div>
+    <p class="note">The escalation ladder. Go one rung up only when the rung below measurably hurts.</p>
+  </div>
+
+  <div class="beat how">
+    <div class="beat-h"><span class="bt">How</span><span class="bh">each rung, handoffs, and the only three real reasons to go multi</span></div>
+
+    <h3 id="agent-patterns--the-ladder-honestly">the ladder, honestly</h3>
+    <ul>
+      <li><b>Single + tools:</b> one model, one context, N tools. Cheap, debuggable, surprisingly far. Most "multi-agent" products are this wearing a costume.</li>
+      <li><b>Router:</b> classify once, dispatch to specialist prompts. The cheapest real "multi" pattern. <span class="wlabel gotcha">gotcha</span> router mistakes are silent. Log the route with every answer.</li>
+      <li><b>Supervisor and workers:</b> a manager plans, delegates, merges, iterates. For big parallelizable jobs. <span class="wlabel why">why it helps</span> the manager's context stays clean while workers absorb the noise.</li>
+      <li><b>Planner and executor:</b> worth naming on its own. The planner emits an explicit plan (an inspectable list of steps), the executor works through it, failures trigger replanning. The plan artifact is what makes this auditable, see <a class="xl" href="graphs.html">graphs</a>.</li>
+      <li><b>Hierarchical:</b> managers of managers. Only for genuinely wide pipelines. Coordination cost compounds per layer, errors get fuzzy far from home.</li>
+      <li><b>Swarm:</b> peer handoffs with shared state, no central brain. <span class="wlabel gotcha">gotcha</span> A to B back to A loops need a circuit breaker, see <a class="xl" href="ops.html">ops</a>.</li>
+    </ul>
+
+    <h3 id="agent-patterns--handoffs-context-transfer-between-agents">handoffs: context transfer between agents</h3>
+    <ul>
+      <li><b>A handoff is one agent delegating ownership to another mid-journey.</b> Support is the canonical shape: a triage agent hands a billing case to the billing specialist instead of pretending to be every specialist at once.</li>
+      <li><b>What travels:</b> a task summary, distilled artifacts (ids, documents, amounts), decisions already made, constraints (policy, deadline, tone) and the requested next step.</li>
+      <li><b>What never travels:</b> the full transcript. Forwarding raw history re-creates the context landfill you isolated to avoid (<a class="xl" href="../02-tokens-context/context-budget.html">context budget</a>).</li>
+      <li><b>Mechanics:</b> the handoff is a structured message with a schema, shaped exactly like a tool call. "transfer to billing" is a tool whose payload is the brief, see <a class="xl" href="../04-tools-mcp/tool-calling.html">tool calling</a>.</li>
+      <li><b>What comes back:</b> the result plus a short trail of what was done, so the delegating agent can answer the user without re-asking anything.</li>
+      <li><span class="wlabel gotcha">gotcha</span> information loss compounds per hop. If the receiving agent re-asks the user for facts the last agent already knew, the handoff schema is too thin.</li>
+    </ul>
+
+    <h3 id="agent-patterns--the-only-three-real-reasons-to-go-multi-agent">the only three real reasons to go multi-agent</h3>
+    <ul>
+      <li><span class="wlabel why">1</span> <b>Context isolation:</b> each subagent starts with a clean window and returns only the result. Hiring a contractor instead of reading every book yourself.</li>
+      <li><span class="wlabel why">2</span> <b>Parallelism:</b> genuinely independent subtasks. Five competitors researched at once, 50 eval cases run at once (<a class="xl" href="../08-evals/evals.html">evals</a>).</li>
+      <li><span class="wlabel why">3</span> <b>Conflicting tool sets or models per role:</b> a read-only researcher and a write-enabled fixer should not share one toolbox or one prompt. A cheap model for breadth and a strong model for the merge is the same argument.</li>
+    </ul>
+
+    <h3 id="agent-patterns--what-it-costs-the-part-vendors-skip">what it costs (the part vendors skip)</h3>
+    <ul>
+      <li><b>Token amplification:</b> every hop re-describes the world. Worker briefs, handoffs, merges: tokens again and again (<a class="xl" href="../02-tokens-context/tokens-cost.html">tokens &amp; cost</a>).</li>
+      <li><b>Error multiplication:</b> the run is only as good as the product of its agents. Five agents at 95% each land near 77% end to end. Failures become archaeology instead of debugging.</li>
+      <li><b>Latency stacks:</b> plan, delegate, wait, merge is the slow path through chat UX.</li>
+      <li><b>Budget enforcement</b> across a team (steps, dollars, circuit breakers) is covered in <a class="xl" href="ops.html">ops</a>.</li>
+    </ul>
+
+    <div class="diagram">
+      <div class="diag-body">
+        <pre class="mermaid">
+flowchart TD
+  Q["building an agent?"] --> A{"many unrelated tools?"}
+  A -- "no" --> S["stay single agent&lt;br/&gt;cheap + debuggable"]
+  A -- "yes" --> B{"subtasks parallelizable?"}
+  B -- "no" --> R["router or supervisor&lt;br/&gt;sequential is fine"]
+  B -- "yes" --> C{"contexts must stay isolated?"}
+  C -- "no" --> R2["supervisor + workers&lt;br/&gt;shared state"]
+  C -- "yes" --> M["hierarchical multi-agent&lt;br/&gt;the last resort"]
+        </pre>
+      </div>
+    </div>
+    <p class="note">Three honest questions before you multiply agents.</p>
+  </div>
+
+  <div class="beat when">
+    <div class="beat-h"><span class="bt">When</span><span class="bh">pattern picker</span></div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Pattern</th><th class="hu">Use when</th><th class="ha">Avoid when</th><th class="hw">Watch out</th></tr></thead>
+        <tbody>
+          <tr><td class="m">Single + tools</td><td class="u">Default start: chat with tools, research, coding helpers</td><td class="avoid">Context drowning in tool noise, then isolate</td><td class="watch">Trim old tool outputs. Context is the real budget</td></tr>
+          <tr><td class="m">Router</td><td class="u">Diverging intents over one knowledge base</td><td class="avoid">One intent only, it is dead weight</td><td class="watch">Silent misroutes. Log the route with every answer</td></tr>
+          <tr><td class="m">Planner + executor</td><td class="u">Multi-step jobs where the plan should be inspectable and revisable</td><td class="avoid">Single-step asks, planning is overhead</td><td class="watch">Plans drift from reality, replan on failure not on schedule</td></tr>
+          <tr><td class="m">Supervisor</td><td class="u">Big parallelizable jobs needing a plan</td><td class="avoid">Latency-sensitive chat</td><td class="watch">Tokens multiply at every hop</td></tr>
+          <tr><td class="m">Hierarchical</td><td class="u">Genuinely wide pipelines with natural sub-teams</td><td class="avoid">Everything shallower. Last resort</td><td class="watch">Coordination cost compounds per layer</td></tr>
+          <tr><td class="m">Swarm</td><td class="u">Stateful journeys with persona handoffs</td><td class="avoid">One-shot tasks</td><td class="watch">Handoff loops need a circuit breaker</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="beat example">
+    <div class="beat-h"><span class="bt">Example</span><span class="bh">the whole agent in 12 lines, then a real handoff</span></div>
+    <pre class="code" data-lang="python" data-file="agent_loop.py"><code><span class="tk-k">def</span> <span class="tk-f">run_agent</span>(goal, tools, max_steps=<span class="tk-n">25</span>):
+    state = {<span class="tk-s">"goal"</span>: goal, <span class="tk-s">"history"</span>: []}
+    <span class="tk-k">for</span> step <span class="tk-k">in</span> range(max_steps):            <span class="tk-c"># budget enforced here, not in hope</span>
+        reply = llm(state, tools)                   <span class="tk-c"># thinks, may request tool calls</span>
+        <span class="tk-k">if not</span> reply.tool_calls:                        <span class="tk-c"># no tool asked: done is the answer</span>
+            <span class="tk-k">return</span> reply.text
+        state[<span class="tk-s">"history"</span>].append(run_tools(reply.tool_calls))
+    <span class="tk-k">raise</span> BudgetExceeded(<span class="tk-s">"max steps hit, goal not met"</span>)</code></pre>
+    <ul>
+      <li><b>Loop, tools, goal, stop condition.</b> That is the entire agent. Everything else on this page is escalation. Tool call shapes live in <a class="xl" href="../04-tools-mcp/tool-calling.html">tool calling</a>, durable versions of this loop in <a class="xl" href="graphs.html">graphs</a>.</li>
+    </ul>
+    <pre class="code" data-lang="python" data-file="handoff.py"><code><span class="tk-c"># the only thing that crosses agents: a schema, not a transcript</span>
+handoff = {
+    <span class="tk-s">"to"</span>: <span class="tk-s">"billing_specialist"</span>,
+    <span class="tk-s">"task"</span>: <span class="tk-s">"resolve duplicate charge, refund if confirmed"</span>,
+    <span class="tk-s">"facts"</span>: {<span class="tk-s">"user_id"</span>: <span class="tk-n">8412</span>, <span class="tk-s">"charge_ids"</span>: [<span class="tk-s">"ch_a1"</span>, <span class="tk-s">"ch_a2"</span>], <span class="tk-s">"usd"</span>: <span class="tk-n">89.0</span>},
+    <span class="tk-s">"decided"</span>: [<span class="tk-s">"identity verified"</span>, <span class="tk-s">"not a plan upgrade"</span>],
+    <span class="tk-s">"constraints"</span>: [<span class="tk-s">"policy: refunds under 100 need no approval"</span>],
+}</code></pre>
+    <ul>
+      <li><b>In the wild:</b> <b>Claude Code and Cursor</b> are a single agent with a fat toolbox, proof the single lane goes far. <b>Deep-research assistants</b> are a supervisor with parallel workers. <b>Support copilots</b> are router plus handoffs across billing, support and sales.</li>
+      <li><b>Bullshit detector:</b> for each extra agent in a design, name which of the three reasons it serves. Anything else is theater and token burn.</li>
+    </ul>
+  </div>
+
+  <div class="beat pitfalls">
+    <div class="beat-h"><span class="bt">Pitfalls</span><span class="bh">theater, amnesia, ping-pong</span></div>
+    <ul>
+      <li><b>Multi-agent theater:</b> extra agents serving none of the three reasons. You pay latency and tokens for a diagram.</li>
+      <li><b>Handoff amnesia:</b> forwarding the raw transcript (landfill moves house) or nothing (user repeats themselves). Send summary plus artifacts.</li>
+      <li><b>Micromanaging supervisors:</b> a manager that re-reads every worker output gains zero isolation and doubles the tokens.</li>
+      <li><b>Ping-pong loops:</b> agents handing back and forth forever. Cap handoffs per run like any other budget, see <a class="xl" href="ops.html">ops</a>.</li>
+      <li><b>Router drift:</b> silent misroutes with no logging. Untraceable a week later.</li>
+      <li><b>Non-determinism squared:</b> more agents, more branches. Trace every run or debugging is archaeology (<a class="xl" href="../08-evals/evals.html">evals</a>).</li>
+    </ul>
+  </div>
+
+  <div class="beat checklist">
+    <div class="beat-h"><span class="bt">Checklist</span><span class="bh">six bullets to remember</span></div>
+    <ul>
+      <li>Start single agent with good tools, escalate only with a named reason</li>
+      <li>An agent is loop + tools + goal, with a stop condition and a budget</li>
+      <li>Handoffs carry summary + artifacts + constraints, never full history</li>
+      <li>Log every route and every handoff alongside the answer</li>
+      <li>Parallel fan-out only for genuinely independent subtasks</li>
+      <li>Isolation, parallelism, conflicting tools or models: any other reason is hype</li>
+    </ul>
+  </div>
+  
+    <nav class="pager" id="pager"></nav>
+
+    <footer class="footer">
+      learning-project · tracks/ai · print this page from the browser dialog · diagrams load mermaid from CDN once online
+    </footer>
+  </div>
+</main>
+
+<script src="../../js/app.js"></script>
+</body>
+</html>

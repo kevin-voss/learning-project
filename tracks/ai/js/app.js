@@ -1,28 +1,42 @@
-/* app.js — renders content registry, builds nav, wires interactions. No dependencies. */
+/* app.js — shared runtime for the topic pages. No dependencies.
+   Pages are plain HTML in content/<folder>/<id>.html. */
 (() => {
   'use strict';
 
   const PARTS = {
-    1: 'Part 1 · Foundations',
-    2: 'Part 2 · Retrieval',
-    3: 'Part 3 · Tools & agents',
-    4: 'Part 4 · Memory & safety',
-    5: 'Part 5 · Proof & production',
+    1: 'Foundations',
+    2: 'Retrieval',
+    3: 'Tools & agents',
+    4: 'Memory & safety',
+    5: 'Proof & production',
   };
 
-  /* ── content registry (content/*.js call this) ────── */
-  const registry = [];
-  window.AI_PUSH = (entry) => {
-    if (!entry || !entry.id || !entry.title || typeof entry.html !== 'string') {
-      console.error('AI_PUSH: entry needs id, title, html', entry);
-      return;
-    }
-    if (registry.some((s) => s.id === entry.id)) {
-      console.error('AI_PUSH: duplicate id ' + entry.id);
-      return;
-    }
-    registry.push(entry);
-  };
+  const PAGES = [
+    { id: 'llm-internals',    part: 1, file: '01-foundations/llm-internals.html',    title: 'How LLMs actually work' },
+    { id: 'ml-multimodal',    part: 1, file: '01-foundations/ml-multimodal.html',    title: 'ML just enough · multimodal' },
+    { id: 'finetune-decide',  part: 1, file: '01-foundations/finetune-decide.html',  title: 'Fine-tuning vs RAG vs prompting' },
+    { id: 'tokens-cost',      part: 1, file: '02-tokens-context/tokens-cost.html',   title: 'Tokens, cost, caching' },
+    { id: 'context-budget',   part: 1, file: '02-tokens-context/context-budget.html', title: 'Context budgeting' },
+    { id: 'rag-overview',     part: 2, file: '03-rag-search/rag-overview.html',      title: 'RAG the big picture' },
+    { id: 'chunking',         part: 2, file: '03-rag-search/chunking.html',          title: 'Chunking' },
+    { id: 'embeddings',       part: 2, file: '03-rag-search/embeddings.html',        title: 'Embeddings & vector stores' },
+    { id: 'search-rerank',    part: 2, file: '03-rag-search/search-rerank.html',     title: 'Search & reranking' },
+    { id: 'rag-variants',     part: 2, file: '03-rag-search/rag-variants.html',      title: 'RAG variants' },
+    { id: 'tool-calling',     part: 3, file: '04-tools-mcp/tool-calling.html',       title: 'Tool calling & structured output' },
+    { id: 'mcp',              part: 3, file: '04-tools-mcp/mcp.html',                title: 'MCP protocol' },
+    { id: 'ag-ui',            part: 3, file: '04-tools-mcp/ag-ui.html',              title: 'AG-UI generative components' },
+    { id: 'agent-patterns',   part: 3, file: '05-agents-orchestration/agent-patterns.html', title: 'Agent patterns' },
+    { id: 'graphs',           part: 3, file: '05-agents-orchestration/graphs.html',  title: 'Orchestration graphs' },
+    { id: 'ops',              part: 3, file: '05-agents-orchestration/ops.html',     title: 'Durable ops' },
+    { id: 'ecosystem',        part: 3, file: '05-agents-orchestration/ecosystem.html', title: 'Ecosystem' },
+    { id: 'memory',           part: 4, file: '06-memory/memory.html',                title: 'Memory' },
+    { id: 'injection',        part: 4, file: '07-security/injection.html',           title: 'Prompt injection & exfil' },
+    { id: 'guardrails',       part: 4, file: '07-security/guardrails.html',          title: 'Guardrails & least privilege' },
+    { id: 'evals',            part: 5, file: '08-evals/evals.html',                  title: 'Evals & observability' },
+    { id: 'architecture',     part: 5, file: '09-systems/architecture.html',         title: 'System architecture' },
+    { id: 'aws',              part: 5, file: '09-systems/aws.html',                  title: 'Systems on AWS' },
+    { id: 'quickref',         part: 5, file: '10-quickref/quickref.html',            title: 'The 30-second layer' },
+  ];
 
   const el = (tag, cls, html) => {
     const n = document.createElement(tag);
@@ -30,69 +44,69 @@
     if (html != null) n.innerHTML = html;
     return n;
   };
-  const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 
-  /* ── render sections + collect h3 subnav ─────────── */
-  function renderContent() {
-    const mount = document.getElementById('content');
-    if (!mount) return;
-    registry.forEach((sec, i) => {
-      const no = String(i + 1).padStart(2, '0');
-      const section = el('section', 'topic');
-      section.id = sec.id;
+  const currentPage = () => {
+    const path = decodeURIComponent(location.pathname);
+    return PAGES.findIndex((p) => path.endsWith('/' + p.file) || path.endsWith(p.file));
+  };
 
-      const head = el('div', 'topic-head');
-      head.appendChild(el('span', 'no', no));
-      head.appendChild(el('h2', null, sec.title));
-      if (sec.blurb) head.appendChild(el('p', 'lead', sec.blurb));
-      section.appendChild(head);
-
-      const body = el('div', 'topic-body');
-      body.innerHTML = sec.html;
-      section.appendChild(body);
-
-      body.querySelectorAll('h3').forEach((h, j) => {
-        if (!h.id) h.id = sec.id + '--' + (slug(h.textContent) || 's' + (j + 1));
-      });
-      mount.appendChild(section);
-    });
-  }
-
-  /* ── sidebar nav ──────────────────────────────────── */
+  /* ── sidebar + pager ─────────────────────────────── */
   function buildNav() {
     const nav = document.getElementById('toc');
-    if (!nav) return;
-    nav.innerHTML = '';
-    const byPart = new Map();
-    registry.forEach((sec) => {
-      if (!byPart.has(sec.part)) byPart.set(sec.part, []);
-      byPart.get(sec.part).push(sec);
-    });
-
-    byPart.forEach((secs, partNo) => {
-      nav.appendChild(el('div', 'nav-part', PARTS[partNo] || 'Part ' + partNo));
-      secs.forEach((sec) => {
+    if (nav) {
+      nav.innerHTML = '';
+      const idx = currentPage();
+      let lastPart = 0;
+      PAGES.forEach((p, i) => {
+        if (p.part !== lastPart) {
+          nav.appendChild(el('div', 'nav-part', PARTS[p.part] || 'Part ' + p.part));
+          lastPart = p.part;
+        }
         const item = el('div', 'nav-sec');
-        item.dataset.target = sec.id;
-        const title = el('span', null, sec.title);
-        const no = el('span', 'no', String(registry.indexOf(sec) + 1).padStart(2, '0'));
-        const a = el('a', null);
-        a.href = '#' + sec.id;
-        a.appendChild(no);
-        a.appendChild(title);
+        if (i === idx) item.classList.add('active');
+        const a = el('a');
+        a.href = '../' + p.file;
+        a.appendChild(el('span', 'no', String(i + 1).padStart(2, '0')));
+        a.appendChild(el('span', null, p.title));
         item.appendChild(a);
-
-        const sub = el('div', 'nav-sub');
-        document.querySelectorAll('#' + sec.id + ' h3').forEach((h) => {
-          const s = el('a', null, h.textContent);
-          s.href = '#' + h.id;
-          s.dataset.target = h.id;
-          sub.appendChild(s);
-        });
-        item.appendChild(sub);
+        if (i === idx) {
+          const sub = el('div', 'nav-sub');
+          document.querySelectorAll('.content h3[id]').forEach((h) => {
+            const s = el('a', null, h.textContent);
+            s.href = '#' + h.id;
+            s.dataset.target = h.id;
+            sub.appendChild(s);
+          });
+          item.appendChild(sub);
+        }
         nav.appendChild(item);
       });
-    });
+      if (idx === -1) {
+        const home = el('div', 'nav-part', 'Start');
+        nav.prepend(home);
+        const a = el('a', null, '← overview');
+        a.href = '../index.html';
+        nav.insertBefore(a, home.nextSibling);
+      }
+    }
+
+    const pager = document.getElementById('pager');
+    if (pager) {
+      const idx = currentPage();
+      const prev = idx > 0 ? PAGES[idx - 1] : null;
+      const next = idx >= 0 && idx < PAGES.length - 1 ? PAGES[idx + 1] : null;
+      pager.innerHTML = '';
+      if (prev) pager.appendChild(link(prev, '← previous', '../' + prev.file));
+      pager.appendChild(el('span', 'spacer'));
+      if (next) pager.appendChild(link(next, 'next →', '../' + next.file, true));
+    }
+    function link(p, dir, href, isNext) {
+      const a = el('a', isNext ? 'next' : 'prev');
+      a.href = href;
+      a.appendChild(el('span', 'dir', dir));
+      a.appendChild(el('span', 'what', p.title));
+      return a;
+    }
   }
 
   /* ── scrollspy + progress ─────────────────────────── */
@@ -103,23 +117,14 @@
         const max = document.documentElement.scrollHeight - innerHeight;
         bar.style.width = (max > 0 ? (scrollY / max) * 100 : 0) + '%';
       }
-      document.querySelectorAll('.nav-sec.active').forEach((n) => n.classList.remove('active'));
       document.querySelectorAll('.nav-sub a.cur').forEach((n) => n.classList.remove('cur'));
-      let current = null;
-      document.querySelectorAll('section.topic').forEach((s) => {
-        if (s.getBoundingClientRect().top < innerHeight * 0.33) current = s;
+      let curH = null;
+      document.querySelectorAll('.content h3[id]').forEach((h) => {
+        if (h.getBoundingClientRect().top < innerHeight * 0.33) curH = h;
       });
-      if (current) {
-        const item = document.querySelector('.nav-sec[data-target="' + current.id + '"]');
-        if (item) item.classList.add('active');
-        let curH = null;
-        current.querySelectorAll('h3').forEach((h) => {
-          if (h.getBoundingClientRect().top < innerHeight * 0.33) curH = h;
-        });
-        if (curH) {
-          const link = document.querySelector('.nav-sub a[data-target="' + curH.id + '"]');
-          if (link) link.classList.add('cur');
-        }
+      if (curH) {
+        const link = document.querySelector('.nav-sub a[data-target="' + curH.id + '"]');
+        if (link) link.classList.add('cur');
       }
     };
     addEventListener('scroll', onScroll, { passive: true });
@@ -131,9 +136,8 @@
     document.querySelectorAll('pre.code').forEach((pre) => {
       const card = el('div', 'code-card');
       const bar = el('div', 'cc-bar');
-      const dots = el('span', 'cc-dots', '<i></i><i></i><i></i>');
-      const file = el('span', 'cc-file', pre.dataset.file || '');
-      const lang = el('span', 'cc-lang', pre.dataset.lang || 'code');
+      if (pre.dataset.file) bar.appendChild(el('span', 'cc-file', pre.dataset.file));
+      bar.appendChild(el('span', 'cc-lang', pre.dataset.lang || 'code'));
 
       const copyBtn = el('button', 'cc-btn', 'copy');
       copyBtn.type = 'button';
@@ -146,9 +150,6 @@
         exBtn.textContent = open ? 'close' : 'open';
       });
 
-      bar.appendChild(dots);
-      if (pre.dataset.file) bar.appendChild(file);
-      bar.appendChild(lang);
       bar.appendChild(copyBtn);
       bar.appendChild(exBtn);
 
@@ -203,9 +204,9 @@
       x = Math.max(pad, Math.min(x, innerWidth - tw - pad));
       let y;
       if (r.top - th - pad >= 0) {
-        y = r.top - th - 6;               /* prefer above */
+        y = r.top - th - 6;
       } else {
-        y = Math.min(r.bottom + 6, innerHeight - th - pad); /* flip below */
+        y = Math.min(r.bottom + 6, innerHeight - th - pad);
       }
       tip.style.left = x + 'px';
       tip.style.top = y + 'px';
@@ -231,7 +232,25 @@
     addEventListener('keydown', (e) => { if (e.key === 'Escape') hide(); });
   }
 
-  /* ── mermaid via CDN, per-diagram isolation ───────── */
+  /* ── solutions accordion ─────────────────────────── */
+  function wireAccordions() {
+    document.addEventListener('click', (e) => {
+      const head = e.target.closest('.sol-head');
+      if (head) head.closest('.sol-item').classList.toggle('open');
+    });
+    const openFor = (hash) => {
+      if (!hash || hash === '#') return;
+      let target;
+      try { target = document.querySelector(decodeURIComponent(hash)); } catch (err) { return; }
+      if (!target) return;
+      const item = target.closest('.sol-item');
+      if (item) item.classList.add('open');
+    };
+    openFor(location.hash);
+    addEventListener('hashchange', () => openFor(location.hash));
+  }
+
+  /* ── mermaid via CDN, full width, readable ────────── */
   async function wireMermaid() {
     const nodes = Array.from(document.querySelectorAll('pre.mermaid'));
     if (!nodes.length) return;
@@ -240,12 +259,34 @@
       mermaid = (await import('https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs')).default;
       mermaid.initialize({
         startOnLoad: false,
-        theme: 'dark',
+        theme: 'base',
         securityLevel: 'loose',
+        flowchart: { htmlLabels: true, useMaxWidth: true, nodeSpacing: 48, rankSpacing: 64, padding: 12 },
+        sequence: { useMaxWidth: true, actorFontSize: 16, actorFontWeight: 600, messageFontSize: 15, noteFontSize: 14, wrap: true },
         themeVariables: {
           background: 'transparent',
-          fontFamily: 'JetBrains Mono, Menlo, monospace',
-          fontSize: '13px',
+          fontFamily: 'Inter, system-ui, sans-serif',
+          fontSize: '16px',
+          /* light champagne fills + dark text: readable on dark page and on paper */
+          primaryColor: '#ece5d8',
+          primaryTextColor: '#141821',
+          primaryBorderColor: '#a2926f',
+          secondaryColor: '#e4dccb',
+          tertiaryColor: '#f2ede2',
+          textColor: '#aab5c5',
+          lineColor: '#a2926f',
+          edgeLabelBackground: 'transparent',
+          clusterBkg: 'transparent',
+          clusterBorder: '#5d6673',
+          titleColor: '#c7d3e2',
+          noteBkgColor: '#f2ede2',
+          noteTextColor: '#141821',
+          noteBorderColor: '#a2926f',
+          actorBkg: '#ece5d8',
+          actorBorder: '#a2926f',
+          actorTextColor: '#141821',
+          signalColor: '#9aa7ba',
+          signalTextColor: '#aab5c5',
         },
       });
     } catch (err) {
@@ -271,8 +312,7 @@
       filter.addEventListener('input', () => {
         const q = filter.value.trim().toLowerCase();
         document.querySelectorAll('#toc .nav-sec').forEach((item) => {
-          const hit = !q || item.textContent.toLowerCase().includes(q);
-          item.style.display = hit ? '' : 'none';
+          item.style.display = !q || item.textContent.toLowerCase().includes(q) ? '' : 'none';
         });
         document.querySelectorAll('#toc .nav-part').forEach((p) => {
           let any = false;
@@ -295,14 +335,14 @@
     const exAll = document.getElementById('expand-all');
     if (exAll) {
       exAll.addEventListener('click', () => {
-        const cards = document.querySelectorAll('.code-card');
-        const openAny = document.querySelector('.code-card:not(.open)');
-        cards.forEach((c) => {
-          c.classList.toggle('open', !!openAny);
+        const open = !!(document.querySelector('.code-card:not(.open)') || document.querySelector('.sol-item:not(.open)'));
+        document.querySelectorAll('.code-card').forEach((c) => {
+          c.classList.toggle('open', open);
           const b = c.querySelector('.cc-btn:last-of-type');
-          if (b) b.textContent = openAny ? 'close' : 'open';
+          if (b) b.textContent = open ? 'close' : 'open';
         });
-        exAll.classList.toggle('on', !!openAny);
+        document.querySelectorAll('.sol-item').forEach((s) => s.classList.toggle('open', open));
+        exAll.classList.toggle('on', open);
       });
     }
 
@@ -310,21 +350,29 @@
     if (printBtn) printBtn.addEventListener('click', () => print());
 
     const navToggle = document.getElementById('nav-toggle');
-    const sidebar = document.querySelector('.sidebar');
-    if (navToggle && sidebar) {
-      navToggle.addEventListener('click', () => sidebar.classList.toggle('open'));
-      sidebar.addEventListener('click', (e) => {
-        if (e.target.closest('a')) sidebar.classList.remove('open');
+    if (navToggle) {
+      navToggle.addEventListener('click', () => {
+        if (matchMedia('(max-width: 1099px)').matches) {
+          document.body.classList.toggle('nav-open');
+        } else {
+          const collapsed = document.body.classList.toggle('nav-collapsed');
+          try { localStorage.setItem('ai-guide-nav', collapsed ? '1' : ''); } catch (e) { /* no-op */ }
+        }
+      });
+      try {
+        if (localStorage.getItem('ai-guide-nav') === '1') document.body.classList.add('nav-collapsed');
+      } catch (e) { /* no-op */ }
+      document.querySelector('.sidebar')?.addEventListener('click', (e) => {
+        if (e.target.closest('a')) document.body.classList.remove('nav-open');
       });
     }
   }
 
-  /* ── boot ─────────────────────────────────────────── */
   document.addEventListener('DOMContentLoaded', () => {
-    renderContent();
     buildNav();
     wireCodeCards();
     wireTooltips();
+    wireAccordions();
     wireToolbar();
     wireScrollSpy();
     wireMermaid();

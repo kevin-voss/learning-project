@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How LLMs actually work · AI Engineering Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../css/tokens.css">
+<link rel="stylesheet" href="../../css/base.css">
+<link rel="stylesheet" href="../../css/components.css">
+<link rel="stylesheet" href="../../css/flow.css">
+<link rel="stylesheet" href="../../css/print.css">
+</head>
+<body>
+
+<div id="progress"></div>
+
+<header class="topbar">
+  <button class="tbtn" id="nav-toggle" type="button" aria-label="Toggle navigation">☰</button>
+  <a class="brand" href="../../index.html"><b>ai</b>·field-guide</a>
+  <div class="tools">
+    <input id="toc-filter" type="search" placeholder="filter · /" aria-label="Filter topics">
+    <button class="tbtn" id="expand-all" type="button">expand</button>
+    <button class="tbtn" id="print-btn" type="button">print</button>
+  </div>
+</header>
+
+<nav class="sidebar" id="toc" aria-label="Topics"></nav>
+
+<main class="main">
+  <div class="content">
+    <header class="topic-head">
+      <div class="kicker">Part 1 · Foundations · 02/24</div>
+      <h1>How LLMs actually work</h1>
+      <p class="lead">An LLM does exactly one thing: predict the next token. Every answer, bug, price tag and security hole in this sheet follows from that one sentence.</p>
+    </header>
+
+  <div class="stage-label sl-why">Why you need it</div>
+  <div class="why">
+    <ul>
+      <li><b>Debugging blind:</b> why did it hallucinate, why did it ignore the system prompt, why does it forget. Without a mental model these are mysteries, not bugs.</li>
+      <li><b>Costs stay opaque:</b> context limits, token prices and cache discounts only make sense once you know what a token costs to process, see <a class="xl" href="../02-tokens-context/tokens-cost.html">tokens, cost, caching</a>.</li>
+      <li><b>Knobs feel arbitrary:</b> temperature, top-p and max_tokens have precise effects, yet teams tune them by vibes for years.</li>
+      <li><b>Security reasoning fails:</b> <a class="xl" href="../07-security/injection.html">prompt injection</a> is obvious once you see that the model treats all text as data, wherever it came from.</li>
+    </ul>
+  </div>
+
+  <div class="stage-label sl-sol">Solutions</div>
+  <p class="lead">Five systems explain every LLM behavior you will meet: the prediction loop, tokens and attention, sampling knobs, training stages, and the KV cache.</p>
+
+  <div class="diagram">
+    <div class="diag-body"><pre class="mermaid">
+flowchart TD
+  A["prompt text"] --> B["tokenizer"]
+  B --> C["transformer blocks&lt;br/&gt;attention layers"]
+  C --> D["probability per&lt;br/&gt;vocabulary token"]
+  D --> E["sampling&lt;br/&gt;temp · top-p"]
+  E --> F["one token out"]
+  F -. "append, repeat&lt;br/&gt;until stop" .-> C
+    </pre></div>
+  </div>
+
+  <div class="sol-list">
+
+    <div class="sol-item">
+      <button class="sol-head" type="button">
+        <span class="sol-no">A</span>
+        <span class="sol-name">The prediction loop</span>
+        <span class="sol-sum">score every token, pick one, append, repeat, no fact store inside</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li>Text goes in, the network scores every vocabulary token (about 100k of them) with a probability, one gets picked, appended, and the loop repeats until a stop token.</li>
+          <li><b>Prediction, not lookup:</b> no database of facts sits inside. Ask a question and it generates the most plausible continuation, it does not fetch a stored answer.</li>
+          <li><b>Knowledge lives in <button class="term" type="button" data-tip="Learned numbers inside the network, set during training. Frozen at inference time unless you fine-tune.">weights</button>:</b> training text is compressed into learned numbers. That is why the same model can write poetry about tax law and invent a fake court case in one reply.</li>
+          <li><b>Planning emerged:</b> there is no planner module. Multi-step behavior is a learned pattern of the single next-token objective.</li>
+        </ul>
+        <h4>The window is its entire world</h4>
+        <ul>
+          <li>Everything the model knows about this conversation is exactly the text you sent. No hidden notepad, no session state, nothing between calls.</li>
+          <li>Chat "memory" is your app re-sending history every turn, which is why <a class="xl" href="../02-tokens-context/context-budget.html">context engineering</a> and <a class="xl" href="../06-memory/memory.html">memory strategies</a> exist as disciplines.</li>
+          <li>Overflow the window and the oldest tokens fall out silently. The model will not warn you, it will just calmly answer with half the document.</li>
+        </ul>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><b>con:</b> fluent is not true. Its job is plausible continuation, not truth, so it fills gaps between training patterns with confident-sounding invention. Ground with <a class="xl" href="#rag-overview">RAG</a> and verify with <a class="xl" href="../08-evals/evals.html">evals</a>.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+    <div class="sol-item">
+      <button class="sol-head" type="button">
+        <span class="sol-no">B</span>
+        <span class="sol-name">Tokens + attention</span>
+        <span class="sol-sum">subword pieces are the currency, attention is how they read each other</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li>Text is cut into <button class="term" type="button" data-tip="A subword piece, roughly 4 characters of English. Windows, prices and chunk sizes are all counted in these.">tokens</button> by a fixed vocabulary of about 100k pieces. Common words stay whole, rare words split, new emojis split into several pieces.</li>
+          <li>Every limit on this site is a token count: window size, price per million, <a class="xl" href="#chunking">chunk size</a>, <a class="xl" href="../03-rag-search/embeddings.html">embedding input cap</a>.</li>
+          <li>Each token becomes a vector. <b>Self-attention</b> lets every token read every other token, so "bank" collects its meaning from the words around it.</li>
+          <li>Layers (12 to 100+) refine this. Early layers hold syntax, deep layers hold meaning and task behavior.</li>
+        </ul>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><span class="wlabel why">why</span> <b>con:</b> attention cost grows with the square of input length. Long prompts get slow and pricey.</li>
+          <li><b>con:</b> quality droops in the middle, the "lost in the middle" effect. Edges of the window get the most attention.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+    <div class="sol-item">
+      <button class="sol-head" type="button">
+        <span class="sol-no">C</span>
+        <span class="sol-name">Sampling knobs</span>
+        <span class="sol-sum">temperature reshapes the distribution, top-p cuts the tail</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li><b><button class="term" type="button" data-tip="Rescales the probability list before sampling. Low values sharpen it toward the top token, high values flatten it and admit weirder picks.">temperature</button></b> reshapes the whole distribution. Near 0 the top token almost always wins. Above 1 long-shot tokens get real probability mass.</li>
+          <li><b><button class="term" type="button" data-tip="Nucleus sampling: keep the smallest set of tokens whose probabilities add up to p, then sample inside that set. Caps the tail of weird tokens.">top-p</button></b> cuts the candidate pool first: keep the smallest set of tokens whose probabilities sum to p, then sample inside it. It removes catastrophic tail picks without flattening good variety.</li>
+          <li><b>Presets:</b> temp 0 to 0.3 for extraction, code, structured output, evals. 0.7 to 1.0 for prose and ideation. Change one knob at a time or you will never know which one did what.</li>
+          <li><b>max_tokens</b> is the output budget. Hit it and answers cut mid-sentence, so reserve it in your <a class="xl" href="../02-tokens-context/context-budget.html">context budget</a>.</li>
+        </ul>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><span class="wlabel gotcha">gotcha</span> <b>con:</b> temperature 0 is <i>almost</i> deterministic, not bit-exact. Floating-point order, batching and hardware differences can flip a near-tie, and one flip changes every token after it. Never build a system that requires identical repeats.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+    <div class="sol-item">
+      <button class="sol-head" type="button">
+        <span class="sol-no">D</span>
+        <span class="sol-name">Training stages</span>
+        <span class="sol-sum">pretrain bakes knowledge, SFT adds format, RLHF adds alignment</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li><b>Pretraining (knowledge):</b> predict the next token across trillions of tokens of internet-scale text, for months on GPU clusters. Done once by the provider, staggeringly expensive. Facts, style and languages live here, frozen into weights.</li>
+          <li><b>SFT, instruction tuning (format):</b> fine-tune on curated instruction-response pairs. Turns the raw text-continuer into an assistant that answers instead of continuing. Prompt-following behavior is shaped here.</li>
+          <li><b>RLHF / DPO (alignment):</b> humans rank outputs, a reward model learns the preference, the model is nudged toward preferred answers. DPO is the simpler pairwise variant. Refusals and persona come from these stages, not from pretraining.</li>
+          <li><b>Inference (serving):</b> weights stay frozen, only the context changes per request. Generation is the sampling loop above. Your own <a class="xl" href="finetune-decide.html">fine-tuning</a> is a small stage 4 you can run on top.</li>
+        </ul>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><b>pro:</b> the stages tell you what you can change: prompting steers SFT-shaped behavior, tuning adds a stage, nothing you do touches pretraining knowledge.</li>
+          <li><b>con:</b> alignment lives in the last mile, which is why your own tuning can erode refusals, see <a class="xl" href="../07-security/guardrails.html">guardrails</a>.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+    <div class="sol-item">
+      <button class="sol-head" type="button">
+        <span class="sol-no">E</span>
+        <span class="sol-name">KV cache</span>
+        <span class="sol-sum">past attention work is stored, so the first token pays the bill</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li>Generating a token needs attention over all previous tokens. The <button class="term" type="button" data-tip="A cache of already-computed attention keys and values for past tokens. Without it every new token would recompute attention over the full history.">KV cache</button> stores those computed states so past work happens once.</li>
+          <li><b>Consequence:</b> the prompt is prefilled first, so the first token is the slow one, then generation steps are cheap.</li>
+          <li><b>Consequence:</b> identical prefixes can be cached server-side and re-sold at a discount. That is the entire basis of <a class="xl" href="../02-tokens-context/tokens-cost.html">prompt caching</a>.</li>
+        </ul>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><b>pro:</b> cached prefixes make a repeated system prompt nearly free.</li>
+          <li><b>con:</b> a huge uncached prefix plus an unbounded max_tokens turns one runaway loop into a large bill.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+  </div>
+
+  <div class="stage-label sl-when">When to use · when not</div>
+  <div class="pc">
+    <div class="pc-col pros"><h4 class="pc-h">Use when</h4>
+      <ul>
+        <li>Fuzzy language in or out: parse, summarize, draft, classify, chat, tasks whose rules cannot be written down.</li>
+        <li>Knowledge is unstructured: answers live in scattered docs, tickets and PDFs, paired with <a class="xl" href="#rag-overview">RAG</a>.</li>
+        <li>Long tail of variants: a flexible fallback for inputs nobody enumerated.</li>
+        <li>Ambiguity is the job: drafts, options and brainstorming where variety helps.</li>
+      </ul>
+    </div>
+    <div class="pc-col cons"><h4 class="pc-h">Skip when</h4>
+      <ul>
+        <li>The transform is exact and writable: totals, tax math, schema validation, sorting. An LLM there adds cost, latency and drift for zero gain.</li>
+        <li>Answers must be audit-grade correct every single time. Confidence is not correctness, keep a human path.</li>
+        <li>Volume is huge and the pattern is fixed, rules are cheaper and stable.</li>
+        <li>One canonical answer is required downstream, variety is a bug. Route easy cases to rules, send only the hard tail to the model.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Task shape</th><th class="hu">Use an LLM when</th><th class="ha">Avoid when</th><th class="hw">Watch out</th></tr></thead>
+      <tbody>
+        <tr><td class="m">Fuzzy language in or out</td><td class="u">Rules cannot be written down</td><td class="avoid">The transform is exact and writable</td><td class="watch">A model behind a form field adds cost and drift for zero gain</td></tr>
+        <tr><td class="m">Knowledge is unstructured</td><td class="u">Answers live in scattered docs, with RAG</td><td class="avoid">Audit-grade correctness every time</td><td class="watch">Validate outputs and keep a human path</td></tr>
+        <tr><td class="m">Long tail of variants</td><td class="u">Inputs nobody enumerated</td><td class="avoid">Huge volume, fixed pattern</td><td class="watch">Pin versions and add <a class="xl" href="../08-evals/evals.html">evals</a>, updates change behavior silently</td></tr>
+        <tr><td class="m">Ambiguity is the job</td><td class="u">Variety and options help</td><td class="avoid">One canonical answer required downstream</td><td class="watch">Route easy cases to rules, send the hard tail to the model</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="stage-label sl-ex">Example</div>
+  <div class="example">
+    <p class="ex-note">Counts the tokens of one question with tiktoken, so you see the real unit of price, then runs the same prompt at temperature 0 and 1.2. Expect the same boring list at 0 and riskier picks at 1.2.</p>
+    <pre class="code" data-lang="python" data-file="tokens_and_temperature.py"><code><span class="tk-k">import</span> tiktoken, openai
+enc = tiktoken.encoding_for_model(<span class="tk-s">"gpt-4o"</span>)
+
+text = <span class="tk-s">"How do refunds work for annual plans?"</span>
+<span class="tk-f">print</span>(<span class="tk-f">len</span>(enc.encode(text)))  <span class="tk-c"># 9 tokens · the real unit of price</span>
+
+<span class="tk-k">for</span> temp <span class="tk-k">in</span> (<span class="tk-n">0</span>, <span class="tk-n">1.2</span>):
+    r = openai.chat.completions.create(
+        model=<span class="tk-s">"gpt-4o"</span>,
+        temperature=temp,
+        messages=[{<span class="tk-s">"role"</span>: <span class="tk-s">"user"</span>, <span class="tk-s">"content"</span>: <span class="tk-s">"Name three uses for a fork"</span>}])
+    <span class="tk-f">print</span>(temp, r.choices[<span class="tk-n">0</span>].message.content)
+<span class="tk-c"># temp 0: the same boring list nearly every run · temp 1.2: creative, riskier picks</span></code></pre>
+  </div>
+
+  <div class="stage-label sl-extra">Watch out</div>
+  <div class="pit-list"><ul>
+    <li>Hallucination is confident interpolation · it cannot flag its own gaps · ground with <a class="xl" href="#rag-overview">RAG</a>, require citations, verify with <a class="xl" href="../08-evals/evals.html">evals</a></li>
+    <li>Attention favors the edges · instructions at the top dilute as the window fills · repeat critical instructions near the end, see <a class="xl" href="../02-tokens-context/context-budget.html">context budgeting</a></li>
+    <li>System prompts are just text, no privileged channel · any text in context counts as instructions, that is why <a class="xl" href="../07-security/injection.html">injection</a> works</li>
+    <li>Model updates silently change behavior · pin versions and add <a class="xl" href="../08-evals/evals.html">evals</a></li>
+    <li>Temperature 0 is not a determinism contract · batching, quantization and near-ties flip outputs between runs</li>
+  </ul></div>
+
+  <div class="stage-label sl-extra">Remember</div>
+  <div class="remember"><ul>
+    <li>It predicts the next token, it does not look facts up.</li>
+    <li>The context window is its entire world, and you manage what is in it.</li>
+    <li>Temperature reshapes the distribution, top-p cuts the tail, neither is bit-exact.</li>
+    <li>Knowledge comes from pretraining, assistant behavior from SFT and RLHF.</li>
+    <li>The KV cache makes first tokens slow and cached prefixes cheap.</li>
+    <li>Fluent is not true. Ground, cite, eval.</li>
+  </ul></div>
+  
+    <nav class="pager" id="pager"></nav>
+
+    <footer class="footer">
+      learning-project · tracks/ai · print this page from the browser dialog · diagrams load mermaid from CDN once online
+    </footer>
+  </div>
+</main>
+
+<script src="../../js/app.js"></script>
+</body>
+</html>

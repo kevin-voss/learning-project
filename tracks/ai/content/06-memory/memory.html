@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Memory: short-term, long-term, summaries · AI Engineering Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../css/tokens.css">
+<link rel="stylesheet" href="../../css/base.css">
+<link rel="stylesheet" href="../../css/components.css">
+<link rel="stylesheet" href="../../css/flow.css">
+<link rel="stylesheet" href="../../css/print.css">
+</head>
+<body>
+
+<div id="progress"></div>
+
+<header class="topbar">
+  <button class="tbtn" id="nav-toggle" type="button" aria-label="Toggle navigation">☰</button>
+  <a class="brand" href="../../index.html"><b>ai</b>·field-guide</a>
+  <div class="tools">
+    <input id="toc-filter" type="search" placeholder="filter · /" aria-label="Filter topics">
+    <button class="tbtn" id="expand-all" type="button">expand</button>
+    <button class="tbtn" id="print-btn" type="button">print</button>
+  </div>
+</header>
+
+<nav class="sidebar" id="toc" aria-label="Topics"></nav>
+
+<main class="main">
+  <div class="content">
+    <header class="topic-head">
+      <div class="kicker">Part 4 · Memory & safety · 16/24</div>
+      <h1>Memory: short-term, long-term, summaries</h1>
+      <p class="lead">Two clocks run in every assistant. The window is short-term: what the model sees of this session, rebuilt on every call, dead when the session ends. The store is long-term: facts written back after sessions and retrieved across them. Memory is the plumbing between the two clocks, and none of it is magic.</p>
+    </header>
+
+  <div class="beat problem">
+    <div class="beat-h"><span class="bt">Problem</span><span class="bh">the window dies with the session, users do not</span></div>
+    <ul>
+      <li><b>Amnesia at session end.</b> The transcript dies with the thread. Next session starts from zero and "last week you said" points nowhere.</li>
+      <li><b>Users expect continuity anyway.</b> Products ship memory toggles, so "remember that I prefer concise answers" must actually work. The feature is all engineering, none of it magic.</li>
+      <li><b>Long sessions fill the window</b> long before they end, and naive trimming cuts the wrong things. Those budget mechanics live in <a class="xl" href="../02-tokens-context/context-budget.html">context budgeting</a>, this topic is the memory built on top.</li>
+      <li><b>Re-typing is not memory.</b> Forcing users to restate preferences, project names and past decisions every session is the failure mode memory exists to remove.</li>
+    </ul>
+  </div>
+
+  <div class="beat solution">
+    <div class="beat-h"><span class="bt">Solution</span><span class="bh">a window for the session, a store for the year</span></div>
+    <ul>
+      <li><span class="wlabel why">why</span> <b>Two clocks:</b> the <b>window</b> holds this session's working context and is reassembled on every call. The <b>store</b> holds facts that outlive sessions and is read back into the window on demand.</li>
+      <li><b>Within a session:</b> a sliding window, or better, the summary + last-K verbatim hybrid, compacted at ~70% of budget.</li>
+      <li><b>Across sessions:</b> at checkpoints, extract durable facts and write them to a store keyed by user and scope.</li>
+      <li><b>Per turn:</b> retrieve the relevant stored facts and inject them into the window as a labeled block, exactly like retrieval, see <a class="xl" href="#rag-overview">RAG</a>.</li>
+    </ul>
+    <div class="diagram"><div class="diag-body"><pre class="mermaid">graph TD
+  T[Session turns] --> B{Budget check}
+  B -->|under 70%| W[Window · last K verbatim]
+  B -->|over 70%| S[Compaction · running summary] --> W
+  W --> M[Model call]
+  T --> X[Session end · extract facts]
+  X --> DB[Memory store · per user and scope]
+  DB --> R[Retrieve top-k by similarity]
+  R --> W</pre></div></div>
+  </div>
+
+  <div class="beat how">
+    <div class="beat-h"><span class="bt">How</span><span class="bh">two clocks · summarization · the fact store · write-back · forgetting</span></div>
+
+    <h3 id="memory--the-two-clocks-precisely">the two clocks, precisely</h3>
+    <ul>
+      <li><b>Short-term, the window:</b> this thread's messages, the agent scratchpad, tool results in flight. Checkpointed per step for durability in <a class="xl" href="../05-agents-orchestration/graphs.html">orchestration graphs</a>. Dies with the task.</li>
+      <li><b>Long-term, the store:</b> rows you own in your own database. Survives restarts, deployments and sessions. The model only ever sees what you retrieve back into the window.</li>
+      <li><b>The bridge, two different jobs:</b> compaction turns old turns into a running summary inside the session. Extraction turns finished sessions into facts across sessions. Conflating them is the classic design bug.</li>
+    </ul>
+
+    <h3 id="memory--short-term-mechanics-the-recap-that-matters">short-term mechanics, the recap that matters</h3>
+    <ul>
+      <li><b>Sliding window:</b> keep the last N turns. Cheapest, loses the goal and every decision.</li>
+      <li><b>Anchored trim:</b> first turn (the goal) plus the last K. Cheap upgrade over plain sliding.</li>
+      <li><b>Summary + last-K hybrid, the default:</b> a running summary of old turns plus the last K verbatim. Recent promises stay quotable, old decisions survive compressed.</li>
+      <li><b>Compact at ~70%</b> of the history budget, never at overflow. The full ladder, slice budgets and token math: <a class="xl" href="../02-tokens-context/context-budget.html">context budgeting</a>.</li>
+    </ul>
+
+    <h3 id="memory--automatic-summarization-in-depth">automatic summarization, in depth</h3>
+    <ul>
+      <li><b>What to keep, in order:</b> decisions made and their reasons, names and numbers, constraints, open questions. Everything else is optional.</li>
+      <li><b>Structured beats narrative:</b> a "facts / decisions / open questions" block outlives a flowing paragraph and is cheaper to merge on the next compaction pass.</li>
+      <li><span class="wlabel gotcha">gotcha</span> <b>Summary-of-summary drift:</b> each merge loses a little detail and each further merge loses more, errors compound like lossy copies of copies. After enough merges the thread confidently misremembers.</li>
+      <li><b>Fix: re-derive from source.</b> Keep the original turns in your transcript table and periodically rebuild the summary from them, not from the previous summary.</li>
+      <li><b>Anchor preservation:</b> a summary that loses the decision is worse than truncation, because the model still sounds sure of itself with half the context gone.</li>
+    </ul>
+
+    <h3 id="memory--long-term-memory-is-retrieval">long-term memory is retrieval</h3>
+    <ul>
+      <li><b>Fact store (semantic):</b> discrete rows, "user prefers concise answers", "repo uses Postgres 16", written back after sessions. One fact per row, timestamped, scoped.</li>
+      <li><b>User profile:</b> curated, high-trust facts, name, timezone, role, preferences. Small enough to inject whole, too important to gamble on retrieval missing it.</li>
+      <li><button class="term" type="button" data-tip="Memory of events, what happened in past threads, stored as summaries.">Episodic</button> store: summarized past threads kept as documents. Large, so always fetched by similarity, never wholesale.</li>
+      <li><b>Procedural:</b> learned rules and updated instructions. In coding agents this is AGENTS.md-style files, the file IS the memory, readable by any tool.</li>
+      <li><b>The retrieval loop:</b> embed each stored fact, embed the current turn, top-k into a labeled block. The user's own history is just another corpus, see <a class="xl" href="../03-rag-search/embeddings.html">embeddings</a>.</li>
+      <li><b>Label the block:</b> "known facts about this user" as its own section, so the model treats it as data to use, not gospel to obey.</li>
+    </ul>
+
+    <h3 id="memory--write-back-policies">write-back policies</h3>
+    <ul>
+      <li><b>Explicit extraction:</b> a small dedicated LLM call at session end, "list durable facts from this transcript". Predictable, testable, costs one call per session.</li>
+      <li><b>Automatic continuous:</b> extract while the session runs. Fresher, but writes noise mid-flow and multiplies extraction calls.</li>
+      <li><b>Dedupe and timestamp:</b> match new facts against stored ones before insert, embedding similarity plus exact keys catches most repeats.</li>
+      <li><b>Contradiction resolution:</b> a new fact supersedes the old one, mark it superseded and keep lineage, rather than blind last-write-wins. "User moved to Berlin" must retire "user lives in Paris".</li>
+      <li><b>When to forget:</b> staleness TTL on volatile facts (plan tier, current project), user-initiated deletion, and low-confidence facts that retrieval never picks up.</li>
+      <li><b>Write scope on every row:</b> user, session, org, project. Retrieval filters on scope, always.</li>
+    </ul>
+
+    <h3 id="memory--privacy-and-isolation">privacy and isolation</h3>
+    <ul>
+      <li><b>Multi-user isolation is a security boundary:</b> memory rows keyed by user id, retrieval filtered server-side. A leak here is a data breach between customers, see <a class="xl" href="../07-security/guardrails.html">guardrails</a>.</li>
+      <li><b>PII flows in freely:</b> memory happily stores addresses, health hints and moods. Decide what is allowed in, encrypt at rest, keep a user-to-rows mapping.</li>
+      <li><b>Delete-me must actually delete:</b> the row, the vector copy, backups, and logs of what was shown to the model. Regulators treat "we still have the embedding" as not deleted.</li>
+      <li><b>Retention:</b> age facts out on a schedule. "She mentioned a layoff in 2023" is not a fact you want surfaced forever.</li>
+      <li><b>Audit:</b> log which memories were injected into which call so any answer can be explained afterwards.</li>
+    </ul>
+
+    <h3 id="memory--memory-changes-behavior">memory changes behavior</h3>
+    <ul>
+      <li><b>Determinism breaks:</b> same input, different answer, because the store changed between runs. Reproducibility now depends on memory state, not just prompts and temperature.</li>
+      <li><b>Eval problems:</b> goldens need frozen memory fixtures or a per-test user with a seeded store, see <a class="xl" href="../08-evals/evals.html">evals</a>. A memory-off regression suite stays the baseline.</li>
+      <li><b>Injection surface:</b> retrieved memories are content that steers the model. A poisoned or planted fact persists and fires in every future session. Treat memory reads as untrusted data, see <a class="xl" href="../07-security/injection.html">prompt injection</a>.</li>
+      <li><b>Steering risk:</b> one wrong stored fact steers every future answer, silently. Uncurated memory becomes lint.</li>
+    </ul>
+  </div>
+
+  <div class="beat when">
+    <div class="beat-h"><span class="bt">When</span><span class="bh">how much memory to build</span></div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Strategy</th><th class="hu">Use when</th><th class="ha">Avoid when</th><th class="hw">Watch out</th></tr></thead>
+        <tbody>
+          <tr><td>Sliding window only</td><td class="u">One-shot tasks, stateless FAQ, anonymous traffic</td><td class="avoid">Multi-turn work with decisions</td><td class="watch">Loses the original goal silently</td></tr>
+          <tr><td>Summary + last-K</td><td class="u">Long sessions, copilots, research agents, the default</td><td class="avoid">You cannot keep source turns for re-derivation</td><td class="watch">Drift without periodic re-derivation</td></tr>
+          <tr><td>Fact store</td><td class="u">Cross-session products, preferences, project conventions</td><td class="avoid">Regulated data, ephemeral users</td><td class="watch">Stale or wrong facts steer answers silently</td></tr>
+          <tr><td>Episodic summaries</td><td class="u">Products where "what did we do last month" matters</td><td class="avoid">Facts matter more than narratives</td><td class="watch">Large corpus, always fetch by similarity</td></tr>
+          <tr><td>Procedural files</td><td class="u">Coding agents, team conventions in AGENTS.md-style files</td><td class="avoid">Non-technical end users</td><td class="watch">Files need review like code</td></tr>
+          <tr><td>No memory at all</td><td class="u">Compliance-heavy flows, one-shot tools, shared kiosks</td><td class="avoid">The product promise is continuity</td><td class="watch">Users still expect it, say so plainly</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note"><b>When NOT to add memory:</b> one-shot tasks (summarize this document), compliance regimes where retention is a liability, anonymous or shared traffic, and any flow where a wrong remembered fact is worse than asking again. Memory is a feature you default off, then enable with intent.</p>
+  </div>
+
+  <div class="beat example">
+    <div class="beat-h"><span class="bt">Example</span><span class="bh">memory as a product feature, plus the table</span></div>
+    <ul>
+      <li><b>Coding agents remember repo conventions:</b> procedural memory persisted to AGENTS.md or CLAUDE.md. The file is the store, reviewable in a diff, readable by any tool.</li>
+      <li><b>Assistants remember preferences:</b> "concise answers, no emojis, deploys on Thursdays" as semantic facts, injected each session as a profile block.</li>
+      <li><b>Support agents know account history:</b> plan tier, last three tickets, outcome of the last outage. Scoped to the account, TTL on anything volatile.</li>
+      <li><b>Companion apps with months of continuity</b> run nightly summary re-derivation, because drift is the difference between "it remembers" and "it confabulates".</li>
+    </ul>
+    <pre class="code" data-lang="sql" data-file="memory.sql"><code><span class="tk-k">CREATE TABLE</span> memory (
+  fact_id       uuid <span class="tk-k">PRIMARY KEY</span>,            <span class="tk-c">-- one durable fact per row</span>
+  user_id       uuid <span class="tk-k">NOT NULL</span>,             <span class="tk-c">-- isolation boundary, always filter on it</span>
+  scope         text <span class="tk-k">NOT NULL</span>,             <span class="tk-c">-- 'user' · 'session' · 'org' · 'project'</span>
+  kind          text <span class="tk-k">NOT NULL</span>,             <span class="tk-c">-- 'semantic' · 'episodic' · 'procedural'</span>
+  content       text <span class="tk-k">NOT NULL</span>,             <span class="tk-c">-- 'user prefers concise answers'</span>
+  source_id     uuid,                          <span class="tk-c">-- session it came from, for audit</span>
+  confidence    <span class="tk-t">numeric</span> <span class="tk-k">DEFAULT</span> <span class="tk-n">1.0</span>,
+  created_at    timestamptz <span class="tk-k">NOT NULL</span>,
+  expires_at    timestamptz,                   <span class="tk-c">-- null means durable, set TTL on volatile facts</span>
+  superseded_by uuid,                         <span class="tk-c">-- contradiction resolution keeps lineage</span>
+  embedding     vector(<span class="tk-n">1536</span>)
+);</code></pre>
+    <pre class="code" data-lang="python" data-file="assemble.py"><code><span class="tk-k">def</span> <span class="tk-f">build_messages</span>(user, turn):
+    profile = store.<span class="tk-f">profile</span>(user.id)               <span class="tk-c"># small, injected whole</span>
+    facts = store.<span class="tk-f">top_k</span>(user.id, <span class="tk-f">embed</span>(turn), k=<span class="tk-n">8</span>)  <span class="tk-c"># filtered by scope</span>
+    <span class="tk-k">return</span> [
+        {<span class="tk-s">"role"</span>: <span class="tk-s">"system"</span>, <span class="tk-s">"content"</span>: SYSTEM + profile_block(profile)},
+        {<span class="tk-s">"role"</span>: <span class="tk-s">"system"</span>, <span class="tk-s">"content"</span>: memory_block(facts)},  <span class="tk-c"># labeled data</span>
+        *summary_block(),
+        *last_k_verbatim(<span class="tk-n">12</span>),
+    ]</code></pre>
+  </div>
+
+  <div class="beat pitfalls">
+    <div class="beat-h"><span class="bt">Pitfalls</span><span class="bh">wrong memories are worse than none</span></div>
+    <ul>
+      <li><b>Memory bleed:</b> one missing user filter in retrieval shows customer A's facts to customer B. Test isolation like an auth test.</li>
+      <li><b>Uncurated accumulation:</b> every session writes, nothing retires, retrieval fills with lint that steers answers wrong.</li>
+      <li><b>Stale facts:</b> "user is on the free plan" from last year changes today's answer. TTL volatile facts and prefer fresh on conflict.</li>
+      <li><b>Drift:</b> summary-of-summary compounds errors until the thread confidently misremembers. Re-derive from source turns.</li>
+      <li><b>Delete that does not delete:</b> the row is gone but the vector, the backup and the prompt log still hold it.</li>
+      <li><b>Memory in evals:</b> unfrozen stores make goldens flaky in ways that look random, see <a class="xl" href="../08-evals/evals.html">evals</a>.</li>
+      <li><b>Injection persistence:</b> a planted fact keeps steering after the attacker leaves the session, see <a class="xl" href="../07-security/injection.html">prompt injection</a>.</li>
+      <li><b>Cost creep:</b> every turn now pays an embedding call and extra input tokens for the memory block. Measure it, cap k.</li>
+    </ul>
+  </div>
+
+  <div class="beat checklist">
+    <div class="beat-h"><span class="bt">Checklist</span><span class="bh">the memory review in 7 lines</span></div>
+    <ul>
+      <li>Two clocks: the window dies with the session, the store survives. Every fact has a home.</li>
+      <li>Short-term: summary + last-K hybrid, compact at ~70% per <a class="xl" href="../02-tokens-context/context-budget.html">context budgeting</a>.</li>
+      <li>Summaries keep facts, decisions and open questions. Re-derive from source turns on a schedule.</li>
+      <li>Write-back: explicit extraction, dedupe, timestamp, scope, supersede on contradiction.</li>
+      <li>Retrieve like RAG: top-k, labeled block, fresh beats old, see <a class="xl" href="../03-rag-search/embeddings.html">embeddings</a>.</li>
+      <li>Isolate per user, TTL volatile facts, make delete real, audit what the model was shown.</li>
+      <li>Freeze memory in <a class="xl" href="../08-evals/evals.html">evals</a>. Default to no memory for one-shot and regulated flows.</li>
+    </ul>
+  </div>
+  
+    <nav class="pager" id="pager"></nav>
+
+    <footer class="footer">
+      learning-project · tracks/ai · print this page from the browser dialog · diagrams load mermaid from CDN once online
+    </footer>
+  </div>
+</main>
+
+<script src="../../js/app.js"></script>
+</body>
+</html>

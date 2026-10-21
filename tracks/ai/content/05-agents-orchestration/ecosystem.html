@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The ecosystem · AI Engineering Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../css/tokens.css">
+<link rel="stylesheet" href="../../css/base.css">
+<link rel="stylesheet" href="../../css/components.css">
+<link rel="stylesheet" href="../../css/flow.css">
+<link rel="stylesheet" href="../../css/print.css">
+</head>
+<body>
+
+<div id="progress"></div>
+
+<header class="topbar">
+  <button class="tbtn" id="nav-toggle" type="button" aria-label="Toggle navigation">☰</button>
+  <a class="brand" href="../../index.html"><b>ai</b>·field-guide</a>
+  <div class="tools">
+    <input id="toc-filter" type="search" placeholder="filter · /" aria-label="Filter topics">
+    <button class="tbtn" id="expand-all" type="button">expand</button>
+    <button class="tbtn" id="print-btn" type="button">print</button>
+  </div>
+</header>
+
+<nav class="sidebar" id="toc" aria-label="Topics"></nav>
+
+<main class="main">
+  <div class="content">
+    <header class="topic-head">
+      <div class="kicker">Part 3 · Tools & agents · 13/24</div>
+      <h1>The ecosystem</h1>
+      <p class="lead">A new framework ships every quarter and each demo looks like production in a three-minute video. The way out is boring: name the job, then pick the tool whose core abstraction matches it.</p>
+    </header>
+
+  <div class="beat problem">
+    <div class="beat-h"><span class="bt">Problem</span><span class="bh">option overload, churn, lock-in fear</span></div>
+    <ul>
+      <li><b>Option overload:</b> a dozen frameworks, runtimes and SDKs all claim to be the agent layer. Teams pick by brand or hype.</li>
+      <li><b>Churn:</b> abstractions rename between versions, imports move, old answers rot. Yesterday's tutorial is today's build error.</li>
+      <li><b>Lock-in fear:</b> adopt a runtime and your prompts, tools and state start living inside its concepts. Migration later is a rewrite of the glue.</li>
+      <li><b>Raw-dogging costs too:</b> hand-writing retries, streaming parsers, JSON repair, retrieval glue and tracing is a fun weekend and a bad quarter.</li>
+      <li><b>The real risk:</b> building the product inside abstractions nobody on the team can debug at 2am.</li>
+    </ul>
+  </div>
+
+  <div class="beat solution">
+    <div class="beat-h"><span class="bt">Solution</span><span class="bh">pick by job, keep the raw API close</span></div>
+    <ul>
+      <li><b>Pick by job, not by brand.</b> Name the job first: assemble RAG, run an agent graph, embed a copilot in your app, run a CI agent. Then take the tool built for exactly that.</li>
+      <li><b>Keep the raw API in your back pocket.</b> Prefer tools that never lock you away from plain model calls. The day the framework fights you, you drop one layer, not the system.</li>
+      <li><b>Own the harness.</b> Prompts, tools, permissions and evals are yours regardless of framework. That is where the quality lives, invest there.</li>
+    </ul>
+    <p class="note"><b>The 100-line reality check:</b> any agent loop is call model, parse tool calls, execute, append, repeat, with a budget. You could write it this afternoon. Frameworks earn their keep in the ten thousand lines around the loop: durability, streaming, integrations, tracing. Judge them on that, not on the demo.</p>
+  </div>
+
+  <div class="beat how">
+    <div class="beat-h"><span class="bt">How</span><span class="bh">langchain · langgraph · cursor sdk · goose · adjacent tools</span></div>
+
+    <h3 id="ecosystem--langchain-the-integration-supermarket">LangChain: the integration supermarket</h3>
+    <ul>
+      <li><b>Abstractions:</b> chains that compose steps, tools that wrap functions, memory that carries chat history, plus 100+ integrations for models, vector stores and loaders.</li>
+      <li><b>Fast start:</b> a standard RAG pipeline in twenty lines that would take a week raw. For prototypes and standard shapes this speed is real.</li>
+      <li><b>The abstraction tax:</b> layers of wrappers hide the actual prompt and the actual calls, stack traces get deep, and versions churn under you. Debugging often means reading framework source.</li>
+      <li><b>Fair verdict:</b> great for prototypes and conventional pipelines, risky as a deep architectural commitment. Pin versions, turn tracing on so you can see what it generates, keep escape hatches.</li>
+    </ul>
+
+    <h3 id="ecosystem--langgraph-graphs-as-code">LangGraph: graphs as code</h3>
+    <ul>
+      <li><b>Idea:</b> the orchestration model from <a class="xl" href="graphs.html">graphs</a> as a library. Nodes, edges, conditional routes and state reducers, all plain code you can read, test and diff.</li>
+      <li><b>Checkpointing built in:</b> persist state per step to Postgres, get resume, time-travel debugging and human interrupts. The operating mechanics are the <a class="xl" href="ops.html">durable ops</a> page.</li>
+      <li><b>Explicit over implicit:</b> no hidden agent magic. The topology is visible, which is exactly what you want when a run misbehaves in production.</li>
+      <li><b>Watch:</b> a real learning curve, and snapshots bloat if you shovel documents into state. Simple linear chains are still better served by a plain queue.</li>
+    </ul>
+
+    <h3 id="ecosystem--cursor-sdk-and-the-agent-sdk-family">Cursor SDK and the agent-SDK family</h3>
+    <ul>
+      <li><b>What:</b> drive a coding agent loop from your own code. TypeScript and Python SDKs, a headless CLI, and cloud agents running in isolated VMs.</li>
+      <li><b>Inherits infrastructure:</b> your agent gets codebase indexing, search, <a class="xl" href="../04-tools-mcp/mcp.html">MCP</a> tool support and checkpoints. Your app sends a prompt plus tools and gets edits back.</li>
+      <li><b>CI primitive:</b> the CLI in headless mode, <code>agent -p</code> with <code>--output-format json</code>, is the autofix bot. Auth via an API key from your secrets manager, never the repo.</li>
+      <li><b>Family:</b> Claude Code (SDK plus CLI) and OpenAI Codex CLI share the same shape, the coding agent as a programmable service.</li>
+      <li><b>Watch:</b> with managed offerings your code context lives in their cloud. Check your data policy before the first run, and see <a class="xl" href="../09-systems/aws.html">full systems on AWS</a> for where such bots usually land.</li>
+    </ul>
+
+    <h3 id="ecosystem--goose-the-open-source-runtime-you-own">goose: the open-source runtime you own</h3>
+    <ul>
+      <li><b>What:</b> an open-source agent runtime in Rust (born at Block, now under the Linux Foundation's Agentic AI Foundation). CLI, desktop app and a scriptable daemon, Apache-2.0.</li>
+      <li><b>MCP-native extensions:</b> its extensions ARE <a class="xl" href="../04-tools-mcp/mcp.html">MCP</a> servers. Any server you build plugs into goose and every other MCP client, so your tooling compounds across runtimes.</li>
+      <li><b>Local-first:</b> 15+ model backends including local Ollama, which makes air-gapped work possible. Provider-neutral by design.</li>
+      <li><b>Recipes:</b> workflows as portable YAML, instructions plus extensions plus parameters. Shareable, runnable in CI, schedulable (a morning code review on a cron).</li>
+      <li><b>Safety rails:</b> tool permission controls, sandbox mode and prompt-injection detection. You still run it yourself: updates, permissions and sandboxing are your job.</li>
+    </ul>
+
+    <h3 id="ecosystem--adjacent-tools-worth-knowing">adjacent tools worth knowing</h3>
+    <ul>
+      <li><b>LlamaIndex:</b> RAG-first: ingestion, parsers, indexes, retrievers. RAG-centric defaults everywhere.</li>
+      <li><b>DSPy:</b> prompts as programs, compiled against your evals. Compiled prompts look weird, trust the metrics.</li>
+      <li><b>Instructor + Pydantic:</b> typed outputs with validation retries on top of <a class="xl" href="../04-tools-mcp/tool-calling.html">tool calling and structured output</a>. Retries add hidden latency.</li>
+      <li><b>Vercel AI SDK:</b> TypeScript streaming UIs and tool-call rendering. Frontend-first by design.</li>
+      <li><b>MCP SDKs and FastMCP:</b> build one tool server and every client can use it. The glue topic is <a class="xl" href="../04-tools-mcp/mcp.html">MCP</a>.</li>
+    </ul>
+  </div>
+
+  <div class="beat when">
+    <div class="beat-h"><span class="bt">When</span><span class="bh">raw loop vs framework vs graph runtime vs agent platform</span></div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Approach</th><th class="hu">Use when</th><th class="ha">Avoid when</th><th class="hw">Watch out</th></tr></thead>
+        <tbody>
+          <tr><td class="m">Raw HTTP loop</td><td class="u">Learning the mechanics, one model plus one tool, sub-30s tasks, tight control</td><td class="avoid">Durability, streaming UIs, human gates, many integrations</td><td class="watch">You now own retries, parsing, JSON repair and tracing</td></tr>
+          <tr><td class="m">Framework library (LangChain, LlamaIndex)</td><td class="u">Standard pipelines fast, integration breadth, team velocity over control</td><td class="avoid">Zero-magic constraints, a long-lived core you must debug deeply</td><td class="watch">Abstraction churn, pin versions, trace through the wrappers</td></tr>
+          <tr><td class="m">Graph runtime (LangGraph)</td><td class="u">Agent topologies, checkpoints, interrupts, resume, <a class="xl" href="agent-patterns.html">multi-agent patterns</a></td><td class="avoid">Simple linear chains, a queue is simpler</td><td class="watch">Learning curve, snapshot bloat, version your graphs</td></tr>
+          <tr><td class="m">Agent platform (Cursor SDK, goose, Codex)</td><td class="u">Coding agents inside your product or CI, self-hosted automation</td><td class="avoid">Strict data-residency rules with managed ones, custom topologies they do not model</td><td class="watch">Code context leaving the building, runtime lock-in</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="warn"><b>Lock-in is a loan you take silently.</b> Prompts as framework objects, tools as framework types, state in a proprietary store: each one raises migration cost. Mitigate early: tools over <a class="xl" href="../04-tools-mcp/mcp.html">MCP</a> so they outlive the framework, prompts as plain files, model calls behind your own thin adapter, checkpoints you can export. Ask the exit question before adopting: what does leaving cost, in days?</p>
+  </div>
+
+  <div class="beat example">
+    <div class="beat-h"><span class="bt">Example</span><span class="bh">a graph, an SDK loop, a recipe</span></div>
+    <pre class="code" data-lang="python" data-file="graph_min.py"><code><span class="tk-k">from</span> langgraph.graph <span class="tk-k">import</span> StateGraph
+
+g = StateGraph(dict)
+g.add_node(<span class="tk-s">"plan"</span>, plan_step)          <span class="tk-c"># nodes are plain functions</span>
+g.add_node(<span class="tk-s">"act"</span>, act_step)            <span class="tk-c"># tool calls happen here</span>
+g.add_edge(<span class="tk-s">"plan"</span>, <span class="tk-s">"act"</span>)
+g.add_conditional_edges(<span class="tk-s">"act"</span>, route)  <span class="tk-c"># code picks the next node</span>
+app = g.compile(checkpointer=pg_saver) <span class="tk-c"># durability per step</span></code></pre>
+    <pre class="code" data-lang="ts" data-file="agent_loop.ts"><code><span class="tk-k">import</span> { CursorClient } <span class="tk-k">from</span> <span class="tk-s">"@cursor/sdk"</span>;
+
+<span class="tk-k">const</span> cursor = <span class="tk-k">new</span> CursorClient();
+<span class="tk-k">const</span> conv = <span class="tk-k">await</span> cursor.startConversation({ mode: <span class="tk-s">"agent"</span> });
+<span class="tk-k">const</span> res = <span class="tk-k">await</span> conv.prompt(
+  <span class="tk-s">"Run the tests, fix what fails, keep the diff minimal."</span>
+);
+<span class="tk-c">// your app owns the loop: prompt in, edits out.</span>
+<span class="tk-c">// Cursor supplies indexing, search, MCP tools and checkpoints.</span></code></pre>
+    <pre class="code" data-lang="yaml" data-file="review.recipe.yaml"><code><span class="tk-c"># a goose recipe: shareable, schedulable agent workflow</span>
+<span class="tk-a">version:</span> <span class="tk-n">1.0.0</span>
+<span class="tk-a">title:</span> Morning code review
+<span class="tk-a">description:</span> Review overnight commits against the team checklist
+<span class="tk-a">instructions:</span> <span class="tk-t">|</span>
+  Review commits since yesterday 18:00. Flag risky changes,
+  missing tests and TODO debt. Post a summary to #eng-reviews.
+<span class="tk-a">extensions:</span>
+  <span class="tk-a">-</span> <span class="tk-a">type:</span> builtin
+    <span class="tk-a">name:</span> developer      <span class="tk-c"># built-in dev tools, an MCP server</span>
+  <span class="tk-a">-</span> <span class="tk-a">type:</span> mcp
+    <span class="tk-a">name:</span> slack          <span class="tk-c"># any MCP server plugs in the same way</span>
+<span class="tk-a">parameters:</span> []           <span class="tk-c"># schedule it: runs daily at 08:30</span></code></pre>
+    <ul>
+      <li><b>Notice what is absent:</b> no retry code, no streaming plumbing, no checkpoint tables in any snippet. That is the payroll the frameworks collect on.</li>
+    </ul>
+  </div>
+
+  <div class="beat pitfalls">
+    <div class="beat-h"><span class="bt">Pitfalls</span><span class="bh">demos, taxes, mortgages</span></div>
+    <ul>
+      <li><b>Picking by demo:</b> the three-minute video never shows retry storms, eval harnesses or migration day. Demand the failure story before adopting.</li>
+      <li><b>Abstraction tax at 2am:</b> when the framework breaks you read its source. Budget team time for that, or keep the stack shallow.</li>
+      <li><b>Hidden latency:</b> framework retry and validation layers can double your p99 without a trace. Trace through the abstraction, not around it.</li>
+      <li><b>Lock-in creep:</b> each proprietary concept adopted is a small mortgage on migration day. Export early, adapter always.</li>
+      <li><b>Cloud code context:</b> managed agents ship repo slices to their infrastructure. Policy check before the first run, not after.</li>
+      <li><b>Unpinned deps:</b> minor upgrades rename core imports. Lockfile, pin, upgrade on purpose with the changelog open.</li>
+      <li><b>Rewriting the loop for pride:</b> the loop is 100 lines, but the surrounding 10,000 are why teams adopt runtimes. Write raw only when you truly need the control.</li>
+    </ul>
+  </div>
+
+  <div class="beat checklist">
+    <div class="beat-h"><span class="bt">Checklist</span><span class="bh">six bullets to remember</span></div>
+    <ul>
+      <li>Name the job before the tool: pipeline, graph, copilot, CI agent</li>
+      <li>Keep a raw-API scratch file so the escape hatch always works</li>
+      <li>Build tools over MCP so they outlive any framework</li>
+      <li>Prompts in plain files, model calls behind your own adapter</li>
+      <li>Pin versions, read changelogs, upgrade deliberately</li>
+      <li>Ask the exit question early: what does leaving cost, in days?</li>
+    </ul>
+  </div>
+  
+    <nav class="pager" id="pager"></nav>
+
+    <footer class="footer">
+      learning-project · tracks/ai · print this page from the browser dialog · diagrams load mermaid from CDN once online
+    </footer>
+  </div>
+</main>
+
+<script src="../../js/app.js"></script>
+</body>
+</html>

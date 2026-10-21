@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MCP · Model Context Protocol · AI Engineering Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../css/tokens.css">
+<link rel="stylesheet" href="../../css/base.css">
+<link rel="stylesheet" href="../../css/components.css">
+<link rel="stylesheet" href="../../css/flow.css">
+<link rel="stylesheet" href="../../css/print.css">
+</head>
+<body>
+
+<div id="progress"></div>
+
+<header class="topbar">
+  <button class="tbtn" id="nav-toggle" type="button" aria-label="Toggle navigation">☰</button>
+  <a class="brand" href="../../index.html"><b>ai</b>·field-guide</a>
+  <div class="tools">
+    <input id="toc-filter" type="search" placeholder="filter · /" aria-label="Filter topics">
+    <button class="tbtn" id="expand-all" type="button">expand</button>
+    <button class="tbtn" id="print-btn" type="button">print</button>
+  </div>
+</header>
+
+<nav class="sidebar" id="toc" aria-label="Topics"></nav>
+
+<main class="main">
+  <div class="content">
+    <header class="topic-head">
+      <div class="kicker">Part 3 · Tools & agents · 10/24</div>
+      <h1>MCP · Model Context Protocol</h1>
+      <p class="lead">MCP is an open protocol that connects AI apps to tools and data. Write the server once, every client gains it, and the tool menu builds itself at runtime from what the server reports.</p>
+    </header>
+
+<div class="beat problem">
+  <div class="beat-h"><span class="bt">Problem</span><span class="bh">the N×M integration matrix</span></div>
+  <ul>
+    <li><b>Math first:</b> M apps × N tools = <b>M×N bespoke integrations</b> to write, test and maintain forever.</li>
+    <li><b>Plugin sprawl:</b> each app grew its own plugin language, so tool builders wrote the same tool five ways.</li>
+    <li><b>A REST endpoint describes nothing to a model:</b> schema, usage notes and auth story live in human docs the model cannot browse.</li>
+    <li><b>Famous precedent:</b> editors × languages had the same matrix until <button class="term" type="button" data-tip="Language Server Protocol: one language server, every editor. Solved the same N×M matrix for IDEs and lives on stdio like MCP's local transport.">LSP</button> turned it into M+N.</li>
+  </ul>
+</div>
+
+<div class="beat solution">
+  <div class="beat-h"><span class="bt">Solution</span><span class="bh">one protocol, self-describing servers</span></div>
+  <ul>
+    <li><b>Open protocol:</b> your app is a <b>host</b> that runs one MCP <b>client</b> per <b>server</b>. Servers expose tools, resources and prompts over one standard wire.</li>
+    <li><b>The wire:</b> <button class="term" type="button" data-tip="A tiny remote-procedure-call standard: method names like tools/list and tools/call, JSON payloads, structured error codes. Boring on purpose.">JSON-RPC 2.0</button>, implementable in any language, no vendor SDK favored.</li>
+    <li><b>Decisive feature:</b> servers describe themselves at runtime. The client calls tools/list and menus plus schemas build themselves from the response.</li>
+    <li><b>Build once, plug into every client:</b> Claude Desktop, Cursor, <a class="xl" href="../05-agents-orchestration/ecosystem.html">goose</a>, <a class="xl" href="../05-agents-orchestration/agent-patterns.html">your own agents</a>. The matrix collapses to N+M.</li>
+    <li><b>Ecosystem:</b> a public server registry is emerging under the Linux Foundation's Agentic AI Foundation. Npm, but for tools.</li>
+  </ul>
+  <div class="diagram">
+    <div class="diag-body"><pre class="mermaid">
+flowchart LR
+  H["MCP host&lt;br/&gt;IDE · Claude Desktop · goose · your app"]
+  H --> C1["MCP client 1"]
+  H --> C2["MCP client 2"]
+  C1 -- "JSON-RPC 2.0 · stdio" --> S1["filesystem server"]
+  C2 -- "JSON-RPC 2.0 · streamable HTTP" --> S2["Postgres server"]
+  S1 --> F["local files"]
+  S2 --> DB[("Postgres")]
+  classDef d fill:#141826,stroke:#3d3d5c,color:#e6e6f0;
+  classDef v fill:#1c1430,stroke:#a78bfa,color:#e6e6f0;
+  classDef m fill:#0d2818,stroke:#4ade80,color:#e6e6f0;
+  class H,C1,C2 v;
+  class S1,S2 d;
+  class F,DB m;
+    </pre></div>
+  </div>
+</div>
+
+<div class="beat how">
+  <div class="beat-h"><span class="bt">How</span><span class="bh">wire · flow · transports · primitives · vs plain HTTP · Inspector</span></div>
+
+  <h4>the wire · one JSON-RPC envelope</h4>
+  <ul>
+    <li><b>Requests:</b> method + params + id, and a result is expected back.</li>
+    <li><b>Notifications:</b> no id, fire and forget. How servers announce "my tool list changed".</li>
+    <li><span class="wlabel why">why JSON-RPC</span> language-neutral, tiny, structured error codes, boring on purpose.</li>
+  </ul>
+
+  <h4>the flow · handshake, discover, call, execute</h4>
+  <ul>
+    <li><b>1 · Handshake:</b> connect, then initialize. Both sides exchange protocol version and <b>capabilities</b> ("I support tools, resources, sampling, elicitation").</li>
+    <li><b>2 · Discover:</b> the client calls tools/list and receives names, JSON schemas and descriptions written for a model to read.</li>
+    <li><b>3 · Call:</b> the model picks a tool through the <a class="xl" href="tool-calling.html">tool calling</a> contract, the client sends tools/call with arguments.</li>
+    <li><b>4 · Execute:</b> the server does the real work and returns a result (or a structured error) the model consumes.</li>
+    <li><span class="wlabel why">why negotiation is the killer feature</span> the interface is discovered at runtime, not wired at build time. Add a tool server-side, every connected client sees it on the next tools/list. Compare OpenAPI: a static document hand-wired into one app, drifting the moment the server changes.</li>
+  </ul>
+  <div class="diagram">
+    <div class="diag-body"><pre class="mermaid">
+sequenceDiagram
+  participant C as MCP client (inside host)
+  participant S as MCP server
+  C->>S: initialize · version + my capabilities
+  S-->>C: result · my capabilities (tools, resources)
+  C->>S: tools/list
+  S-->>C: tool defs · names, JSON schemas, descriptions
+  C->>S: tools/call get_weather city="Berlin"
+  S-->>C: result · "18C, light rain"
+  Note over C,S: notifications both ways: tools/list_changed, logging, progress
+    </pre></div>
+  </div>
+
+  <pre class="code" data-lang="json" data-file="wire_dump.json"><code><span class="tk-c">// client to server: the handshake</span>
+{ <span class="tk-s">"jsonrpc"</span>: <span class="tk-s">"2.0"</span>, <span class="tk-s">"id"</span>: <span class="tk-n">1</span>, <span class="tk-s">"method"</span>: <span class="tk-s">"initialize"</span>,
+  <span class="tk-s">"params"</span>: { <span class="tk-s">"protocolVersion"</span>: <span class="tk-s">"2025-06-18"</span>,
+              <span class="tk-s">"capabilities"</span>: { <span class="tk-s">"roots"</span>: {}, <span class="tk-s">"sampling"</span>: {} } } }
+
+<span class="tk-c">// server to client: same envelope back, with its capabilities</span>
+{ <span class="tk-s">"jsonrpc"</span>: <span class="tk-s">"2.0"</span>, <span class="tk-s">"id"</span>: <span class="tk-n">1</span>, <span class="tk-s">"result"</span>:
+  { <span class="tk-s">"protocolVersion"</span>: <span class="tk-s">"2025-06-18"</span>,
+    <span class="tk-s">"capabilities"</span>: { <span class="tk-s">"tools"</span>: { <span class="tk-s">"listChanged"</span>: <span class="tk-k">true</span> } } } }
+
+<span class="tk-c">// a tool call · request id 2 expects a result</span>
+{ <span class="tk-s">"jsonrpc"</span>: <span class="tk-s">"2.0"</span>, <span class="tk-s">"id"</span>: <span class="tk-n">2</span>, <span class="tk-s">"method"</span>: <span class="tk-s">"tools/call"</span>,
+  <span class="tk-s">"params"</span>: { <span class="tk-s">"name"</span>: <span class="tk-s">"get_weather"</span>,
+              <span class="tk-s">"arguments"</span>: { <span class="tk-s">"city"</span>: <span class="tk-s">"Berlin"</span> } } }
+
+<span class="tk-c">// notifications have NO id · fire and forget</span>
+{ <span class="tk-s">"jsonrpc"</span>: <span class="tk-s">"2.0"</span>, <span class="tk-s">"method"</span>: <span class="tk-s">"notifications/tools/list_changed"</span> }</code></pre>
+
+  <h4>transports · stdio and streamable HTTP</h4>
+  <ul>
+    <li><b>stdio:</b> the host spawns a local subprocess, JSON-RPC flows over stdin/stdout. Zero network, fastest loop, ideal for filesystem, shell and dev DB.</li>
+    <li><span class="wlabel gotcha">gotcha</span> <b>stdout IS the wire.</b> A stray print() corrupts the stream and the whole server hangs. Log to stderr, always. The Inspector makes this visible in seconds.</li>
+    <li><b>Streamable HTTP:</b> POST JSON-RPC, optionally receive an SSE stream back for results and notifications. Sessions and resumable streams survive network blips. Replaced the older dual HTTP+SSE setup.</li>
+    <li><span class="wlabel why">why two transports</span> a local tool should never touch the network (attack surface, latency, auth). SaaS tools must be reachable over HTTP. One message format normalizes both.</li>
+  </ul>
+
+  <h4>the three primitives · the axis is who initiates</h4>
+  <ul>
+    <li><b>Tools (model-controlled):</b> functions with schemas, can have side effects, need approval UX. The <a class="xl" href="tool-calling.html">tool calling</a> contract, standardized.</li>
+    <li><b>Resources (app/user-controlled):</b> readable data. Files, rows, schemas. Think GET, no side effects, the UI lists them.</li>
+    <li><b>Prompts (user-controlled):</b> parameterized templates servers ship, your /slash commands, reusable across clients.</li>
+  </ul>
+
+  <h4>beyond calls · sampling, roots, elicitation</h4>
+  <ul>
+    <li><b>Sampling:</b> the server asks the client's LLM to complete a prompt. Server authors ship AI behavior without hardcoding a vendor key, with a consent gate in the host.</li>
+    <li><b>Roots:</b> the client tells the server which directories it may care about. Scope, not trust.</li>
+    <li><b>Elicitation:</b> mid-operation the server asks the user a structured question through the client ("which workspace?").</li>
+  </ul>
+
+  <h4>mcp vs "just call my REST API"</h4>
+  <div class="grid2">
+    <div class="wcard">
+      <h4>plain HTTP / REST</h4>
+      <ul>
+        <li>A <b>transport</b>: verbs, URLs, status codes. Says nothing about what an endpoint does.</li>
+        <li>Primary consumer is a developer reading docs and writing code.</li>
+        <li>Discovery: static OpenAPI wired per-app at build time, docs drift.</li>
+        <li>Auth: per-vendor keys, hand-rolled per app.</li>
+        <li>Request and response, client-initiated only. SSE bolted on with per-service conventions.</li>
+      </ul>
+    </div>
+    <div class="wcard">
+      <h4>MCP</h4>
+      <ul>
+        <li>An <b>application protocol</b>: defined methods, capabilities, a lifecycle. Runs over HTTP or stdio.</li>
+        <li>Primary consumer is a model. Schemas and descriptions written to be read by an LLM.</li>
+        <li>Discovery: tools/list at runtime, always current, the UI builds itself.</li>
+        <li>Auth: standardized OAuth 2.1, implemented once per client.</li>
+        <li>Bidirectional sessions: notifications plus server-to-client requests (sampling, elicitation). Streaming built in, with session resume.</li>
+      </ul>
+    </div>
+  </div>
+  <p class="note"><b>The punchline:</b> MCP is not "instead of HTTP". It is an app layer on top of HTTP or stdio, the way LSP sits on stdio. If only your own code calls your endpoint, REST is right. When the consumer is a model, or many apps must share your tools, the standard wins outright.</p>
+
+  <h4>mcp inspector · your first stop</h4>
+  <ul>
+    <li><b>What:</b> the official local web UI that connects to any MCP server over any transport. Drive your server standalone before wiring it into Claude Desktop, Cursor or goose.</li>
+    <li><b>Browse tools, resources, prompts</b> with forms auto-generated from their JSON schemas. Invoke with real inputs, schema typos surface in seconds, not as mystery client failures.</li>
+    <li><b>Raw JSON-RPC traffic log:</b> every request, notification and error in order. The stray print() corrupting stdio is visible here immediately.</li>
+    <li><b>Test OAuth flows</b> for remote servers, plus sampling and elicitation callbacks.</li>
+    <li><span class="wlabel why">why it matters</span> debugging through a client multiplies suspects (their bug? my schema? the wire?). The Inspector removes the client from the question.</li>
+  </ul>
+</div>
+
+<div class="beat when">
+  <div class="beat-h"><span class="bt">When</span><span class="bh">integration picker</span></div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Option</th><th class="hu">Use when</th><th class="ha">Avoid when</th><th class="hw">Watch out</th></tr></thead>
+      <tbody>
+        <tr><td class="m">native <a class="xl" href="tool-calling.html">function calling</a></td><td class="u">Tools live inside one app, one machine</td><td class="avoid">Sharing tools across apps or teams</td><td class="watch">Re-implementation per app, the N×M trap</td></tr>
+        <tr><td class="m">MCP local · stdio</td><td class="u">Local-first tools for desktop AI apps</td><td class="avoid">Multi-user SaaS backends, stdio is per-process</td><td class="watch">Permission prompts are part of the UX. Stdout is the wire</td></tr>
+        <tr><td class="m">MCP remote · streamable HTTP</td><td class="u">Team-shared tools, SaaS integrations</td><td class="avoid">High-frequency inner loops, protocol overhead</td><td class="watch">It is a web service now: auth, rate limits, audit logs</td></tr>
+        <tr><td class="m">plain REST endpoint</td><td class="u">Only your own code calls it, the consumer is not a model</td><td class="avoid">Models or multiple AI apps are the consumer</td><td class="watch">Docs drift, schemas hand-wired</td></tr>
+        <tr><td class="m">OpenAPI / plugin spec</td><td class="u">Existing REST APIs with good static docs</td><td class="avoid">Tools that change often, spec drift</td><td class="watch">Static specs do not teach usage like tool descriptions</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="beat example">
+  <div class="beat-h"><span class="bt">Example</span><span class="bh">a server in 12 lines, and debugging it in 1</span></div>
+  <pre class="code" data-lang="python" data-file="fastmcp_server.py"><code><span class="tk-k">from</span> mcp.server.fastmcp <span class="tk-k">import</span> FastMCP
+
+mcp = FastMCP(<span class="tk-s">"tools"</span>)   <span class="tk-c"># one server · every MCP client can use it</span>
+
+<span class="tk-f">@mcp.tool()</span>
+<span class="tk-k">def</span> <span class="tk-f">get_weather</span>(city: <span class="tk-k">str</span>) -> <span class="tk-k">str</span>:
+    <span class="tk-s">"""Current weather for a city."""</span>       <span class="tk-c"># the docstring IS the description</span>
+    <span class="tk-k">return</span> <span class="tk-f">fetch_weather</span>(city)          <span class="tk-c"># your real logic</span>
+
+<span class="tk-f">@mcp.resource</span>(<span class="tk-s">"docs://api"</span>)
+<span class="tk-k">def</span> <span class="tk-f">api_docs</span>() -> <span class="tk-k">str</span>:
+    <span class="tk-k">return</span> <span class="tk-f">open</span>(<span class="tk-s">"API.md"</span>).<span class="tk-f">read</span>()        <span class="tk-c"># readable data, not callable</span>
+
+mcp.<span class="tk-f">run</span>()   <span class="tk-c"># stdio locally · streamable HTTP for remote clients</span></code></pre>
+  <pre class="code" data-lang="bash" data-file="debug_with_inspector.sh"><code><span class="tk-c"># fire up the Inspector against any server · a web UI opens locally</span>
+npx @modelcontextprotocol/inspector python fastmcp_server.py
+
+<span class="tk-c"># in the UI: connect (stdio preselected), tools auto-listed with
+# schema-generated forms, invoke, watch the raw JSON-RPC log.
+# stdio rule 1: all logging goes to stderr · stdout is the wire.</span></code></pre>
+  <ul>
+    <li><b>One Postgres MCP server</b> feeds Claude Desktop, Cursor and three internal agents. Add a tool server-side, every client sees it tomorrow with zero client work.</li>
+    <li><b>GitHub, Cloudflare, Sentry, Stripe</b> ship public MCP servers so agents act on their platforms directly.</li>
+    <li><b><a class="xl" href="../05-agents-orchestration/ecosystem.html">goose</a> is the proof of concept at scale:</b> a whole runtime whose 70+ extensions are just MCP servers.</li>
+  </ul>
+</div>
+
+<div class="beat pitfalls">
+  <div class="beat-h"><span class="bt">Pitfalls</span><span class="bh">a remote server is remote code influence</span></div>
+  <ul>
+    <li><b>Trust decision, not a config line:</b> whoever runs the server shapes what your model sees and does. Connecting to a remote server hands over influence, scope it like any dependency.</li>
+    <li><b>Auth:</b> remote MCP uses OAuth 2.1 (authorization code + PKCE, dynamic client registration, resource indicators). Keys authenticate a developer, OAuth grants a user's consent per app with scopes and revocable tokens.</li>
+    <li><b>Audit what servers expose:</b> servers hold the keys, scope them hard. An over-exposed server (drop table next to read row) is one confused model away from damage.</li>
+    <li><b>Prompt injection via content:</b> resources and tool results are untrusted input. A poisoned file or row can steer the model, see <a class="xl" href="../07-security/injection.html">prompt injection</a>.</li>
+    <li><b>stdio corruption:</b> any stray stdout write breaks the wire, including prints from third-party libraries.</li>
+    <li><b>Protocol overhead:</b> handshake, listing and JSON-RPC envelopes cost latency. Keep high-frequency inner loops as native calls, budget them like any <a class="xl" href="../05-agents-orchestration/ops.html">ops</a> dependency.</li>
+    <li><b>Version drift:</b> client and server negotiate a protocol version, capability gaps still bite (old client, new tool semantics).</li>
+  </ul>
+</div>
+
+<div class="beat checklist">
+  <div class="beat-h"><span class="bt">Checklist</span><span class="bh">7 things to remember</span></div>
+  <ul>
+    <li>M×N collapses to N+M: one server, every client. That is the whole pitch.</li>
+    <li>Pick the primitive by who initiates: tools model, resources app, prompts user.</li>
+    <li>Handshake first: initialize, exchange capabilities, then tools/list, then call.</li>
+    <li>stdio means stdout is the wire. Logging goes to stderr, always.</li>
+    <li>Debug in the Inspector before blaming the client.</li>
+    <li>Remote servers get OAuth, rate limits and audit logs. Treat them as web services.</li>
+    <li>Treat tool and resource output as untrusted input.</li>
+  </ul>
+</div>
+
+    <nav class="pager" id="pager"></nav>
+
+    <footer class="footer">
+      learning-project · tracks/ai · print this page from the browser dialog · diagrams load mermaid from CDN once online
+    </footer>
+  </div>
+</main>
+
+<script src="../../js/app.js"></script>
+</body>
+</html>

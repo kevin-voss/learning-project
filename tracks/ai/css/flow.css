@@ -1,0 +1,111 @@
+/* flow — the per-topic stage system: why → solutions (accordion) → when → example */
+
+.stage-label {
+  display: flex; align-items: center; gap: 12px;
+  font-family: var(--mono); font-size: 10px; font-weight: 700;
+  letter-spacing: .22em; text-transform: uppercase;
+  color: var(--gold);
+  margin: var(--r-xl) 0 14px;
+}
+.stage-label:first-child { margin-top: var(--r-lg); }
+.stage-label::after {
+  content: ""; flex: 1; height: 1px;
+  background: linear-gradient(90deg, rgba(211, 183, 138, .35), var(--edge) 40%);
+}
+
+/* ── why we need it ───────────────────────────────── */
+.why {
+  padding: 2px 0 2px 20px;
+  border-left: 2px solid rgba(211, 183, 138, .4);
+}
+.why ul { margin: 0; }
+.why li { margin: 7px 0; }
+
+/* ── solutions accordion ──────────────────────────── */
+.sol-list { display: flex; flex-direction: column; }
+.sol-item { border-bottom: 1px solid var(--edge); }
+.sol-item:first-child { border-top: 1px solid var(--edge); }
+.sol-head {
+  display: flex; align-items: center; gap: 14px; width: 100%;
+  padding: 15px 4px; background: none; border: 0; cursor: pointer;
+  font-family: var(--sans); text-align: left; color: var(--txt);
+}
+.sol-head:hover .sol-name { color: var(--gold); }
+.sol-no {
+  flex: none; font-family: var(--mono); font-size: 10.5px; font-weight: 700;
+  color: var(--faint);
+}
+.sol-item.open .sol-no { color: var(--gold); }
+.sol-name { flex: none; font-weight: 600; color: var(--txt-strong); font-size: 15px; transition: color .15s; }
+.sol-item.open .sol-name { color: var(--gold); }
+.sol-sum { flex: 1; color: var(--dim); font-size: 13px; min-width: 0; }
+.sol-chev {
+  flex: none; color: var(--faint); font-size: 10px;
+  transition: transform .2s ease;
+}
+.sol-item.open .sol-chev { transform: rotate(90deg); color: var(--gold); }
+
+.sol-body {
+  display: grid; grid-template-rows: 0fr;
+  transition: grid-template-rows .25s ease;
+}
+.sol-body > .sol-inner { overflow: hidden; min-height: 0; }
+.sol-item.open .sol-body { grid-template-rows: 1fr; }
+.sol-content { padding: 4px 4px 20px 30px; }
+.sol-content h4 { margin-top: 14px; }
+.sol-content h4:first-child { margin-top: 0; }
+.sol-content ul, .sol-content ol { margin-bottom: 6px; }
+.sol-content .tbl-wrap, .sol-content .code-card, .sol-content pre.code { margin: 10px 0; }
+.sol-tag {
+  display: inline-block; font-family: var(--mono); font-size: 9px;
+  letter-spacing: .1em; text-transform: uppercase;
+  border-radius: 4px; padding: 1px 7px; margin-left: 9px; vertical-align: 2px;
+  border: 1px solid;
+}
+.sol-tag.best { color: var(--mint); border-color: rgba(127, 214, 164, .3); }
+.sol-tag.fast { color: var(--info); border-color: rgba(157, 184, 217, .3); }
+.sol-tag.cheap { color: var(--mint); border-color: rgba(127, 214, 164, .3); }
+.sol-tag.hard { color: var(--deny); border-color: rgba(229, 142, 142, .3); }
+.sol-tag.advanced { color: var(--gold); border-color: rgba(211, 183, 138, .3); }
+
+/* ── when to use / avoid (pros and cons) ──────────── */
+.pc {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+}
+.pc-col {
+  border: 1px solid var(--edge); border-radius: var(--rad);
+  background: var(--panel); padding: 14px 17px 10px;
+}
+.pc-col.pros { border-top: 2px solid rgba(127, 214, 164, .55); }
+.pc-col.cons { border-top: 2px solid rgba(229, 142, 142, .55); }
+.pc-h {
+  font-family: var(--mono); font-size: 10px; font-weight: 700;
+  letter-spacing: .16em; text-transform: uppercase;
+  margin: 0 0 8px;
+}
+.pc-col.pros .pc-h { color: var(--mint); }
+.pc-col.cons .pc-h { color: var(--deny); }
+.pc-col ul { list-style: none; padding: 0; margin: 0; }
+.pc-col li { margin: 7px 0; padding-left: 18px; position: relative; font-size: 13.5px; }
+.pc-col.pros li::before { content: "+"; position: absolute; left: 0; font-family: var(--mono); color: var(--mint); }
+.pc-col.cons li::before { content: "−"; position: absolute; left: 0; font-family: var(--mono); color: var(--deny); }
+
+/* ── example block ────────────────────────────────── */
+.example {
+  border: 1px solid var(--edge); border-radius: var(--rad);
+  background: var(--panel); padding: 16px 18px;
+}
+.example .ex-note { margin: 0 0 6px; color: var(--txt); }
+.example .ex-note ul { margin: 4px 0 8px; }
+.example .code-card, .example pre.code { margin: 10px 0 2px; }
+
+/* ── compact closers ──────────────────────────────── */
+.pit-list, .remember {
+  padding: 6px 0 6px 20px;
+  font-size: 13.5px;
+}
+.pit-list { border-left: 2px solid rgba(229, 142, 142, .4); }
+.remember { border-left: 2px solid rgba(127, 214, 164, .4); }
+.pit-list ul, .remember ul { margin: 0; }
+.pit-list li, .remember li { margin: 4px 0; }

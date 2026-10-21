@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The 30-second layer · AI Engineering Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../css/tokens.css">
+<link rel="stylesheet" href="../../css/base.css">
+<link rel="stylesheet" href="../../css/components.css">
+<link rel="stylesheet" href="../../css/flow.css">
+<link rel="stylesheet" href="../../css/print.css">
+</head>
+<body>
+
+<div id="progress"></div>
+
+<header class="topbar">
+  <button class="tbtn" id="nav-toggle" type="button" aria-label="Toggle navigation">☰</button>
+  <a class="brand" href="../../index.html"><b>ai</b>·field-guide</a>
+  <div class="tools">
+    <input id="toc-filter" type="search" placeholder="filter · /" aria-label="Filter topics">
+    <button class="tbtn" id="expand-all" type="button">expand</button>
+    <button class="tbtn" id="print-btn" type="button">print</button>
+  </div>
+</header>
+
+<nav class="sidebar" id="toc" aria-label="Topics"></nav>
+
+<main class="main">
+  <div class="content">
+    <header class="topic-head">
+      <div class="kicker">Part 5 · Proof & production · 22/24</div>
+      <h1>The 30-second layer</h1>
+      <p class="lead">One line per topic: the default, the exceptions, the trap. Skim here, jump to the full reasoning only on demand.</p>
+    </header>
+
+  <div class="grid2">
+    <div class="wcard">
+      <h4>llm knobs</h4>
+      <ul>
+        <li><b>temperature 0</b> → extraction, code, evals · <b>0.7+</b> → prose</li>
+        <li><b>always</b> → set max_tokens, output is the pricey meter</li>
+        <li><b>never</b> → trust temp 0 for bit-exact repeats</li>
+      </ul>
+      <a class="xl" href="../01-foundations/llm-internals.html">llm internals →</a>
+    </div>
+    <div class="wcard">
+      <h4>knowledge injection</h4>
+      <ul>
+        <li><b>prompt first, RAG second, LoRA the residual</b></li>
+        <li><b>facts</b> → RAG · <b>style + format</b> → fine-tune</li>
+        <li><b>never</b> → fine-tune for fresh facts or citations</li>
+      </ul>
+      <a class="xl" href="../01-foundations/finetune-decide.html">fine-tune decision →</a>
+    </div>
+    <div class="wcard">
+      <h4>cost &amp; caching</h4>
+      <ul>
+        <li><b>static prefix first</b> → prompt caching, measure the hit rate</li>
+        <li><b>repetitive traffic</b> → semantic cache, TTL + no personalization</li>
+        <li><b>async work</b> → batch API at ~50% off</li>
+      </ul>
+      <a class="xl" href="../02-tokens-context/tokens-cost.html">tokens &amp; cost →</a>
+    </div>
+    <div class="wcard">
+      <h4>context &amp; memory</h4>
+      <ul>
+        <li><b>default</b> → summary + last-K verbatim, compact at ~70%</li>
+        <li><b>cross-session</b> → explicit fact store, retrieve like RAG</li>
+        <li><b>re-derive summaries</b> from source turns or they drift</li>
+      </ul>
+      <a class="xl" href="../02-tokens-context/context-budget.html">context budget →</a> · <a class="xl" href="../06-memory/memory.html">memory →</a>
+    </div>
+    <div class="wcard">
+      <h4>chunking</h4>
+      <ul>
+        <li><b>default</b> → recursive, 400-800 tokens, 10-15% overlap</li>
+        <li><b>hard limits</b> → embedder max ≠ target, truncation is silent</li>
+        <li><b>precision-critical</b> → contextual chunks · <b>logs</b> → fixed</li>
+      </ul>
+      <a class="xl" href="#chunking">chunking →</a>
+    </div>
+    <div class="wcard">
+      <h4>search</h4>
+      <ul>
+        <li><b>default</b> → hybrid BM25 + dense, RRF k≈60</li>
+        <li><b>always</b> → cross-encoder rerank top-50 before index exotics</li>
+        <li><b>repeated traffic</b> → semantic cache first, see <a class="xl" href="../02-tokens-context/tokens-cost.html">cost &amp; caching</a></li>
+      </ul>
+      <a class="xl" href="../03-rag-search/search-rerank.html">search &amp; rerank →</a>
+    </div>
+    <div class="wcard">
+      <h4>rag flavor</h4>
+      <ul>
+        <li><b>find docs</b> → vector · <b>connections</b> → graph</li>
+        <li><b>ambiguous research</b> → agentic, with budgets</li>
+        <li><b>scans</b> → multimodal · <b>numbers</b> → text-to-SQL</li>
+      </ul>
+      <a class="xl" href="../03-rag-search/rag-variants.html">rag variants →</a>
+    </div>
+    <div class="wcard">
+      <h4>tools &amp; output</h4>
+      <ul>
+        <li><b>default</b> → native function calling, few + well-named</li>
+        <li><b>sacred parsing</b> → structured outputs, constrained decoding</li>
+        <li><b>always</b> → validate server-side, errors written for the model</li>
+      </ul>
+      <a class="xl" href="../04-tools-mcp/tool-calling.html">tool calling →</a>
+    </div>
+    <div class="wcard">
+      <h4>agents &amp; orchestration</h4>
+      <ul>
+        <li><b>always</b> → single agent + tools until isolation or parallelism hurts</li>
+        <li><b>runs over 1 min</b> → graph + Postgres checkpointer</li>
+        <li><b>queues</b> → idempotent workers, jittered retries, DLQ at 3</li>
+      </ul>
+      <a class="xl" href="../05-agents-orchestration/agent-patterns.html">agent patterns →</a> · <a class="xl" href="../05-agents-orchestration/graphs.html">graphs →</a> · <a class="xl" href="../05-agents-orchestration/ops.html">ops →</a>
+    </div>
+    <div class="wcard">
+      <h4>ecosystem &amp; plumbing</h4>
+      <ul>
+        <li><b>graphs</b> → LangGraph · <b>own your runtime</b> → Goose · <b>coding agents</b> → Cursor SDK/CLI</li>
+        <li><b>model consumes tools</b> → MCP server, stdio stdout is the wire</li>
+        <li><b>data-heavy answers</b> → generative UI, stop narrating</li>
+      </ul>
+      <a class="xl" href="../05-agents-orchestration/ecosystem.html">ecosystem →</a> · <a class="xl" href="../04-tools-mcp/mcp.html">mcp →</a> · <a class="xl" href="../04-tools-mcp/ag-ui.html">ag-ui →</a>
+    </div>
+    <div class="wcard">
+      <h4>architecture &amp; aws</h4>
+      <ul>
+        <li><b>ingest</b> → S3, SQS, idempotent workers, DLQ at 3 strikes</li>
+        <li><b>agents</b> → Fargate + RDS checkpoints + Bedrock, VPC-only</li>
+        <li><b>streams</b> → bypass the API gateway 29s limit, ALB or WebSocket</li>
+      </ul>
+      <a class="xl" href="../09-systems/architecture.html">architecture →</a> · <a class="xl" href="../09-systems/aws.html">aws →</a>
+    </div>
+    <div class="wcard">
+      <h4>security &amp; evals</h4>
+      <ul>
+        <li><b>least privilege tools + human gates</b> → your two cheapest controls</li>
+        <li><b>output filter</b> → block external URLs and images, always</li>
+        <li><b>before v2 of anything</b> → golden set + the pyramid in CI</li>
+      </ul>
+      <a class="xl" href="../07-security/injection.html">injection →</a> · <a class="xl" href="../07-security/guardrails.html">guardrails →</a> · <a class="xl" href="../08-evals/evals.html">evals →</a>
+    </div>
+  </div>
+
+  <div class="beat checklist">
+    <div class="beat-h"><span class="bt">Checklist</span><span class="bh">before you ship, across the whole sheet</span></div>
+    <ul>
+      <li><b>Retrieval first:</b> retrieval quality caps generation quality, fix <a class="xl" href="#rag-overview">retrieval</a> before blaming the model.</li>
+      <li><b>Measure before you tune:</b> a <a class="xl" href="../08-evals/evals.html">golden set</a> makes every change a fact instead of a guess.</li>
+      <li><b>Boring plumbing:</b> queues, Postgres and <a class="xl" href="../05-agents-orchestration/ops.html">checkpoints</a> beat clever, always.</li>
+      <li><b>Meter the output:</b> set max_tokens on every call, output is the pricey meter.</li>
+      <li><b>Validate at the edge:</b> check <a class="xl" href="../04-tools-mcp/tool-calling.html">tool output</a> server-side, write errors the model can act on.</li>
+      <li><b>Least privilege:</b> scoped tools plus human gates on anything that writes.</li>
+      <li><b>Filter the exits:</b> block external URLs and images in the output filter, always.</li>
+    </ul>
+  </div>
+  
+    <nav class="pager" id="pager"></nav>
+
+    <footer class="footer">
+      learning-project · tracks/ai · print this page from the browser dialog · diagrams load mermaid from CDN once online
+    </footer>
+  </div>
+</main>
+
+<script src="../../js/app.js"></script>
+</body>
+</html>

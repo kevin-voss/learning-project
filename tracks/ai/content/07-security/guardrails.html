@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guardrails &amp;amp; least privilege · AI Engineering Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../css/tokens.css">
+<link rel="stylesheet" href="../../css/base.css">
+<link rel="stylesheet" href="../../css/components.css">
+<link rel="stylesheet" href="../../css/flow.css">
+<link rel="stylesheet" href="../../css/print.css">
+</head>
+<body>
+
+<div id="progress"></div>
+
+<header class="topbar">
+  <button class="tbtn" id="nav-toggle" type="button" aria-label="Toggle navigation">☰</button>
+  <a class="brand" href="../../index.html"><b>ai</b>·field-guide</a>
+  <div class="tools">
+    <input id="toc-filter" type="search" placeholder="filter · /" aria-label="Filter topics">
+    <button class="tbtn" id="expand-all" type="button">expand</button>
+    <button class="tbtn" id="print-btn" type="button">print</button>
+  </div>
+</header>
+
+<nav class="sidebar" id="toc" aria-label="Topics"></nav>
+
+<main class="main">
+  <div class="content">
+    <header class="topic-head">
+      <div class="kicker">Part 4 · Memory & safety · 17/24</div>
+      <h1>Guardrails &amp;amp; least privilege</h1>
+      <p class="lead"><a class="xl" href="#injection">Injection</a> will succeed sometimes. Guardrails are the automated filters that decide what reaches the model and what leaves it. Least privilege is the keyring policy that decides what a hijacked hop can actually touch. Together they turn a compromise into a bad log entry.</p>
+    </header>
+
+  <div class="beat problem">
+    <div class="beat-h"><span class="bt">Problem</span><span class="bh">raw hops and oversized keys</span></div>
+    <ul>
+      <li><b>No filters anywhere:</b> every LLM hop ingests raw user text, raw retrieved docs, raw tool output. One poisoned chunk reaches the model with full voice.</li>
+      <li><b>One permission level for all tools:</b> the agent holds an admin credential, so any successful <a class="xl" href="injection.html">injection</a> is instantly a breach.</li>
+      <li><b>Fail-open everywhere:</b> when a filter errors it is bypassed "temporarily", which quietly becomes permanent.</li>
+      <li><b>No audit trail:</b> an incident happens and nobody can say what the agent saw, called, or who approved it.</li>
+    </ul>
+  </div>
+
+  <div class="beat solution">
+    <div class="beat-h"><span class="bt">Solution</span><span class="bh">filters at every edge, keys too small to matter</span></div>
+    <ul>
+      <li><b>Staged filters:</b> screen input before the model, screen output after it, check permissions between model and tools. Every hop, not just the user-facing one.</li>
+      <li><b>Least privilege per tool:</b> read-only by default, scoped and short-lived credentials, approval gates on writes. Injection succeeds and nothing happens.</li>
+      <li><b>Explicit fail policy per stage:</b> fail-closed where blast radius is big, fail-open where it is small. Decide in advance, in writing, not during an outage.</li>
+      <li><b>Log everything:</b> every tool call with args and approver, replayable for forensics.</li>
+    </ul>
+    <div class="diagram">
+      <div class="diag-body"><pre class="mermaid">
+flowchart LR
+  U["user + docs + tool results"] --> F1["edge input filter&lt;br/&gt;jailbreak · PII · topics"]
+  F1 --> P["prompt design&lt;br/&gt;hierarchy · delimiters"]
+  P --> M["LLM hop"]
+  M --> F2["output filter&lt;br/&gt;secrets · PII · schema"]
+  F2 --> PERM{"tool permission&lt;br/&gt;least privilege"}
+  PERM -- "read-only" --> T["tool executes&lt;br/&gt;scoped token"]
+  PERM -- "write" --> H["approval gate"]
+  T --> L["audit log&lt;br/&gt;args · approver · replay"]
+  H --> L
+      </pre></div>
+    </div>
+  </div>
+
+  <div class="beat how">
+    <div class="beat-h"><span class="bt">How it works</span><span class="bh">stages, fail policy, permissions, PII, logs, costs</span></div>
+
+    <h3 id="guardrails--the-two-filter-stages">The two filter stages</h3>
+    <div class="grid2">
+      <div class="wcard">
+        <h4>input filters <span class="wt">before the model</span></h4>
+        <ul>
+          <li><b>PII detection:</b> find emails, card numbers, names. Redact before anything is sent to the provider.</li>
+          <li><b>Jailbreak and injection classifiers:</b> score user text and retrieved content for attack patterns.</li>
+          <li><b>Topic refusal:</b> banned domains answered with a fixed refusal, no model hop at all.</li>
+          <li>Runs on user text AND retrieved chunks AND tool results. Skipping any one reopens the <a class="xl" href="injection.html">indirect injection</a> door.</li>
+        </ul>
+      </div>
+      <div class="wcard">
+        <h4>output filters <span class="wt">after the model</span></h4>
+        <ul>
+          <li><b>Secret scanning:</b> keys and tokens in the answer are blocked, not displayed.</li>
+          <li><b>PII redaction:</b> the model repeats personal data it should not, the filter masks it on the way out.</li>
+          <li><b>Toxicity and policy:</b> topic rules applied to what users actually see.</li>
+          <li><b>Schema validation:</b> structured output checked against the declared shape before <a class="xl" href="../04-tools-mcp/tool-calling.html">tool arguments</a> or UI code trust it.</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 id="guardrails--fail-closed-vs-fail-open">Fail-closed vs fail-open</h3>
+    <ul>
+      <li><button class="term" type="button" data-tip="when the filter itself errors or is unreachable, the request is blocked">Fail-closed</button>: the safe default. The cost is availability.</li>
+      <li><button class="term" type="button" data-tip="when the filter itself errors or is unreachable, the request passes unchecked">Fail-open</button>: the convenient default. The cost is every incident you later read about.</li>
+      <li><b>Choose per stage, by blast radius:</b> topic filter down → fail-open keeps chat alive and the harm is a rude answer. Output filter down → fail-closed, because answers can carry secrets. Permission checker down → always fail-closed, no exceptions.</li>
+      <li><span class="wlabel gotcha">gotcha</span> The policy only counts if it also fires on timeouts and provider errors, not just clean refusals.</li>
+    </ul>
+
+    <h3 id="guardrails--least-privilege-per-tool">Least privilege per tool</h3>
+    <ul>
+      <li><b>Read-only default:</b> the retrieval path uses a DB user that cannot write. The most effective single control you own.</li>
+      <li><b>Scoped credentials:</b> per-tenant, per-session tokens. No shared admin key across the whole agent.</li>
+      <li><b>TTL tokens:</b> minutes, not days. A leaked token dies of old age before anyone notices it.</li>
+      <li><b>Per-tenant quotas and rate caps:</b> even a fully hijacked loop cannot burn unbounded money or rows.</li>
+      <li><b>Approval gates for writes:</b> refunds, deletes, sends pause for a human, wired as durable <a class="xl" href="../05-agents-orchestration/ops.html">interrupts</a> so they survive restarts.</li>
+      <li><b><a class="xl" href="../04-tools-mcp/mcp.html">MCP</a> servers publish capability lists.</b> Grant the narrowest slice that works, and re-audit grants when tools change.</li>
+    </ul>
+
+    <h3 id="guardrails--pii-handling">PII handling</h3>
+    <ul>
+      <li><b>Redact before send:</b> strip or mask personal data at the gateway, before prompts leave your perimeter (Presidio-style pipelines).</li>
+      <li><b>Retention:</b> prompts and completions are personal data. Set TTLs, and contractually exclude them from provider training.</li>
+      <li><b>Delete-me:</b> user deletion must cascade to vector stores, <a class="xl" href="../06-memory/memory.html">memory profiles</a> and logs. That is where the copies hide.</li>
+      <li><span class="wlabel gotcha">gotcha</span> Redaction can leak by shape: a rare masked value in a small tenant is re-identifiable. Measure, do not assume.</li>
+    </ul>
+
+    <h3 id="guardrails--audit-logging">Audit logging</h3>
+    <ul>
+      <li><b>Every tool call logged:</b> tool name, full arguments, decision, and the approving identity (human or policy).</li>
+      <li><b>Immutable and append-only:</b> the attacker's first goal is editing the log that convicts them.</li>
+      <li><b>Replay for forensics:</b> given an incident id, rebuild exactly what the agent saw and did, step by step.</li>
+      <li>Feeds directly into <a class="xl" href="../08-evals/evals.html">evals</a>: real attacks found in logs become regression cases.</li>
+    </ul>
+
+    <h3 id="guardrails--when-guardrails-hurt">When guardrails hurt</h3>
+    <ul>
+      <li><b>Latency budget:</b> each classifier adds tens to hundreds of milliseconds. Stacked filters can double time-to-first-token. Budget them like any hop.</li>
+      <li><b>False positives block legit traffic:</b> an over-eager output filter silently mangles valid answers, and users blame the model.</li>
+      <li><b>The tuning loop:</b> every rule needs thresholds, allowlist exceptions and monitoring. Filters are components under test, not set-and-forget.</li>
+      <li>Track filter trigger rates per rule. A rule that fires 100 times a day is a product decision, not a guardrail.</li>
+    </ul>
+  </div>
+
+  <div class="beat when">
+    <div class="beat-h"><span class="bt">When to use what</span><span class="bh">buy vs build, by policy shape</span></div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Option</th><th class="hu">Use when</th><th class="hw">Watch out</th></tr></thead>
+        <tbody>
+          <tr><td class="m">Bedrock Guardrails</td><td class="u">You are on AWS and your policies are standard: hate, violence, insults, PII redaction, grounding checks</td><td class="watch">Managed policy still needs your evals to prove it on your traffic</td></tr>
+          <tr><td class="m">Llama Guard</td><td class="u">You want an open classifier you can self-host and threshold-tune</td><td class="watch">Classifier quality drifts across model versions, pin and re-eval</td></tr>
+          <tr><td class="m">NeMo Guardrails</td><td class="u">You need dialog-level rails: scripted flows, topic routing, canonical answers</td><td class="watch">Rails are logic, they rot silently without tests</td></tr>
+          <tr><td class="m">custom filters</td><td class="u">Niche policies, hard latency budgets, domain-specific secret formats</td><td class="watch">You now own an arms race. Fund the tuning loop or do not start it</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="beat example">
+    <div class="beat-h"><span class="bt">In code</span><span class="bh">a scoped credential with TTL and an approval gate</span></div>
+    <ul>
+      <li><b>What this buys you:</b> when <a class="xl" href="injection.html">injection</a> lands, the stolen authority covers one tenant, read-only, for ten minutes, with every call logged against a session.</li>
+      <li><b>In the field:</b> regulated deployments ship evidence, not architecture: filtered-request counts, approval trails, replayable traces. Auditors read logs.</li>
+    </ul>
+    <pre class="code" data-lang="python" data-file="scoped_tool_token.py"><code><span class="tk-k">import</span> time
+
+<span class="tk-k">def</span> <span class="tk-f">issue_tool_token</span>(session_id, tenant_id, ttl_s=<span class="tk-n">600</span>):
+    <span class="tk-s">"""Read-only, tenant-scoped, short-lived. A hijacked call has</span>
+<span class="tk-s">    ten minutes and one tenant's rows to play with."""</span>
+    claims = {<span class="tk-s">"sub"</span>: session_id, <span class="tk-s">"tenant"</span>: tenant_id, <span class="tk-s">"ro"</span>: <span class="tk-k">True</span>}
+    token = <span class="tk-f">sign</span>(claims, <span class="tk-f">int</span>(time.time()) + ttl_s)
+    <span class="tk-f">audit</span>(<span class="tk-s">"issue_token"</span>, tenant_id, session_id, approver=<span class="tk-s">"system"</span>)
+    <span class="tk-k">return</span> token
+
+<span class="tk-k">def</span> <span class="tk-f">call_tool</span>(tool, args, token):
+    <span class="tk-k">if</span> <span class="tk-k">not</span> <span class="tk-f">verify</span>(token):          <span class="tk-c"># fail closed on any doubt</span>
+        <span class="tk-k">raise</span> Denied(<span class="tk-s">"bad or expired token"</span>)
+    <span class="tk-k">if</span> tool.writes <span class="tk-k">and</span> <span class="tk-k">not</span> args.get(<span class="tk-s">"approved_by"</span>):
+        <span class="tk-k">raise</span> NeedsApproval(tool.name)
+    <span class="tk-f">audit</span>(tool.name, tenant_of(token), args,
+          approver=args.get(<span class="tk-s">"approved_by"</span>), replay_key=token.claims[<span class="tk-s">"sub"</span>])
+    <span class="tk-k">return</span> tool.run(args, scope=token.claims)</code></pre>
+  </div>
+
+  <div class="beat pitfalls">
+    <div class="beat-h"><span class="bt">Pitfalls</span><span class="bh">ways good guardrails go bad</span></div>
+    <ul>
+      <li><span class="wlabel gotcha">gotcha</span> <b>One filter config for every hop.</b> The retrieval hop needs different rules than the user-facing hop. Shared config means tuned for neither.</li>
+      <li><span class="wlabel gotcha">gotcha</span> <b>Fail-open on the permission checker during an outage.</b> That "temporary" bypass is the incident report.</li>
+      <li><b>Logging raw args with secrets inside.</b> The audit log becomes the leak. Redact into the log, keep the vault copy separate.</li>
+      <li><b>Redacting outputs but sending raw PII in prompts.</b> The provider-side copy is the exposure you forgot.</li>
+      <li><b>Filters with no eval coverage.</b> Rules drift silently until a legit answer is shredded in production.</li>
+      <li><b>Approval fatigue.</b> Gate everything and humans rubber-stamp. Gate the irreversible only.</li>
+    </ul>
+  </div>
+
+  <div class="beat checklist">
+    <div class="beat-h"><span class="bt">Checklist</span><span class="bh">the six things that matter</span></div>
+    <ul>
+      <li>Every LLM hop: input filter before, output filter after, permission check before any tool runs.</li>
+      <li>Every tool: read-only default, scoped token, short TTL, per-tenant quota.</li>
+      <li>Writes require approval. Permission failures block, never pass.</li>
+      <li>Fail policy written per stage, fires on timeouts, not just clean refusals.</li>
+      <li>PII redacted before send, retention and delete-me defined across stores and logs.</li>
+      <li>Every tool call logged with args and approver, replayable, and feeding the <a class="xl" href="../08-evals/evals.html">eval suite</a>.</li>
+    </ul>
+  </div>
+  
+    <nav class="pager" id="pager"></nav>
+
+    <footer class="footer">
+      learning-project · tracks/ai · print this page from the browser dialog · diagrams load mermaid from CDN once online
+    </footer>
+  </div>
+</main>
+
+<script src="../../js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The AI system architecture · AI Engineering Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../css/tokens.css">
+<link rel="stylesheet" href="../../css/base.css">
+<link rel="stylesheet" href="../../css/components.css">
+<link rel="stylesheet" href="../../css/flow.css">
+<link rel="stylesheet" href="../../css/print.css">
+</head>
+<body>
+
+<div id="progress"></div>
+
+<header class="topbar">
+  <button class="tbtn" id="nav-toggle" type="button" aria-label="Toggle navigation">☰</button>
+  <a class="brand" href="../../index.html"><b>ai</b>·field-guide</a>
+  <div class="tools">
+    <input id="toc-filter" type="search" placeholder="filter · /" aria-label="Filter topics">
+    <button class="tbtn" id="expand-all" type="button">expand</button>
+    <button class="tbtn" id="print-btn" type="button">print</button>
+  </div>
+</header>
+
+<nav class="sidebar" id="toc" aria-label="Topics"></nav>
+
+<main class="main">
+  <div class="content">
+    <header class="topic-head">
+      <div class="kicker">Part 5 · Proof & production · 20/24</div>
+      <h1>The AI system architecture</h1>
+      <p class="lead">Every earlier topic handed you a component. Systems fail between components: who owns auth, what happens when the provider throttles mid-run, where state sleeps, who watches the hops. This page is the box the components live in.</p>
+    </header>
+
+  <div class="beat problem">
+    <div class="beat-h"><span class="bt">Problem</span><span class="bh">systems fail at the seams, not inside sections</span></div>
+    <ul>
+      <li><b>Demo to prod gap:</b> a notebook that answers questions is not a system. The gap is not the model, it is auth, retries, tenancy, budgets and state.</li>
+      <li><b>Seam failures:</b> the provider 429s mid-orchestration, three tenants see each other's index slices, a deploy kills a 20-minute run. None of these live inside one component.</li>
+      <li><b>Some decisions cannot be patched later:</b> multi-tenancy model, idempotency contract, where cost is metered. Retrofitting those under load is rewriting the plane mid-flight.</li>
+      <li><b>The opposite error:</b> teams who fear the seams split into eight services on day one and build the most expensive hello world ever. Both failures are architecture failures.</li>
+    </ul>
+  </div>
+
+  <div class="beat solution">
+    <div class="beat-h"><span class="bt">Solution</span><span class="bh">one layered reference box · stateless middle · observable hops</span></div>
+    <ul>
+      <li><b>The path:</b> client, then edge and gateway, then orchestrator, then the model layer, retrieval, tools and memory, then the data plane. One process or ten deployables, the layers stay.</li>
+      <li><b>Stateless middle:</b> the orchestrator owns no durable state. All of it lives in the data plane: run state, history, vectors. Any instance can die at any time, resume is a <a class="xl" href="../05-agents-orchestration/ops.html">ops</a> concern.</li>
+      <li><b>Cross-cutting, not optional:</b> observability and security wrap every layer from day one, traces per <a class="xl" href="../08-evals/evals.html">evals</a>, least privilege per <a class="xl" href="../07-security/guardrails.html">guardrails</a>.</li>
+    </ul>
+    <div class="diagram">
+      <div class="diag-body">
+        <pre class="mermaid">
+flowchart TB
+  C["client · chat UI · IDE · CI"] --> E["edge · CDN · WAF · rate limits"]
+  E --> G["gateway · auth · routing · budgets"]
+  G --> O["orchestrator · agent loop · graphs"]
+  O --> ML["model layer · facade · router · fallbacks"]
+  O --> RT["retrieval · hybrid search · rerank"]
+  O --> TL["tools · internal APIs · MCP"]
+  O --> ME["memory · history · summaries"]
+  ML --> P["model providers · primary · backup"]
+  O --> DP[("data plane · Postgres · state · history · pgvector")]
+  RT --> DP
+  TL --> DP
+  ME --> DP
+  OBS["observability · traces · evals · guardrails"] -. "wraps every hop" .-> G
+  OBS -.-> O
+        </pre>
+      </div>
+    </div>
+    <p class="note">Request enters at the top, durable state lives at the bottom, the middle can be killed and replaced at any moment. The AWS mapping of this exact box is <a class="xl" href="aws.html">full systems on AWS</a>.</p>
+  </div>
+
+  <div class="beat how">
+    <div class="beat-h"><span class="bt">How</span><span class="bh">request path · sync vs async · model facade · retrieval · config · traces</span></div>
+
+    <h3 id="architecture--the-request-path-hop-by-hop">the request path, hop by hop</h3>
+    <ul>
+      <li><b>Edge:</b> CDN for static assets, WAF and coarse rate limits before anything expensive runs.</li>
+      <li><b>Gateway:</b> authn and authz, per-tenant quotas, request budgets, cost metering. Bill and alert from here, the numbers feed <a class="xl" href="../08-evals/evals.html">evals</a>.</li>
+      <li><b>Orchestrator:</b> the agent loop and graph execution, context assembly, <a class="xl" href="../06-memory/memory.html">memory</a> reads and writes. Shaping the loop is <a class="xl" href="../05-agents-orchestration/graphs.html">graphs</a>, this page only places it.</li>
+      <li><b>Model layer:</b> a facade over providers, below. Never a raw vendor SDK call from business logic.</li>
+      <li><b>Tools:</b> internal APIs and MCP servers, each scoped to least privilege, shapes and sync rules in <a class="xl" href="../04-tools-mcp/tool-calling.html">tool calling</a>.</li>
+      <li><b>Data plane:</b> Postgres for run state, history and vectors. The one place truth lives.</li>
+    </ul>
+
+    <h3 id="architecture--sync-vs-async-two-paths-one-system">sync vs async: two paths, one system</h3>
+    <ul>
+      <li><b>Sync path, under 2 s budget:</b> chat answers, autocomplete, classify. The user waits. Budget the p95 so gateway, retrieval and the first streamed token land inside 2 s, tokens stream after that.</li>
+      <li><b>Async path:</b> reindex, report generation, deep research, eval batches. Too big for a request. Push a job, a worker owns it, retries and checkpoints per <a class="xl" href="../05-agents-orchestration/ops.html">ops</a>.</li>
+      <li><b>Status channel back:</b> job id now, results later. Poll an endpoint or push over WebSocket or SSE. The UI must show "working, 40 of 500 docs" or users resubmit and double the load.</li>
+      <li><b>Never block a sync request on async work:</b> the request enqueues and returns the job id. The queue, not the HTTP timeout, is the boundary.</li>
+    </ul>
+
+    <h3 id="architecture--the-model-layer-behind-a-facade">the model layer behind a facade</h3>
+    <ul>
+      <li><b>One interface, many providers:</b> business code calls complete(messages, prefs). The facade maps to vendor SDKs, so a provider swap is a config change, not a rewrite.</li>
+      <li><b>Routing cheap vs dear by task:</b> a classifier or heuristics send FAQ-shaped traffic to a small model and complexity to the big one. Small models can be 10× cheaper, routing is a bigger lever than prompt tuning, see <a class="xl" href="../02-tokens-context/tokens-cost.html">tokens, cost, caching</a>.</li>
+      <li><b>Fallback chains, not single retries:</b> primary provider, then backup provider, then a degraded honest answer. A chain survives a vendor outage, a retry only survives a blip.</li>
+      <li><b>Streaming passes through:</b> the facade returns streams, it never buffers them to "simplify" the interface.</li>
+    </ul>
+
+    <h3 id="architecture--retrieval-inline-or-service-plus-cache-tiers">retrieval: inline or service, plus cache tiers</h3>
+    <ul>
+      <li><b>Inline retrieval,</b> a function the orchestrator calls: simplest, one deploy unit, fine until multiple consumers need the same corpus.</li>
+      <li><b>Retrieval as a service,</b> its own API with its own index and filters: many consumers, independent scaling, one place for tenant filtering and reranking. The search mechanics are <a class="xl" href="#rag-overview">RAG overview</a>.</li>
+      <li><b>Exact cache:</b> hash of the normalized question to a stored answer. Nearly free, hits rarely on natural language.</li>
+      <li><b>Embedding cache:</b> hash of the text to its vector. Embedding the same chunk twice is pure waste.</li>
+      <li><b>Semantic cache:</b> similarity to a cached question above a high threshold serves the cached answer. Powerful, dangerous at low thresholds, judge it with <a class="xl" href="../08-evals/evals.html">evals</a>.</li>
+    </ul>
+
+    <h3 id="architecture--config-and-prompts-are-versioned-artifacts">config and prompts are versioned artifacts</h3>
+    <ul>
+      <li><b>Not code constants:</b> model id, temperature, retrieval knobs, tool lists, system prompts. These change weekly, and a redeploy per tweak is a tax and an audit gap.</li>
+      <li><b>Versioned and reviewable:</b> prompts live in the repo or a config store, tagged like code. Every trace records the versions it ran with, so an eval regression maps to a diff.</li>
+      <li><b>Rollout discipline:</b> prompt changes ship behind a flag to a slice of traffic, get judged by <a class="xl" href="../08-evals/evals.html">evals</a>, then promote. Same ceremony as code, because it is code.</li>
+      <li><b>Per-environment values:</b> dev points at a cheap model and a small index, prod at the real ones. The config is the environment contract.</li>
+    </ul>
+
+    <h3 id="architecture--every-hop-emits-a-trace">every hop emits a trace</h3>
+    <ul>
+      <li><b>A run is a tree:</b> root span per request, child spans per gateway check, retrieval, model call, tool call. Latency, tokens, cost and verdicts attach per span.</li>
+      <li><b>Why architecturally:</b> without spans every incident is archaeology and every eval is unexplainable. Wiring traces late means grep, not a dashboard.</li>
+      <li><b>Skip sampling early:</b> full traces for the first months, the storage cost is tiny next to model spend. Practice and dashboards live in <a class="xl" href="../08-evals/evals.html">evals</a>.</li>
+    </ul>
+  </div>
+
+  <div class="beat when">
+    <div class="beat-h"><span class="bt">When</span><span class="bh">monolith first, split on evidence</span></div>
+    <ul>
+      <li><b>Build monolith-first:</b> one deployable service with clean internal modules for gateway, facade, retrieval and orchestrator, until load or team shape demands splits.</li>
+      <li><b>Split on evidence:</b> a component that scales differently (embedding workers), fails differently (a flaky vendor adapter) or is owned by another team. Not before.</li>
+      <li><b>The box survives every stage:</b> in a monolith the layers are modules, in microservices they are deployables. The seams stay put, so the eventual split is cheap.</li>
+    </ul>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Decision</th><th class="hu">Use when</th><th class="ha">Avoid when</th><th class="hw">Watch out</th></tr></thead>
+        <tbody>
+          <tr><td class="m">Topology</td><td class="u">One service, layered modules</td><td class="avoid">Load or team shape forces splits</td><td class="watch">Distributed hello world, see pitfalls</td></tr>
+          <tr><td class="m">State location</td><td class="u">All durable state in the data plane</td><td class="avoid">Never fork state per service early</td><td class="watch">Hidden coupling via a shared DB, see pitfalls</td></tr>
+          <tr><td class="m">Retrieval</td><td class="u">Inline function first</td><td class="avoid">Many consumers or apps need the corpus</td><td class="watch">Tenant filters must apply either way</td></tr>
+          <tr><td class="m">Model access</td><td class="u">Facade with routing and fallbacks</td><td class="avoid">Direct vendor SDK calls in business logic</td><td class="watch">Routing needs eval signal or it ossifies</td></tr>
+          <tr><td class="m">Streaming</td><td class="u">SSE for chat streams</td><td class="avoid">Co-editing or long sessions, use WebSocket</td><td class="watch">Buffering proxies break token-by-token UX</td></tr>
+          <tr><td class="m">Config</td><td class="u">Versioned artifacts with rollout flags</td><td class="avoid">Constants compiled into the deploy</td><td class="watch">Untracked prompt edits make evals meaningless</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="beat example">
+    <div class="beat-h"><span class="bt">Example</span><span class="bh">the facade: routing plus fallback in one small module</span></div>
+    <pre class="code" data-lang="python" data-file="facade.py"><code>PROVIDERS = [<span class="tk-s">"primary"</span>, <span class="tk-s">"backup"</span>]      <span class="tk-c"># different vendors: no single point of failure</span>
+
+<span class="tk-k">def</span> <span class="tk-f">route</span>(task):
+    <span class="tk-k">if</span> task.simple:                    <span class="tk-c"># classify once: FAQ-shaped traffic</span>
+        <span class="tk-k">return</span> <span class="tk-s">"small-model"</span>           <span class="tk-c"># 10x cheaper, most of the traffic</span>
+    <span class="tk-k">return</span> <span class="tk-s">"big-model"</span>                 <span class="tk-c"># complexity or eval signal earns the spend</span>
+
+<span class="tk-k">def</span> <span class="tk-f">call_with_fallback</span>(task):
+    <span class="tk-k">for</span> p <span class="tk-k">in</span> PROVIDERS:               <span class="tk-c"># a chain, not a single retry</span>
+        <span class="tk-k">try</span>:
+            <span class="tk-k">return</span> <span class="tk-f">call</span>(p, <span class="tk-f">route</span>(task), idem_key=task.key)  <span class="tk-c"># idempotent by key</span>
+        <span class="tk-k">except</span> RateLimit:
+            <span class="tk-f">backoff</span>(p)                 <span class="tk-c"># jittered, see ops</span>
+    <span class="tk-k">return</span> <span class="tk-f">degraded_answer</span>(task)     <span class="tk-c"># honest fallback, never a hang</span></code></pre>
+    <ul>
+      <li><b>Every AI SaaS quietly converges on this shape:</b> gateway with per-tenant budgets, stateless app tier, one facade over a provider chain, Postgres backbone.</li>
+      <li><b>One call site is the payoff:</b> provider swap, routing change and spend caps are each a one-file diff, not an incident.</li>
+    </ul>
+  </div>
+
+  <div class="beat pitfalls">
+    <div class="beat-h"><span class="bt">Pitfalls</span><span class="bh">distributed hello world · hidden coupling · buffering proxies</span></div>
+    <ul>
+      <li><b>Distributed hello world:</b> eight services, a mesh and an event bus serving 40 requests a day. Every hop adds latency, auth, tracing and on-call surface. Split on evidence.</li>
+      <li><b>Hidden coupling via a shared DB:</b> two "independent" services where one reads the other's tables. The schema is now a public contract nobody versioned. Own the split or stay one service.</li>
+      <li><b>Buffering proxies:</b> SSE through a proxy that batches responses destroys token-by-token UX. Test streaming through the real path, many gateways need explicit no-buffering config.</li>
+      <li><b>Tenancy retrofitted:</b> per-tenant filters bolted onto a populated index after one customer sees another's data. Design filters into retrieval from day one.</li>
+      <li><b>Double side effects:</b> a retry executes a tool twice, two refunds, two emails. Idempotency keys on every mutation, per <a class="xl" href="../05-agents-orchestration/ops.html">ops</a>.</li>
+      <li><b>Config as constants:</b> prompt tweaks require redeploys, so people stop tweaking. Versioned artifacts with flags keep the iteration loop alive.</li>
+      <li><b>Traces bolted on late:</b> the first 3am incident without spans is where you learn this, expensively.</li>
+    </ul>
+  </div>
+
+  <div class="beat checklist">
+    <div class="beat-h"><span class="bt">Checklist</span><span class="bh">seven bullets to remember</span></div>
+    <ul>
+      <li>Layered box: client, edge and gateway, orchestrator, model layer, retrieval, tools, memory, data plane</li>
+      <li>Sync under 2 s and streamed, anything longer is a queued job with a status channel</li>
+      <li>One model facade: routing cheap vs dear, fallback chain, honest degraded answer at the end</li>
+      <li>Cache tiers in order: exact, embedding, semantic with a high threshold</li>
+      <li>Prompts and config are versioned artifacts, versions recorded per trace</li>
+      <li>Every hop emits a span with latency, tokens and cost</li>
+      <li>Monolith with clean seams first, split on load or team evidence</li>
+    </ul>
+  </div>
+  
+    <nav class="pager" id="pager"></nav>
+
+    <footer class="footer">
+      learning-project · tracks/ai · print this page from the browser dialog · diagrams load mermaid from CDN once online
+    </footer>
+  </div>
+</main>
+
+<script src="../../js/app.js"></script>
+</body>
+</html>

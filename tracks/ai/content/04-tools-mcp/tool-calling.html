@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tool calling &amp; structured output · AI Engineering Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../css/tokens.css">
+<link rel="stylesheet" href="../../css/base.css">
+<link rel="stylesheet" href="../../css/components.css">
+<link rel="stylesheet" href="../../css/flow.css">
+<link rel="stylesheet" href="../../css/print.css">
+</head>
+<body>
+
+<div id="progress"></div>
+
+<header class="topbar">
+  <button class="tbtn" id="nav-toggle" type="button" aria-label="Toggle navigation">☰</button>
+  <a class="brand" href="../../index.html"><b>ai</b>·field-guide</a>
+  <div class="tools">
+    <input id="toc-filter" type="search" placeholder="filter · /" aria-label="Filter topics">
+    <button class="tbtn" id="expand-all" type="button">expand</button>
+    <button class="tbtn" id="print-btn" type="button">print</button>
+  </div>
+</header>
+
+<nav class="sidebar" id="toc" aria-label="Topics"></nav>
+
+<main class="main">
+  <div class="content">
+    <header class="topic-head">
+      <div class="kicker">Part 3 · Tools & agents · 11/24</div>
+      <h1>Tool calling &amp; structured output</h1>
+      <p class="lead">A raw model can only emit prose. Tools let it ask your code to act, a JSON Schema lets your code trust what comes back, and one Postgres keeps runs, threads and retrieval anchored to the same truth.</p>
+    </header>
+
+  <div class="beat problem">
+    <div class="beat-h"><span class="bt">Problem</span><span class="bh">a model in a jar, emitting prose</span></div>
+    <ul>
+      <li><b>Sealed in a jar:</b> a raw LLM cannot check the weather, query your database, run code, or even know today's date. It emits text, that is all (<a class="xl" href="../01-foundations/llm-internals.html">llm-internals</a>).</li>
+      <li><b>The naive escape hatch fails:</b> "please reply in JSON" gives fences that break, keys that wander, formats that drift between runs.</li>
+      <li><b>Two loud needs:</b> let the model ACT on the real world, and make its STRUCTURED output reliable enough to hand to code without prayer.</li>
+      <li><b>One quiet need:</b> the moment tools write to real systems the run needs trustworthy state, a plan that survives a crash, and follow-up turns that can read what the last tool just wrote.</li>
+    </ul>
+  </div>
+
+  <div class="beat solution">
+    <div class="beat-h"><span class="bt">Solution</span><span class="bh">tools as contracts · the model asks, your code executes</span></div>
+    <ul>
+      <li><b>Describe</b> your functions as a <button class="term" type="button" data-tip="A machine-readable contract: field names, types, required flags. The model was trained to fill exactly this shape.">JSON Schema</button>. <b>Declare</b> them with the request. The model emits a <b>tool call</b>, your code executes it, the result goes back as a message, the model continues.</li>
+      <li><b>The model never executes anything.</b> It asks. Your code runs. The permission boundary is yours, which makes it your security boundary (<a class="xl" href="../07-security/injection.html">injection</a>).</li>
+      <li><b>Structured outputs mode</b> makes the JSON contract provider-enforced instead of polite-requested.</li>
+    </ul>
+    <div class="flow">
+      <div class="lane-label"><span class="d m"></span>live · per request</div>
+      <div class="lane mint">
+        <span class="fc"><b>USER</b><i>"book a table, somewhere quiet"</i></span>
+        <span class="fa">→</span>
+        <span class="fc"><b>MODEL</b><i>"I need search_restaurants"</i></span>
+        <span class="fa">→</span>
+        <span class="fc"><b>TOOL CALL</b><i>query="quiet", min_rating=4</i></span>
+        <span class="fa">→</span>
+        <span class="fc"><b>YOUR CODE</b><i>executes the real API</i></span>
+        <span class="fa">→</span>
+        <span class="fc"><b>RESULT</b><i>Osteria · 4.6★ · 19:00 free</i></span>
+        <span class="fa">→</span>
+        <span class="fc"><b>MODEL</b><i>reads it, answers the user</i></span>
+      </div>
+      <div class="loopnote">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        call → result → decide, repeat until it can answer. Each iteration is a round trip, so budget steps (<a class="xl" href="../05-agents-orchestration/graphs.html">graphs</a>)
+      </div>
+    </div>
+  </div>
+
+  <div class="beat how">
+    <div class="beat-h"><span class="bt">How</span><span class="bh">the loop, the contract, the schema discipline, the database anchor</span></div>
+    <h3 id="tool-calling--the-loop-is-your-app-not-the-model">The loop is your app, not the model</h3>
+    <ul>
+      <li><b>Four beats, forever:</b> the model emits JSON saying "call this, with these args". Your runtime executes, appends a <code>role:"tool"</code> message, calls the model again. Repeat until it answers with no tool call.</li>
+      <li><b>Cap the iterations.</b> Every hop is a round trip that costs tokens, latency and money (<a class="xl" href="../02-tokens-context/tokens-cost.html">tokens, cost, caching</a>). A max-stops guard belongs in your loop, not in hope.</li>
+      <li><b>Chaining, parallel calls, error recovery</b> are trained behaviors: the model can fan out several independent calls in one turn and adapt when a tool returns an error.</li>
+      <li><span class="wlabel why">why function calling is trained, not prompted</span> providers fine-tune on tool-use trajectories (<a class="xl" href="../01-foundations/llm-internals.html">llm-internals</a>). Schema-filling is a learned skill, far more reliable than prompt-begging.</li>
+    </ul>
+    <h3 id="tool-calling--structured-output-the-trust-upgrade">Structured output: the trust upgrade</h3>
+    <ul>
+      <li><b><button class="term" type="button" data-tip="At each token the model's logits are masked so only schema-valid continuations remain. Invalid JSON becomes impossible, not merely unlikely.">Constrained decoding</button></b> makes invalid JSON physically impossible: tokens outside the grammar are masked as they are sampled. Validation happens at the token level, not in your try/except.</li>
+      <li><b>Validate anyway.</b> Syntactically valid JSON can still be semantically wrong: a mis-chosen enum, a hallucinated id. A Pydantic model on your side turns garbage into a readable tool error the model can act on.</li>
+      <li><b>Retry with error feedback:</b> send the validation error back as the tool result. The model repairs on the next turn. Two retries is the sweet spot before you surface a real error and pay the output budget (<a class="xl" href="../02-tokens-context/tokens-cost.html">tokens, cost, caching</a>).</li>
+      <li><b>Arguments stream as tokens:</b> render "calling search(city='Berlin'...)" live in the UI before any result exists. <a class="xl" href="ag-ui.html">AG-UI</a> turns exactly this into generative UI.</li>
+    </ul>
+    <h3 id="tool-calling--tool-design-is-prompt-design">Tool design is prompt design</h3>
+    <ul>
+      <li><b>Few, well-named, orthogonal tools.</b> Names and descriptions are read by the model on EVERY call: they cost tokens and attention (<a class="xl" href="../02-tokens-context/tokens-cost.html">tokens, cost, caching</a>).</li>
+      <li><b>Descriptions say what + when + units.</b> "city: city name in English, e.g. 'Berlin'" beats "city". "amount: USD cents, integer" beats "amount".</li>
+      <li><b>Error messages are prompts.</b> "city not found, did you mean X?" lets the model recover. A stack trace ends the run.</li>
+      <li><span class="wlabel why">why not tools for everything</span> deterministic logic belongs in code, math belongs in a calculator tool, and every tool taxes every call. Fewer, sharper tools win.</li>
+      <li><span class="wlabel gotcha">gotcha</span> tool schemas ride along on every request even when unused. Ten tools can mean 1,500 tokens of permanent overhead (<a class="xl" href="../02-tokens-context/tokens-cost.html">tokens, cost, caching</a>).</li>
+    </ul>
+    <h3 id="tool-calling--sync-with-database-state">Sync with database state</h3>
+    <ul>
+      <li><b>Postgres is the anchor.</b> Transcript tables for history, checkpoint tables for run state, <button class="term" type="button" data-tip="A Postgres extension storing embeddings as a native column type with cosine operators and HNSW indexes. Your vector store is just another table.">pgvector</button> for RAG knowledge, business tables next to all of it. The join IS the feature: tenant rules and permission filters apply in the same transaction as the vector search.</li>
+      <li><b>Transactional writes:</b> a tool's side effect and the run-state update commit together or not at all. A booking without its run row, or a run row without its booking, is a lie your next turn will retell.</li>
+      <li><b>Idempotent writes:</b> your loop retries, the network retries, the user retries. Give every write an idempotency key so a replayed tool call converges instead of double-charging (<a class="xl" href="../05-agents-orchestration/ops.html">ops</a>).</li>
+      <li><b>Read-your-writes:</b> a follow-up turn must see the previous tool's write. Commit before the next model call, and keep the same anchor database so no replica lags between the write and the read.</li>
+      <li><b>State machine for runs:</b> a runs table with legal statuses (pending, running, waiting_approval, done, failed) and guarded transitions, plus checkpoint rows keyed <code>(thread_id, checkpoint_id)</code> as a linked list, gives resume, replay and audit almost free (<a class="xl" href="../05-agents-orchestration/graphs.html">graphs</a>).</li>
+      <li><b>Layer picker:</b> a plain history table for stateless-ish bots · checkpointed state for loop-and-branch agents · a curated memory store for cross-session facts · pgvector until tens of millions of vectors, then graduate deliberately (<a class="xl" href="../03-rag-search/embeddings.html">embeddings</a>).</li>
+      <li><span class="wlabel gotcha">gotcha</span> <b>Trim before you snapshot.</b> Tool outputs land in state, state lands in Postgres. A 40-page tool dump per step × 20 steps is a real storage bill and a slow resume (<a class="xl" href="../02-tokens-context/context-budget.html">context-budget</a>).</li>
+    </ul>
+    <p class="note">One rule holds all of it together: the database commit is the boundary of truth, and the next model call only ever happens after it.</p>
+  </div>
+
+  <div class="beat when">
+    <div class="beat-h"><span class="bt">When</span><span class="bh">mechanism picker</span></div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Mechanism</th><th class="hu">Use when</th><th class="ha">Avoid when</th><th class="hw">Watch out</th></tr></thead>
+        <tbody>
+          <tr><td class="m">Prompt-for-JSON</td><td class="u">Scripts, internal tools, low stakes</td><td class="avoid">Downstream code must parse reliably</td><td class="watch">Fences break. Wrap in retries and validation</td></tr>
+          <tr><td class="m">Function calling</td><td class="u">The default for real apps</td><td class="avoid">Models without the feature (rare)</td><td class="watch">Validate args server-side anyway</td></tr>
+          <tr><td class="m">Structured outputs<span class="sm">schema mode</span></td><td class="u">Parsing is sacred, guaranteed by constrained decoding</td><td class="avoid">Creative prose (constraints hurt fluency)</td><td class="watch">Keep schemas small. Giant schemas slow the model</td></tr>
+          <tr><td class="m"><a class="xl" href="mcp.html">MCP</a> tools</td><td class="u">Sharing tools across apps, teams or machines</td><td class="avoid">Single-app single-machine tools</td><td class="watch">One extra protocol hop. Audit what remote servers expose</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="beat example">
+    <div class="beat-h"><span class="bt">Example</span><span class="bh">the raw anatomy, no framework · then the Postgres sync sketch</span></div>
+    <ul>
+      <li><b>Claude Code and Cursor</b> are this exact loop with shell, file and edit tools.</li>
+      <li><b>90% of "agent" products</b> are this loop plus UI. The differences are tool design and context management (<a class="xl" href="../05-agents-orchestration/agent-patterns.html">agent patterns</a>).</li>
+      <li><b>Support agents</b> issue refunds through internal APIs the model can see but never touch directly. The tool call is a request, the permission boundary is your code.</li>
+      <li><b>Teams that ran</b> Pinecone + DynamoDB + Redis quietly consolidate to one Postgres with one backup story.</li>
+    </ul>
+    <pre class="code" data-lang="python" data-file="raw_tool_call.py"><code>tools = [{
+    <span class="tk-s">"type"</span>: <span class="tk-s">"function"</span>,
+    <span class="tk-s">"function"</span>: {
+        <span class="tk-s">"name"</span>: <span class="tk-s">"get_weather"</span>,
+        <span class="tk-s">"parameters"</span>: {                    <span class="tk-c"># JSON Schema = the contract</span>
+            <span class="tk-s">"type"</span>: <span class="tk-s">"object"</span>,
+            <span class="tk-s">"properties"</span>: {
+                <span class="tk-s">"city"</span>: {<span class="tk-s">"type"</span>: <span class="tk-s">"string"</span>,
+                    <span class="tk-s">"description"</span>: <span class="tk-s">"city name in English, e.g. Berlin"</span>},
+            },
+            <span class="tk-s">"required"</span>: [<span class="tk-s">"city"</span>],
+        },
+    },
+}]
+
+resp = client.chat.completions.create(model=<span class="tk-s">"gpt-4o"</span>,
+                                     messages=messages, tools=tools)
+call = resp.choices[<span class="tk-n">0</span>].message.tool_calls[<span class="tk-n">0</span>]
+
+<span class="tk-c"># 1) the model emits get_weather(city="Berlin") · IT EXECUTES NOTHING</span>
+result = get_weather(**json.loads(call.function.arguments))
+
+<span class="tk-c"># 2) your code runs the tool, feeds the result back as a message</span>
+messages += [call, {<span class="tk-s">"role"</span>: <span class="tk-s">"tool"</span>, <span class="tk-s">"tool_call_id"</span>: call.id,
+                    <span class="tk-s">"content"</span>: json.dumps(result)}]
+
+<span class="tk-c"># 3) call the model again · the loop repeats until it can answer</span></code></pre>
+    <pre class="code" data-lang="python" data-file="sync_write.py"><code><span class="tk-k">def</span> <span class="tk-f">book_table</span>(run_id, call_id, booking):
+    <span class="tk-s">"""One transaction: the side effect AND the run-state update."""</span>
+    <span class="tk-k">with</span> tx():                              <span class="tk-c"># commit both or neither</span>
+        cur = sql(<span class="tk-s">"""
+            INSERT INTO bookings (id, user_id, slot, idem_key)
+            VALUES (%s, %s, %s, %s)
+            ON CONFLICT (idem_key) DO NOTHING     -- replay-safe
+            RETURNING id
+        """</span>, booking.id, booking.user_id, booking.slot, call_id)
+        <span class="tk-k">if</span> cur.rowcount == <span class="tk-n">0</span>:               <span class="tk-c"># retried call · already booked</span>
+            <span class="tk-k">return</span> find_by_idem(call_id)    <span class="tk-c"># idempotent · no second charge</span>
+        sql(<span class="tk-s">"""
+            UPDATE runs SET status = 'waiting_model', updated_at = now()
+            WHERE id = %s AND status IN ('running', 'waiting_approval')
+        """</span>, run_id)                        <span class="tk-c"># state machine · legal moves only</span>
+    <span class="tk-c"># committed before the next model call · read-your-writes holds</span></code></pre>
+    <pre class="code" data-lang="sql" data-file="hybrid_search.sql"><code><span class="tk-c">-- pgvector knowledge beside the business tables · one hybrid query, parameters only</span>
+<span class="tk-k">WITH</span> vec <span class="tk-k">AS</span> (
+  <span class="tk-k">SELECT</span> id, row_number() <span class="tk-k">OVER</span> (<span class="tk-k">ORDER BY</span> embedding &lt;=&gt; %s::<span class="tk-t">vector</span>) <span class="tk-k">AS</span> rank
+  <span class="tk-k">FROM</span> docs <span class="tk-k">WHERE</span> tenant_id = %s           <span class="tk-c">-- permission filter, same query</span>
+),
+bm25 <span class="tk-k">AS</span> (
+  <span class="tk-k">SELECT</span> id, row_number() <span class="tk-k">OVER</span> (<span class="tk-k">ORDER BY</span> ts_rank_cd(tsv, q) <span class="tk-k">DESC</span>) <span class="tk-k">AS</span> rank
+  <span class="tk-k">FROM</span> docs, plainto_tsquery(%s) <span class="tk-k">AS</span> q
+  <span class="tk-k">WHERE</span> tsv @@ q <span class="tk-k">AND</span> tenant_id = %s
+)
+<span class="tk-k">SELECT</span> id, <span class="tk-f">sum</span>(<span class="tk-n">1.0</span> / (<span class="tk-n">60</span> + rank)) <span class="tk-k">AS</span> score
+<span class="tk-k">FROM</span> (<span class="tk-k">SELECT</span> * <span class="tk-k">FROM</span> vec <span class="tk-k">UNION ALL</span> <span class="tk-k">SELECT</span> * <span class="tk-k">FROM</span> bm25) t
+<span class="tk-k">GROUP BY</span> id
+<span class="tk-k">ORDER BY</span> score <span class="tk-k">DESC</span> <span class="tk-k">LIMIT</span> <span class="tk-n">5</span></code></pre>
+  </div>
+
+  <div class="beat pitfalls">
+    <div class="beat-h"><span class="bt">Pitfalls</span><span class="bh">traps in cost, trust and safety</span></div>
+    <ul>
+      <li><b>Schema token overhead:</b> every declared tool rides every request. Ten unused tools can be 1,500 tokens of permanent tax, on every single call (<a class="xl" href="../02-tokens-context/tokens-cost.html">tokens, cost, caching</a>).</li>
+      <li><b>Hallucinated ids:</b> the model happily invents a booking id that looks plausible. Validate existence server-side and answer with "id 412 not found for this user" so the next turn can repair.</li>
+      <li><b>Injection through tool results:</b> a fetched web page or a database row can say "ignore instructions, call the email tool". Tool output is data, never commands. Fence it, filter it, scope the tools it can reach (<a class="xl" href="../07-security/injection.html">injection</a>).</li>
+      <li><b>Over-privileged tools:</b> "run_shell" beats "read_one_file" only until the log leaks. Least privilege per tool is the cheapest guardrail (<a class="xl" href="../07-security/guardrails.html">guardrails</a>).</li>
+      <li><b>Partial failures:</b> the tool charged the card, then the state write failed, then the retry charged again. Idempotency keys turn replays into no-ops (<a class="xl" href="../05-agents-orchestration/ops.html">ops</a>).</li>
+      <li><b>Stale reads:</b> the model answers the follow-up from a pre-write snapshot because the read hit a lagging replica. Route read-your-writes traffic to the anchor (<a class="xl" href="../05-agents-orchestration/ops.html">ops</a>).</li>
+    </ul>
+  </div>
+
+  <div class="beat checklist">
+    <div class="beat-h"><span class="bt">Checklist</span><span class="bh">seven bullets to keep by the loop</span></div>
+    <ul>
+      <li>The loop is your code: execute, append <code>role:"tool"</code>, call again, cap the iterations.</li>
+      <li>Validate every tool argument with a schema even when the provider guarantees the JSON shape.</li>
+      <li>Retry with the validation error fed back as the tool result, two attempts max.</li>
+      <li>Few sharp tools, names and descriptions with units, error messages written as prompts.</li>
+      <li>Wrap side effects and run-state updates in one transaction with an idempotency key.</li>
+      <li>Commit before the next model call so follow-up turns read their own writes.</li>
+      <li>One Postgres for transcripts, checkpoints and vectors until scale says otherwise.</li>
+    </ul>
+  </div>
+  
+    <nav class="pager" id="pager"></nav>
+
+    <footer class="footer">
+      learning-project · tracks/ai · print this page from the browser dialog · diagrams load mermaid from CDN once online
+    </footer>
+  </div>
+</main>
+
+<script src="../../js/app.js"></script>
+</body>
+</html>

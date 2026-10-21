@@ -33,5 +33,5 @@ Canonical overview: [README.md](../../README.md). Learning order: [docs/LEARNING
 - **Structure:** See [structure.mdc](./structure.mdc) — max 5 files per folder, ~400-line soft cap.
 - When scope spans buckets, update README / LEARNING_PATH cross-links.
 - Pages follow `docs/STYLE.md`: picture → one idea → tiny example → try it → check, English, short sentences, `> [!PICTURE]` / `[!TRY]` / `[!CHECK]` boxes. Colours only from `hub/theme/tokens.css` (`--lp-*`).
-- Cursor commands: students use `/next` → `/stuck` → `/check` → `/done` (rules in `tutor.mdc`, for student tasks, projects, drills, Code for Cleaning and path lessons); teachers use `/new-exercise` and `/new-content`. Do not add more commands: extend these.
+- Cursor commands: students use `/next` → `/stuck` → `/test` → `/check` → `/done` (rules in `tutor.mdc`, for student tasks, projects, drills, Code for Cleaning and path lessons); teachers use `/new-exercise` and `/new-content`. Do not add more commands: extend these.
 - Students follow one list: `hub/path.mjs`. New content goes on the path by adding a step there (never rename a step `id`, progress is saved by id). The `path`, `students` and `catalog` regions of `hub/index.html` are generated: run `make site`, never hand-edit between their markers.

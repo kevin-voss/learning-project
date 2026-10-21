@@ -8,6 +8,16 @@ TODO: which file to create (e.g. `Name.java`) and that the class inside has the 
 
 TODO: exact commands for {{LANGUAGE}}, run from this folder.
 
+## Test it
+
+The task has tests: they type the inputs for you and check what your program prints. Any file and class name works. Run them from the main folder of the repo (where the `Makefile` is):
+
+```bash
+make test-task TASK={{TASK}}
+```
+
+Does the task have parts a), b) …? Test one part alone: `make test-task TASK={{TASK}} PART=a`. In Cursor, `/test` runs them and explains the first ❌ (and makes extra tests for edge cases when you ask).
+
 ## Rules for this desk
 
 - Change anything you like here.

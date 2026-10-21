@@ -1,0 +1,21 @@
+{
+  "task": "03_2",
+  "tests": [
+    { "name": "1495 cents are 14 full euros and 95 cents (the sheet's example)", "part": "a", "input": ["1495"],
+      "expect": ["14 EUR 95 CENT"] },
+    { "name": "100 cents are exactly 1 euro, 0 cents left", "part": "a", "input": ["100"],
+      "expect": ["1 EUR 0 CENT"] },
+    { "name": "49 cents are not a full euro yet: 0 euros, 49 cents", "part": "a", "input": ["49"],
+      "expect": ["0 EUR 49 CENT"] },
+    { "name": "1495 cents are 14.95 EUR, the cents stay after the dot (the sheet's example)", "part": "b", "input": ["1495"],
+      "expect": ["14.95 EUR"], "reject": ["14.0 EUR"] },
+    { "name": "49 cents are 0.49 EUR, not 0.0", "part": "b", "input": ["49"],
+      "expect": ["0.49 EUR"], "reject": ["0.0 EUR"] },
+    { "name": "1495 cents round up to 15 EUR (the sheet's example)", "part": "c", "input": ["1495"],
+      "expect": ["15 EUR"] },
+    { "name": "1449 cents: 49 cents round down to 14 EUR", "part": "c", "input": ["1449"],
+      "expect": ["14 EUR 49 CENT", "14 EUR"], "reject": ["15 EUR"] },
+    { "name": "1450 cents: exactly 50 cents round up to 15 EUR", "part": "c", "input": ["1450"],
+      "expect": ["15 EUR"] }
+  ]
+}

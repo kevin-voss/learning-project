@@ -28,6 +28,7 @@ Everything is written in English. A sheet in another language is translated fait
 | Exercise `README.md` | The story, then every new idea of the sheet explained **like for a 6-year-old** (real-life picture → tiny code → "in task NN_k you use it to …"), words to know, source |
 | Task `README.md` | The task from the sheet, translated faithfully into English · simply said, one step per line · test examples (input → expected output, include the borders) · helpers in `<details>` · done when |
 | `my-solution/` | **No code.** Only `README.md`: the file and class name to create, exact run commands, and empty spaces for written answers. The student starts alone, from an empty file |
+| `tests.json` | 4–10 black-box tests (typed input → printed output), tagged by part. Rules: "Tests" in [`students.mdc`](../rules/students.mdc) |
 | `solution/` | One clean beginner sample solution using only what the exercise teaches, comments explain *why*. `README.md`: run commands, step-by-step walkthrough, real test output, common mistakes |
 
 Code is English too: class names, variable names, comments and everything the program prints.
@@ -36,8 +37,9 @@ Code is English too: class names, variable names, comments and everything the pr
 
 - Check that `my-solution/` holds only its `README.md`. Compile and run every `solution/` file.
 - Run **every** test example against the sample solution and paste the real output into its `README.md`.
+- `make test-task TASK=<NN_k> SOLUTION=1` passes every test of every task.
 - `make site` must report 0 broken links.
 
 ## 5. Reply
 
-Three bullets: folders created, ideas covered, test results. Do not commit unless asked.
+Three bullets: folders created, ideas covered, test results (`make test-task … SOLUTION=1`). Do not commit unless asked.

@@ -1,0 +1,7 @@
+{
+  "task": "02_3",
+  "tests": [
+    { "name": "the sum of the four numbers, as a double computes it", "part": "a",
+      "expect": ["Sum: 2340003.4500045604"] }
+  ]
+}

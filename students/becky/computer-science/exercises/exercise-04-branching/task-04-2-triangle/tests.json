@@ -1,0 +1,25 @@
+{
+  "task": "04_2",
+  "tests": [
+    { "name": "3.0, 4.0, 5.0 is a right-angled triangle (the sheet's example)", "input": ["3.0", "4.0", "5.0"],
+      "expect": ["valid: true", "equilateral: false", "isosceles: false", "right-angled: true"] },
+    { "name": "5, 3, 4: the longest side can come first", "input": ["5", "3", "4"],
+      "expect": ["valid: true", "equilateral: false", "isosceles: false", "right-angled: true"] },
+    { "name": "3, 5, 4: the longest side can be in the middle", "input": ["3", "5", "4"],
+      "expect": ["valid: true", "right-angled: true"] },
+    { "name": "2, 2, 2: equilateral is also isosceles", "input": ["2", "2", "2"],
+      "expect": ["valid: true", "equilateral: true", "isosceles: true", "right-angled: false"] },
+    { "name": "5, 5, 8: two equal sides make it isosceles", "input": ["5", "5", "8"],
+      "expect": ["valid: true", "equilateral: false", "isosceles: true", "right-angled: false"] },
+    { "name": "1, 1, 1.4142135623730951: isosceles and right-angled (needs a tolerance)", "input": ["1", "1", "1.4142135623730951"],
+      "expect": ["valid: true", "equilateral: false", "isosceles: true", "right-angled: true"] },
+    { "name": "1, 2, 3: two sides exactly as long as the third is no triangle", "input": ["1", "2", "3"],
+      "expect": ["valid: false", "equilateral: false", "isosceles: false", "right-angled: false"] },
+    { "name": "-3, 4, 5: a negative side is no triangle, so not right-angled either", "input": ["-3", "4", "5"],
+      "expect": ["valid: false", "equilateral: false", "isosceles: false", "right-angled: false"] },
+    { "name": "5, 1, 1: two equal sides but no triangle, so not isosceles", "input": ["5", "1", "1"],
+      "expect": ["valid: false", "isosceles: false"], "reject": ["isosceles: true"] },
+    { "name": "0, 0, 0: three equal zero sides are no triangle, so not equilateral", "input": ["0", "0", "0"],
+      "expect": ["valid: false", "equilateral: false"], "reject": ["equilateral: true"] }
+  ]
+}

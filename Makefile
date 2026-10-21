@@ -16,13 +16,14 @@
 
 TOPICS := variables math strings arrays conditionals loops functions objects
 
-.PHONY: test help new-exercise site catalog check-path $(TOPICS)
+.PHONY: test help new-exercise test-task site catalog check-path $(TOPICS)
 
 help:
 	@echo "make test              — every drill topic"
 	@echo "make variables         — only variables/ (same for math, strings, …)"
 	@echo "make variables-task-03 — one task (01–11) of a topic"
 	@echo "make new-exercise STUDENT=becky SUBJECT=computer-science NUMBER=05 TITLE=\"Loops\" TASKS=\"Times table, Guess the number\" [LANGUAGE=Java]"
+	@echo "make test-task TASK=04_2 [PART=a] [STUDENT=becky] [SOLUTION=1] — run a student task's tests.json"
 	@echo "make catalog           — rewrite the generated parts of hub/index.html"
 	@echo "make check-path        — check hub/path.mjs (ids, retired ids, links)"
 	@echo "make site              — check the path, build dist/site, check every link"
@@ -63,6 +64,11 @@ objects-task-%:
 new-exercise:
 	node students/scripts/new-exercise.mjs --student "$(STUDENT)" --subject "$(SUBJECT)" --number "$(NUMBER)" \
 		--title "$(TITLE)" --tasks "$(TASKS)" $(if $(SLUG),--slug "$(SLUG)") $(if $(LANGUAGE),--language "$(LANGUAGE)")
+
+# Tests of one student task (its tests.json) on my-solution/, or on solution/ with SOLUTION=1
+test-task:
+	@node students/scripts/test-task.mjs "$(TASK)" $(if $(PART),--part "$(PART)") $(if $(STUDENT),--student "$(STUDENT)") \
+		$(if $(MAIN),--main "$(MAIN)") $(if $(SOLUTION),--solution)
 
 # Website: check the path, refresh the landing page, build dist/site, check links (same as Vercel)
 catalog:

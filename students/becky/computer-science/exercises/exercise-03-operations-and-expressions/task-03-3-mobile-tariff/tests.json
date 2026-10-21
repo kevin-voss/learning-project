@@ -1,0 +1,19 @@
+{
+  "task": "03_3",
+  "tests": [
+    { "name": "5 GB and 100 minutes: everything is free, only the fee (119 EUR)", "input": ["5", "100"],
+      "expect": ["Yearly cost: 119 EUR"] },
+    { "name": "5 GB and 150 minutes: 50 extra minutes at 9 cent (173 EUR)", "input": ["5", "150"],
+      "expect": ["Yearly cost: 173 EUR"] },
+    { "name": "7 GB and 100 minutes: 2 extra GB are 4 blocks of 500 MB (261 EUR)", "input": ["7", "100"],
+      "expect": ["Yearly cost: 261 EUR"], "reject": ["190 EUR"] },
+    { "name": "7 GB and 150 minutes: extra data and extra minutes together (315 EUR)", "input": ["7", "150"],
+      "expect": ["Yearly cost: 315 EUR"] },
+    { "name": "10 GB and 200 minutes: the most expensive row of the sheet (581 EUR)", "input": ["10", "200"],
+      "expect": ["Yearly cost: 581 EUR"] },
+    { "name": "6 GB: one GB over the free 5 is already two blocks (190 EUR)", "input": ["6", "100"],
+      "expect": ["Yearly cost: 190 EUR"], "reject": ["154 EUR"] },
+    { "name": "101 minutes: one minute over the free 100 costs 9 cent a month (120 EUR)", "input": ["5", "101"],
+      "expect": ["Yearly cost: 120 EUR"] }
+  ]
+}

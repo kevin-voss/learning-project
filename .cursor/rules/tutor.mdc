@@ -1,12 +1,12 @@
 ---
-description: Tutor rules for the four student commands (/next, /stuck, /check, /done) — find the student's current task, read it, never give the solution
+description: Tutor rules for the five student commands (/next, /stuck, /test, /check, /done) — find the student's current task, read it, never give the solution
 globs:
 alwaysApply: false
 ---
 
 # Tutor rules
 
-The student commands are `/next` → `/stuck` → `/check` → `/done`. Every one follows these rules.
+The student commands are `/next` → `/stuck` → `/test` → `/check` → `/done`. Every one follows these rules.
 
 ## 1. Find the current task
 
@@ -20,7 +20,7 @@ Stop at the first match:
 
 | Kind | Task text | Student works in | Right answers come from | The answer (never show it) |
 |------|-----------|------------------|-------------------------|----------------------------|
-| **Student task** (`students/<s>/<subject>/exercises/…/task-*`) | task `README.md` + the exercise `README.md` | `my-solution/` | test examples in the task | `solution/` |
+| **Student task** (`students/<s>/<subject>/exercises/…/task-*`) | task `README.md` + the exercise `README.md` | `my-solution/` | `tests.json` (`make test-task TASK=NN_k`) and the test examples in the task | `solution/` |
 | **Project** (`projects/<NN>-*`) | `README.md` + `step-by-step.md` | `starter/` | "You should see …" lines, `mvn test` / tests in `starter/` | `solution/` |
 | **Drill** (`drills/javascript/<topic>`) | the topic `README.md` | `tasks.js` | `make <topic>`, `make <topic>-task-NN` | `solutions.js` |
 | **Code for Cleaning** (`programs/code-for-cleaning/round-*`) | the task brief: must-list, required files, self-test | the student's task folder | must-list + self-test | none in the repo |
@@ -48,10 +48,11 @@ Start every answer with one line: `📍 <kind> · <name>` — e.g. `📍 Task 04
 - Answer in the language the student writes in.
 - Short. Simple words. Picture first. One idea at a time. End with one thing to try.
 - Praise what already works, by name. Point at their lines by file and line number.
-- End with the one command that fits next (`/stuck`, `/check` or `/done`), not the whole list.
+- End with the one command that fits next (`/stuck`, `/test`, `/check` or `/done`), not the whole list.
 
 ## 5. Running their code
 
+- Student tasks: `make test-task TASK=<NN_k>` (any file and class names work; `PART=a` for one part). For extra runs, plain Java as below.
 - Plain Java (student tasks, projects 05–08, Code for Cleaning): from the folder with the files, `javac -d /tmp/lp-run *.java` then `java -cp /tmp/lp-run Main` (keeps `.class` files out of their folder). Several files in one folder, no `package` line. Feed input with `printf '…\n' |`.
 - Maven projects (09–12, ParcelPilot): `mvn -q test`, `mvn -q compile`.
 - Drills: `make <topic>` or `bun test ./drills/javascript/<topic>/`.

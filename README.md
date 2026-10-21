@@ -22,7 +22,7 @@ cd learning-project
 git switch -c your-name
 ```
 
-Personal exercise sheets from a teacher are in [`students/<your-name>/`](students/README.md): one folder per exercise, one per task. Write your code in the task's `my-solution/`, compare with `solution/`, commit and push. In Cursor, four commands help without giving the answer (below).
+Personal exercise sheets from a teacher are in [`students/<your-name>/`](students/README.md): one folder per exercise, one per task. Write your code in the task's `my-solution/`, test it with `make test-task TASK=04_2`, compare with `solution/`, commit and push. In Cursor, five commands help without giving the answer (below).
 
 ## Structure
 
@@ -74,6 +74,9 @@ Vercel runs path check + build + link check on every deploy (`vercel.json`). Loc
 # JS drills
 make test
 
+# Tests of one student task on its my-solution/ (PART=a: one part only, SOLUTION=1: on solution/)
+make test-task TASK=04_2
+
 # Website: check the path, build dist/site, check links
 make site
 
@@ -86,12 +89,13 @@ node tracks/computer-science/scripts/verify-demos.mjs
 
 ## Cursor
 
-Type `/` in the Cursor chat. Four commands for students, in the order you need them, on any task (a student task, a project, a drill, a lesson). None of them writes your solution.
+Type `/` in the Cursor chat. Five commands for students, in the order you need them, on any task (a student task, a project, a drill, a lesson). None of them writes your solution.
 
 | Command | When |
 |---------|------|
 | `/next` | Where am I? What do I do now? |
 | `/stuck` | You are stuck. Add the red error text, a word you do not know, or what you tried |
+| `/test` | One part written: runs the task's tests on your code (and makes them if the task has none yet) |
 | `/check` | You think it works: it runs your examples and tells you what is good and what to improve |
 | `/done` | You are finished: last check, three questions, then what comes next |
 

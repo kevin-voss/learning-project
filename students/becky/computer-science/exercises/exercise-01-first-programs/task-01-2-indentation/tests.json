@@ -1,0 +1,9 @@
+{
+  "task": "01_2",
+  "tests": [
+    { "name": "prints the same 10 lines as the messy original: A to I, then L",
+      "exact": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "L"] },
+    { "name": "no J and no K: tidying never adds letters",
+      "reject": ["J", "K"] }
+  ]
+}

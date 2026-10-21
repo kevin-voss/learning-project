@@ -1,0 +1,11 @@
+{
+  "task": "01_3",
+  "tests": [
+    { "name": "on the way up: 1, 2, 3, 4, 5 stars",
+      "expect": ["* ** *** **** *****"] },
+    { "name": "on the way down: 4, 3, 2, 1 stars",
+      "expect": ["***** **** *** ** *"] },
+    { "name": "the whole picture matches, with 1, 2, 3, 4 spaces in front of the falling half",
+      "exact": ["*", "**", "***", "****", "*****", " ****", "  ***", "   **", "    *"] }
+  ]
+}

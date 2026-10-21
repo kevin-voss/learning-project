@@ -20,14 +20,14 @@ A learning site for complete beginners. **One path** in [`hub/path.mjs`](hub/pat
 | AIP-C01 | `tracks/certifications/aws-genai-pro/` | Static prep app |
 | Projects | `projects/` | The ladder `01`–`12` + `extras/`; each: `README.md`, `step-by-step.md`, `starter/`, `solution/` |
 | Cleaning | `programs/code-for-cleaning/` | Slash commands in `programs/code-for-cleaning/.cursor/commands/` |
-| Students | `students/` | `<student>/<subject>/exercises/exercise-NN-…/task-NN-k-…/` (README, `my-solution/`, `solution/`) · create with `/new-exercise` or `make new-exercise` · rule `students.mdc` |
+| Students | `students/` | `<student>/<subject>/exercises/exercise-NN-…/task-NN-k-…/` (README, `tests.json`, `my-solution/`, `solution/`) · create with `/new-exercise` or `make new-exercise` · rule `students.mdc` |
 | Learner memory | `docs/learner-memory/` | Long-term profile; skill `learner-memory` (recorded by `/done`) |
 
 ## Cursor
 
 - **Rules:** `.cursor/rules/` — `monorepo.mdc` (always on), `structure.mdc` (folder/line limits), `students.mdc` (`students/**`).
 - **Skills:** `.cursor/skills/caveman/` — optional compressed replies when invoked.
-- **Commands:** `.cursor/commands/`, six in total. Students: `/next` → `/stuck` → `/check` → `/done` (where am I · stuck, red text or a new word · is it right · finished). They work on any task (student task, project, drill, Code for Cleaning, path lesson), follow `.cursor/rules/tutor.mdc` and never write the solution. Teachers: `/new-exercise` (an exercise sheet for one student), `/new-content` (a lesson, sheet, project or drill in its one home). Extend these instead of adding new ones.
+- **Commands:** `.cursor/commands/`, seven in total. Students: `/next` → `/stuck` → `/test` → `/check` → `/done` (where am I · stuck, red text or a new word · run the tests · is it right · finished). Student tasks have a `tests.json` each, run with `make test-task TASK=NN_k` (`students/scripts/test-task.mjs`). They work on any task (student task, project, drill, Code for Cleaning, path lesson), follow `.cursor/rules/tutor.mdc` and never write the solution. Teachers: `/new-exercise` (an exercise sheet for one student), `/new-content` (a lesson, sheet, project or drill in its one home). Extend these instead of adding new ones.
 
 ## Conventions
 

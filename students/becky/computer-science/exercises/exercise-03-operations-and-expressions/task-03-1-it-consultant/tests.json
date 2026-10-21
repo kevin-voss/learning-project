@@ -1,0 +1,16 @@
+{
+  "task": "03_1",
+  "tests": [
+    { "name": "70 hours and 490 km cost 8767.5 EUR in total (the sheet's example)", "input": ["70", "490"],
+      "expect": ["Work cost", "8400.0", "Travel cost", "367.5", "Total cost: 8767.5 EUR"],
+      "reject": ["8400.0367.5"] },
+    { "name": "each step shows the amount, the price and the result (70 x 120.0 = 8400.0)", "input": ["70", "490"],
+      "expect": ["70", "120.0", "8400.0", "490", "0.75", "367.5"] },
+    { "name": "0 hours and 0 km: nothing done, nothing to pay", "input": ["0", "0"],
+      "expect": ["Total cost: 0.0 EUR"] },
+    { "name": "1 hour and 1 km: one hour's price plus one km's price", "input": ["1", "1"],
+      "expect": ["120.0", "0.75", "Total cost: 120.75 EUR"] },
+    { "name": "8 hours and 120 km: one working day with a trip", "input": ["8", "120"],
+      "expect": ["960.0", "90.0", "Total cost: 1050.0 EUR"] }
+  ]
+}

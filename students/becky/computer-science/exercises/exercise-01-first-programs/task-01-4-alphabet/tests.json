@@ -1,0 +1,11 @@
+{
+  "task": "01_4",
+  "tests": [
+    { "name": "prints ABCDEFGHIJKL in one piece", "part": "a",
+      "expect": ["ABCDEFGHIJKL"] },
+    { "name": "the grid: three rows of four letters, every letter after a tab", "part": "c",
+      "lines": ["\tA\tB\tC\tD", "\tE\tF\tG\tH", "\tI\tJ\tK\tL"] },
+    { "name": "new line and tab are written with a backslash, not as /n or /t", "part": "c",
+      "reject": ["/n", "/tA"] }
+  ]
+}

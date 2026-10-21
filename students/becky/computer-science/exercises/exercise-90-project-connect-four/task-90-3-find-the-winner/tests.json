@@ -1,0 +1,11 @@
+{
+  "task": "90_3",
+  "tests": [
+    { "name": "every four is found: 4 of the 12 answers say true (across, up and down, slanted /, slanted \\, all at an edge)",
+      "expect": ["true", "true", "true", "true"] },
+    { "name": "no four is made up: 8 of the 12 answers say false",
+      "expect": ["false", "false", "false", "false", "false", "false", "false", "false"] },
+    { "name": "all 12 answers in the task's order: R true B false, R false B true, R true B false, R false B true, then false 4 times",
+      "expect": ["true", "false", "false", "true", "true", "false", "false", "true", "false", "false", "false", "false"] }
+  ]
+}

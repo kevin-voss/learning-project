@@ -1,0 +1,9 @@
+{
+  "task": "02_2",
+  "tests": [
+    { "name": "the smallest long is -9223372036854775808 (ends in 8)",
+      "expect": ["Minimum: -9223372036854775808"] },
+    { "name": "the biggest long is 9223372036854775807 (ends in 7)",
+      "expect": ["Maximum: 9223372036854775807"] }
+  ]
+}

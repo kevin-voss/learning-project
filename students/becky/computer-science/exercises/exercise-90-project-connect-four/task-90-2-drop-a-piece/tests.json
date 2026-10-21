@@ -1,0 +1,13 @@
+{
+  "task": "90_2",
+  "tests": [
+    { "name": "six pieces into empty column 4 land in rows 5, 4, 3, 2, 1, 0",
+      "expect": ["5", "4", "3", "2", "1", "0"] },
+    { "name": "the 7th piece into the full column 4 gives back -1",
+      "expect": ["-1"] },
+    { "name": "the edges work: columns 1 and 7 give back 5, 5, then 4",
+      "expect": ["-1", "5", "5", "4"] },
+    { "name": "the board at the end: column 4 full (6 pieces), B B in column 1, R in column 7",
+      "expect": [". . . B . . .", ". . . R . . .", ". . . B . . .", ". . . R . . .", "B . . B . . .", "B . . R . . R", "1 2 3 4 5 6 7"] }
+  ]
+}

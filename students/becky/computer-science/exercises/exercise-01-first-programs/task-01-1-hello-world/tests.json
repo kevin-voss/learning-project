@@ -1,0 +1,7 @@
+{
+  "task": "01_1",
+  "tests": [
+    { "name": "prints Hello World, spelled right", "part": "a",
+      "expect": ["Hello World"] }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "task": "02_1",
+  "tests": [
+    { "name": "all eight boxes are printed, each with its label, in the sheet's order",
+      "expect": ["First name:", "Last name:", "Year of birth:", "Gender:", "Study programme:",
+                 "Semester:", "First degree:", "Canteen meal:"] }
+  ]
+}

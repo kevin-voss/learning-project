@@ -40,6 +40,16 @@ printf '%s\n' 1 1 1 1 1 1 2 2 2 2 2 2 3 3 3 3 3 3 5 4 4 4 4 4 4 5 5 5 5 5 6 6 6 
 
 (`printf '%s\n' a b c` prints every word on its own line: a short way to write many `\n`.) The numbers you "type" this way do not show up on the screen, so each question is followed directly by the answer of the program. When the numbers run out before the game is over, your program should stop with a short message, for example `No more input. Game stopped.`, and not crash.
 
+## Test it
+
+The task has tests: they type the inputs for you and check what your program prints. Any file and class name works. Run them from the main folder of the repo (where the `Makefile` is):
+
+```bash
+make test-task TASK=90_4
+```
+
+In Cursor, `/test` runs them and explains the first ❌ (and makes extra tests for edge cases when you ask).
+
 ## Rules for this desk
 
 - Change anything you like here.

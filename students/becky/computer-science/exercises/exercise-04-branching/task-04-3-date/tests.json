@@ -1,0 +1,25 @@
+{
+  "task": "04_3",
+  "tests": [
+    { "name": "29.2.2024 is valid: 2024 is a leap year", "input": ["29", "2", "2024"],
+      "expect": ["valid"], "reject": ["not", "invalid"] },
+    { "name": "29.2.2023 is not valid: 2023 is no leap year", "input": ["29", "2", "2023"],
+      "expect": ["not", "valid"] },
+    { "name": "29.2.1900 is not valid: divisible by 100 but not by 400", "input": ["29", "2", "1900"],
+      "expect": ["not", "valid"] },
+    { "name": "29.2.2000 is valid: divisible by 400 is a leap year", "input": ["29", "2", "2000"],
+      "expect": ["valid"], "reject": ["not", "invalid"] },
+    { "name": "31.4.2025 is not valid: April has only 30 days", "input": ["31", "4", "2025"],
+      "expect": ["not", "valid"] },
+    { "name": "30.4.2025 is valid: the last day of April", "input": ["30", "4", "2025"],
+      "expect": ["valid"], "reject": ["not", "invalid"] },
+    { "name": "31.12.2025 is valid: December has 31 days", "input": ["31", "12", "2025"],
+      "expect": ["valid"], "reject": ["not", "invalid"] },
+    { "name": "32.1.2025 is not valid: no month has 32 days", "input": ["32", "1", "2025"],
+      "expect": ["not", "valid"] },
+    { "name": "0.5.2025 is not valid: days start at 1", "input": ["0", "5", "2025"],
+      "expect": ["not", "valid"] },
+    { "name": "15.13.2025 is not valid: there is no month 13", "input": ["15", "13", "2025"],
+      "expect": ["not", "valid"] }
+  ]
+}

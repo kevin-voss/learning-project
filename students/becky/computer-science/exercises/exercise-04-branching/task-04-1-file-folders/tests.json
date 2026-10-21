@@ -1,0 +1,25 @@
+{
+  "task": "04_1",
+  "tests": [
+    { "name": "80 folders: the example from the sheet, 1041.53 EUR", "input": ["80"],
+      "expect": ["1041.53"], "reject": ["1041.52"] },
+    { "name": "1 folder: no discount, shipping is added", "input": ["1"],
+      "expect": ["111.88"], "reject": ["111.87"] },
+    { "name": "49 folders: one less than 50, still no discount", "input": ["49"],
+      "expect": ["682.51"] },
+    { "name": "50 folders: the 1 % discount starts here", "input": ["50"],
+      "expect": ["688.45"] },
+    { "name": "84 folders: just under 1000 EUR with tax, shipping is still added", "input": ["84"],
+      "expect": ["1088.60"] },
+    { "name": "85 folders: just over 1000 EUR with tax, shipping is free", "input": ["85"],
+      "expect": ["1000.38"], "reject": ["1100.37"] },
+    { "name": "99 folders: over 1000 EUR with tax, so no shipping", "input": ["99"],
+      "expect": ["1165.15"], "reject": ["1265.14"] },
+    { "name": "100 folders: the 3 % discount starts here (cheaper than 99)", "input": ["100"],
+      "expect": ["1153.15"], "reject": ["1176.92"] },
+    { "name": "200 folders: the 5 % discount starts here", "input": ["200"],
+      "expect": ["2258.74"], "reject": ["2353.84"] },
+    { "name": "250 folders: far above 200, still 5 % and not 1 %", "input": ["250"],
+      "expect": ["2823.42"], "reject": ["2942.30"] }
+  ]
+}

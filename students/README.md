@@ -22,6 +22,7 @@ students/
                 ├── README.md
                 ├── task-04-1-file-folders/  ← one task = one folder
                 │   ├── README.md            ← the task, simply said, test examples, helpers
+                │   ├── tests.json           ← the tests: make test-task TASK=04_1
                 │   ├── my-solution/         ← START HERE: your code goes in this folder
                 │   └── solution/            ← the sample solution (peek only when done!)
                 ├── task-04-2-triangle/
@@ -32,6 +33,7 @@ students/
 |---------------|----------------|
 | Exercise `README.md` | The story and every new idea, explained like for a 6-year-old. Table of tasks with status |
 | Task `README.md` | The task from the sheet (in English), the same task in simple words, test examples, little helpers, "done when" |
+| `tests.json` | The task's tests: what gets typed in, what your program must print. Run them with `make test-task TASK=04_1` |
 | `my-solution/` | Your desk. It starts empty: you write the whole program yourself. Its `README.md` says which file to create and how to run it |
 | `solution/` | The sample solution: one clean, complete solution with a step-by-step walkthrough and common mistakes |
 
@@ -44,7 +46,13 @@ You need this repository on your computer and your own branch. If you have not d
 1. Read the exercise `README.md` (the new ideas).
 2. Open the first task and read its `README.md`.
 3. Write your code in `my-solution/`. Run it there (Java: `javac *.java`, then `java <ClassName>`).
-4. Try every test example.
+4. Test it after every part you finish, from the main folder of the repo:
+
+   ```bash
+   make test-task TASK=04_1
+   ```
+
+   Only part a) so far? Add `PART=a`. Any file and class name works: the tests only look at what you type in and what your program prints.
 5. Done? Compare with `solution/`, set the status to `done` in the exercise table, then save your work:
 
 ```bash
@@ -63,6 +71,7 @@ Open your file in `my-solution/` and type one of these in the Cursor chat. Curso
 |---------|-------------|
 | `/next` | Where am I? What is the next small step? |
 | `/stuck` | You are stuck. Add what you have: the red error text, a new word (`/stuck switch`), or what you tried. You get one hint; ask again for a bigger one |
+| `/test` | One part is written: runs the task's tests and explains the first ❌. Ask for edge cases and it adds a few more tests |
 | `/check` | You think it works: runs every test example, then says what is good and what to improve |
 | `/done` | You are finished: tests, three questions, status `done`, what comes next |
 

@@ -20,6 +20,16 @@ java DateCheck
 
 `javac` = "translate my code for the computer". `java` = "now run it". Changed the code? Run `javac` again before `java`, or you run the old version.
 
+## Test it
+
+The task has tests: they type the inputs for you and check what your program prints. Any file and class name works. Run them from the main folder of the repo (where the `Makefile` is):
+
+```bash
+make test-task TASK=04_3
+```
+
+In Cursor, `/test` runs them and explains the first ❌ (and makes extra tests for edge cases when you ask).
+
 ## Rules for this desk
 
 - Change anything you like here.

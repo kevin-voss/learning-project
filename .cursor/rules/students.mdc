@@ -16,6 +16,7 @@ students/<student>/README.md                          the student's room: list o
     exercises/README.md                               table of exercises
       exercise-<NN>-<slug>/README.md                  story, every new idea explained, tasks table with status, words to know
         task-<NN>-<k>-<slug>/README.md                the task from the sheet, simply said, test examples, helpers, done when
+          tests.json                                  the task's tests: what is typed → what must be printed (run: make test-task TASK=NN_k)
           my-solution/                                the student's desk: README only (which file to create, how to run it). No code
           solution/                                   README (walkthrough, real test output, common mistakes) + sample solution
 ```
@@ -33,6 +34,19 @@ students/<student>/README.md                          the student's room: list o
 - A sheet in another language is translated into English faithfully: same meaning, every number and value unchanged. "Words to know" explains the English terms; list a term from the paper sheet next to its English meaning only when it really helps the student match the paper (prefer English only).
 - Solutions use only what the exercise teaches. No clever tricks a beginner has not seen.
 
+## Tests (`tests.json`)
+
+Every task has a `tests.json` next to its `README.md`. `students/scripts/test-task.mjs` runs it on `my-solution/` (`make test-task TASK=04_2`, one part: `PART=a`) and on `solution/` (`SOLUTION=1`). The file format is at the top of that script.
+
+- **Black box only:** what is typed in → what is printed. Never test class, file, method or variable names, and never the prompt texts ("Side a in cm: "). The student picks their own names.
+- **Start with the task's own test examples** (the same values), then the borders the task cares about: 0, negative, exactly on the border, one less and one more, full and empty, first and last.
+- **Few and clear:** one idea per test, no two tests for the same idea. 4–10 tests per task, never more than 12.
+- **`name`** says the idea in plain words: `50 folders: the 1 % discount starts here`.
+- **`expect`** holds the smallest pieces that prove the idea, with the labels and values from the task's test table (`"right-angled: true"`). **`reject`** catches the wrong answer a typical mistake prints. **`lines`** checks a few lines exactly, tabs and spaces included (a grid inside a longer output). **`exact`** only when the whole output's exact look is the task (a star picture, tidied output).
+- **`part`**: the sheet's part letter (`a`, `b`, `c`), or the step number for a task that grows step by step, so a student can test each part as soon as it is written.
+- Every test passes on `solution/` (`make test-task TASK=NN_k SOLUTION=1`) before it is committed. Never change a test to make a student's code pass; fix a test only when it disagrees with the task text.
+- Programs that print nothing testable (a written answer, a table of error messages) get no test for that part.
+
 ## Helping a student
 
-Students use `/next` → `/stuck` → `/check` → `/done`. How to find their task, what you may read and the "never give the solution" rules are in [`tutor.mdc`](./tutor.mdc).
+Students use `/next` → `/stuck` → `/test` → `/check` → `/done`. How to find their task, what you may read and the "never give the solution" rules are in [`tutor.mdc`](./tutor.mdc).

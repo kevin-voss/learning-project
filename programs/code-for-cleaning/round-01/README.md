@@ -12,14 +12,14 @@ Every Java task has more than one file. `Main.java` is the terminal. The other f
 
 | # | Task | Category | Time | Reward |
 |---|------|----------|------|--------|
-| 1 | [Password generator](01-password-generator.md) | Java Core | 1–3 h | Sink |
-| 2 | [Shopping list](02-shopping-list.md) | Java Core | 2–5 h | Sink |
-| 3 | [Cleaning schedule](03-cleaning-schedule.md) | Web snack | 2–4 h | Sink |
-| 4 | [Shared expenses](04-shared-expenses.md) | Java Core | 4–7 h | Sink + toilet |
-| 5 | [Calendar conflicts](05-calendar-conflicts.md) | Puzzle | 4–7 h | Sink + toilet |
-| 6 | [Server healthcheck](06-server-healthcheck.md) | Linux | 3–5 h | Sink + toilet |
-| 7 | [Household budget](07-household-budget.md) | Real-world tools | 6–12 h | Whole bathroom |
-| 8 | [Calculator](08-calculator.md) | Puzzle | 8–15 h | Whole bathroom |
+| 1 | [Password generator](sink/01-password-generator.md) | Java Core | 1–3 h | Sink |
+| 2 | [Shopping list](sink/02-shopping-list.md) | Java Core | 2–5 h | Sink |
+| 3 | [Cleaning schedule](sink/03-cleaning-schedule.md) | Web snack | 2–4 h | Sink |
+| 4 | [Shared expenses](sink-and-toilet/04-shared-expenses.md) | Java Core | 4–7 h | Sink + toilet |
+| 5 | [Calendar conflicts](sink-and-toilet/05-calendar-conflicts.md) | Puzzle | 4–7 h | Sink + toilet |
+| 6 | [Server healthcheck](sink-and-toilet/06-server-healthcheck.md) | Linux | 3–5 h | Sink + toilet |
+| 7 | [Household budget](bathroom/07-household-budget.md) | Real-world tools | 6–12 h | Whole bathroom |
+| 8 | [Calculator](bathroom/08-calculator.md) | Puzzle | 8–15 h | Whole bathroom |
 
 You do not have to finish all eight. Each accepted task is cleaned on its own.
 

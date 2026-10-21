@@ -23,13 +23,13 @@ programs/code-for-cleaning/solutions/03-cleaning-schedule/
 Nothing to compile. In `index.html`:
 
 ```html
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../styles.css">
 ```
 
 in `head`, and
 
 ```html
-<script src="app.js"></script>
+<script src="../app.js"></script>
 ```
 
 at the end of `body`. Also in `head`:

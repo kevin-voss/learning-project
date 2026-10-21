@@ -21,6 +21,7 @@ Pattern everywhere: **read a short sheet → build a small related project → n
 | [`projects/`](projects/README.md) | Sheets + small portfolio builds |
 | [`docs/learner-memory/`](docs/learner-memory/README.md) | Long-term learner profile |
 | [`programs/code-for-cleaning/`](programs/code-for-cleaning/README.md) | Optional Java practice |
+| [`students/`](students/README.md) | Per-student tasks: `<student>/<subject>/<NN-task>/` with starter + solution |
 
 ```
 learning-project/
@@ -30,7 +31,8 @@ learning-project/
 ├── drills/javascript/
 ├── tracks/         # java, computer-science, architecture, spring-boot, certifications
 ├── projects/       # 00 static → 01 weather → 05 java CLI → 02 docker → optional 03/04
-└── programs/
+├── programs/
+└── students/       # <student>/<subject>/<NN-task>/ (README, TASK, starter/, solution/)
 ```
 
 ## Quick commands
@@ -42,12 +44,15 @@ make test
 # Website (hub + every sheet as a page) → dist/site, deployed by Vercel
 node hub/build-site.mjs
 
+# New task for a student (or /new-task in Cursor)
+make new-task STUDENT=becky SUBJECT=computer-science TITLE="Loops"
+
 # CS demos after edits
 node tracks/computer-science/scripts/verify-demos.mjs
 ```
 
 ## Cursor
 
-Rules: [`.cursor/rules/`](.cursor/rules/). Skills: `learner-memory`, `caveman`. Commands: `/path`, `/learning-path`, `/reflect`.
+Rules: [`.cursor/rules/`](.cursor/rules/). Skills: `learner-memory`, `caveman`. Commands: `/path`, `/learning-path`, `/reflect`, `/new-task`.
 
 Agents: [`AGENTS.md`](AGENTS.md).

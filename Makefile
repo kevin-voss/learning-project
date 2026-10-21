@@ -16,12 +16,13 @@
 
 TOPICS := variables math strings arrays conditionals loops functions objects
 
-.PHONY: test help $(TOPICS)
+.PHONY: test help new-task $(TOPICS)
 
 help:
 	@echo "make test              — alle Themen"
 	@echo "make variables         — nur variables/ (ebenso: math, strings, …)"
 	@echo "make variables-task-03 — eine Aufgabe (01–10) im Thema"
+	@echo "make new-task STUDENT=becky SUBJECT=computer-science TITLE=\"Loops\" [NUMBER=05] [LANGUAGE=Java]"
 
 test:
 	bun test drills/javascript/
@@ -52,3 +53,8 @@ functions-task-%:
 
 objects-task-%:
 	bun test drills/javascript/objects/tasks.test.js --test-name-pattern objects-task-$*
+
+# Neue Aufgabe für eine:n Schüler:in anlegen (students/<name>/<fach>/<NN-titel>/)
+new-task:
+	node students/scripts/new-task.mjs --student "$(STUDENT)" --subject "$(SUBJECT)" --title "$(TITLE)" \
+		$(if $(NUMBER),--number "$(NUMBER)") $(if $(SLUG),--slug "$(SLUG)") $(if $(LANGUAGE),--language "$(LANGUAGE)")

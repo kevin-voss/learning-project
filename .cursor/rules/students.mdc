@@ -1,0 +1,29 @@
+---
+description: Layout and writing style for per-student tasks under students/
+globs: students/**
+alwaysApply: false
+---
+
+# Students bucket
+
+Per-student tasks only. Shared sheets live in `projects/docs/`, shared builds in `projects/`, curricula in `tracks/`. Link to them, do not copy them here.
+
+## Layout (fixed)
+
+```text
+students/<student>/<subject>/<NN-slug>/
+  README.md     topics explained simply
+  TASK.md       original task + simple version + tests
+  starter/      student works here (skeleton + TODOs, never solved)
+  solution/     complete reference solution + walkthrough
+```
+
+- Create tasks only with `/new-task` or `node students/scripts/new-task.mjs` so index pages stay in sync.
+- Templates: `students/_template/`. Change the template, not every task, when the format changes.
+- `starter/` must never contain the answer. `solution/` is the only place for it.
+
+## Writing style
+
+- Explain like for a 6-year-old: short sentences, one idea per paragraph, real-life picture first, code second.
+- Keep the original task text unchanged in `TASK.md`; translate hard words in a "Words to know" table.
+- Solutions use only what the task teaches. No clever tricks a beginner has not seen.

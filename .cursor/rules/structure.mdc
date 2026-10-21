@@ -10,7 +10,7 @@ alwaysApply: true
 
 - **Hard rule:** at most **5 non-hidden files** in a single directory. Use subfolders before adding a sixth file.
 - Subdirectories do not count toward the limit; only immediate file siblings.
-- Prefer **bucketed paths**: `drills/`, `tracks/`, `projects/`, `programs/`, `docs/`, `hub/`.
+- Prefer **bucketed paths**: `drills/`, `tracks/`, `projects/`, `programs/`, `students/`, `docs/`, `hub/`.
 
 ## Files
 

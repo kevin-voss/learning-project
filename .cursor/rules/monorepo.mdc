@@ -18,6 +18,7 @@ Canonical overview: [README.md](../../README.md). Learning order: [docs/LEARNING
 | Projects | `projects/` | Sheets → builds. Order/scopes follow `docs/LEARNING_PATH.md` (Java Layers A–F). `00`/`01` web, `05` Layer C, `02` Layer D, `03`/`04` optional Phase 6 |
 | Programs | `programs/code-for-cleaning/` | Slash commands in `programs/code-for-cleaning/.cursor/commands/` must **not** write task solutions |
 | Learner memory | `docs/learner-memory/` | Profile schema, events, Cursor skill `learner-memory` |
+| Students | `students/<student>/<subject>/<NN-slug>/` | Per-student tasks (README, TASK, `starter/`, `solution/`). Create via `/new-task`; see `students.mdc` |
 
 ## Stacks
 

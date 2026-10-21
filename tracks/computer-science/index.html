@@ -21,7 +21,7 @@
   <nav class="sidebar" id="sidebar">
     <div class="sidebar-header">
       <h2>CS Roadmap</h2>
-      <p>Data structures, algorithms, memory, OS, web, infra, DevOps, and auth basics</p>
+      <p>Picture-first lessons. The sidebar follows the learning path.</p>
     </div>
     <div class="progress-section">
       <div class="progress-label">
@@ -43,46 +43,61 @@
 <script src="js/ns.js"></script>
 <script src="js/app/state.js"></script>
 <script src="js/utils/messages.js"></script>
-<!-- Foundations -->
-<script src="js/data/concepts/foundations.js"></script>
-<script src="js/data/concepts/memory-model.js"></script>
-<script src="js/data/concepts/binary-encoding.js"></script>
-<script src="js/data/concepts/number-bases.js"></script>
-<script src="js/data/concepts/references-pointers.js"></script>
-<script src="js/data/concepts/stack-heap-gc.js"></script>
-<script src="js/data/concepts/recursion-call-stack.js"></script>
-<script src="js/data/concepts/big-o.js"></script>
-<script src="js/data/concepts/logical-operators.js"></script>
-<script src="js/data/concepts/foundations-extra.js"></script>
-<!-- Data structures -->
-<script src="js/data/arrays.js"></script>
-<script src="js/data/linked-lists.js"></script>
-<script src="js/data/stacks.js"></script>
-<script src="js/data/queues.js"></script>
-<script src="js/data/hash-tables.js"></script>
-<script src="js/data/trees.js"></script>
-<script src="js/data/graphs.js"></script>
-<script src="js/data/sets.js"></script>
-<script src="js/data/concepts/heaps-priority-queues.js"></script>
-<!-- Algorithms -->
-<script src="js/data/concepts/searching-algorithms.js"></script>
-<script src="js/data/concepts/sorting-algorithms.js"></script>
-<script src="js/data/concepts/extended-algorithms.js"></script>
-<!-- Internals -->
-<script src="js/data/concepts/buffers-ring-buffers.js"></script>
-<script src="js/data/concepts/compiler-runtime.js"></script>
-<script src="js/data/concepts/os-kernel-queues.js"></script>
-<script src="js/data/concepts/concurrency-async.js"></script>
-<script src="js/data/concepts/linux-terminal-os.js"></script>
-<!-- Web & infra -->
-<script src="js/data/concepts/web-foundations.js"></script>
-<script src="js/data/concepts/extended-web.js"></script>
-<script src="js/data/concepts/deployment-devops-lessons.js"></script>
-<script src="js/data/concepts/message-queues.js"></script>
-<script src="js/data/concepts/auth-identity.js"></script>
-<script src="js/data/concepts/security-threats.js"></script>
-<script src="js/data/concepts/databases.js"></script>
-<script src="js/data/concepts/nosql-basics.js"></script>
+<script src="js/app/glossary/terms-a.js"></script>
+<script src="js/app/glossary/terms-b.js"></script>
+<!-- Lessons. The order here is the order in the sidebar (it follows hub/path.mjs). -->
+<!-- Start here -->
+<script src="js/data/tools/linux-terminal-os.js"></script>
+<script src="js/data/tools/git-collaboration.js"></script>
+<!-- JavaScript basics -->
+<script src="js/data/foundations/logical-operators.js"></script>
+<script src="js/data/structures/arrays.js"></script>
+<!-- How the web works -->
+<script src="js/data/web/web-basics.js"></script>
+<script src="js/data/web/networks.js"></script>
+<script src="js/data/web/http.js"></script>
+<!-- Java 1: memory -->
+<script src="js/data/memory/memory-model.js"></script>
+<script src="js/data/memory/stack-heap-gc.js"></script>
+<!-- Java 2: data structures -->
+<script src="js/data/structures/linked-lists.js"></script>
+<script src="js/data/structures/stacks.js"></script>
+<script src="js/data/structures/queues.js"></script>
+<script src="js/data/structures/hash-tables.js"></script>
+<!-- Java 3: smart code -->
+<script src="js/data/foundations/cs-foundations.js"></script>
+<script src="js/data/algorithms/big-o.js"></script>
+<script src="js/data/algorithms/searching-algorithms.js"></script>
+<script src="js/data/algorithms/sorting-algorithms.js"></script>
+<script src="js/data/foundations/binary-encoding.js"></script>
+<!-- Data and servers -->
+<script src="js/data/databases/sql-fundamentals.js"></script>
+<script src="js/data/ops/servers-docker.js"></script>
+<!-- Go deeper -->
+<script src="js/data/runtime/concurrency-async.js"></script>
+<!-- More (not on the path) -->
+<script src="js/data/foundations/number-bases.js"></script>
+<script src="js/data/memory/references-pointers.js"></script>
+<script src="js/data/algorithms/recursion-call-stack.js"></script>
+<script src="js/data/foundations/foundations-extra.js"></script>
+<script src="js/data/trees-graphs/trees.js"></script>
+<script src="js/data/trees-graphs/graphs.js"></script>
+<script src="js/data/trees-graphs/sets.js"></script>
+<script src="js/data/trees-graphs/heaps-priority-queues.js"></script>
+<script src="js/data/trees-graphs/buffers-ring-buffers.js"></script>
+<script src="js/data/algorithms/extended-algorithms.js"></script>
+<script src="js/data/runtime/compiler-runtime.js"></script>
+<script src="js/data/runtime/os-kernel-queues.js"></script>
+<script src="js/data/ops/docker-compose.js"></script>
+<script src="js/data/ops/observability.js"></script>
+<script src="js/data/ops/cloud-hosting.js"></script>
+<script src="js/data/security/encryption.js"></script>
+<script src="js/data/security/auth-sessions.js"></script>
+<script src="js/data/security/auth-access.js"></script>
+<script src="js/data/security/security-threats.js"></script>
+<script src="js/data/databases/database-design-scaling.js"></script>
+<script src="js/data/databases/nosql-basics.js"></script>
+<script src="js/data/aliases.js"></script>
 <!-- Demos -->
 <script src="js/demos/ui.js"></script>
 <script src="js/demos/playground.js"></script>
@@ -124,26 +139,28 @@
 <!-- web-infra/web -->
 <script src="js/demos/web-infra/web/web-foundations.js"></script>
 <script src="js/demos/web-infra/web/http.js"></script>
-<script src="js/demos/web-infra/web/linux-terminal.js"></script>
+<script src="js/demos/web-infra/web/linux-terminal/commands-basics.js"></script>
+<script src="js/demos/web-infra/web/linux-terminal/commands-deeper.js"></script>
+<script src="js/demos/web-infra/web/linux-terminal/commands-system.js"></script>
+<script src="js/demos/web-infra/web/linux-terminal/terminal.js"></script>
 <script src="js/demos/web-infra/web/git-playground.js"></script>
 <script src="js/demos/web-infra/web/testing-debugging.js"></script>
 <!-- web-infra/data-security -->
 <script src="js/demos/web-infra/data-security/database-sql.js"></script>
 <script src="js/demos/web-infra/data-security/encryption.js"></script>
-<script src="js/demos/web-infra/data-security/auth-identity.js"></script>
+<script src="js/demos/web-infra/data-security/auth-identity/stages.js"></script>
+<script src="js/demos/web-infra/data-security/auth-identity/demo.js"></script>
 <script src="js/demos/web-infra/data-security/security-threats.js"></script>
 <script src="js/demos/web-infra/data-security/nosql-basics.js"></script>
 <!-- web-infra/ops -->
 <script src="js/demos/web-infra/ops/docker-compose.js"></script>
 <script src="js/demos/web-infra/ops/observability.js"></script>
 <script src="js/demos/web-infra/ops/cloud-hosting.js"></script>
-<script src="js/demos/web-infra/ops/caching-strategies.js"></script>
-<script src="js/demos/web-infra/ops/message-queues.js"></script>
 <!-- web-infra/apis -->
-<script src="js/demos/web-infra/apis/rest-api.js"></script>
 <script src="js/demos/web-infra/apis/abstraction-apis.js"></script>
 <script src="js/demos/init.js"></script>
 <script src="js/app/nav.js"></script>
+<script src="js/app/content-blocks.js"></script>
 <script src="js/app/content.js"></script>
 <script src="js/app/navigation.js"></script>
 <script src="js/globals.js"></script>

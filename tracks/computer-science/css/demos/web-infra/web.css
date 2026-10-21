@@ -1,0 +1,135 @@
+.web-demo-flow {
+  display: grid;
+  gap: 12px;
+}
+
+.web-demo-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  display: grid;
+  gap: 6px;
+  grid-template-columns: 34px 1fr;
+  padding: 14px;
+  transition: all 0.2s ease;
+}
+
+.web-demo-card span {
+  align-items: center;
+  background: var(--accent-dim);
+  border-radius: 999px;
+  color: var(--accent);
+  display: flex;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 800;
+  height: 30px;
+  justify-content: center;
+  width: 30px;
+}
+
+.web-demo-card strong {
+  color: var(--fg);
+}
+
+.web-demo-card p {
+  color: var(--fg2);
+  font-size: 13px;
+  grid-column: 2;
+  line-height: 1.6;
+}
+
+.web-demo-card.is-active {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(240,180,41,0.12);
+  transform: translateY(-1px);
+}
+
+
+.http-demo {
+  display: grid;
+  gap: 14px;
+}
+
+.http-message-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.http-message {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+}
+
+.http-message.request {
+  border-left: 4px solid var(--blue);
+}
+
+.http-message.response {
+  border-left: 4px solid var(--green);
+}
+
+.http-message.response.redirect {
+  border-left-color: var(--accent);
+}
+
+.http-message.response.client {
+  border-left-color: #e07a5f;
+}
+
+.http-message.response.server {
+  border-left-color: var(--red);
+}
+
+.http-message strong {
+  color: var(--fg);
+  display: block;
+  margin-bottom: 8px;
+}
+
+.http-message strong i {
+  color: var(--accent);
+  margin-right: 6px;
+}
+
+.http-message pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--fg2);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  line-height: 1.55;
+  margin: 0;
+  overflow-x: auto;
+  padding: 10px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.http-toggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.http-toggle {
+  align-items: center;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--fg2);
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 700;
+  gap: 8px;
+  padding: 8px 12px;
+}
+
+.http-toggle input {
+  accent-color: var(--accent);
+}
+

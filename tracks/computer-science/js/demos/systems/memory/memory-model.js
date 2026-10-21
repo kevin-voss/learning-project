@@ -9,14 +9,14 @@ DS.demos.memoryModel = function (container) {
     const stackHtml = `
       <div class="mem-layout mem-stack-view">
         <div class="mem-region mem-stack">
-          <h4>Stack (function calls)</h4>
-          <div class="mem-frame">main()</div>
-          <div class="mem-frame is-active">greet("Maya")</div>
-          <div class="mem-frame">name = "Maya"</div>
+          <h4>Stack (method calls)</h4>
+          <div class="mem-frame">main(String[] args)</div>
+          <div class="mem-frame is-active">greet(user)</div>
+          <div class="mem-frame">user → Parcel object</div>
         </div>
         <div class="mem-region mem-heap">
           <h4>Heap (objects)</h4>
-          <div class="mem-heap-obj">{ user: "Maya", score: 42 }</div>
+          <div class="mem-heap-obj">Parcel { name = "Maya", weight = 2 }</div>
         </div>
       </div>`;
     const arrayHtml = `
@@ -43,7 +43,7 @@ DS.demos.memoryModel = function (container) {
 
     UI.mount(container, {
       title: 'Memory layout explorer',
-      hint: 'Compare stack vs heap and why arrays feel faster than linked lists when looping.',
+      hint: 'Stack and heap, then an array (boxes side by side) and a linked list (nodes spread out).',
       stage: `
         <div class="memory-demo">
           <div class="demo-controls">
@@ -55,9 +55,9 @@ DS.demos.memoryModel = function (container) {
         </div>`,
       inspector: UI.inspector('Inspector', [
         ['View', view, 'Current memory visualization'],
-        ['Stack', 'LIFO frames', 'Local variables and return addresses'],
-        ['Heap', 'Shared objects', 'Data that outlives one function call'],
-        ['Cache', view === 'array' ? 'Friendly' : view === 'linked' ? 'Less friendly' : ', ', 'CPU prefetch behavior'],
+        ['Stack', 'Pile of plates', 'One frame per running method'],
+        ['Heap', 'Storage room', 'Objects made with new'],
+        ['Cache', view === 'array' ? 'Friendly' : view === 'linked' ? 'Less friendly' : '-', 'CPU prefetch behavior'],
       ]),
     });
   };

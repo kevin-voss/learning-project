@@ -1,0 +1,217 @@
+/* Linux terminal demo: banner, panels, guided steps */
+.linux-topic-banner strong {
+  color: var(--accent);
+  font-size: 14px;
+}
+
+.linux-topic-banner span {
+  color: var(--fg2);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.linux-panel {
+  display: grid;
+  gap: 12px;
+}
+
+.linux-panel-head {
+  display: grid;
+  gap: 4px;
+}
+
+.linux-panel-head span {
+  align-items: center;
+  color: var(--fg);
+  display: flex;
+  font-size: 14px;
+  font-weight: 800;
+  gap: 8px;
+}
+
+.linux-panel-head i {
+  color: var(--accent);
+}
+
+.linux-panel-head small {
+  color: var(--fg2);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.linux-guided-steps {
+  display: grid;
+  gap: 8px;
+}
+
+.linux-guided-step {
+  align-items: start;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--fg2);
+  cursor: pointer;
+  display: grid;
+  gap: 3px 10px;
+  grid-template-columns: 30px 1fr;
+  padding: 10px 12px;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.linux-guided-step:hover {
+  border-color: rgba(240, 180, 41, 0.35);
+  transform: translateY(-1px);
+}
+
+.linux-guided-step span {
+  align-items: center;
+  background: var(--accent-dim);
+  border-radius: 999px;
+  color: var(--accent);
+  display: flex;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 800;
+  height: 26px;
+  justify-content: center;
+  width: 26px;
+}
+
+.linux-guided-step strong {
+  color: var(--fg);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+}
+
+.linux-guided-step em {
+  color: var(--muted);
+  font-size: 12px;
+  font-style: normal;
+  grid-column: 2;
+  line-height: 1.4;
+}
+
+.linux-guided-step.is-active {
+  background: var(--accent-dim);
+  border-color: rgba(240, 180, 41, 0.55);
+  box-shadow: 0 0 0 3px rgba(240, 180, 41, 0.08);
+}
+
+.linux-guided-actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.linux-guided-preview {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: minmax(0, 1.25fr) minmax(240px, 0.75fr);
+}
+
+.linux-guided-terminal {
+  background: #070b09;
+  border: 1px solid rgba(76, 201, 240, 0.22);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.linux-guided-terminal-body {
+  color: var(--fg2);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  line-height: 1.65;
+  min-height: 92px;
+  padding: 14px;
+}
+
+.linux-guided-terminal-body pre {
+  color: var(--fg);
+  margin: 6px 0 0;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.linux-guided-explanation {
+  display: grid;
+  gap: 10px;
+}
+
+.linux-guided-explanation > div {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.linux-guided-explanation strong {
+  color: var(--blue);
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.linux-guided-explanation ul {
+  color: var(--fg2);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  line-height: 1.55;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.linux-guided-explanation p {
+  color: var(--fg2);
+  font-size: 12px;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.linux-guided-actions span {
+  color: var(--fg2);
+  flex: 1 1 220px;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.linux-command-bank {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.linux-entry-source {
+  color: var(--blue);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  margin-bottom: 2px;
+  text-transform: uppercase;
+}
+
+@media (max-width: 860px) {
+  .linux-data-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .linux-input-row {
+    grid-template-columns: 1fr;
+  }
+
+  .linux-guided-step {
+    grid-template-columns: 1fr;
+  }
+
+  .linux-guided-step em {
+    grid-column: 1;
+  }
+
+  .linux-guided-preview {
+    grid-template-columns: 1fr;
+  }
+}
+

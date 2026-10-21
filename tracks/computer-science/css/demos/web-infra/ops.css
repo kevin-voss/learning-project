@@ -1,0 +1,247 @@
+.compose-demo {
+  display: grid;
+  gap: 14px;
+}
+
+.compose-network {
+  background: var(--card);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.compose-network.is-live {
+  border-color: rgba(76,201,240,0.45);
+}
+
+.compose-network > span {
+  color: var(--blue);
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.compose-services {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.compose-service {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  opacity: 0.55;
+  padding: 12px;
+  transition: opacity 0.2s ease, border-color 0.2s ease;
+}
+
+.compose-service.running {
+  border-color: rgba(39,196,132,0.45);
+  opacity: 1;
+}
+
+.compose-service-head {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.compose-service-head i { color: var(--accent); }
+
+.compose-badge {
+  background: var(--accent-dim);
+  border-radius: 999px;
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 800;
+  margin-left: auto;
+  padding: 2px 8px;
+  text-transform: uppercase;
+}
+
+.compose-service.running .compose-badge {
+  background: var(--green-dim);
+  color: var(--green);
+}
+
+.compose-meta {
+  color: var(--muted);
+  display: grid;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  gap: 4px;
+}
+
+.compose-yaml {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--fg2);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 0;
+  overflow-x: auto;
+  padding: 14px;
+  white-space: pre;
+}
+
+.obs-demo {
+  display: grid;
+  gap: 14px;
+}
+
+.obs-flow {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.obs-node {
+  align-items: center;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 88px;
+  opacity: 0.55;
+  padding: 10px;
+}
+
+.obs-node.is-active {
+  border-color: var(--accent);
+  opacity: 1;
+}
+
+.obs-node i { color: var(--accent); }
+
+.obs-arrow { color: var(--muted); }
+
+.obs-panels {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.obs-panel {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.obs-panel h4 {
+  color: var(--fg);
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.obs-panel h4 i {
+  color: var(--blue);
+  margin-right: 6px;
+}
+
+.obs-panel ul {
+  display: grid;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  gap: 6px;
+  list-style: none;
+}
+
+.obs-panel li.log-info { color: var(--fg2); }
+.obs-panel li.log-warn { color: var(--accent); }
+.obs-panel li.log-error { color: var(--red); }
+.obs-empty { color: var(--muted); }
+
+.obs-metrics {
+  display: grid;
+  gap: 8px;
+}
+
+.obs-metrics div {
+  display: flex;
+  justify-content: space-between;
+}
+
+.obs-metrics span { color: var(--muted); font-size: 12px; }
+.obs-metrics strong { color: var(--fg); font-family: 'JetBrains Mono', monospace; }
+
+.obs-panel.is-alert {
+  border-color: rgba(244,93,93,0.45);
+}
+
+.obs-panel.is-alert p { color: var(--red); font-weight: 700; }
+
+.cloud-demo {
+  display: grid;
+  gap: 14px;
+}
+
+.cloud-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.cloud-option {
+  align-items: center;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--fg2);
+  cursor: pointer;
+  display: flex;
+  gap: 8px;
+  padding: 10px 14px;
+}
+
+.cloud-option.active {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.cloud-detail {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.cloud-detail h4 { color: var(--fg); margin-bottom: 8px; }
+.cloud-detail p { color: var(--fg2); line-height: 1.6; margin-bottom: 12px; }
+
+.cloud-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  margin-bottom: 12px;
+}
+
+.cloud-grid span {
+  color: var(--muted);
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.cloud-grid strong { color: var(--fg); }
+
+.cloud-best {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--fg2);
+  font-size: 13px;
+  line-height: 1.6;
+  padding: 10px 12px;
+}
+

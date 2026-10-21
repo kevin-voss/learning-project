@@ -42,10 +42,7 @@ DS.demoRunners = function (demoScenario) {
     'docker-compose': DS.demos.dockerCompose,
     'observability': DS.demos.observability,
     'cloud-hosting': DS.demos.cloudHosting,
-    'caching-strategies': DS.demos.cachingStrategies,
-    'message-queues': DS.demos.messageQueues,
     // web-infra/apis
-    'rest-api-design': DS.demos.restApi,
     'abstraction-apis': DS.demos.abstractionApis,
     // algorithms/core
     'big-o': DS.demos.bigO,
@@ -61,7 +58,7 @@ DS.demoRunners = function (demoScenario) {
     // systems/runtime
     'compiler-runtime': DS.demos.compilerRuntime,
     'os-kernel-queues': DS.demos.osKernelQueues,
-    'concurrency-async': DS.demos.concurrencyAsync,
+    'concurrency-async': (el) => DS.demos.concurrencyAsync(el, demoScenario),
     // systems/overview
     'cs-foundations': DS.demos.csFoundations,
     'roadmap-explorer': DS.demos.roadmapExplorer,
@@ -88,7 +85,6 @@ DS.demoRunners = function (demoScenario) {
     'client-server': DS.demos.webFoundations,
     'http-requests-responses': DS.demos.http,
     'networks-ips-requests': DS.demos.webFoundations,
-    'networking-http': DS.demos.webFoundations,
     'database-sql-fundamentals': (el) => DS.demos.databaseSql(el, demoScenario),
     'database-design-scaling': (el) => DS.demos.databaseSql(el, demoScenario),
     'git-collaboration': DS.demos.gitPlayground,

@@ -21,7 +21,7 @@ const HIDDEN = new Set(['tracks/ai/content/README.md'])
 // Top-level cards: a short title and one sentence. Folders missing here still
 // appear, with the README heading and first paragraph instead.
 const META = {
-  'tracks/computer-science': { tag: 'cs', title: 'Computer science', blurb: '52 interactive lessons: memory, data structures, algorithms, Linux, networks, Git and Docker intros.' },
+  'tracks/computer-science': { tag: 'cs', title: 'Computer science', blurb: '49 interactive lessons with demos: terminal, Git, memory, data structures, algorithms, the web, databases, Docker.' },
   'tracks/java': { tag: 'java', title: 'Java hub', blurb: 'The main language path. One topic per page, from setup to design patterns.' },
   'tracks/spring-boot': { tag: 'java', title: 'Spring Boot · ParcelPilot', blurb: 'Build one backend product step by step, from a first API to queues, services and JWT.' },
   'tracks/architecture': { tag: 'systems', title: 'Architecture & system design', blurb: 'Load balancing, caches, layers, data and messaging trade-offs, with diagrams.' },

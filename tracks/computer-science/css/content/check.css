@@ -1,0 +1,53 @@
+/* "Check yourself" block: questions with hidden answers (uses track tokens only) */
+.check-list {
+  counter-reset: check;
+  display: grid;
+  gap: 10px;
+  list-style: none;
+}
+
+.check-list li {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--blue);
+  border-radius: 10px;
+  color: var(--fg);
+  line-height: 1.6;
+  padding: 12px 14px;
+}
+
+.check-list li::before {
+  color: var(--blue);
+  content: counter(check) '. ';
+  counter-increment: check;
+  font-weight: 700;
+}
+
+.check-list details {
+  color: var(--fg2);
+  margin-top: 8px;
+}
+
+.check-list summary {
+  color: var(--accent);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.check-list details p {
+  margin-top: 6px;
+}
+
+.try-steps {
+  color: var(--fg2);
+  display: grid;
+  gap: 6px;
+  line-height: 1.6;
+  margin: 0 0 10px 20px;
+}
+
+.try-result {
+  color: var(--green);
+  font-weight: 600;
+}

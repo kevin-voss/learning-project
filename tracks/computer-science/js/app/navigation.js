@@ -10,8 +10,11 @@ DS.buildHash = function () {
 };
 
 DS.parseHash = function (hash) {
-  const raw = (hash || location.hash || '').replace(/^#/, '');
+  let raw = (hash || location.hash || '').replace(/^#/, '');
   if (!raw) return null;
+  // Old ids of merged or removed lessons (js/data/aliases.js) open the new home.
+  const alias = (DS.lessonAliases || []).find(a => a.id === raw.split('/')[0]);
+  if (alias) raw = alias.to;
   const [lessonId, subSlug] = raw.split('/');
   const section = DS.curriculum.findIndex(l => l.id === lessonId);
   if (section < 0) return null;

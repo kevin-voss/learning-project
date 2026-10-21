@@ -12,10 +12,11 @@ Canonical overview: [README.md](../../README.md). Learning order: [docs/LEARNING
 
 | Bucket | Path | Notes |
 |--------|------|--------|
-| Hub | `hub/` | Landing page + `path.mjs` (the one ordered step list) + `progress.js` (localStorage) + `scripts/` (`catalog.mjs`, `build-site.mjs`, `check-links.mjs`) — no course files at repo root |
+| Hub | `hub/` | Landing page + `path.mjs` (levels → stages → steps, `RETIRED` ids) + `progress.js` (localStorage, step bar, theme toggle) + `sheet.js` (Markdown renderer) + `theme/` (the one design, animations) + `scripts/` (`check-path.mjs`, `catalog.mjs`, `build-site.mjs`, `check-links.mjs`) |
+| Sheets | `sheets/` | Short pages, one idea each, picture first (see `docs/STYLE.md`) |
 | Drills | `drills/javascript/` | `tasks.js` / `tasks.test.js`; root **`Makefile`** → `bun test` |
 | Tracks | `tracks/java/`, `tracks/computer-science/`, `tracks/architecture/`, `tracks/spring-boot/`, `tracks/ai/`, `tracks/certifications/aws-genai-pro/` | Static or markdown curricula — **one canonical home per topic** (link, don’t duplicate) |
-| Projects | `projects/` | Sheets → builds. Order/scopes follow `docs/LEARNING_PATH.md` (Java Layers A–F). `00`/`01` web, `05` Layer C, `02` Layer D, `03`/`04` optional Phase 6 |
+| Projects | `projects/` | The project ladder `01`–`12` (each reuses the last skill, adds one): `README.md`, `step-by-step.md`, `starter/`, `solution/`, optional `help/`. Optional builds in `extras/` |
 | Programs | `programs/code-for-cleaning/` | Slash commands in `programs/code-for-cleaning/.cursor/commands/` must **not** write task solutions |
 | Learner memory | `docs/learner-memory/` | Profile schema, events, Cursor skill `learner-memory` |
 | Students | `students/<student>/<subject>/uebungen/uebung-NN-…/aufgabe-NN-k-…/` | Per-student Übungen; every Aufgabe has README, `meine-loesung/`, `musterloesung/`. Create via `/new-uebung`; tutor commands `/task` `/hint` `/explain` `/error` `/check` `/review` `/done`; see `students.mdc` |
@@ -31,4 +32,5 @@ Canonical overview: [README.md](../../README.md). Learning order: [docs/LEARNING
 - **Plain JS** in drills and static tracks unless noted.
 - **Structure:** See [structure.mdc](./structure.mdc) — max 5 files per folder, ~400-line soft cap.
 - When scope spans buckets, update README / LEARNING_PATH cross-links.
+- Pages follow `docs/STYLE.md`: picture → one idea → tiny example → try it → check, English, short sentences, `> [!PICTURE]` / `[!TRY]` / `[!CHECK]` boxes. Colours only from `hub/theme/tokens.css` (`--lp-*`).
 - Students follow one list: `hub/path.mjs`. New content goes on the path by adding a step there (never rename a step `id`, progress is saved by id). The `path`, `students` and `catalog` regions of `hub/index.html` are generated: run `make site`, never hand-edit between their markers.

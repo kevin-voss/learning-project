@@ -17,13 +17,13 @@ DS.demos.array = function (container) {
     const v = arr[selectedIdx];
     const info = UI.numberInfo(v);
     return [
-      ['Index', `[${selectedIdx}]`, 'Zero-based position: O(1) access'],
+      ['Index', `[${selectedIdx}]`, 'Zero-based position: jump straight there'],
       ['Value', info.decimal],
       ['Memory address', UI.memAddr(BASE, selectedIdx, ELEM_BYTES), 'Contiguous: each slot is 8 bytes apart'],
       ['Storage', `${info.bytes} bytes · ${info.bits} bits`, info.type],
       ['Binary', info.binary, 'Bit pattern (integers only)'],
       ['Hex', info.hex, 'Base-16 shorthand'],
-      ['Access cost', 'O(1)', 'CPU jumps directly: no scanning'],
+      ['Access cost', 'quick', 'CPU jumps directly: no scanning'],
     ];
   };
 
@@ -55,7 +55,7 @@ DS.demos.array = function (container) {
       UI.statChip('Length', arr.length, 'Number of elements'),
       UI.statChip('Memory used', `~${totalBytes} bytes`, `${arr.length} × ${ELEM_BYTES} bytes per Number`),
       UI.statChip('Layout', 'Contiguous', 'All elements sit next to each other in RAM'),
-      UI.statChip('.length', arr.length, 'Array property: O(1) to read'),
+      UI.statChip('.length', arr.length, 'Array property: quick to read'),
     ].join('');
 
     UI.mount(container, {
@@ -85,14 +85,14 @@ DS.demos.array = function (container) {
     arr.push(Number(val));
     selectedIdx = arr.length - 1;
     render();
-    DS.showMsg('arrMsg', `Pushed ${val} → index [${arr.length - 1}] at ${UI.memAddr(BASE, arr.length - 1, ELEM_BYTES)}: O(1)`, 'success-msg');
+    DS.showMsg('arrMsg', `Pushed ${val} → index [${arr.length - 1}] at ${UI.memAddr(BASE, arr.length - 1, ELEM_BYTES)}`, 'success-msg');
   };
   window.arrPop = () => {
     if (!arr.length) return DS.showMsg('arrMsg', 'Array is empty!', 'error');
     const val = arr.pop();
     selectedIdx = arr.length ? arr.length - 1 : null;
     render();
-    DS.showMsg('arrMsg', `Popped ${val} from end: freed 8 bytes: O(1)`, 'info');
+    DS.showMsg('arrMsg', `Popped ${val} from end: freed 8 bytes: quick`, 'info');
   };
   window.arrUnshift = () => {
     const val = document.getElementById('arrInput').value;
@@ -100,14 +100,14 @@ DS.demos.array = function (container) {
     arr.unshift(Number(val));
     selectedIdx = 0;
     render();
-    DS.showMsg('arrMsg', `Unshifted ${val} → every index shifted right (+8 bytes each moved): O(n)`, 'info');
+    DS.showMsg('arrMsg', `Unshifted ${val} → every index shifted right (+8 bytes each moved): slow when the list is long`, 'info');
   };
   window.arrShift = () => {
     if (!arr.length) return DS.showMsg('arrMsg', 'Array is empty!', 'error');
     const val = arr.shift();
     selectedIdx = 0;
     render();
-    DS.showMsg('arrMsg', `Shifted ${val} off index [0]: remaining cells slid left: O(n)`, 'info');
+    DS.showMsg('arrMsg', `Shifted ${val} off index [0]: remaining cells slid left: slow when the list is long`, 'info');
   };
   window.arrReset = () => {
     arr = [...INITIAL_ARRAY];

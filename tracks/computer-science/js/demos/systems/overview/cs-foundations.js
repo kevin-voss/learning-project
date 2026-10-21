@@ -18,7 +18,7 @@ DS.demos.csFoundations = function (container) {
     { key: 'problem', label: 'Problem', detail: 'A user types into a search box. The app must find matching items.' },
     { key: 'structure', label: 'Data structure', detail: 'Songs live in an array: ordered, easy to display, scanned for search.' },
     { key: 'algorithm', label: 'Algorithm', detail: 'Compare each song title and artist to the query. Collect matches.' },
-    { key: 'complexity', label: 'Complexity', detail: 'Each comparison is one step: about n checks for n songs (O(n) scan).' },
+    { key: 'complexity', label: 'Complexity', detail: 'Each check is one step. 5 songs means 5 checks. A million songs means a million checks. Big-O, the next lesson, names this.' },
     { key: 'ship', label: 'Ship', detail: 'Rank matches and show results. Real apps also cache, index, or use hash tables for speed.' },
   ];
 

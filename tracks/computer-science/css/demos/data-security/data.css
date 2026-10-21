@@ -1,0 +1,320 @@
+.sql-demo {
+  display: grid;
+  gap: 14px;
+}
+
+.sql-query {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--fg2);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  line-height: 1.7;
+  margin: 0;
+  overflow-x: auto;
+  padding: 16px;
+  white-space: pre;
+}
+
+.sql-db-action {
+  background: rgba(76, 201, 240, 0.08);
+  border: 1px solid rgba(76, 201, 240, 0.25);
+  border-radius: var(--radius);
+  color: var(--fg2);
+  display: grid;
+  font-size: 13px;
+  gap: 4px;
+  line-height: 1.6;
+  padding: 12px 14px;
+}
+
+.sql-db-action strong {
+  color: var(--blue);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sql-result {
+  overflow-x: auto;
+}
+
+.sql-result-table {
+  border-collapse: collapse;
+  min-width: 100%;
+}
+
+.sql-result-table th,
+.sql-result-table td {
+  border: 1px solid var(--border);
+  color: var(--fg2);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  padding: 10px 12px;
+  text-align: left;
+}
+
+.sql-result-table th {
+  background: var(--accent-dim);
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.sql-result-table td {
+  background: var(--card);
+}
+
+.encryption-demo {
+  display: grid;
+  gap: 14px;
+}
+
+.encryption-method-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.encryption-input-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.encryption-field {
+  display: grid;
+  gap: 6px;
+}
+
+.encryption-field span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.encryption-method-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  display: grid;
+  gap: 14px;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 0.9fr);
+  padding: 16px;
+}
+
+.encryption-method-card strong {
+  color: var(--fg);
+  display: block;
+  margin-bottom: 8px;
+}
+
+.encryption-method-card strong i {
+  color: var(--accent);
+  margin-right: 6px;
+}
+
+.encryption-method-card p {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.encryption-method-result {
+  display: grid;
+  gap: 6px;
+}
+
+.encryption-method-result span,
+.encryption-step-number {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.encryption-method-result code,
+.encryption-step-detail code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--fg2);
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  line-height: 1.6;
+  min-height: 44px;
+  overflow-wrap: anywhere;
+  padding: 10px;
+  white-space: pre-wrap;
+}
+
+.encryption-steps {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+}
+
+.encryption-step {
+  align-items: center;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--muted);
+  cursor: pointer;
+  display: flex;
+  gap: 8px;
+  min-height: 52px;
+  padding: 10px;
+  text-align: left;
+}
+
+.encryption-step span {
+  align-items: center;
+  background: rgba(255,255,255,0.08);
+  border-radius: 999px;
+  color: var(--fg);
+  display: inline-flex;
+  flex: 0 0 26px;
+  font-size: 12px;
+  font-weight: 800;
+  height: 26px;
+  justify-content: center;
+  width: 26px;
+}
+
+.encryption-step strong {
+  color: inherit;
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+.encryption-step.active {
+  background: rgba(99, 102, 241, 0.14);
+  border-color: var(--accent);
+  color: var(--fg);
+}
+
+.encryption-step.active span {
+  background: var(--accent);
+  color: white;
+}
+
+.encryption-step-detail {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(14, 165, 233, 0.06));
+  border: 1px solid rgba(99, 102, 241, 0.35);
+  border-radius: var(--radius);
+  display: grid;
+  gap: 8px;
+  padding: 16px;
+}
+
+.encryption-step-detail h4 {
+  color: var(--fg);
+  font-size: 18px;
+}
+
+.encryption-step-detail p {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.encryption-pipeline {
+  display: grid;
+  gap: 12px;
+}
+
+.encryption-box {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.encryption-box strong,
+.encryption-box code {
+  display: block;
+}
+
+.encryption-box strong {
+  color: var(--fg);
+  margin-bottom: 8px;
+}
+
+.encryption-box code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--fg2);
+  font-family: 'JetBrains Mono', monospace;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+  padding: 10px;
+}
+
+.encryption-box.plaintext {
+  border-left: 4px solid var(--blue);
+}
+
+.encryption-box.ciphertext {
+  border-left: 4px solid var(--red);
+}
+
+.encryption-box.decrypted {
+  border-left: 4px solid var(--green);
+}
+
+.encryption-arrow {
+  align-items: center;
+  color: var(--accent);
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  text-align: center;
+}
+
+.encryption-arrow span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.key-pair-panel {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+
+.key-pair-panel div {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.key-pair-panel strong {
+  color: var(--fg);
+  display: block;
+  margin-bottom: 6px;
+}
+
+.key-pair-panel strong i {
+  color: var(--accent);
+  margin-right: 6px;
+}
+
+.key-pair-panel p {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+@media (max-width: 720px) {
+  .encryption-method-card {
+    grid-template-columns: 1fr;
+  }
+}
+

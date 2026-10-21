@@ -12,33 +12,33 @@ DS.demos.stackHeapGc = function (container) {
       <div class="mem-layout mem-stack-view">
         <div class="mem-region mem-stack">
           <h4>Call stack</h4>
-          <div class="mem-frame">main()</div>
-          <div class="mem-frame is-active">createUser("Maya")</div>
-          <div class="mem-frame">name = "Maya"</div>
-          <div class="mem-frame">return ref → heap</div>
+          <div class="mem-frame">main(String[] args)</div>
+          <div class="mem-frame is-active">pack("Maya")</div>
+          <div class="mem-frame">int weight = 2</div>
+          <div class="mem-frame">Parcel p → heap</div>
         </div>
         <div class="mem-region mem-heap">
           <h4>Heap (referenced)</h4>
-          <div class="gc-obj is-live">{ user: "Maya", active: true }</div>
+          <div class="gc-obj is-live">Parcel { name = "Maya" }</div>
         </div>
-        <p class="mem-note">Stack frames disappear when a function returns. The heap object can live longer if something still references it.</p>
+        <p class="mem-note">A plate (frame) goes away when its method returns. The object stays in the heap while a reference still leads to it.</p>
       </div>`;
 
     const heapHtml = `
       <div class="mem-layout mem-heap-only">
         <div class="mem-region mem-heap">
           <h4>Heap objects</h4>
-          <div class="gc-obj is-live">{ user: "Maya" }</div>
-          <div class="gc-obj is-live">[10, 20, 30] array</div>
-          <div class="gc-obj is-live">{ theme: "dark" }</div>
+          <div class="gc-obj is-live">Parcel { name = "Maya" }</div>
+          <div class="gc-obj is-live">int[] { 10, 20, 30 }</div>
+          <div class="gc-obj is-live">"dark" (a String)</div>
         </div>
-        <p class="mem-note">Objects and arrays created with literals or <code>new</code> usually live on the heap and can outlast one function call.</p>
+        <p class="mem-note">Every object made with <code>new</code> (and every array and String) lives in the heap. It can outlast the method that made it.</p>
       </div>`;
 
     const gcHtml = `
       <div class="gc-demo">
         <div class="gc-heap">
-          <div class="gc-obj ${refs > 0 ? 'is-live' : 'is-dead'}">user object</div>
+          <div class="gc-obj ${refs > 0 ? 'is-live' : 'is-dead'}">Parcel "Maya"</div>
           <div class="gc-obj ${gcRun && refs === 0 ? 'is-dead' : 'is-live'}">orphan (no refs)</div>
         </div>
         <p>References to user object: <strong>${refs}</strong></p>
@@ -64,8 +64,8 @@ DS.demos.stackHeapGc = function (container) {
         </div>`,
       inspector: UI.inspector('Memory', [
         ['View', view, 'Stack vs heap vs GC'],
-        ['Stack', 'Short-lived', 'Locals and call frames'],
-        ['Heap', 'Flexible lifetime', 'Objects shared across calls'],
+        ['Stack', 'Short-lived', 'Local variables in method frames'],
+        ['Heap', 'Lives while reachable', 'Objects made with new'],
         ['Reachable', refs > 0 ? 'yes' : 'no', 'References keep objects alive'],
         ['GC ran', gcRun ? 'yes' : 'no', 'Sweep unreachable heap objects'],
       ]),

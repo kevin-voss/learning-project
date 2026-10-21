@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 /**
  * Smoke test: every demoType in curriculum data must resolve in init.js runners.
- * Also checks demo folder layout and index.html script paths.
+ * Also checks folder layout (≤5 files per folder, ≤420 lines per file), index.html script
+ * paths, unique lesson ids, relatedIds and lesson aliases.
  * Run: node tracks/computer-science/scripts/verify-demos.mjs
  */
 import { readFileSync, readdirSync, existsSync } from 'fs';
+import vm from 'vm';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -96,7 +98,64 @@ function collectDemoTypes(dir) {
 }
 
 const demoTypes = collectDemoTypes(join(root, 'js/data'));
-collectDemoTypes(join(root, 'js/data/concepts')).forEach(t => demoTypes.add(t));
+
+// Folder and file size rules for the whole track (docs/STYLE.md).
+const MAX_FILES_PER_DIR = 5;
+const MAX_LINES = 420;
+function walkLayout(dir) {
+  const entries = readdirSync(dir, { withFileTypes: true }).filter(e => !e.name.startsWith('.'));
+  const files = entries.filter(e => e.isFile());
+  const rel = dir.replace(root + '/', '');
+  if (files.length > MAX_FILES_PER_DIR && !rel.startsWith('js/demos')) {
+    layoutErrors.push(`${rel}: ${files.length} files (max ${MAX_FILES_PER_DIR})`);
+  }
+  for (const f of files) {
+    if (!/\.(js|css|mjs)$/.test(f.name)) continue;
+    const lines = readFileSync(join(dir, f.name), 'utf8').split('\n').length;
+    if (lines > MAX_LINES) layoutErrors.push(`${rel}/${f.name}: ${lines} lines (max ${MAX_LINES})`);
+  }
+  for (const e of entries) if (e.isDirectory()) walkLayout(join(dir, e.name));
+}
+['js/data', 'js/app', 'css', 'js/demos'].forEach(d => walkLayout(join(root, d)));
+
+// Every lesson file is loaded by index.html.
+const dataScripts = new Set([...indexSrc.matchAll(/src="(js\/data\/[^"]+\.js)"/g)].map(m => m[1]));
+function collectFiles(dir, prefix, out = []) {
+  for (const e of readdirSync(dir, { withFileTypes: true })) {
+    if (e.isDirectory()) collectFiles(join(dir, e.name), `${prefix}/${e.name}`, out);
+    else if (e.name.endsWith('.js')) out.push(`${prefix}/${e.name}`);
+  }
+  return out;
+}
+const dataFiles = collectFiles(join(root, 'js/data'), 'js/data');
+dataFiles.filter(f => !dataScripts.has(f)).forEach(f => layoutErrors.push(`${f}: not loaded in index.html`));
+[...dataScripts].filter(f => !existsSync(join(root, f))).forEach(f => layoutErrors.push(`index.html loads missing ${f}`));
+
+// Load the lessons like the browser does and check ids and links between lessons.
+const sandbox = { window: {}, DS: {} };
+sandbox.window = sandbox;
+vm.createContext(sandbox);
+for (const f of [...dataScripts]) vm.runInContext(readFileSync(join(root, f), 'utf8'), sandbox, { filename: f });
+const lessons = sandbox.DS.curriculum || [];
+const lessonIds = new Set();
+const lessonErrors = [];
+for (const l of lessons) {
+  if (lessonIds.has(l.id)) lessonErrors.push(`lesson id "${l.id}" is used twice`);
+  lessonIds.add(l.id);
+}
+for (const l of lessons) {
+  const rel = [...(l.relatedIds || []), ...(l.subPages || []).flatMap(p => p.relatedIds || [])];
+  rel.filter(id => !lessonIds.has(id)).forEach(id => lessonErrors.push(`${l.id}: relatedIds has unknown lesson "${id}"`));
+  const subIds = (l.subPages || []).map(p => p.id).filter(Boolean);
+  if (new Set(subIds).size !== subIds.length) lessonErrors.push(`${l.id}: sub-lesson ids are not unique`);
+}
+for (const a of sandbox.DS.lessonAliases || []) {
+  const [lid, sub] = a.to.split('/');
+  const target = lessons.find(l => l.id === lid);
+  if (!target) lessonErrors.push(`alias ${a.id}: unknown lesson "${lid}"`);
+  else if (sub && !(target.subPages || []).some(p => p.id === sub)) lessonErrors.push(`alias ${a.id}: unknown sub-lesson "${a.to}"`);
+  if (lessonIds.has(a.id)) lessonErrors.push(`alias ${a.id} is also a lesson id`);
+}
 
 const missing = [];
 for (const type of demoTypes) {
@@ -125,6 +184,11 @@ if (stale.length) {
   console.error('index.html demo scripts not on disk:');
   stale.forEach(p => console.error(`  - ${p}`));
 }
+if (lessonErrors.length) {
+  failed = true;
+  console.error('Lessons:');
+  lessonErrors.forEach(msg => console.error(`  - ${msg}`));
+}
 if (missing.length) {
   failed = true;
   console.error('Missing runner keys for demoType values:');
@@ -135,5 +199,5 @@ if (failed) process.exit(1);
 
 console.log(
   `OK: ${demoTypes.size} demoType values resolve in init.js (${runnerKeys.size} runner keys); ` +
-    `${onDiskTopicDemos.size} topic demos in index.html; layout ≤${MAX_DEMO_FILES_PER_DIR} per folder`
+    `${onDiskTopicDemos.size} topic demos in index.html; ${lessons.length} lessons; layout ≤${MAX_DEMO_FILES_PER_DIR} per folder`
 );

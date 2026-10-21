@@ -1,0 +1,216 @@
+/* Hash table */
+.hash-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.hash-formula {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--fg2);
+  padding: 10px 14px;
+  background: var(--card);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.hash-buckets {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.hash-bucket {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.hash-index {
+  width: 36px;
+  min-height: 44px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: var(--muted);
+  font-family: 'JetBrains Mono', monospace;
+  flex-shrink: 0;
+}
+
+.hash-index strong {
+  font-size: 14px;
+  color: var(--fg);
+}
+
+.hash-slot {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  padding: 6px 10px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  min-height: 44px;
+}
+
+.hash-entry {
+  background: var(--accent-dim);
+  border: 1px solid rgba(240,180,41,0.35);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+}
+
+.hash-entry-key { color: var(--accent); font-weight: 700; }
+.hash-entry-val { color: var(--fg2); }
+.hash-entry-meta { display: block; font-size: 9px; color: var(--muted); margin-top: 2px; }
+
+.hash-empty {
+  font-size: 12px;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.hash-bucket.is-active .hash-index { border-color: var(--accent); color: var(--accent); }
+.hash-bucket.is-active .hash-slot { border-color: var(--accent); background: var(--accent-dim); }
+
+/* Tree */
+.tree-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.tree-row {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.tree-node-card {
+  width: 72px;
+  background: var(--card);
+  border: 2px solid var(--green);
+  border-radius: 50%;
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  transition: transform 0.2s;
+}
+
+.tree-node-card:hover { transform: scale(1.08); }
+
+.tree-node-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--green);
+}
+
+.tree-node-depth {
+  font-size: 8px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.tree-legend {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 11px;
+  color: var(--fg2);
+  margin-top: 8px;
+}
+
+.tree-legend span { display: flex; align-items: center; gap: 6px; }
+
+.tree-level-sep {
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: 12px;
+  text-align: center;
+}
+
+/* Graph */
+.graph-stage {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.graph-canvas {
+  width: 100%;
+  height: 240px;
+  border-radius: 8px;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+}
+
+.graph-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 11px;
+  color: var(--fg2);
+}
+
+.graph-adj {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--fg2);
+  line-height: 1.6;
+}
+
+.graph-adj strong { color: var(--accent); }
+
+/* Set */
+.set-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.set-member {
+  background: var(--card);
+  border: 2px solid var(--accent);
+  border-radius: 10px;
+  padding: 10px 14px;
+  min-width: 100px;
+  animation: slideIn 0.3s ease;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+}
+
+.set-member-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: capitalize;
+}
+
+.set-member-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+

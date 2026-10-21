@@ -16,18 +16,17 @@ java Aufgabe01_3
 
 ## How it works, step by step
 
-1. One line of the picture = one `System.out.println("…");`. Eight lines in the picture, so eight `println`.
-2. **Going up** (lines 1 to 4): only stars, no spaces. 1, 2, 4, 5 stars, exactly like the sheet.
-3. **Going down** (lines 5 to 8): one star less each line, and one space **more** in front. Spaces inside quotes are printed, so they push the stars to the right. Because "one star less" and "one space more" happen together, every line is 5 characters wide and the right edge stays in the same column.
+1. One line of the picture = one `System.out.println("…");`. Nine lines in the picture, so nine `println`.
+2. **Going up** (lines 1 to 5): only stars, no spaces. 1, 2, 3, 4, 5 stars: one more each line.
+3. **Going down** (lines 6 to 9): one star less each line, and one space **more** in front. Spaces inside quotes are printed, so they push the stars to the right. Because "one star less" and "one space more" happen together, every line is 5 characters wide and the right edge stays in the same column.
 4. Nothing else: no variables, no loops. This Übung only knows `println`, and that is enough.
-
-If your paper sheet shows a `***` line on the way up too (a 9-line picture), add `System.out.println("***");` between `"**"` and `"****"`. Everything else stays the same.
 
 **Test run** (spaces made visible with `cat -e`: every line ends with `$`, so you can see where it ends)
 
 ```text
 *$
 **$
+***$
 ****$
 *****$
  ****$
@@ -41,6 +40,7 @@ And the normal output:
 ```text
 *
 **
+***
 ****
 *****
  ****

@@ -6,6 +6,7 @@ public class Aufgabe01_3 {
         // Going up: the stars grow, no spaces in front.
         System.out.println("*");
         System.out.println("**");
+        System.out.println("***");
         System.out.println("****");
         System.out.println("*****");
         // Going down: one star less AND one space more each line,

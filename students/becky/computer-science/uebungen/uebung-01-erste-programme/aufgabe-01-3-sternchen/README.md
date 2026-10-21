@@ -16,6 +16,7 @@ Write a Java program that produces the following output using multiple `System.o
 ```
 *
 **
+***
 ****
 *****
  ****
@@ -39,18 +40,20 @@ Your program is right when it gives exactly these answers.
 |------|-----------------|-------|------------|
 | 1 | 0 | 1 | `*` |
 | 2 | 0 | 2 | `**` |
-| 3 | 0 | 4 | `****` |
-| 4 | 0 | 5 | `*****` |
-| 5 | 1 | 4 | `␣****` |
-| 6 | 2 | 3 | `␣␣***` |
-| 7 | 3 | 2 | `␣␣␣**` |
-| 8 | 4 | 1 | `␣␣␣␣*` |
+| 3 | 0 | 3 | `***` |
+| 4 | 0 | 4 | `****` |
+| 5 | 0 | 5 | `*****` |
+| 6 | 1 | 4 | `␣****` |
+| 7 | 2 | 3 | `␣␣***` |
+| 8 | 3 | 2 | `␣␣␣**` |
+| 9 | 4 | 1 | `␣␣␣␣*` |
 
 (`␣` = one space, so you can count it.) The whole output of `java Aufgabe01_3`:
 
 ```text
 *
 **
+***
 ****
 *****
  ****
@@ -59,7 +62,7 @@ Your program is right when it gives exactly these answers.
     *
 ```
 
-Look closely: on the way **up** the picture as it is in your repository has **no** line with 3 stars (1, 2, 4, 5), on the way **down** it has one (4, 3, 2, 1). So it is 8 lines, not 9. Check your paper sheet: if your sheet shows a `***` line between `**` and `****`, follow your sheet, it is the original. In every case: print exactly what the sheet shows, not what looks "nicer".
+9 lines: on the way **up** 1, 2, 3, 4, 5 stars, on the way **down** 4, 3, 2, 1 stars with more and more spaces in front. (The copy of the task in your course repository misses the `***` line on the way up. The paper sheet has it, and the paper sheet is the original.)
 
 ## Your first try
 
@@ -70,7 +73,7 @@ What is already good:
 
 What is still open:
 
-- Count the lines of your output and of the picture above, line by line. They do not have the same number of lines. Decide with your paper sheet which picture is the right one.
+- Your `println` part prints all 9 lines of the paper sheet, `***` on the way up included. Only the copy of the task in your repository is missing that line: fix the picture in your repository's README so it matches the sheet.
 - This Übung only knows `println`. Keep the loop version as a bonus, but make sure the `println`-only part alone produces the picture.
 
 ## Little helpers
@@ -90,9 +93,9 @@ Put your output and the sheet's picture next to each other and go line by line: 
 </details>
 
 <details>
-<summary>Is there no shorter way than writing eight println?</summary>
+<summary>Is there no shorter way than writing nine println?</summary>
 
-Yes, with **loops** ("do this 5 times"). They come in a later Übung. For now, eight `println` are exactly right: the task even says "using multiple `println()` statements".
+Yes, with **loops** ("do this 5 times"). They come in a later Übung. For now, nine `println` are exactly right: the task even says "using multiple `println()` statements".
 
 </details>
 

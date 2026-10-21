@@ -4,7 +4,7 @@ Part of [Exercise 01 · First programs](../README.md). New ideas you need: block
 
 | Folder | What it is |
 |--------|-----------|
-| [`my-solution/`](my-solution/README.md) | **Your desk.** `Task01_2.java` holds the messy program from the sheet: tidy it up |
+| [`my-solution/`](my-solution/README.md) | **Your desk.** Empty on purpose: you write `Task01_2.java` yourself |
 | [`solution/`](solution/README.md) | The sample solution. Peek only when you are done |
 
 ## The task (from the sheet)
@@ -38,7 +38,7 @@ public class Task01_2 {
 
 ## The task, simply said
 
-1. Type the program into `Task01_2.java` (your desk already has it).
+1. Type (or copy) the program into a new file `Task01_2.java` on your desk.
 2. Run it once and write down what it prints. That is your "before" picture.
 3. Find every box: every `{` and its partner `}`.
 4. Give every `{` and every `}` a clean place, and indent every line by 4 spaces per box it is in.

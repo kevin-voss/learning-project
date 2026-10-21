@@ -1,14 +1,14 @@
 # My solution · Task 90_2 ✏️
 
-This is your desk. `ConnectFour.java` is half-ready: the board from 90_1 (`createBoard`, `printBoard`) and the test drops in `main` are done, the thinking is yours. Look for `TODO` in `dropPiece` and solve them from top to bottom.
+This is your desk. It is empty on purpose: you write the whole program yourself, from the first line to the last.
 
-The file already runs. Until you fill in the TODOs every drop says `full, -1` and the board stays empty.
+Create a file `ConnectFour.java` in this folder. The class inside must have the same name: `public class ConnectFour`. The [exercise page](../../README.md) explains every idea you need.
 
-Want to use your own 90_1 code instead? Go ahead: put your loops into `createBoard` and `printBoard`.
+Start from **your own** 90_1: copy your `ConnectFour.java` from [`../../task-90-1-game-board/my-solution/`](../../task-90-1-game-board/my-solution/README.md) into this folder. Then add `dropPiece` and a `main` that does the test drops from the task.
 
 ## How to run it
 
-Open a terminal **in this folder** (`my-solution/`), then:
+When your file is written, open a terminal **in this folder** (`my-solution/`), then:
 
 ```bash
 javac ConnectFour.java

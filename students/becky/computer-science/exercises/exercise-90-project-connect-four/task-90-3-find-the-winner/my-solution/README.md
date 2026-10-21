@@ -1,14 +1,16 @@
 # My solution · Task 90_3 ✏️
 
-This is your desk. `ConnectFour.java` is half-ready: the board (90_1), `dropPiece` (90_2) and all six test boards in `main` are done, the thinking is yours. Look for `TODO` in `hasFour` and solve them from top to bottom.
+This is your desk. It is empty on purpose: you write the whole program yourself, from the first line to the last.
 
-The file already runs. Until you fill in the TODOs every test says `false` for both players.
+Create a file `ConnectFour.java` in this folder. The class inside must have the same name: `public class ConnectFour`. The [exercise page](../../README.md) explains every idea you need.
 
-Tip: solve TODO 1 (across) first and run. Test 1 should switch to `R has four: true`. Then TODO 2 and test 2, and so on.
+Start from **your own** 90_2: copy your `ConnectFour.java` from [`../../task-90-2-drop-a-piece/my-solution/`](../../task-90-2-drop-a-piece/my-solution/README.md) into this folder. Then add `hasFour` and a `main` that builds the test boards from the task.
+
+Tip: build the check across first and run. Then up and down, then the two slanted ones.
 
 ## How to run it
 
-Open a terminal **in this folder** (`my-solution/`), then:
+When your file is written, open a terminal **in this folder** (`my-solution/`), then:
 
 ```bash
 javac ConnectFour.java

@@ -170,5 +170,5 @@ console.log(`
 Next: replace every TODO in
   ${exerciseFolder}/README.md   story, every new idea explained simply, words to know
   task-…/README.md              the task from the sheet (in English), simply said, test examples, helpers
-  task-…/my-solution/           half-ready files with TODOs (never the answer)
+  task-…/my-solution/           README only: which file to create and how to run it (no code)
   task-…/solution/              the sample solution + walkthrough`)

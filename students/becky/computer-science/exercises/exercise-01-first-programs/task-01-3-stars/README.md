@@ -4,7 +4,7 @@ Part of [Exercise 01 · First programs](../README.md). New ideas you need: `prin
 
 | Folder | What it is |
 |--------|-----------|
-| [`my-solution/`](my-solution/README.md) | **Your desk.** `Task01_3.java` is half-ready: fill in the `TODO`s |
+| [`my-solution/`](my-solution/README.md) | **Your desk.** Empty on purpose: you write `Task01_3.java` yourself |
 | [`solution/`](solution/README.md) | The sample solution. Peek only when you are done |
 
 ## The task (from the sheet)

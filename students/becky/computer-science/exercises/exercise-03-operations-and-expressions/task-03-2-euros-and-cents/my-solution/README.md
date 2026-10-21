@@ -1,12 +1,14 @@
 # My solution · Task 03_2 ✏️
 
-This is your desk. `EuroCent.java` is half-ready: reading the keyboard is done, the thinking is yours. Look for `TODO` in the code and solve them from top to bottom.
+This is your desk. It is empty on purpose: you write the whole program yourself, from the first line to the last.
 
-The file already runs. It just gives wrong answers until you fill in the TODOs.
+Create a file `EuroCent.java` in this folder. The class inside must have the same name: `public class EuroCent`. The [exercise page](../../README.md) explains every idea you need.
+
+Your program reads its numbers from the keyboard with a `Scanner`. The exercise page shows how.
 
 ## How to run it
 
-Open a terminal **in this folder** (`my-solution/`), then:
+When your file is written, open a terminal **in this folder** (`my-solution/`), then:
 
 ```bash
 javac EuroCent.java

@@ -1,12 +1,12 @@
 # My solution · Task 02_2 ✏️
 
-This is your desk. `LongLimits.java` is half-ready: the two boxes and the `println`s are there, holding `0` for now. Look for `TODO` in the code and solve them from top to bottom.
+This is your desk. It is empty on purpose: you write the whole program yourself, from the first line to the last.
 
-The file already runs. It just prints `0` twice until you fill in the TODOs.
+Create a file `LongLimits.java` in this folder. The class inside must have the same name: `public class LongLimits`. The [exercise page](../../README.md) explains every idea you need.
 
 ## How to run it
 
-Open a terminal **in this folder** (`my-solution/`), then:
+When your file is written, open a terminal **in this folder** (`my-solution/`), then:
 
 ```bash
 javac LongLimits.java

@@ -195,7 +195,7 @@ int km = scanner.nextInt();             // the SAME scanner again
 
 ⚠️ Make **one** `Scanner` and reuse it. A second `new Scanner(System.in)` is like a second ear that starts listening too late: the first one may already have swallowed your next number. With typed input it often still works by luck; with input from a file or a pipe it crashes with `NoSuchElementException`.
 
-**In the task:** every task reads its numbers this way. Your files in `my-solution/` already have it.
+**In the task:** every task reads its numbers this way. You write these lines yourself at the top of your program.
 
 ### 10. Units: compare apples with apples
 

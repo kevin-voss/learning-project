@@ -240,7 +240,7 @@ boolean same = Math.abs(x - y) < TOLERANCE;   // Math.abs drops the minus sign
 
 ### 12. Reading from the keyboard — the program's ears
 
-`Scanner` listens to what you type. Your files in `my-solution/` already have it, so you only need to know what it does:
+`Scanner` listens to what you type. You write it into your program yourself, like in exercise 03:
 
 ```java
 Scanner scanner = new Scanner(System.in);

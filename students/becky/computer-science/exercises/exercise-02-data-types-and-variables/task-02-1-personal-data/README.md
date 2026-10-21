@@ -4,7 +4,7 @@ Part of [Exercise 02 · Data types and variables](../README.md). New ideas you n
 
 | Folder | What it is |
 |--------|-----------|
-| [`my-solution/`](my-solution/README.md) | **Your desk.** `PersonalData.java` is half-ready: fill in the `TODO`s |
+| [`my-solution/`](my-solution/README.md) | **Your desk.** Empty on purpose: you write `PersonalData.java` yourself |
 | [`solution/`](solution/README.md) | The sample solution. Peek only when you are done |
 
 ## The task (from the sheet)

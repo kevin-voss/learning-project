@@ -1,6 +1,8 @@
 # My solution · Task {{TASK}} ✏️
 
-This is your desk. The files here are half-ready: the boring setup is done, the thinking is yours. Look for `TODO` in the code and solve them from top to bottom.
+This is your desk. It is empty on purpose: you write the whole program yourself, from the first line to the last.
+
+TODO: which file to create (e.g. `Name.java`) and that the class inside has the same name. The [exercise page](../../README.md) explains every idea you need.
 
 ## How to run it
 

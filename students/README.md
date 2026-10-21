@@ -32,7 +32,7 @@ students/
 |---------------|----------------|
 | Exercise `README.md` | The story and every new idea, explained like for a 6-year-old. Table of tasks with status |
 | Task `README.md` | The task from the sheet (in English), the same task in simple words, test examples, little helpers, "done when" |
-| `my-solution/` | Your desk: half-ready files with `TODO`s. Nothing is solved here |
+| `my-solution/` | Your desk. It starts empty: you write the whole program yourself. Its `README.md` says which file to create and how to run it |
 | `solution/` | The sample solution: one clean, complete solution with a step-by-step walkthrough and common mistakes |
 
 Every folder has a `README.md`, so you can always read where you are.
@@ -68,7 +68,7 @@ Open your file in `my-solution/` and type one of these in the Cursor chat. Curso
 
 ## Add a new exercise sheet (teacher)
 
-Fastest way in Cursor: type **`/new-exercise`** and paste the sheet. The agent builds the folders, translates the sheet into English and writes the explanations, the half-ready files and the sample solution.
+Fastest way in Cursor: type **`/new-exercise`** and paste the sheet. The agent builds the folders, translates the sheet into English and writes the explanations, the desk README and the sample solution.
 
 By hand (only builds the empty folders, you fill them):
 

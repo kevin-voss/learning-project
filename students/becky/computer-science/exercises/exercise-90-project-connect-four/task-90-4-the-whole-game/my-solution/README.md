@@ -1,14 +1,14 @@
 # My solution · Task 90_4 ✏️
 
-This is your desk. `ConnectFour.java` is half-ready: all the machines from 90_1 to 90_3 are in it and finished (`createBoard`, `printBoard`, `dropPiece`, `hasFour`), plus a ready-made helper `readColumn` that reads the players' numbers. The game itself is yours. Look for `TODO` in `main` and solve them from top to bottom.
+This is your desk. It is empty on purpose: you write the whole program yourself, from the first line to the last.
 
-The file already runs. Until you fill in the TODOs it asks Red for one column, says `(you chose 4, the game is not built yet)` and stops.
+Create a file `ConnectFour.java` in this folder. The class inside must have the same name: `public class ConnectFour`. The [exercise page](../../README.md) explains every idea you need.
 
-Did you do 90_3 first? Good, because `hasFour` is finished in this file. Want to use your own `dropPiece` and `hasFour` from 90_2 and 90_3 instead? Copy them over the ones here.
+Start from **your own** 90_3: copy your `ConnectFour.java` from [`../../task-90-3-find-the-winner/my-solution/`](../../task-90-3-find-the-winner/my-solution/README.md) into this folder. It has your `createBoard`, `printBoard`, `dropPiece` and `hasFour`. The game in `main` is new.
 
 ## How to run it
 
-Open a terminal **in this folder** (`my-solution/`), then:
+When your file is written, open a terminal **in this folder** (`my-solution/`), then:
 
 ```bash
 javac ConnectFour.java
@@ -38,7 +38,7 @@ printf '0\n8\nhello\n1\n1\n1\n1\n1\n1\n1\n2\n2\n3\n3\n4\n' | java ConnectFour
 printf '%s\n' 1 1 1 1 1 1 2 2 2 2 2 2 3 3 3 3 3 3 5 4 4 4 4 4 4 5 5 5 5 5 6 6 6 6 6 6 7 7 7 7 7 7 | java ConnectFour
 ```
 
-(`printf '%s\n' a b c` prints every word on its own line: a short way to write many `\n`.) The numbers you "type" this way do not show up on the screen, so each question is followed directly by the answer of the program. When the numbers run out before the game is over, `readColumn` says `No more input. Game stopped.`
+(`printf '%s\n' a b c` prints every word on its own line: a short way to write many `\n`.) The numbers you "type" this way do not show up on the screen, so each question is followed directly by the answer of the program. When the numbers run out before the game is over, your program should stop with a short message, for example `No more input. Game stopped.`, and not crash.
 
 ## Rules for this desk
 

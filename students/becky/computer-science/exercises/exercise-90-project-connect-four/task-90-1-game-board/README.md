@@ -4,7 +4,7 @@ Part of [Exercise 90 · Project: Connect Four](../README.md). New ideas you need
 
 | Folder | What it is |
 |--------|-----------|
-| [`my-solution/`](my-solution/README.md) | **Your desk.** `ConnectFour.java` is half-ready: fill in the `TODO`s |
+| [`my-solution/`](my-solution/README.md) | **Your desk.** Empty on purpose: you write `ConnectFour.java` yourself |
 | [`solution/`](solution/README.md) | The sample solution. Peek only when you are done |
 
 ## The task (from the sheet)

@@ -1,14 +1,14 @@
 # My solution · Task 02_1 ✏️
 
-This is your desk. `PersonalData.java` is half-ready: the first box (`firstName`) and its `println` are done as an example, the other seven are yours. Look for `TODO` in the code and solve them from top to bottom.
+This is your desk. It is empty on purpose: you write the whole program yourself, from the first line to the last.
 
-The file already runs. It just prints only the first name until you fill in the TODOs.
+Create a file `PersonalData.java` in this folder. The class inside must have the same name: `public class PersonalData`. The [exercise page](../../README.md) explains every idea you need.
 
 This folder is on a public website: use **made-up** values (like the sheet's Donald Duck), not your real data.
 
 ## How to run it
 
-Open a terminal **in this folder** (`my-solution/`), then:
+When your file is written, open a terminal **in this folder** (`my-solution/`), then:
 
 ```bash
 javac PersonalData.java

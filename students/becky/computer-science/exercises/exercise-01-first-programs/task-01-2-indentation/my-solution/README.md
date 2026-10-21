@@ -1,10 +1,14 @@
 # My solution · Task 01_2 ✏️
 
-This is your desk. `Task01_2.java` holds the program from the sheet, as messy as it is there. It already runs. Your job is to make it easy to read, without changing what it prints. The steps are the `TODO`s at the top of the file.
+This is your desk. It is empty on purpose: you write the whole program yourself, from the first line to the last.
+
+Create a file `Task01_2.java` in this folder. The class inside must have the same name: `public class Task01_2`. The [exercise page](../../README.md) explains every idea you need.
+
+Copy the messy program from the [task](../README.md#the-task-from-the-sheet) into your new file, exactly as it is on the sheet. Run it once **before** you change anything and keep the output.
 
 ## How to run it
 
-Open a terminal **in this folder** (`my-solution/`), then:
+When your file is written, open a terminal **in this folder** (`my-solution/`), then:
 
 ```bash
 javac Task01_2.java
@@ -14,7 +18,7 @@ javac Task01_2.java
 java Task01_2
 ```
 
-Run it once **before** you change anything and keep the output. After tidying, run it again: same output = you only moved spaces, as you should.
+After tidying, run it again: same output = you only moved spaces, as you should.
 
 ## Rules for this desk
 

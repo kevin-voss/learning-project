@@ -16,14 +16,14 @@ students/<student>/README.md                          the student's room: list o
     exercises/README.md                               table of exercises
       exercise-<NN>-<slug>/README.md                  story, every new idea explained, tasks table with status, words to know
         task-<NN>-<k>-<slug>/README.md                the task from the sheet, simply said, test examples, helpers, done when
-          my-solution/                                the student's desk: README (how to run) + half-ready files with TODOs
+          my-solution/                                the student's desk: README only (which file to create, how to run it). No code
           solution/                                   README (walkthrough, real test output, common mistakes) + sample solution
 ```
 
 - Task ids are written `04_1`, folders `task-04-1-<slug>`. Status lives in the exercise README table: `todo` → `in progress` → `done`.
 - Create exercises and tasks only with `/new-exercise` or `make new-exercise` (`students/scripts/new-exercise.mjs`) so every index page and the landing page stay in sync.
 - Templates: `students/_template/`. Change the template, not every task, when the format changes.
-- `my-solution/` must never contain the answer. `solution/` is the only place for it.
+- `my-solution/` holds no code at all: the student starts alone, from an empty file. Only its `README.md` (file and class name to create, run commands, a place for written answers). `solution/` is the only place for code.
 - Every folder has a `README.md`.
 
 ## Writing style

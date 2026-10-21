@@ -4,7 +4,7 @@ Part of [Exercise 90 · Project: Connect Four](../README.md). New ideas you need
 
 | Folder | What it is |
 |--------|-----------|
-| [`my-solution/`](my-solution/README.md) | **Your desk.** `ConnectFour.java` is half-ready: fill in the `TODO`s |
+| [`my-solution/`](my-solution/README.md) | **Your desk.** Starts empty: copy your own `ConnectFour.java` from the task before and build on it |
 | [`solution/`](solution/README.md) | The sample solution. Peek only when you are done |
 
 ## The task (from the sheet)
@@ -25,7 +25,7 @@ Here you build the "4 of the same colour in a row" part. "The board is full" and
    - **slanted `/`**: each step one row up and one column right.
 3. Otherwise `false`.
 4. Never look outside the board: a four starting in column 5 does not fit.
-5. `main` is finished: it sets up six boards by hand and asks `hasFour` for `R` and for `B` on each one.
+5. Start from your own 90_2 file. Write a `main` that sets up the six test boards below by hand and asks `hasFour` for `R` and for `B` on each one.
 
 ## Test examples
 

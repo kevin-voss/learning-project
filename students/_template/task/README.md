@@ -4,7 +4,7 @@ Part of [Exercise {{EXERCISE}} · {{EXERCISE_TITLE}}](../README.md). New ideas y
 
 | Folder | What it is |
 |--------|-----------|
-| [`my-solution/`](my-solution/README.md) | **Your desk.** Half-ready files: fill in the `TODO`s |
+| [`my-solution/`](my-solution/README.md) | **Your desk.** Empty on purpose: you write the program yourself |
 | [`solution/`](solution/README.md) | The sample solution. Peek only when you are done |
 
 ## The task (from the sheet)

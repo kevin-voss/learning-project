@@ -4,7 +4,7 @@ Part of [Exercise 90 · Project: Connect Four](../README.md). New ideas you need
 
 | Folder | What it is |
 |--------|-----------|
-| [`my-solution/`](my-solution/README.md) | **Your desk.** `ConnectFour.java` is half-ready: fill in the `TODO`s |
+| [`my-solution/`](my-solution/README.md) | **Your desk.** Starts empty: copy your own `ConnectFour.java` from the task before and build on it |
 | [`solution/`](solution/README.md) | The sample solution. Peek only when you are done |
 
 ## The task (from the sheet)
@@ -16,17 +16,17 @@ From Becky's rules (translated into English), the part this task covers:
 
 ## The task, simply said
 
-1. Your board from 90_1 is already in the file, as two finished methods: `createBoard()` and `printBoard(board)`.
+1. Copy your own `ConnectFour.java` from 90_1. Your board is in it: `createBoard()` and `printBoard(board)`.
 2. The two players are `'R'` (Red) and `'B'` (Blue).
 3. Write the method `dropPiece(board, column, piece)`. `column` is Java's number, 0 to 6.
 4. It looks at the column from the **bottom** row up to the **top** row.
 5. The first empty hole it finds gets the piece. Then it gives back that row number.
 6. Is the column already full? Then nothing changes and it gives back `-1`.
-7. `main` is finished: it drops a fixed list of pieces, prints what each `dropPiece` gave back, and prints the board at the end.
+7. Write a `main` that drops the pieces from the test examples below, prints what each `dropPiece` gave back, and prints the board at the end.
 
 ## Test examples
 
-`main` drops these pieces, one after the other (columns as players say them, 1 to 7). Row 5 is the bottom, row 0 the top.
+Your `main` drops these pieces, one after the other (columns as players say them, 1 to 7). Row 5 is the bottom, row 0 the top.
 
 | Drop | Piece | Column | `dropPiece` gives back | Why |
 |------|-------|--------|------------------------|-----|

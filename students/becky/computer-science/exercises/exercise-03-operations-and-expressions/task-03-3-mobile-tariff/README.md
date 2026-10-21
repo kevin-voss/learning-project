@@ -4,7 +4,7 @@ Part of [Exercise 03 · Operations and expressions](../README.md). New ideas you
 
 | Folder | What it is |
 |--------|-----------|
-| [`my-solution/`](my-solution/README.md) | **Your desk.** `MobileTariff.java` is half-ready: fill in the `TODO`s |
+| [`my-solution/`](my-solution/README.md) | **Your desk.** Empty on purpose: you write `MobileTariff.java` yourself |
 | [`solution/`](solution/README.md) | The sample solution. Peek only when you are done |
 
 ## The task (from the sheet)

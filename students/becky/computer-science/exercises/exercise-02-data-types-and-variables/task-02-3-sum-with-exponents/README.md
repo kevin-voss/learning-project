@@ -4,7 +4,7 @@ Part of [Exercise 02 · Data types and variables](../README.md). New ideas you n
 
 | Folder | What it is |
 |--------|-----------|
-| [`my-solution/`](my-solution/README.md) | **Your desk.** `FloatingSum.java` is half-ready: fill in the `TODO`s, and your answer to b) in its `README.md` |
+| [`my-solution/`](my-solution/README.md) | **Your desk.** Empty on purpose: you write `FloatingSum.java` yourself, and your answers in its `README.md` |
 | [`solution/`](solution/README.md) | The sample solution. Peek only when you are done |
 
 ## The task (from the sheet)

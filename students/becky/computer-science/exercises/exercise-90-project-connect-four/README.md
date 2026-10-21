@@ -58,7 +58,7 @@ Status words: `todo` → `in progress` → `done`. Change them here when you fin
 4. Try every test example from the task's `README.md`.
 5. Only when you are done (or really stuck for a long time): look at `solution/`.
 
-In every task the file is called `ConnectFour.java`. It is the same game, growing step by step: the desk of 90_2 already has a finished 90_1 inside, and so on.
+In every task the file is called `ConnectFour.java`. It is the same game, growing step by step: every desk starts empty, and you start 90_2 by copying your own 90_1 file into it, and so on.
 
 In Cursor you can ask for help at any time, without getting the answer: `/next` (where am I?), `/stuck` (stuck, red text or a new word), `/check` (is it right?), `/done` (finished). See [students/README.md](../../../../README.md#cursor-commands-for-students).
 
@@ -261,7 +261,7 @@ The `return -1` after the loop only runs when the loop found nothing. `-1` is a 
 
 ### 9. Reading input you can trust
 
-In 90_4 the players type a column. People type wrong things: `0`, `8`, or `hello`. The game must say "try again" and **not** switch players. The desk file has a ready-made helper `readColumn` that reads the next number and turns a word into `0` (never a valid column). You only need to check the number it gives you:
+In 90_4 the players type a column. People type wrong things: `0`, `8`, or `hello`. The game must say "try again" and **not** switch players. Write a small helper method `readColumn` that reads the next number and turns a word into `0` (never a valid column). Three `Scanner` words help: `hasNext()` (is there any more input?), `hasNextInt()` (is the next thing a whole number?) and `next()` (read the word and throw it away). Then the game only checks the number it gets:
 
 ```java
 int column = readColumn(scanner);

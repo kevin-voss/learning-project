@@ -1,12 +1,12 @@
 # My solution · Task 01_4 ✏️
 
-This is your desk. `Task01_4.java` is half-ready: there is one `println` for each part, printing `TODO` for now. Look for `TODO` in the code and solve them from top to bottom.
+This is your desk. It is empty on purpose: you write the whole program yourself, from the first line to the last.
 
-The file already runs. It just prints `TODO a)`, `TODO b)` and `TODO c)` until you fill them in.
+Create a file `Task01_4.java` in this folder. The class inside must have the same name: `public class Task01_4`. The [exercise page](../../README.md) explains every idea you need.
 
 ## How to run it
 
-Open a terminal **in this folder** (`my-solution/`), then:
+When your file is written, open a terminal **in this folder** (`my-solution/`), then:
 
 ```bash
 javac Task01_4.java

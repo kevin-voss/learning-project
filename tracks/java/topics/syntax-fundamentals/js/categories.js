@@ -6,13 +6,20 @@ Java.topics.syntaxFundamentals.categories = {
     color: 'var(--teal)',
     bg: 'var(--teal-bg)',
     glow: 'var(--teal-glow)',
-    desc: 'Statements and structure'
+    desc: 'Statements, blocks, spaces, comments, keywords'
   },
   organization: {
     name: 'Organization',
     color: 'var(--violet)',
     bg: 'var(--violet-bg)',
     glow: 'var(--violet-glow)',
-    desc: 'Names, packages, imports'
+    desc: 'Names, files, packages, imports'
+  },
+  errors: {
+    name: 'Errors',
+    color: 'var(--amber)',
+    bg: 'var(--amber-bg)',
+    glow: 'var(--amber-glow)',
+    desc: 'Read what javac tells you'
   }
 };

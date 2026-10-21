@@ -6,14 +6,14 @@ Java.topics.typesAndVariables.categories = {
     color: 'var(--coral)',
     bg: 'var(--coral-bg)',
     glow: 'var(--coral-glow)',
-    desc: 'Kinds of data'
+    desc: 'Boxes and the kinds of values in them'
   },
   variables: {
     name: 'Variables',
     color: 'var(--amber)',
     bg: 'var(--amber-bg)',
     glow: 'var(--amber-glow)',
-    desc: 'Names and lifetime'
+    desc: 'Constants, scope, references and memory'
   },
   deeper: {
     name: 'Deeper',

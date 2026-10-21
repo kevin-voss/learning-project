@@ -14,5 +14,12 @@ Java.topics.controlFlow.categories = {
     bg: 'var(--coral-bg)',
     glow: 'var(--coral-glow)',
     desc: 'Repeat work'
+  },
+  deeper: {
+    name: 'Deeper',
+    color: 'var(--violet)',
+    bg: 'var(--violet-bg)',
+    glow: 'var(--violet-glow)',
+    desc: 'Optional: come back later'
   }
 };

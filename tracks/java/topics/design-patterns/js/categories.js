@@ -1,6 +1,13 @@
 Java.topics.designPatterns = Java.topics.designPatterns || {};
 
 Java.topics.designPatterns.categories = {
+  basics: {
+    name: 'Basics',
+    color: 'var(--green)',
+    bg: 'color-mix(in srgb, var(--green) 10%, transparent)',
+    glow: 'color-mix(in srgb, var(--green) 35%, transparent)',
+    desc: 'What a pattern is'
+  },
   creational: {
     name: 'Creational',
     color: 'var(--amber)',

@@ -5,22 +5,57 @@ import java.util.Scanner;
 public class FolderOrder {
     public static void main(String[] args) {
         // Numbers from the task. "final" = they never change.
-        final double LIST_PRICE = 9.99;           // one folder, in EUR
-        final double VAT = 0.19;                  // 19 % VAT
+        final double LIST_PRICE = 9.99;           // one folder, in EUR                 // 19 % VAT
         final double SHIPPING = 99.99;            // shipping costs
         final double FREE_SHIPPING_ABOVE = 1000.0;
 
         Scanner scanner = new Scanner(System.in);
-        System.out.print("How many folders? ");
+
+        System.out.println("How many folders? ");
+
         int quantity = scanner.nextInt();
+        double priceWithoutDiscount = quantity * LIST_PRICE;
+         
+       
+        if(quantity >= 200) { //5% discount
+            double discount = (priceWithoutDiscount * 5) / 100;
+            System.out.println("Your discount: " + discount + "EUR");
 
-        // TODO 1: Find the discount with if / else if / else.
-        //         200 or more -> 0.05, 100 or more -> 0.03, 50 or more -> 0.01, else 0.0
-        //         Think: which check must come FIRST?
-        double discount = 0.0;
+            double priceWithDiscount = priceWithoutDiscount - discount;
+            System.out.println("Price without VAT:" + priceWithDiscount + "EUR");
 
-        // TODO 2: Price of all folders, minus the discount.
-        double net = 0.0;
+            double VAT = (priceWithDiscount * 19) / 100;
+            double priceWithVAT = priceWithDiscount + VAT;  
+            System.out.println("Your Prize with VET: " + priceWithVAT + "EUR");
+        } else if(quantity >= 100) { //3% discount
+            double discount = (priceWithoutDiscount * 3) / 100;
+            System.out.println("Your discount: " + discount + "EUR");
+
+            double priceWithDiscount = priceWithoutDiscount - discount;
+            System.out.println("Price without VAT: " + priceWithoutDiscount + "EUR");
+
+            double VAT = (priceWithDiscount * 19) / 100;
+            double priceWithVAT = priceWithDiscount + VAT;  
+            System.out.println("Your Prize with VET: " + priceWithVAT + "EUR");
+        } else if(quantity >= 50) { //1% discount
+            double discount = priceWithoutDiscount / 100;
+            System.out.println("Your discount: " + discount + "EUR");
+
+            double priceWithDiscount = priceWithoutDiscount - discount;
+            System.out.println("Price without VAT: " + priceWithoutDiscount + "EUR");
+
+            double VAT = (priceWithDiscount * 19) / 100;
+            double priceWithVAT = priceWithDiscount + VAT;  
+            System.out.println("Your Prize with VET: " + priceWithVAT + "EUR");
+        } else {
+            int quantityTillDiscount = 50 - quantity;
+            System.out.println(quantityTillDiscount + "Folders are missing untill you get a discount!");
+            System.out.println("Price without VAT: " + priceWithoutDiscount + "EUR");
+
+            double VAT = (priceWithoutDiscount * 19) / 100;
+            double priceWithVAT = priceWithoutDiscount + VAT;  
+            System.out.println("Your Prize with VET: " + priceWithVAT + "EUR");
+        }
 
         // TODO 3: Add 19 % VAT on top of net.
         double gross = 0.0;

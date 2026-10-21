@@ -81,7 +81,7 @@ Expected: exactly the story above — every line from either service that mentio
 
 Grep by parcel ID works — until it doesn't. This is why README sub-step 3 added a correlation id. Two problems:
 
-1. **Not every line mentions a parcel.** The step-06 catch-all logs "Unexpected error on /parcels/P-7/status" (good, greppable), but many failure lines — connection errors, consumer crashes mid-deserialization — carry no parcel ID at all. You end up matching on **timestamps**: "the error at 18:40:14... is that *my* 18:40:14 request?"
+1. **Not every line mentions a parcel.** The step-07 catch-all logs "Unhandled error on PATCH /parcels/P-7/status" (good, greppable), but many failure lines — connection errors, consumer crashes mid-deserialization — carry no parcel ID at all. You end up matching on **timestamps**: "the error at 18:40:14... is that *my* 18:40:14 request?"
 2. **Concurrency breaks it.** Ten deliveries per second means ten interleaved stories; the parcel ID separates them *only* in lines that include it.
 
 What you want is one ID, generated per request, that rides along **through the event into the consumer**, stamped on every line both services write for that request. That's the correlation ID: `docker compose logs | grep c2e8a9f0` finds the delivery story even in lines without a parcel ID. Why it works: [correlation-ids.md](correlation-ids.md).

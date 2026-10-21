@@ -157,9 +157,9 @@ curl -s http://localhost:8080/parcels
 
 Only the parcel from row 5 should be there.
 
-## Stretch: guard the PATCH endpoint too
+## Guard the PATCH endpoint too
 
-`PATCH /parcels/{id}/status` takes a body like `{"status":"PICKED_UP"}`. Right now a typo (`"PICKEDUP"`, `"picked_up"`, `""`) travels all the way into your domain code before anything complains. Guard the shape at the boundary:
+`PATCH /parcels/{id}/status` takes a body like `{"status":"PICKED_UP"}`. Right now a typo (`"PICKEDUP"`, `"picked_up"`, `""`) reaches `Status.valueOf(...)` in the controller and crashes into a `500`. Guard the shape at the boundary. The record keeps its `String` field from step 04 and gains two annotations (later steps rely on them):
 
 ```java
 package com.parcelpilot;

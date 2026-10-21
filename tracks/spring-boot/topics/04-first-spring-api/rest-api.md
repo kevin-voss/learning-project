@@ -21,10 +21,12 @@ public void changeStatus(Status target) {
 }
 ```
 
-**2. Add a request DTO** in `UpdateStatusRequest.java`:
+**2. Add a request DTO** in `UpdateStatusRequest.java`. The status arrives as plain text; the controller turns it into a `Status`:
 
 ```java
-public record UpdateStatusRequest(Status status) {}
+package com.parcelpilot;
+
+public record UpdateStatusRequest(String status) {}
 ```
 
 **3. Add the endpoint to `ParcelController`:**
@@ -38,7 +40,7 @@ public ResponseEntity<?> changeStatus(@PathVariable String id,
         return ResponseEntity.notFound().build();                        // 404
     }
     try {
-        parcel.changeStatus(req.status());
+        parcel.changeStatus(Status.valueOf(req.status()));             // "PICKED_UP" -> Status.PICKED_UP
     } catch (IllegalStateException e) {
         return ResponseEntity.status(409).body(Map.of("error", e.getMessage())); // 409
     }
@@ -46,7 +48,7 @@ public ResponseEntity<?> changeStatus(@PathVariable String id,
 }
 ```
 
-The `try`/`catch` inside the controller is a little messy. That is on purpose: step 06 moves it into one central error handler.
+The `try`/`catch` inside the controller is a little messy. That is on purpose: step 06 moves it into one central error handler. A typo like `{"status":"PICKEDUP"}` makes `Status.valueOf` throw and ends in a `500` for now; step 05 turns it into a helpful `400`.
 
 > [!TRY]
 > 1. Restart the app and create `P-1` (see the README's Test it section).

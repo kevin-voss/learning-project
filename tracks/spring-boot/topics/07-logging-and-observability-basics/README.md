@@ -91,30 +91,37 @@ public ResponseEntity<ParcelResponse> create(@Valid @RequestBody CreateParcelReq
 
 ```java
 @GetMapping("/{id}")
-public ResponseEntity<ParcelResponse> getOne(@PathVariable String id) {
+public ParcelResponse getOne(@PathVariable String id) {
     log.debug("Reading parcel {}", id);
-    // ... existing lookup and return
+    Parcel parcel = store.get(id);
+    if (parcel == null) {
+        throw new ParcelNotFoundException(id);
+    }
+    return toResponse(parcel);
 }
 ```
 
 ```java
 @PatchMapping("/{id}/status")
-public ResponseEntity<ParcelResponse> updateStatus(@PathVariable String id,
-                                                   @Valid @RequestBody UpdateStatusRequest req) {
-    // ... existing lookup and transition
-    log.info("Parcel {} status changed to {}", id, req.status());
-    return ResponseEntity.ok(toResponse(parcel));
+public ParcelResponse changeStatus(@PathVariable String id,
+                                   @Valid @RequestBody UpdateStatusRequest req) {
+    Parcel parcel = store.get(id);
+    if (parcel == null) {
+        throw new ParcelNotFoundException(id);
+    }
+    parcel.changeStatus(Status.valueOf(req.status()));
+    log.info("Parcel {} status changed to {}", id, parcel.status());
+    return toResponse(parcel);
 }
 ```
 
-(Your method bodies from steps 05–06 may differ slightly — the point is one `log.info` per successful write and one `log.debug` per read. Don't add more.)
+These are the step-06 methods with one line added. The point is one `log.info` per successful write and one `log.debug` per read. Don't add more.
 
 ### 3. Log the disaster in `GlobalErrorHandler`
 
 This is the heart of the step. Your catch-all from step 06 returns a clean `ErrorResponse` — now make it also record what actually happened:
 
 ```java
-import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -125,22 +132,19 @@ public class GlobalErrorHandler {
 
     // ... your existing 400/404/409 handlers stay as they are
 
+    // the step-06 catch-all, with ONE new line: the log.error
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleUnexpected(Exception e, HttpServletRequest request) {
-        log.error("Unhandled error on {} {}", request.getMethod(), request.getRequestURI(), e);
-        ErrorResponse body = new ErrorResponse(
-                "INTERNAL",
-                "An unexpected error occurred",
-                Map.of(),
-                request.getRequestURI());
-        return ResponseEntity.status(500).body(body);
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse unexpected(Exception ex, HttpServletRequest request) {
+        log.error("Unhandled error on {} {}", request.getMethod(), request.getRequestURI(), ex);
+        return new ErrorResponse("INTERNAL", "An unexpected error occurred", Map.of(), request.getRequestURI());
     }
 }
 ```
 
-**Look closely at the `log.error` line — this is a classic gotcha.** There are two `{}` placeholders but *three* arguments. That's deliberate: when the **last** argument is a `Throwable` and has no placeholder, SLF4J treats it as *the exception* and prints its **full stack trace** under the message. If you wrote `log.error("Unhandled error: {}", e)` instead, `e` would fill the placeholder as a plain string — one line, **no stack trace**, and you'd be blind again. Exception last, no `{}` for it.
+**Look closely at the `log.error` line — this is a classic gotcha.** There are two `{}` placeholders but *three* arguments. That's deliberate: when the **last** argument is a `Throwable` and has no placeholder, SLF4J treats it as *the exception* and prints its **full stack trace** under the message. If you wrote `log.error("Unhandled error: {}", ex)` instead, `ex` would fill the placeholder as a plain string — one line, **no stack trace**, and you'd be blind again. Exception last, no `{}` for it.
 
-Note the split: the **client** still gets the generic "Something went wrong" (never leak internals in responses) while the **log** gets everything.
+Note the split: the **client** still gets the generic "An unexpected error occurred" (never leak internals in responses) while the **log** gets everything.
 
 ### 4. (Stretch) A request ID on every line
 

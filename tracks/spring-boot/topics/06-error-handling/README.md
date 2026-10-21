@@ -158,7 +158,7 @@ public ParcelResponse getOne(@PathVariable String id) {
 
 ### 4. Delete the ad-hoc `409` from `PATCH`
 
-The step-04 lab caught `IllegalStateException` inside the method. Remove the `try`/`catch` and just let the domain throw — same lookup rule as above for a missing parcel:
+The step-04 lab caught `IllegalStateException` inside the method. Remove the `try`/`catch` and let the domain throw — same lookup rule as above for a missing parcel:
 
 ```java
 // BEFORE (shape from the step-04 lab)
@@ -170,7 +170,7 @@ public ResponseEntity<?> changeStatus(@PathVariable String id,
         return ResponseEntity.notFound().build();
     }
     try {
-        parcel.changeStatus(req.status());
+        parcel.changeStatus(Status.valueOf(req.status()));
     } catch (IllegalStateException e) {
         return ResponseEntity.status(409).body(Map.of("error", e.getMessage()));
     }
@@ -185,7 +185,7 @@ public ParcelResponse changeStatus(@PathVariable String id,
     if (parcel == null) {
         throw new ParcelNotFoundException(id);
     }
-    parcel.changeStatus(req.status());              // may throw IllegalStateException -> 409
+    parcel.changeStatus(Status.valueOf(req.status()));              // may throw IllegalStateException -> 409
     return toResponse(parcel);
 }
 ```

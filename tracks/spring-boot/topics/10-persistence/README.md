@@ -241,7 +241,7 @@ public List<ParcelResponse> list(@RequestParam(required = false) Status status) 
 @PatchMapping("/{id}/status")
 public ParcelResponse changeStatus(@PathVariable String id, @Valid @RequestBody UpdateStatusRequest req) {
     ParcelEntity parcel = load(id);
-    switch (Status.valueOf(req.status())) {   // status is a String since the step-05 lab (@Pattern)
+    switch (Status.valueOf(req.status())) {
         case PICKED_UP -> parcel.markPickedUp();
         case DELIVERED -> parcel.markDelivered();
         case CREATED -> throw new IllegalStateException("a parcel cannot go back to CREATED");

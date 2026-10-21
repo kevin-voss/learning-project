@@ -101,7 +101,7 @@ A library catalog API accepts `POST /books` with an ISBN and a title. Without bo
 
 ## Common mistakes
 
-- **Forgetting `@Valid`.** The constraints on the record are just decoration until something triggers them. No `@Valid` on the parameter = no validation, silently.
+- **Forgetting `@Valid`.** The constraints on the record are only decoration until something triggers them. No `@Valid` on the parameter = no validation, silently.
 - **Forgetting the dependency.** Without `spring-boot-starter-validation` on the classpath, the annotations compile fine and do nothing. If your bad request sails through, check the `pom.xml` first.
 - **Using `@NotNull` when you mean `@NotBlank`.** `@NotNull` happily accepts `""` and `"   "`. For required text, `@NotBlank` is almost always what you want (the full distinction table is in [Bean Validation explained](bean-validation-explained.md)).
 - **Validating the entity instead of the DTO.** HTTP rules belong on the request DTO. Persistence classes (step 10) have their own concerns.
@@ -109,7 +109,7 @@ A library catalog API accepts `POST /books` with an ISBN and a title. Without bo
 
 ## Build it in ParcelPilot
 
-Still one project: `applications/parcelpilot`. Three small changes and one handler. Follow the [validation lab](validation-lab.md) if you want to *break the app first* and watch each change take effect — recommended.
+Still one project: `applications/parcelpilot`. Small changes and one handler. Follow the [validation lab](validation-lab.md) if you want to *break the app first* and watch each change take effect — recommended.
 
 ### 1. Add the validation starter to `pom.xml`
 
@@ -184,7 +184,27 @@ public ResponseEntity<Map<String, String>> onValidationError(MethodArgumentNotVa
 
 An `@ExceptionHandler` method placed inside a controller catches that exception **for this controller only**. That's fine today — ParcelPilot has one controller. But you can already smell the limitation: every future controller would need its own copy, and the `IllegalArgumentException` from the domain still crashes into a `500`. **Step 06 moves error handling to one central place (`@ControllerAdvice`) with one shared error schema.** Don't build that yet.
 
-### 5. (Optional stretch) A custom constraint
+### 5. Guard the `PATCH` body too
+
+`UpdateStatusRequest` from the step-04 lab gets the same treatment. Its field stays a `String`; two annotations reject unknown statuses with a `400` before `Status.valueOf(...)` can crash:
+
+```java
+package com.parcelpilot;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+
+public record UpdateStatusRequest(
+        @NotBlank(message = "status must not be blank")
+        @Pattern(regexp = "CREATED|PICKED_UP|DELIVERED",
+                 message = "status must be one of CREATED, PICKED_UP, DELIVERED")
+        String status
+) {}
+```
+
+Add `@Valid` in front of `@RequestBody UpdateStatusRequest req` in the `PATCH` method. The [validation lab](validation-lab.md#guard-the-patch-endpoint-too) proves it with `curl`.
+
+### 6. (Optional stretch) A custom constraint
 
 Want `@ValidParcelId` as a reusable, self-documenting annotation instead of a raw `@Pattern`? The full small example lives in [Bean Validation explained](bean-validation-explained.md#optional-stretch-a-custom-constraint). Skip it on first pass.
 
@@ -214,7 +234,7 @@ Content-Type: application/json
 ```
 
 ```bash
-# blank recipient -> 400 naming just that field
+# blank recipient -> 400 naming only that field
 curl -i -X POST http://localhost:8080/parcels \
   -H 'Content-Type: application/json' \
   -d '{"id":"P-7","recipient":"   "}'

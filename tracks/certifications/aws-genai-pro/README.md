@@ -59,9 +59,9 @@ tracks/certifications/aws-genai-pro/
 │   └── components/      # overview, topic, topic-detail, quiz, responsive
 ├── js/
 │   ├── app.js           # hash router + sidebar
-│   ├── core/            # ns.js (AIP.register*), config.js (domains, keys), storage.js (localStorage)
+│   ├── core/            # ns.js (AIP.register*), config.js (domains, keys), storage.js (localStorage), pwa.js (install + service worker)
 │   ├── course/          # study-guide.js, chapters.js (sidebar 00–27), render.js (chapter / home HTML)
-│   ├── exam/            # question-bank.js, quiz.js (attempt flow)
+│   ├── exam/            # question-bank.js (filters, sorting), bank-views.js (list + exam setup), quiz.js (attempt flow), stats-view.js
 │   ├── content/         # one file per chapter, grouped: foundations, integration-agents,
 │   │                    # knowledge, trust, operate, ship, exam
 │   └── questions/

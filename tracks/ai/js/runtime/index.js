@@ -1,8 +1,8 @@
-import { wireNavigation } from './navigation.js';
-import { wireContent } from './content.js';
-import { wireDiagrams } from './diagrams.js';
-import { wireSearch } from './search.js';
-import { wireWidgets } from './widgets.js';
+import { wireNavigation } from './nav/navigation.js';
+import { wireContent } from './page/content.js';
+import { wireDiagrams } from './page/diagrams.js';
+import { wireSearch } from './nav/search.js';
+import { wireWidgets } from './page/widgets.js';
 
 export function start() {
   const ready = () => {

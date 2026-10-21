@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { READABLE_MAX, READABLE_MIN, autoScale, fitScale, zoomDimensions } from '../../js/runtime/diagrams.js';
-import { sidebarExpanded } from '../../js/runtime/navigation.js';
-import { fuzzyScore, solId } from '../../js/runtime/search.js';
+import { READABLE_MAX, READABLE_MIN, autoScale, fitScale, zoomDimensions } from '../../js/runtime/page/diagrams.js';
+import { sidebarExpanded } from '../../js/runtime/nav/navigation.js';
+import { fuzzyScore, solId } from '../../js/runtime/nav/search.js';
 
 test('auto scale fits slightly wide diagrams but never shrinks labels below the readable floor', () => {
   assert.equal(autoScale(1100, 200, 1000), 1000 / 1100);

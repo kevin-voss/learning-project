@@ -1,5 +1,5 @@
-import { PAGES } from './data.js';
-import { solId } from './search.js';
+import { PAGES } from '../nav/data.js';
+import { solId } from '../nav/search.js';
 
 const el = (tag, cls, text) => {
   const node = document.createElement(tag);

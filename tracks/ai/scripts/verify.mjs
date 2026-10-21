@@ -10,7 +10,7 @@ const filesUnder = (directory) => readdirSync(join(root, directory), { withFileT
   const path = join(directory, entry.name);
   return entry.isDirectory() ? filesUnder(path) : [path];
 });
-const appSource = read('tracks/ai/js/runtime/data.js');
+const appSource = read('tracks/ai/js/runtime/nav/data.js');
 const routes = [...appSource.matchAll(/file:\s*'([^']+\.html)'/g)].map((match) => match[1]);
 if (routes.length < 1) errors.push('Runtime metadata lists no topic routes');
 if (new Set(routes).size !== routes.length) errors.push('Runtime metadata contains duplicate topic routes');

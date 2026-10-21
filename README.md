@@ -22,7 +22,7 @@ cd learning-project
 git switch -c your-name
 ```
 
-Personal tasks from a teacher are in [`students/<your-name>/`](students/README.md). Work in `starter/`, compare with `solution/`, commit and push.
+Personal Übungen from a teacher are in [`students/<your-name>/`](students/README.md): one folder per Übung, one per Aufgabe. Write your code in the Aufgabe's `meine-loesung/`, compare with `musterloesung/`, commit and push. In Cursor, `/task`, `/hint`, `/check`, `/review` and `/done` help without giving the answer.
 
 ## Structure
 
@@ -35,7 +35,7 @@ Personal tasks from a teacher are in [`students/<your-name>/`](students/README.m
 | [`projects/`](projects/README.md) | Small builds `00`–`05`, each with step-by-step docs | Do steps |
 | [`drills/`](drills/javascript/README.md) | JavaScript drills with tests | Stage 5 |
 | [`programs/`](programs/code-for-cleaning/README.md) | Code for Cleaning: real-life Java task rounds | Extras |
-| [`students/`](students/README.md) | `<student>/<subject>/<NN-task>/` with README, TASK, `starter/`, `solution/` | My tasks |
+| [`students/`](students/README.md) | `<student>/<subject>/uebungen/uebung-NN-…/aufgabe-NN-k-…/` with README, `meine-loesung/`, `musterloesung/` | My tasks |
 
 ```
 learning-project/
@@ -46,7 +46,7 @@ learning-project/
 ├── projects/       # docs/ (sheets) · 00 static → 01 weather → 05 java CLI → 02 docker → optional 03/04
 ├── drills/         # javascript/
 ├── programs/       # code-for-cleaning/
-└── students/       # <student>/<subject>/<NN-task>/
+└── students/       # <student>/<subject>/uebungen/<uebung>/<aufgabe>/
 ```
 
 ## The website
@@ -72,8 +72,8 @@ make test
 # Website: refresh catalog, build dist/site, check links
 make site
 
-# New task for a student (or /new-task in Cursor); also updates the landing page
-make new-task STUDENT=becky SUBJECT=computer-science TITLE="Loops"
+# New Übung with Aufgaben for a student (or /new-uebung in Cursor); also updates the landing page
+make new-uebung STUDENT=becky SUBJECT=computer-science NUMBER=05 TITLE="Schleifen" AUFGABEN="Einmaleins, Zahlenraten"
 
 # CS demos after edits
 node tracks/computer-science/scripts/verify-demos.mjs
@@ -81,6 +81,6 @@ node tracks/computer-science/scripts/verify-demos.mjs
 
 ## Cursor
 
-Rules: [`.cursor/rules/`](.cursor/rules/). Skills: `learner-memory`, `caveman`. Commands: `/path`, `/learning-path`, `/reflect`, `/new-task`.
+Rules: [`.cursor/rules/`](.cursor/rules/). Skills: `learner-memory`, `caveman`. Commands for students working on an Aufgabe: `/task`, `/hint`, `/explain`, `/error`, `/check`, `/review`, `/done` (shared tutor rules in `.cursor/rules/students.mdc`). For teachers: `/new-uebung`, `/path`, `/learning-path`, `/reflect`.
 
 Agents: [`AGENTS.md`](AGENTS.md).

@@ -1,11 +1,12 @@
 # /path
 
-Show where content belongs in this monorepo.
+Show where new content belongs in this repo.
 
-When the user invokes this command, reply with:
+Reply with:
 
-1. **Bucket** — `hub`, `drills`, `apps`, `tracks`, `projects`, `programs`, or `docs`
-2. **Canonical path** — exact folder for their topic (check `docs/LEARNING_PATH.md`)
-3. **Whether to link** — if similar content exists elsewhere, name the canonical file and do not duplicate
+1. **Bucket**: `tracks` (big course), `projects/docs` (short sheet), `projects` (a build), `drills`, `programs`, `students` (one student's Übung) or `docs` (background for teachers). The site itself is `hub/`.
+2. **Canonical path**: the exact folder. Check `README.md` and the step list in `hub/path.mjs`.
+3. **Link, do not copy**: if the topic already has a home, name that file and link to it.
+4. **Path step**: if learners should do it, where it goes in `hub/path.mjs` (stage and position). Never rename an existing step `id`.
 
-Do not create new top-level folders without updating `README.md` and `docs/LEARNING_PATH.md`.
+New Übungen for a student: use `/new-uebung`, not this command.

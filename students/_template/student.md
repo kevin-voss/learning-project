@@ -1,13 +1,19 @@
 # {{STUDENT_NAME}}
 
-Hi {{STUDENT_NAME}}! This is your room. Every shelf below is one subject. Open a subject to see its tasks.
+Hi {{STUDENT_NAME}}! This is your room. Every folder below is one subject.
 
-How each task works:
+How it is sorted:
 
-1. Read the task's `README.md`: what you will learn.
-2. Read `TASK.md`: what to build.
-3. Work in `starter/`.
-4. Done and tested? Then compare with `solution/`.
+```text
+{{STUDENT}}/
+└── <subject>/                 e.g. computer-science
+    └── uebungen/              all Übungen of this subject
+        └── uebung-04-…/       one Übung = one exercise sheet
+            └── aufgabe-04-1-…/  one Aufgabe = one task
+                ├── README.md        the task, simply said, test examples
+                ├── meine-loesung/   your desk: write your code here
+                └── musterloesung/   the Musterlösung (peek only when done)
+```
 
 ## Subjects
 

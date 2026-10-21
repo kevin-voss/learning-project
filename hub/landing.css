@@ -616,6 +616,15 @@ h1 {
   font-weight: 700;
 }
 
+.uebung {
+  margin: 10px 0 4px;
+  font-weight: 800;
+}
+
+.uebung a {
+  text-decoration: none;
+}
+
 .task-list {
   margin: 0;
   padding: 0;

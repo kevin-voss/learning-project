@@ -88,7 +88,7 @@ function withProgress(html) {
   return html.includes('</body>') ? html.replace('</body>', `${PROGRESS}\n</body>`) : html
 }
 
-// Source files next to a README are listed under it, so starter/ and solution/
+// Source files next to a README are listed under it, so meine-loesung/ and musterloesung/
 // pages show their code on the website too.
 function withCodeList(markdown, dir) {
   const files = readdirSync(join(ROOT, dir)).filter((name) => CODE[extname(name)]).sort()

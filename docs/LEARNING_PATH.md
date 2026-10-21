@@ -189,7 +189,7 @@ Same as Layer F: [`tracks/spring-boot`](../tracks/spring-boot/). No shortcut pas
 |------|------|
 | [`tracks/ai/`](../tracks/ai/README.md) | AI engineering sheet (RAG, agents, MCP, evals) |
 | [`programs/code-for-cleaning/`](../programs/code-for-cleaning/README.md) | Extra Java practice |
-| [`students/`](../students/README.md) | Per-student tasks by subject (e.g. Becky · Computer Science) · `/new-task` |
+| [`students/`](../students/README.md) | Per-student Übungen and Aufgaben (e.g. Becky · Computer Science · Übung 04) · `/new-uebung` |
 | [`tracks/certifications/aws-genai-pro/`](../tracks/certifications/aws-genai-pro/index.html) | Exam prep only |
 | Learner memory | [`docs/learner-memory/`](learner-memory/README.md) · Cursor `/reflect` |
 

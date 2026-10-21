@@ -1,12 +1,9 @@
 # {{STUDENT_NAME}} · {{SUBJECT_NAME}}
 
-All {{SUBJECT_NAME}} tasks for {{STUDENT_NAME}}, oldest first. One folder = one task.
+Everything for this subject lives in this folder.
 
-## Tasks
-
-<!-- index:start -->
-<!-- index:end -->
-
-Status words: `todo` → `in progress` → `done`. Change them by hand in the table.
+| Folder | What is inside |
+|--------|----------------|
+| [`uebungen/`](uebungen/README.md) | The Übungen. One folder per Übung, one subfolder per Aufgabe |
 
 Back to [{{STUDENT_NAME}}](../README.md).

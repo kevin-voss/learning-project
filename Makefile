@@ -16,13 +16,13 @@
 
 TOPICS := variables math strings arrays conditionals loops functions objects
 
-.PHONY: test help new-task site catalog $(TOPICS)
+.PHONY: test help new-uebung site catalog $(TOPICS)
 
 help:
 	@echo "make test              — alle Themen"
 	@echo "make variables         — nur variables/ (ebenso: math, strings, …)"
 	@echo "make variables-task-03 — eine Aufgabe (01–10) im Thema"
-	@echo "make new-task STUDENT=becky SUBJECT=computer-science TITLE=\"Loops\" [NUMBER=05] [LANGUAGE=Java]"
+	@echo "make new-uebung STUDENT=becky SUBJECT=computer-science NUMBER=05 TITLE=\"Schleifen\" AUFGABEN=\"Einmaleins, Zahlenraten\" [LANGUAGE=Java]"
 	@echo "make catalog           — Landing-Katalog (hub/index.html) aus den Ordnern neu schreiben"
 	@echo "make site              — Website bauen (dist/site) und alle Links prüfen"
 
@@ -56,10 +56,12 @@ functions-task-%:
 objects-task-%:
 	bun test drills/javascript/objects/tasks.test.js --test-name-pattern objects-task-$*
 
-# Neue Aufgabe für eine:n Schüler:in anlegen (students/<name>/<fach>/<NN-titel>/)
-new-task:
-	node students/scripts/new-task.mjs --student "$(STUDENT)" --subject "$(SUBJECT)" --title "$(TITLE)" \
-		$(if $(NUMBER),--number "$(NUMBER)") $(if $(SLUG),--slug "$(SLUG)") $(if $(LANGUAGE),--language "$(LANGUAGE)")
+# Neue Übung mit Aufgaben für eine:n Schüler:in
+# (students/<name>/<fach>/uebungen/uebung-<NN>-<titel>/aufgabe-<NN>-<k>-<titel>/)
+# Gleiche NUMBER nochmal = weitere Aufgaben zur bestehenden Übung.
+new-uebung:
+	node students/scripts/new-uebung.mjs --student "$(STUDENT)" --subject "$(SUBJECT)" --number "$(NUMBER)" \
+		--title "$(TITLE)" --aufgaben "$(AUFGABEN)" $(if $(SLUG),--slug "$(SLUG)") $(if $(LANGUAGE),--language "$(LANGUAGE)")
 
 # Website: Katalog auf der Landing Page + dist/site bauen + Links prüfen (wie auf Vercel)
 catalog:

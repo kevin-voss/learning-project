@@ -1,15 +1,9 @@
 # Becky · Computer Science
 
-All Computer Science tasks for Becky, oldest first. One folder = one task.
+Programmieren 1 (Hochschule Hannover). Everything for this subject lives in this folder.
 
-## Tasks
-
-<!-- index:start -->
-| # | Task | Status |
-|---|------|--------|
-| 04 | [Branches (Verzweigungen)](04-branches/README.md) | todo |
-<!-- index:end -->
-
-Status words: `todo` → `in progress` → `done`. Change them by hand in the table.
+| Folder | What is inside |
+|--------|----------------|
+| [`uebungen/`](uebungen/README.md) | The weekly Übungen. One folder per Übung, one subfolder per Aufgabe |
 
 Back to [Becky](../README.md).

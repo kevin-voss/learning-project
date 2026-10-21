@@ -19,14 +19,14 @@ A monorepo of **drills**, **tracks**, **projects** (sheet → small build), and 
 | AIP-C01 | `tracks/certifications/aws-genai-pro/` | Static prep app |
 | Projects | `projects/` | Four brief-only curricula |
 | Cleaning | `programs/code-for-cleaning/` | Slash commands in `programs/code-for-cleaning/.cursor/commands/` |
-| Students | `students/` | `<student>/<subject>/<NN-slug>/` · create with `/new-task` or `make new-task` · rule `students.mdc` |
+| Students | `students/` | `<student>/<subject>/uebungen/uebung-NN-…/aufgabe-NN-k-…/` (README, `meine-loesung/`, `musterloesung/`) · create with `/new-uebung` or `make new-uebung` · rule `students.mdc` |
 | Learner memory | `docs/learner-memory/` | Long-term profile; skill `learner-memory`, `/reflect` |
 
 ## Cursor
 
 - **Rules:** `.cursor/rules/` — `monorepo.mdc` (always on), `structure.mdc` (folder/line limits), `students.mdc` (`students/**`).
 - **Skills:** `.cursor/skills/caveman/` — optional compressed replies when invoked.
-- **Commands:** `.cursor/commands/` — repo-wide helpers; cleaning program keeps its own commands under `programs/code-for-cleaning/.cursor/commands/`.
+- **Commands:** `.cursor/commands/` — student tutor commands for the current Aufgabe (`/task`, `/hint`, `/explain`, `/error`, `/check`, `/review`, `/done`; they never write the solution), teacher commands (`/new-uebung`, `/path`, `/learning-path`, `/reflect`). The cleaning program keeps its own commands under `programs/code-for-cleaning/.cursor/commands/`.
 
 ## Conventions
 

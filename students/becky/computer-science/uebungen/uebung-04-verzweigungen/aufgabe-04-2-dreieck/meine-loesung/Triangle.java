@@ -26,7 +26,7 @@ public class Triangle {
         // TODO 4: right-angled = valid AND longest² == short1² + short2²
         //         Step A: find out which side is the longest (if / else if).
         //         Step B: compare. Careful: doubles are sometimes off by a tiny bit,
-        //                 see README "Doubles can tell tiny fibs".
+        //                 see the Übung README, part 11 "Doubles can tell tiny fibs".
         boolean rightAngled = false;
 
         System.out.println("Valid:         " + valid);

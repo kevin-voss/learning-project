@@ -3,73 +3,91 @@
 Think of this folder like a big school building.
 
 - Every **student** has their own room (a folder with their name).
-- In each room there are **shelves**, one for each subject (computer science, math, …).
-- On every shelf there are **boxes**. One box = one task.
-- Every box always looks the same inside, so you never get lost.
+- In each room there is a **shelf for each subject** (computer science, math, …).
+- On the shelf there is a box called **Übungen**. Inside: one folder per **Übung** (one exercise sheet).
+- Every Übung has one folder per **Aufgabe** (one task). Every Aufgabe looks the same inside, so you never get lost.
 
 Everyone can open every room. Looking at how someone else solved a task is allowed and useful.
 
-Lessons and projects that are the same for everyone are in the [learning path](../hub/index.html). This folder is only for extra tasks that belong to **one** student.
+Lessons that are the same for everyone are on the [learning path](../hub/index.html). This folder is only for Übungen that belong to **one** student.
 
-## What is inside one task box
+## What is inside
 
 ```text
 students/
-└── becky/                          ← the student
-    └── computer-science/           ← the subject
-        └── 04-branches/            ← one task = one folder
-            ├── README.md           ← what you will learn (explained simply)
-            ├── TASK.md             ← the task itself
-            ├── starter/            ← START HERE: your work goes in this folder
-            └── solution/           ← the perfect solution (peek only when done!)
+└── becky/                                   ← the student
+    └── computer-science/                    ← the subject
+        └── uebungen/                        ← all Übungen of this subject
+            └── uebung-04-verzweigungen/     ← one Übung: README explains every new idea
+                ├── README.md
+                ├── aufgabe-04-1-aktenordner/  ← one Aufgabe = one folder
+                │   ├── README.md              ← the task, simply said, test examples, helpers
+                │   ├── meine-loesung/         ← START HERE: your code goes in this folder
+                │   └── musterloesung/         ← the Musterlösung (peek only when done!)
+                ├── aufgabe-04-2-dreieck/
+                └── aufgabe-04-3-datum/
 ```
 
-| File / folder | Who uses it | What it is for |
-|---------------|-------------|----------------|
-| `README.md` | Student first | The new ideas, explained like a story, before any code |
-| `TASK.md` | Student | The exact task, plus a simple version and test examples |
-| `starter/` | Student | Half-ready files to fill in. Nothing is solved here |
-| `solution/` | Teacher, then student | One clean, complete solution with explanations |
+| Folder / file | What it is for |
+|---------------|----------------|
+| Übung `README.md` | The story and every new idea, explained like for a 6-year-old. Table of Aufgaben with status |
+| Aufgabe `README.md` | The original task, the same task in simple words, test examples, little helpers, "done when" |
+| `meine-loesung/` | Your desk: half-ready files with `TODO`s. Nothing is solved here |
+| `musterloesung/` | One clean, complete solution with a step-by-step walkthrough and common mistakes |
 
-## Read on the web, work on your computer
+Every folder has a `README.md`, so you can always read where you are.
 
-The website shows every task, including the code in `starter/` and `solution/`. On the landing page, open **My tasks** and pick your name.
+## How to work on an Aufgabe
 
-To **do** a task you need this repository on your computer and your own branch. If you have not done that yet, follow [Get set up](../projects/docs/setup/getting-started.md) first.
+You need this repository on your computer and your own branch. If you have not done that yet, follow [Get set up](../projects/docs/setup/getting-started.md) first.
 
-1. Open `students/<your-name>/<subject>/<task>/README.md` and read it.
-2. Read `TASK.md`.
-3. Write your code in `starter/`. Run it there (for Java: `javac *.java` then `java <ClassName>`).
-4. Done and tested? Compare with `solution/`.
-5. Set the status of the task to `done` in your subject `README.md`, then save and upload your work:
+1. Read the Übung `README.md` (the new ideas).
+2. Open the first Aufgabe and read its `README.md`.
+3. Write your code in `meine-loesung/`. Run it there (Java: `javac *.java`, then `java <ClassName>`).
+4. Try every test example.
+5. Done? Compare with `musterloesung/`, set the status to `done` in the Übung table, then save your work:
 
 ```bash
 git add students/becky
-git commit -m "feat(becky): solve 04-branches"
+git commit -m "feat(becky): solve Aufgabe 04_1"
 git push
 ```
 
-Your teacher looks at your branch (or a pull request) and merges it.
+The website shows all of it too: on the landing page open **My tasks** and pick your name.
 
-## Add a new task (teacher)
+## Cursor commands for students
 
-Fastest way in Cursor: type **`/new-task`** and paste the task. The agent builds the folder and writes the docs and the solution.
+Open your file in `meine-loesung/` and type one of these in the Cursor chat. Cursor finds your current Aufgabe by itself (or add it: `/hint 04_2`). It helps you think. It never writes the solution for you.
 
-By hand (only builds the empty box, you fill it):
+| Command | Use it when |
+|---------|-------------|
+| `/task` | Where am I? What is the next small step? |
+| `/hint` | You are stuck. You get one hint, not the answer. Ask again for a bigger one |
+| `/explain switch` | A word or idea is new |
+| `/error` | The terminal shows red text. Paste it after the command |
+| `/check` | Does my program give the right answers? Runs every test example |
+| `/review` | Feedback on your code, like from a teacher |
+| `/done` | You think you are finished: tests, three questions, then status `done` |
+
+## Add a new Übung (teacher)
+
+Fastest way in Cursor: type **`/new-uebung`** and paste the sheet. The agent builds the folders and writes the explanations, the half-ready files and the Musterlösung.
+
+By hand (only builds the empty folders, you fill them):
 
 ```bash
-make new-task STUDENT=becky SUBJECT=computer-science TITLE="Loops" NUMBER=05
+make new-uebung STUDENT=becky SUBJECT=computer-science NUMBER=05 TITLE="Schleifen" AUFGABEN="Einmaleins, Zahlenraten" LANGUAGE=Java
 ```
 
 Same thing without make:
 
 ```bash
-node students/scripts/new-task.mjs --student becky --subject computer-science --title "Loops" --number 05
+node students/scripts/new-uebung.mjs --student becky --subject computer-science --number 05 --title "Schleifen" --aufgaben "Einmaleins, Zahlenraten" --language Java
 ```
 
-`NUMBER` is optional. Without it the next free number is used (`01`, `02`, …). New students and new subjects are created on the fly. Every index page gets a new line, and the landing page lists the task under **My tasks**.
+Run it again with the same `NUMBER` to add more Aufgaben to that Übung. New students and subjects are created on the fly, every index page gets a new line, and the landing page lists the Übung under **My tasks**.
 
-Templates for all generated files live in `_template/` (not on the website). Change them there and every **new** task uses the change.
+Templates for every generated file live in `_template/` (not on the website). Change them there and every **new** Übung uses the change.
 
 ## All students
 

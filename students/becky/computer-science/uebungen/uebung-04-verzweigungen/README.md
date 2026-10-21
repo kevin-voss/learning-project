@@ -1,11 +1,11 @@
-# 04 · Branches (Verzweigungen)
+# Übung 04 · Verzweigungen (Branches)
 
 | | |
 |---|---|
 | Student | Becky |
-| Subject | Computer Science (Programmieren 1, Übung 04) |
-| Language | Java |
-| Created | 2026-10-21 |
+| Fach | Computer Science · Programmieren 1 (Hochschule Hannover) |
+| Sprache | Java |
+| Erstellt | 2026-10-21 |
 
 ## The story in one sentence
 
@@ -16,6 +16,30 @@ You will build three little programs that make choices:
 1. A **shop till** that knows discounts and free delivery.
 2. A **triangle detective** that tells you what kind of triangle you have.
 3. A **calendar guard** that knows if a date really exists.
+
+## Aufgaben
+
+Do them in order: each one is a bit harder than the one before. Every Aufgabe has its own folder with the task, a desk for your code (`meine-loesung/`) and the Musterlösung.
+
+<!-- index:start -->
+| Aufgabe | Thema | Status |
+|---------|-------|--------|
+| 04_1 | [Aktenordner: shop till](aufgabe-04-1-aktenordner/README.md) | todo |
+| 04_2 | [Dreieck: triangle detective](aufgabe-04-2-dreieck/README.md) | todo |
+| 04_3 | [Datum: calendar guard](aufgabe-04-3-datum/README.md) | todo |
+<!-- index:end -->
+
+Status words: `todo` → `in progress` → `done`. Change them here when you finish an Aufgabe (or let `/done` do it).
+
+## How to work
+
+1. Read this page to the end: it explains every new idea once, for all three Aufgaben.
+2. Open the first Aufgabe and read its `README.md`.
+3. Write your code in its `meine-loesung/` folder. That is your desk.
+4. Try every test example from the Aufgabe's `README.md`.
+5. Only when you are done (or really stuck for a long time): look at `musterloesung/`.
+
+In Cursor you can ask for help at any time, without getting the answer: `/task` (where am I?), `/hint`, `/explain`, `/error`, `/check`, `/review`, `/done`. See [students/README.md](../../../../README.md#cursor-commands-for-students).
 
 ---
 
@@ -216,7 +240,7 @@ boolean same = Math.abs(x - y) < TOLERANCE;   // Math.abs drops the minus sign
 
 ### 12. Reading from the keyboard — the program's ears
 
-`Scanner` listens to what you type. The starter files already have it, so you only need to know what it does:
+`Scanner` listens to what you type. Your files in `meine-loesung/` already have it, so you only need to know what it does:
 
 ```java
 Scanner scanner = new Scanner(System.in);
@@ -247,12 +271,9 @@ Your computer speaks German, so it would want `3,5` instead of `3.5`. The line `
 | Schaltjahr | leap year | A year with 29 February |
 | teilbar | divisible | Shares with no leftovers (`% == 0`) |
 
-## How to work on this task
+## Source
 
-1. Read this page to the end.
-2. Open [TASK.md](TASK.md) and read the task.
-3. Work only in [`starter/`](starter/). That is your desk.
-4. Try every test example from `TASK.md`.
-5. Only when you are done (or really stuck for a long time): look at [`solution/`](solution/).
+> Prof. Dr.-Ing. Dennis Chong · Tim Dannhauer, M. Sc. · Hochschule Hannover, Fakultät IV – Wirtschaft und Informatik, Abteilung WI
+> **Programmieren 1 | Übung 04 Verzweigungen**
 
-Back to [all tasks](../README.md).
+Back to [all Übungen](../README.md).

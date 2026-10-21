@@ -11,7 +11,7 @@ Use [Bun](https://bun.sh/) from this directory:
 | Command              | Purpose                                      |
 |----------------------|----------------------------------------------|
 | `bun install`        | Install dependencies                         |
-| `bun run dev`        | Dev server (default `http://localhost:5173`) |
+| `bun run dev`        | Dev server (default `http://localhost:5173/codestep/`) |
 | `bun run build`    | Type-check (`tsc -b`) and production bundle  |
 | `bun run preview`    | Preview the production build locally         |
 | `bun run lint`       | ESLint (TypeScript + React Hooks refresh)   |

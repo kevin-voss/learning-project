@@ -12,10 +12,10 @@
       <div class="brand"><div class="brand-mark">LP</div><span>Learning Project</span></div>
       <nav class="nav-links" aria-label="Primary">
         <a href="../docs/LEARNING_PATH.md">Path</a>
-        <a href="../tracks/java/index.html">Java</a>
         <a href="../tracks/computer-science/index.html">CS</a>
+        <a href="../tracks/java/index.html">Java</a>
         <a href="../projects/README.md">Projects</a>
-        <a href="../apps/codestep/index.html">CodeStep</a>
+        <a href="../codestep/">CodeStep</a>
         <a href="../tracks/spring-boot/README.md">Spring</a>
         <a href="../tracks/architecture/index.html">Architecture</a>
       </nav>
@@ -30,9 +30,9 @@
           <h1>Learning Project</h1>
           <p>Computer science from the ground up, then HTML/CSS/JS, then <strong>Java in depth</strong>. Small projects only. Read a sheet, build something tiny, move on.</p>
           <div class="quick-actions">
-            <a class="button primary" href="../docs/LEARNING_PATH.md">Open learning path</a>
-            <a class="button secondary" href="../tracks/java/index.html">Java hub</a>
-            <a class="button secondary" href="../tracks/computer-science/index.html">CS roadmap</a>
+            <a class="button primary" href="#spine">Start the spine</a>
+            <a class="button secondary" href="../docs/LEARNING_PATH.md">Full learning path</a>
+            <a class="button secondary" href="../projects/docs/roadmap.md">Project roadmap</a>
           </div>
         </div>
 
@@ -45,25 +45,153 @@
       </div>
     </section>
 
-    <section class="section">
+    <section class="section" id="spine">
       <div class="container">
         <div class="section-head">
           <div>
-            <div class="eyebrow">Sheet → project</div>
-            <h2>Small builds</h2>
+            <div class="eyebrow">Do in order</div>
+            <h2>The spine</h2>
           </div>
-          <p>Each project is hours, not weeks. Full checklist in <a href="../projects/docs/roadmap.md">projects/docs/roadmap.md</a>.</p>
+          <p>Each step: read the sheet, build the project, pass the checkpoint, move on. Order follows <a href="../docs/LEARNING_PATH.md">LEARNING_PATH</a>.</p>
         </div>
-        <div class="grid">
-          <a class="track-card" href="../projects/00-static-page/README.md"><span class="tag js">00</span><h3>Static page</h3><p>HTML + CSS sheets → about-me page.</p><div class="meta"><span>2–4 h</span><span>Sheet first</span></div></a>
-          <a class="track-card" href="../projects/01-weather-dashboard/README.md"><span class="tag js">01</span><h3>Weather (browser)</h3><p>JS drills → fetch Open-Meteo.</p><div class="meta"><span>6–10 h</span><span>JS apply</span></div></a>
-          <a class="track-card" href="../projects/05-java-weather-cli/README.md"><span class="tag java">05</span><h3>Weather (Java CLI)</h3><p>Same API in Java after hub REST (Layer C).</p><div class="meta"><span>3–5 h</span><span>Java apply</span></div></a>
-          <a class="track-card" href="../projects/02-docker-portfolio/README.md"><span class="tag systems">02</span><h3>Docker site</h3><p>CS Docker → containerize a page (with Layer D practice).</p><div class="meta"><span>4–6 h</span><span>Infra</span></div></a>
-          <a class="track-card" href="../tracks/java/index.html"><span class="tag java">Hub</span><h3>Java learning hub</h3><p>Layers A–D: language, collections, REST, server layers. Cookie-cutter examples + terminal practice.</p><div class="meta"><span>tracks/java</span><span>Focus</span></div></a>
-          <a class="track-card" href="../apps/todo-e2e/README.md"><span class="tag java">App</span><h3>Todo e2e</h3><p>Layer E after Gates A–D. Controllers + JdbcTemplate + Postgres.</p><div class="meta"><span>apps/todo-e2e</span><span>make</span></div></a>
-          <a class="track-card" href="../tracks/architecture/index.html"><span class="tag systems">Arch</span><h3>Architecture</h3><p>Layer F concepts. Not a second Docker course.</p><div class="meta"><span>tracks/architecture</span><span>Concepts</span></div></a>
-          <a class="track-card" href="../tracks/spring-boot/README.md"><span class="tag systems">Boot</span><h3>Spring Boot</h3><p>Layer F. ParcelPilot after Gates A–D (ideally after todo-e2e).</p><div class="meta"><span>tracks/spring-boot</span><span>Build</span></div></a>
-        </div>
+
+        <ol class="spine">
+          <li class="spine-step cs">
+            <div class="spine-head"><span class="tag cs">0</span><h3>Orientation</h3></div>
+            <p>Know the loop: sheet → project → next.</p>
+            <ul class="spine-links">
+              <li><a href="../docs/LEARNING_PATH.md">Learning path</a></li>
+              <li><a href="../projects/docs/setup/README.md">Setup sheet</a></li>
+              <li><a href="../projects/README.md">Projects overview</a></li>
+            </ul>
+          </li>
+
+          <li class="spine-step cs">
+            <div class="spine-head"><span class="tag cs">1</span><h3>CS from the ground up</h3></div>
+            <p>Foundations → data structures → algorithms. Linux, networks/HTTP, Git and Docker intros.</p>
+            <ul class="spine-links">
+              <li><a href="../tracks/computer-science/index.html">Computer science track</a></li>
+              <li><a href="../projects/docs/git/README.md">Git sheet</a></li>
+            </ul>
+          </li>
+
+          <li class="spine-step js">
+            <div class="spine-head"><span class="tag js">2</span><h3>HTML &amp; CSS</h3></div>
+            <p>A simple page that looks good on phone and desktop.</p>
+            <ul class="spine-links">
+              <li><a href="../projects/docs/html/README.md">HTML sheet</a></li>
+              <li><a href="../projects/00-static-page/README.md">Project 00 · Static page</a></li>
+              <li><a href="../projects/docs/css/README.md">CSS sheet</a></li>
+            </ul>
+          </li>
+
+          <li class="spine-step js">
+            <div class="spine-head"><span class="tag js">3</span><h3>JavaScript</h3></div>
+            <p>Drills, then browser <code>fetch</code>: search a city, show live weather.</p>
+            <ul class="spine-links">
+              <li><a href="../drills/javascript/README.md">JS drills</a></li>
+              <li><a href="../projects/docs/javascript/README.md">JavaScript sheet</a></li>
+              <li><a href="../codestep/">CodeStep (guided JS, optional)</a></li>
+              <li><a href="../projects/01-weather-dashboard/README.md">Project 01 · Weather dashboard</a></li>
+            </ul>
+          </li>
+
+          <li class="spine-step java">
+            <div class="spine-head"><span class="tag java">4A</span><h3>Java · Language foundation</h3></div>
+            <p>Gate A: folders, packages, compile from the terminal, class vs object.</p>
+            <ul class="spine-links">
+              <li><a href="../projects/docs/java/README.md">Java sheet</a></li>
+              <li><a href="../tracks/java/index.html">Java hub</a></li>
+              <li><a href="../tracks/java/topics/getting-started/index.html">Getting started</a></li>
+              <li><a href="../tracks/java/topics/syntax-fundamentals/index.html">Syntax fundamentals</a></li>
+              <li><a href="../tracks/java/topics/types-and-variables/index.html">Types and variables</a></li>
+              <li><a href="../tracks/java/topics/operators/index.html">Operators</a></li>
+              <li><a href="../tracks/java/topics/control-flow/index.html">Control flow</a></li>
+              <li><a href="../tracks/java/topics/methods/index.html">Methods</a></li>
+              <li><a href="../tracks/java/topics/classes-and-objects/index.html">Classes and objects</a></li>
+              <li><a href="../tracks/java/topics/arrays/index.html">Arrays</a></li>
+              <li><a href="../tracks/java/topics/strings/index.html">Strings</a></li>
+            </ul>
+          </li>
+
+          <li class="spine-step java">
+            <div class="spine-head"><span class="tag java">4B</span><h3>Java · Everyday types</h3></div>
+            <p>Gate B: <code>ArrayList</code> and <code>HashMap</code> without copy-paste panic.</p>
+            <ul class="spine-links">
+              <li><a href="../tracks/java/topics/collections/index.html">Collections</a></li>
+              <li><a href="../tracks/java/topics/exceptions/index.html">Exceptions</a></li>
+              <li><a href="../tracks/java/topics/io-basics/index.html">I/O basics</a></li>
+              <li><a href="../tracks/java/topics/debugging/index.html">Debugging</a></li>
+              <li><a href="../tracks/java/topics/practice-projects/index.html">Practice projects</a></li>
+            </ul>
+          </li>
+
+          <li class="spine-step java">
+            <div class="spine-head"><span class="tag java">4C</span><h3>Java · Finish the base</h3></div>
+            <p>Gate C: the weather CLI works; you know GET vs POST.</p>
+            <ul class="spine-links">
+              <li><a href="../tracks/java/topics/build-tools/index.html">Build tools (Maven)</a></li>
+              <li><a href="../tracks/java/topics/testing/index.html">Testing (JUnit)</a></li>
+              <li><a href="../tracks/java/topics/git-basics/index.html">Git basics</a></li>
+              <li><a href="../tracks/java/topics/rest-and-http/index.html">REST and HTTP</a></li>
+              <li><a href="../projects/05-java-weather-cli/README.md">Project 05 · Java weather CLI</a></li>
+            </ul>
+          </li>
+
+          <li class="spine-step java">
+            <div class="spine-head"><span class="tag java">4D</span><h3>Java · How a server is structured</h3></div>
+            <p>Gate D: controller / service / repository / DTO / entity; Postgres in Docker.</p>
+            <ul class="spine-links">
+              <li><a href="../projects/docs/java/server-layers.md">Server layers sheet</a></li>
+              <li><a href="../apps/todo-e2e/docs/CODE-TOUR.md">Todo e2e code tour</a></li>
+              <li><a href="../apps/todo-e2e/docs/HOW-IT-WORKS.md">Todo e2e: how it works</a></li>
+            </ul>
+          </li>
+
+          <li class="spine-step systems">
+            <div class="spine-head"><span class="tag systems">5</span><h3>Docker apply</h3></div>
+            <p>A site or Postgres runs in Docker.</p>
+            <ul class="spine-links">
+              <li><a href="../projects/docs/docker/README.md">Docker sheet</a></li>
+              <li><a href="../projects/02-docker-portfolio/README.md">Project 02 · Docker portfolio</a></li>
+            </ul>
+          </li>
+
+          <li class="spine-step java">
+            <div class="spine-head"><span class="tag java">E</span><h3>First fullstack apps</h3></div>
+            <p>Controllers + JdbcTemplate + Postgres, then the same idea with JPA.</p>
+            <ul class="spine-links">
+              <li><a href="../apps/todo-e2e/README.md">Todo e2e</a></li>
+              <li><a href="../apps/pokedex/README.md">Pokédex</a></li>
+              <li><a href="../pokedex/">Pokédex (live)</a></li>
+            </ul>
+          </li>
+
+          <li class="spine-step systems">
+            <div class="spine-head"><span class="tag systems">F</span><h3>Deeper: Spring &amp; architecture</h3></div>
+            <p>Only after Gates A–D feel boring (good sign).</p>
+            <ul class="spine-links">
+              <li><a href="../tracks/spring-boot/README.md">Spring Boot · ParcelPilot</a></li>
+              <li><a href="../tracks/java/topics/jvm-memory/index.html">JVM memory</a></li>
+              <li><a href="../tracks/java/topics/design-patterns/index.html">Design patterns</a></li>
+              <li><a href="../tracks/java/topics/uml-diagrams/index.html">UML diagrams</a></li>
+              <li><a href="../tracks/architecture/index.html">Architecture &amp; system design</a></li>
+            </ul>
+          </li>
+
+          <li class="spine-step js">
+            <div class="spine-head"><span class="tag js">6</span><h3>Optional web depth</h3></div>
+            <p>Node / React / TS, only after Java Layers A–B feel solid. Or skip.</p>
+            <ul class="spine-links">
+              <li><a href="../projects/docs/nodejs/README.md">Node.js sheet</a></li>
+              <li><a href="../projects/docs/npm/README.md">npm sheet</a></li>
+              <li><a href="../projects/03-cli-tool/README.md">Project 03 · CLI tool</a></li>
+              <li><a href="../projects/docs/react/README.md">React sheet</a></li>
+              <li><a href="../projects/docs/typescript/README.md">TypeScript sheet</a></li>
+              <li><a href="../projects/04-react-todo-app/README.md">Project 04 · React todo app</a></li>
+            </ul>
+          </li>
+        </ol>
       </div>
     </section>
 
@@ -71,24 +199,23 @@
       <div class="container">
         <div class="section-head">
           <div>
-            <div class="eyebrow">Also here</div>
-            <h2>Optional lanes</h2>
+            <div class="eyebrow">Never the main spine</div>
+            <h2>Side paths</h2>
           </div>
-          <p>Never required for the main spine.</p>
+          <p>Extra practice and reference. Open any time.</p>
         </div>
         <div class="workflow">
-          <div class="workflow-step"><strong>CodeStep</strong><span><a href="../apps/codestep/index.html">apps/codestep</a>: guided JS; TS when ready.</span></div>
-          <div class="workflow-step"><strong>Pokédex</strong><span><a href="../apps/pokedex/README.md">apps/pokedex</a>: Layer E after todo-e2e (JPA deeper).</span></div>
-          <div class="workflow-step"><strong>AI sheet</strong><span><a href="../tracks/ai/index.html">tracks/ai</a>: RAG, agents, MCP, evals.</span></div>
-          <div class="workflow-step"><strong>Cleaning / AIP-C01</strong><span>Side practice and exam prep only.</span></div>
-          <div class="workflow-step"><strong>React / Node (optional last)</strong><span>Projects 03–04 after Java Layers A–B feel solid, or skip.</span></div>
+          <div class="workflow-step"><strong>AI field guide</strong><span><a href="../tracks/ai/index.html">tracks/ai</a>: RAG, agents, MCP, evals.</span></div>
+          <div class="workflow-step"><strong>Code for Cleaning</strong><span><a href="../programs/code-for-cleaning/README.md">programs/code-for-cleaning</a>: extra Java practice.</span></div>
+          <div class="workflow-step"><strong>AWS GenAI Pro</strong><span><a href="../tracks/certifications/aws-genai-pro/index.html">tracks/certifications</a>: exam prep only.</span></div>
+          <div class="workflow-step"><strong>Learner memory</strong><span><a href="../docs/learner-memory/README.md">docs/learner-memory</a>: long-term learner profile.</span></div>
         </div>
       </div>
     </section>
   </main>
 
   <footer class="site-footer">
-    <div class="container">Start at <code>docs/LEARNING_PATH.md</code> · open <code>hub/index.html</code></div>
+    <div class="container">Start at <a href="../docs/LEARNING_PATH.md">docs/LEARNING_PATH.md</a> · this page is <code>hub/index.html</code></div>
   </footer>
 </body>
 </html>

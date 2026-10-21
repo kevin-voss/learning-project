@@ -1,0 +1,37 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "services": {
+    "site": {
+      "root": ".",
+      "buildCommand": "node hub/build-site.mjs",
+      "outputDirectory": "dist/site",
+      "devCommand": "node hub/build-site.mjs && python3 -m http.server $PORT --directory dist/site",
+      "trailingSlash": true
+    },
+    "codestep": {
+      "root": "apps/codestep",
+      "framework": "vite",
+      "outputDirectory": "dist"
+    },
+    "pokedex": {
+      "root": "apps/pokedex/frontend",
+      "framework": "vite",
+      "outputDirectory": "dist"
+    },
+    "pokedex_api": {
+      "root": "apps/pokedex/backend",
+      "entrypoint": "Dockerfile.vercel"
+    }
+  },
+  "redirects": [
+    { "source": "/", "destination": "/hub/", "permanent": false },
+    { "source": "/codestep", "destination": "/codestep/", "permanent": false },
+    { "source": "/pokedex", "destination": "/pokedex/", "permanent": false }
+  ],
+  "rewrites": [
+    { "source": "/api/pokemon/:path*", "destination": { "service": "pokedex_api" } },
+    { "source": "/codestep/(.*)", "destination": { "service": "codestep" } },
+    { "source": "/pokedex/(.*)", "destination": { "service": "pokedex" } },
+    { "source": "/(.*)", "destination": { "service": "site" } }
+  ]
+}

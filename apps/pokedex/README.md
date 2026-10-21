@@ -19,7 +19,7 @@ Data is seeded from the first **151** Kanto Pokémon (originally fetched from [P
 | **5432** | PostgreSQL | `localhost:5432` — db `pokedex`, user `pokedex`, password `pokedex_dev` |
 | **8081** | Adminer (SQL UI) | http://localhost:8081 |
 | **8082** | Spring Boot API | http://localhost:8082/api/pokemon |
-| **5173** | Vite dev server | http://localhost:5173 |
+| **5173** | Vite dev server | http://localhost:5173/pokedex/ |
 
 Port **8082** is used instead of 8080 because 8080 is often taken by other apps on a dev machine.
 
@@ -120,7 +120,7 @@ npm install          # first time only
 npm run dev
 ```
 
-Open **http://localhost:5173**. The dev server proxies `/api` to `http://localhost:8082`, so the UI talks to your local API (not PokeAPI).
+Open **http://localhost:5173/pokedex/**. The dev server proxies `/api` to `http://localhost:8082`, so the UI talks to your local API (not PokeAPI).
 
 ---
 

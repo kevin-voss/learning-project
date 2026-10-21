@@ -308,3 +308,63 @@ h1 {
     grid-template-columns: 1fr;
   }
 }
+
+.spine {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.spine-step {
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--cs);
+  border-radius: 8px;
+  background: white;
+  padding: 18px 20px;
+}
+
+.spine-step.js { border-left-color: var(--js); }
+.spine-step.java { border-left-color: var(--java); }
+.spine-step.systems { border-left-color: var(--systems); }
+
+.spine-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.spine-head h3 {
+  margin: 0;
+  font-size: 20px;
+  letter-spacing: -0.02em;
+}
+
+.spine-step p {
+  margin: 8px 0 12px;
+  color: var(--muted);
+}
+
+.spine-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.spine-links a {
+  display: inline-block;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.spine-links a:hover {
+  border-color: var(--ink);
+}

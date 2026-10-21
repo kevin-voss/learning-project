@@ -5,7 +5,7 @@ import { fileURLToPath } from "url";
 import { writeQuestionPages, sortQuestions } from "./certsafari-transform.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ROOT = path.join(__dirname, "..");
+const ROOT = path.join(__dirname, "../..");
 const RAW_DIR = path.join(ROOT, "js/questions/raw");
 const OUT_DIR = path.join(ROOT, "js/questions");
 const MASTER = path.join(RAW_DIR, "certsafari-all.json");

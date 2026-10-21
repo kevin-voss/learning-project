@@ -1,25 +1,25 @@
 window.SD = window.SD || {};
 
-function sdRenderSketchSection(sketches, accent) {
+function sdRenderSketchSection(sketches, z) {
   if (!sketches || !sketches.length) return '';
   return `
-      <div>
-        <h3 class="text-xs font-semibold tracking-widest uppercase text-neutral-500 mb-3 flex items-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity:.7"><polygon points="5 4 15 12 5 20 5 4"/></svg>
-          End-to-end animated process flows
+      <section>
+        <h3 class="sd-label sd-label-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="5 4 15 12 5 20 5 4"/></svg>
+          Watch it move
         </h3>
-        <p class="text-neutral-500 text-xs mb-4 leading-relaxed">Each sketch is paced as a loop you can read without extra context: left-side input, middle system decision, right-side outcome, plus the UI signal worth showing.</p>
-        <div class="space-y-4">
+        <p class="sd-note">Each sketch plays in a loop. Read it left to right: what comes in, what the system decides, what comes out. The pill at the top shows the current step.</p>
+        <div class="sd-stack">
           ${sketches
             .map(
               (s) => `
             <div class="sketch-shell">
               <div class="sketch-shell-head">
                 <div>
-                  <div class="sketch-shell-title" style="color:${accent}">${s.title}</div>
-                  <div class="sketch-shell-meta">Flow reads left to right · phase pill shows current step</div>
+                  <div class="sketch-shell-title" style="color:${z.color}">${s.title}</div>
+                  <div class="sketch-shell-meta">Left to right · the pill shows the current step</div>
                 </div>
-                <span class="sketch-shell-tag" style="border-color:${accent}55;color:${accent}">E2E loop</span>
+                <span class="sketch-shell-tag" style="border-color:${z.line};color:${z.color}">Loop</span>
               </div>
               <canvas class="sd-sketch-canvas" data-sketch="${s.id}" width="10" height="10" aria-hidden="true"></canvas>
               <p class="sketch-shell-cap">${s.caption}</p>
@@ -27,7 +27,7 @@ function sdRenderSketchSection(sketches, accent) {
             )
             .join('')}
         </div>
-      </div>`;
+      </section>`;
 }
 
 function openModal(id) {
@@ -44,6 +44,7 @@ function openModal(id) {
   window.sdUpdateProgress();
 
   const box = document.getElementById('modalBox');
+  SD.openId = id;
   if (typeof SD.stopAllSketches === 'function') SD.stopAllSketches();
 
   const prevIdx = concepts.findIndex((x) => x.id === id) - 1;
@@ -52,113 +53,113 @@ function openModal(id) {
   const nextId = nextIdx < concepts.length ? concepts[nextIdx].id : null;
 
   box.innerHTML = `
-        <div class="sticky top-0 z-10 flex items-center justify-between px-6 py-4 border-b border-white/[.06]" style="background:#0a0a0a">
-            <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-lg flex items-center justify-center" style="background:${z.bg}">
-                    <i data-lucide="${c.icon}" class="w-4.5 h-4.5" style="color:${z.color}"></i>
+        <div class="sd-modal-head">
+            <div class="sd-row">
+                <div class="sd-icon-box" style="background:${z.bg}">
+                    <i data-lucide="${c.icon}" class="sd-icon" style="color:${z.color}"></i>
                 </div>
                 <div>
-                    <div class="zone-tag" style="background:${z.bg};color:${z.color};margin-bottom:0;font-size:.55rem">${z.label}</div>
-                    <h2 class="text-lg font-semibold tracking-tight">${c.title}</h2>
+                    <div class="zone-tag zone-tag-sm" style="background:${z.bg};color:${z.color}">${z.label}</div>
+                    <h2 class="sd-modal-title">${c.title}</h2>
                 </div>
             </div>
-            <button type="button" onclick="window.sdCloseModal()" class="w-8 h-8 rounded-lg border border-white/10 flex items-center justify-center hover:bg-white/5 transition-colors">
-                <i data-lucide="x" class="w-4 h-4 text-neutral-400"></i>
+            <button type="button" onclick="window.sdCloseModal()" class="sd-close" aria-label="Close">
+                <i data-lucide="x" class="sd-icon-sm"></i>
             </button>
         </div>
 
-        <div class="px-6 py-6 space-y-8">
-            <div>
-                <h3 class="text-xs font-semibold tracking-widest uppercase text-neutral-500 mb-3">Overview</h3>
-                <p class="text-neutral-300 text-sm leading-relaxed">${c.overview}</p>
+        <div class="sd-modal-body">
+            <section>
+                <h3 class="sd-label">Overview</h3>
+                <p class="sd-text">${c.overview}</p>
+            </section>
+
+            <div class="sd-diagram-box">
+                ${window.sdGetDiagram(c.diagram, SD.token(z.token))}
             </div>
 
-            <div class="rounded-xl border border-white/[.06] bg-white/[.02] p-5">
-                ${window.sdGetDiagram(c.diagram, z.color)}
-            </div>
+            ${sdRenderSketchSection(c.sketches, z)}
 
-            ${sdRenderSketchSection(c.sketches, z.color)}
-
-            <div>
-                <h3 class="text-xs font-semibold tracking-widest uppercase text-neutral-500 mb-4">Key concepts</h3>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <section>
+                <h3 class="sd-label">Key concepts</h3>
+                <div class="sd-grid-2">
                     ${c.keyConcepts
                       .map(
                         (kc) => `
                         <div class="conc-card">
-                            <div class="flex items-center gap-2 mb-2">
-                                <div class="w-6 h-6 rounded-md flex items-center justify-center" style="background:${z.bg}">
-                                    <i data-lucide="${kc.icon}" class="w-3.5 h-3.5" style="color:${z.color}"></i>
+                            <div class="sd-row sd-row-tight">
+                                <div class="sd-icon-box sd-icon-box-sm" style="background:${z.bg}">
+                                    <i data-lucide="${kc.icon}" class="sd-icon-sm" style="color:${z.color}"></i>
                                 </div>
-                                <span class="text-sm font-medium">${kc.name}</span>
+                                <span class="sd-strong">${kc.name}</span>
                             </div>
-                            <p class="text-neutral-400 text-xs leading-relaxed">${kc.desc}</p>
+                            <p class="sd-small">${kc.desc}</p>
                         </div>
                     `
                       )
                       .join('')}
                 </div>
+            </section>
+
+            <div class="sd-grid-2">
+                <section>
+                    <h3 class="sd-label sd-label-icon sd-good">
+                        <i data-lucide="thumbs-up" class="sd-icon-sm"></i> Pros
+                    </h3>
+                    <ul class="sd-list">
+                        ${c.pros.map((p) => `<li class="pro-i">${p}</li>`).join('')}
+                    </ul>
+                </section>
+                <section>
+                    <h3 class="sd-label sd-label-icon sd-bad">
+                        <i data-lucide="thumbs-down" class="sd-icon-sm"></i> Cons
+                    </h3>
+                    <ul class="sd-list">
+                        ${c.cons.map((co) => `<li class="con-i">${co}</li>`).join('')}
+                    </ul>
+                </section>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                    <h3 class="text-xs font-semibold tracking-widest uppercase text-emerald-400/70 mb-3 flex items-center gap-2">
-                        <i data-lucide="thumbs-up" class="w-3.5 h-3.5"></i> Pros
-                    </h3>
-                    <ul class="space-y-2">
-                        ${c.pros.map((p) => `<li class="pro-i text-sm text-neutral-300 leading-relaxed">${p}</li>`).join('')}
-                    </ul>
-                </div>
-                <div>
-                    <h3 class="text-xs font-semibold tracking-widest uppercase text-red-400/70 mb-3 flex items-center gap-2">
-                        <i data-lucide="thumbs-down" class="w-3.5 h-3.5"></i> Cons
-                    </h3>
-                    <ul class="space-y-2">
-                        ${c.cons.map((co) => `<li class="con-i text-sm text-neutral-300 leading-relaxed">${co}</li>`).join('')}
-                    </ul>
-                </div>
-            </div>
-
-            <div>
-                <h3 class="text-xs font-semibold tracking-widest uppercase text-neutral-500 mb-4 flex items-center gap-2">
-                    <i data-lucide="scale" class="w-3.5 h-3.5"></i> Tradeoffs
+            <section>
+                <h3 class="sd-label sd-label-icon">
+                    <i data-lucide="scale" class="sd-icon-sm"></i> Tradeoffs
                 </h3>
-                <div class="space-y-5">
+                <div class="sd-stack-lg">
                     ${c.tradeoffs
                       .map(
                         (tf) => `
                         <div>
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="text-xs font-medium" style="color:${z.color}">${tf.left}</span>
-                                <span class="text-xs font-medium text-neutral-500">${tf.right}</span>
+                            <div class="sd-row sd-row-between">
+                                <span class="sd-tf-end" style="color:${z.color}">${tf.left}</span>
+                                <span class="sd-tf-end sd-muted">${tf.right}</span>
                             </div>
                             <div class="tf-bar">
                                 <div class="tf-fill" style="width:${tf.pct}%;background:${z.color}"></div>
                             </div>
-                            <p class="text-neutral-500 text-xs mt-2 leading-relaxed">${tf.label}</p>
+                            <p class="sd-small sd-tf-label">${tf.label}</p>
                         </div>
                     `
                       )
                       .join('')}
                 </div>
-            </div>
+            </section>
 
-            <div class="flex items-center justify-between pt-4 border-t border-white/[.06]">
+            <nav class="sd-modal-nav" aria-label="Other concepts">
                 ${prevId
                   ? `
-                    <button type="button" onclick="window.sdNavigateModal('${prevId}')" class="flex items-center gap-2 text-xs text-neutral-400 hover:text-white transition-colors px-3 py-2 rounded-lg hover:bg-white/5">
-                        <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> ${concepts.find((x) => x.id === prevId).title}
+                    <button type="button" onclick="window.sdNavigateModal('${prevId}')" class="sd-nav-btn">
+                        <i data-lucide="arrow-left" class="sd-icon-sm"></i> ${concepts.find((x) => x.id === prevId).title}
                     </button>
                 `
                   : '<div></div>'}
                 ${nextId
                   ? `
-                    <button type="button" onclick="window.sdNavigateModal('${nextId}')" class="flex items-center gap-2 text-xs text-neutral-400 hover:text-white transition-colors px-3 py-2 rounded-lg hover:bg-white/5">
-                        ${concepts.find((x) => x.id === nextId).title} <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                    <button type="button" onclick="window.sdNavigateModal('${nextId}')" class="sd-nav-btn">
+                        ${concepts.find((x) => x.id === nextId).title} <i data-lucide="arrow-right" class="sd-icon-sm"></i>
                     </button>
                 `
                   : '<div></div>'}
-            </div>
+            </nav>
         </div>
     `;
 
@@ -169,7 +170,7 @@ function openModal(id) {
 
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
-      if (typeof SD.startSketchesIn === 'function') SD.startSketchesIn(box, z.color);
+      if (typeof SD.startSketchesIn === 'function') SD.startSketchesIn(box, z.token);
     });
   });
 }
@@ -178,6 +179,7 @@ function sdCloseModal() {
   if (typeof SD.stopAllSketches === 'function') SD.stopAllSketches();
   document.getElementById('modal').classList.remove('open');
   document.body.style.overflow = '';
+  SD.openId = null;
 }
 
 function sdNavigateModal(id) {
@@ -198,7 +200,7 @@ function sdUpdateProgress() {
   const el = document.getElementById('progText');
   if (el) el.textContent = `${n} / ${concepts.length} explored`;
   const pf = document.getElementById('progFloat');
-  if (pf) pf.style.borderColor = n === concepts.length ? 'rgba(52,211,153,.3)' : 'rgba(255,255,255,.1)';
+  if (pf) pf.classList.toggle('done', n === concepts.length);
 }
 
 function sdInitRoadmap() {
@@ -211,7 +213,7 @@ function sdInitRoadmap() {
     const side = i % 2 === 0 ? 'left' : 'right';
     const z = ZONES[c.zone];
     const el = document.createElement('div');
-    el.className = `rm-item ${side} mb-16`;
+    el.className = `rm-item ${side}`;
     el.id = `rm-${c.id}`;
     el.innerHTML = `
         <div class="rm-card ${side === 'left' ? '' : 'rm-spacer'}" style="${side === 'left' ? '' : 'display:none'}">
@@ -219,17 +221,17 @@ function sdInitRoadmap() {
             <div class="rm-card-inner" role="button" tabindex="0" data-open="${c.id}">
                 <div class="accent" style="background:${z.color}"></div>
                 <div class="zone-tag" style="background:${z.bg};color:${z.color}">${z.label}</div>
-                <h3 class="text-lg font-semibold tracking-tight mb-1">${c.title}</h3>
-                <p class="text-neutral-400 text-sm leading-relaxed mb-3">${c.tagline}</p>
-                <span class="inline-flex items-center gap-1 text-xs font-medium" style="color:${z.color}">
-                    Explore <i data-lucide="arrow-right" class="w-3 h-3"></i>
+                <h3 class="rm-title">${c.title}</h3>
+                <p class="rm-tagline">${c.tagline}</p>
+                <span class="rm-explore" style="color:${z.color}">
+                    Explore <i data-lucide="arrow-right" class="sd-icon-xs"></i>
                 </span>
             </div>` : ''}
         </div>
         <div class="rm-node">
-            <div class="nd" id="nd-${c.id}" style="border-color:${z.color}40" data-open="${c.id}">
+            <div class="nd" id="nd-${c.id}" style="border-color:${z.line}" data-open="${c.id}">
                 <div class="pulse" style="border-color:${z.color}"></div>
-                <i data-lucide="${c.icon}" class="w-5 h-5" style="color:${z.color}"></i>
+                <i data-lucide="${c.icon}" class="sd-icon-md" style="color:${z.color}"></i>
             </div>
         </div>
         <div class="${side === 'right' ? 'rm-card' : 'rm-spacer'}" style="${side === 'right' ? '' : 'display:none'}">
@@ -237,10 +239,10 @@ function sdInitRoadmap() {
             <div class="rm-card-inner" role="button" tabindex="0" data-open="${c.id}">
                 <div class="accent" style="background:${z.color}"></div>
                 <div class="zone-tag" style="background:${z.bg};color:${z.color}">${z.label}</div>
-                <h3 class="text-lg font-semibold tracking-tight mb-1">${c.title}</h3>
-                <p class="text-neutral-400 text-sm leading-relaxed mb-3">${c.tagline}</p>
-                <span class="inline-flex items-center gap-1 text-xs font-medium" style="color:${z.color}">
-                    Explore <i data-lucide="arrow-right" class="w-3 h-3"></i>
+                <h3 class="rm-title">${c.title}</h3>
+                <p class="rm-tagline">${c.tagline}</p>
+                <span class="rm-explore" style="color:${z.color}">
+                    Explore <i data-lucide="arrow-right" class="sd-icon-xs"></i>
                 </span>
             </div>` : ''}
         </div>
@@ -309,3 +311,12 @@ window.sdUpdateProgress = sdUpdateProgress;
 window.sdInitRoadmap = sdInitRoadmap;
 
 document.addEventListener('DOMContentLoaded', sdInitRoadmap);
+
+// SVG diagrams and canvas sketches hold real colours, so redraw them when the theme changes.
+SD.onThemeChange(() => {
+  if (!SD.openId) return;
+  const box = document.getElementById('modalBox');
+  const y = box.scrollTop;
+  openModal(SD.openId);
+  box.scrollTop = y;
+});

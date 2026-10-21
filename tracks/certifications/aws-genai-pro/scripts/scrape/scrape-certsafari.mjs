@@ -4,7 +4,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const OUT_JSON = path.join(__dirname, "../js/questions/raw/certsafari-quiz-60.json");
+const OUT_JSON = path.join(__dirname, "../../js/questions/raw/certsafari-quiz-60.json");
 const QUESTION_COUNT = 60;
 const EXAM_URL = "https://www.certsafari.com/aws/gen-ai-developer-professional";
 

@@ -18,12 +18,12 @@ A step-by-step technical guide for advanced learners, from model internals throu
 | --- | --- |
 | `index.html` | Six-part contents list and clear starting point |
 | `content/<part>/<topic>.html` | One authored lesson per topic |
-| `css/` | Shared warm-paper theme, components (incl. steps, stack, stats, bars, widgets, search), and topic rhythm |
+| `css/` | `tokens.css` maps the guide's own names onto the site theme (`hub/theme/tokens.css`, light and dark); components (incl. steps, stack, stats, bars, widgets, search), and topic rhythm |
 | `js/app.js` | Stable entry point for the runtime modules in `js/runtime/` (navigation, content, diagrams, search, widgets; `data.js` is the chapter order) |
 | `content/README.md` | Lesson authoring contract |
 
 Lessons keep advanced technical detail. Use headings that fit the subject, then pace the explanation from a central model through mechanisms, trade-offs, examples, and a hands-on check. Shared classes and semantic HTML keep the guide coherent without forcing every topic into an identical outline.
 
-Mermaid 11.12.0 is loaded from jsDelivr when available. The source remains on the page if loading or rendering fails. Diagrams open at a readable size: wide graphs shrink to the frame but never below 78% (about 14px labels, scrolling instead), and small graphs grow to at most 115%. Controls show the current zoom and offer Fit (whole diagram), 100%, zoom steps, and an accessible expanded view. Keep new diagrams within about 1000×650px at 100%. Runtime regression checks use Node's built-in test runner; no additional test package is needed.
+Mermaid 11.12.0 is loaded from jsDelivr when available. Diagram colours come from the site theme and redraw when the reader switches light or dark. The source remains on the page if loading or rendering fails. Diagrams open at a readable size: wide graphs shrink to the frame but never below 78% (about 14px labels, scrolling instead), and small graphs grow to at most 115%. Controls show the current zoom and offer Fit (whole diagram), 100%, zoom steps, and an accessible expanded view. Keep new diagrams within about 1000×650px at 100%. Runtime regression checks use Node's built-in test runner; no additional test package is needed.
 
 **Repo spine:** [`docs/LEARNING_PATH.md`](../../docs/LEARNING_PATH.md) · this guide is optional advanced depth.

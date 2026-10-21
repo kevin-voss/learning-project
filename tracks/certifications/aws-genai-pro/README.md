@@ -32,7 +32,7 @@ Or from the repo root: `python3 -m http.server 8765` and open `/tracks/certifica
 - **iPhone / iPad:** Share → **Add to Home Screen**.
 - Progress and quiz stats stay in `localStorage` on that device.
 
-The app shell, chapters, and question bank are precached. Google Fonts cache after the first online visit; offline still works with system fonts.
+The app shell, chapters, and question bank are precached. The site theme (`/hub/theme/`) loads network-first and is cached for offline use. Google Fonts cache after the first online visit; offline still works with system fonts. Light and dark follow the system, or the ◐ button in the top bar.
 
 ## Exam domains (dashboard on the home page)
 
@@ -50,34 +50,36 @@ The app shell, chapters, and question bank are precached. Google Fonts cache aft
 tracks/certifications/aws-genai-pro/
 ├── index.html
 ├── manifest.webmanifest # PWA install metadata
-├── sw.js                # offline cache (http/https only)
-├── icons/               # app / apple-touch / favicon
-├── css/                 # tokens, base, layout, components
+├── sw.js                # offline cache (http/https only); PRECACHE lists every file
+├── icons/               # icon.svg · app/ (install icons) · browser/ (favicons, apple-touch)
+├── css/
+│   ├── main.css         # imports everything in order
+│   ├── tokens.css       # maps this app's colour names onto the site theme (light + dark)
+│   ├── base.css · layout.css
+│   └── components/      # overview, topic, topic-detail, quiz, responsive
 ├── js/
-│   ├── ns.js            # AIP.registerChapter / registerQuestions
-│   ├── config.js        # domains, journey stages, storage keys
-│   ├── study-guide.js   # architecture paths, one-line summaries, memory checks
-│   ├── chapters.js      # sidebar metadata 00–27
-│   ├── storage.js       # localStorage progress + quiz stats
-│   ├── render.js        # chapter / home HTML
-│   ├── quiz.js          # attempt flow
 │   ├── app.js           # hash router + sidebar
-│   ├── content/         # one file per chapter
+│   ├── core/            # ns.js (AIP.register*), config.js (domains, keys), storage.js (localStorage)
+│   ├── course/          # study-guide.js, chapters.js (sidebar 00–27), render.js (chapter / home HTML)
+│   ├── exam/            # question-bank.js, quiz.js (attempt flow)
+│   ├── content/         # one file per chapter, grouped: foundations, integration-agents,
+│   │                    # knowledge, trust, operate, ship, exam
 │   └── questions/
 │       ├── practice.js          # original practice items
 │       ├── examtopics/p01…p03/  # ExamTopics pages (≤5 files per batch folder)
 │       ├── certsafari/p01…p08/  # CertSafari import (358 items, sorted)
 │       └── raw/                 # optional scrape dumps
+├── scripts/             # scrape/ (CDP + puppeteer), merge/ (raw → question pages), icons/
 └── README.md
 ```
 
-To add a chapter: copy a `js/content/*.js` file, register it, add a row in `js/chapters.js`, and a `<script>` tag in `index.html`.
+To add a chapter: copy a `js/content/<group>/*.js` file, register it, add a row in `js/course/chapters.js`, a `<script>` tag in `index.html`, and its path in the `PRECACHE` list of `sw.js` (then bump `CACHE`).
 
 Chapter fields: `summary`, `assistant` (the real example), `walkthrough` (short steps), `problem`, `why`, `services`, `alternatives`, `examAsks`, `realApp`, `sections`.
 
 Every chapter is rendered through the same scan-friendly topic template: header and exam badges, architecture context, problem/solution, request steps, component cards, decision matrix, exam clues, must-memorize checklist, and footer navigation. Longer `sections` content stays available in the collapsed **Extra context** block instead of interrupting the core study path.
 
-To add mock questions: `AIP.registerQuestions([{ id, chapters, domain, source, stem, choices, correct, why, optionExplanations, badges }])` in a new or existing `js/questions/*.js` file and include the script before `render.js`. Multi-select uses `correct: ["A","D"]`.
+To add mock questions: `AIP.registerQuestions([{ id, chapters, domain, source, stem, choices, correct, why, optionExplanations, badges }])` in a new or existing `js/questions/*.js` file and include the script before `js/course/render.js`. Multi-select uses `correct: ["A","D"]`.
 
 ## Question bank status
 

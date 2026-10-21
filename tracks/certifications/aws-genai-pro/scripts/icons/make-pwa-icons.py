@@ -7,7 +7,7 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
-OUT = Path(__file__).resolve().parents[1] / "icons"
+OUT = Path(__file__).resolve().parents[2] / "icons"
 FONT_BOLD = "/System/Library/Fonts/Supplemental/Arial Bold.ttf"
 FONT_BLACK = "/System/Library/Fonts/Supplemental/Arial Black.ttf"
 
@@ -152,14 +152,15 @@ def render_badge(size: int, *, padded: bool, label: bool) -> Image.Image:
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     specs = {
-        "icon-192.png": (192, False, True),
-        "icon-512.png": (512, False, True),
-        "icon-512-maskable.png": (512, True, True),
-        "apple-touch-icon.png": (180, False, True),
-        "favicon-48.png": (48, False, False),
-        "favicon-32.png": (32, False, False),
+        "app/icon-192.png": (192, False, True),
+        "app/icon-512.png": (512, False, True),
+        "app/icon-512-maskable.png": (512, True, True),
+        "browser/apple-touch-icon.png": (180, False, True),
+        "browser/favicon-48.png": (48, False, False),
+        "browser/favicon-32.png": (32, False, False),
     }
     for name, (size, padded, label) in specs.items():
+        (OUT / name).parent.mkdir(parents=True, exist_ok=True)
         render_badge(size, padded=padded, label=label).save(OUT / name, "PNG", optimize=True)
         print("wrote", name)
 

@@ -4,43 +4,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>System Design Roadmap</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@0.453.0/dist/umd/lucide.min.js"></script>
+    <link rel="stylesheet" href="css/bridge.css">
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/roadmap.css">
+    <link rel="stylesheet" href="css/modal.css">
 </head>
 <body class="dot-grid">
 
-<header class="relative min-h-[70vh] flex flex-col items-center justify-center text-center px-6 overflow-hidden">
-    <div class="hero-glow bg-indigo-500" style="top:-100px;left:50%;transform:translateX(-50%)"></div>
-    <div class="hero-glow bg-purple-600" style="bottom:-80px;right:10%;width:350px;height:350px;opacity:.08"></div>
+<nav class="sd-topbar" aria-label="Site">
+    <a class="sd-topbar-link" href="../../hub/index.html">← Learning hub</a>
+    <span class="sd-prog" id="progFloat">
+        <i data-lucide="map" class="sd-icon-sm"></i>
+        <span id="progText">0 / 0 explored</span>
+    </span>
+    <button type="button" class="lp-theme-toggle" data-theme-toggle aria-label="Switch light or dark">◐</button>
+</nav>
 
-    <div class="relative z-10">
-        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/[.03] text-xs text-neutral-400 mb-6 anim-fade" style="animation-delay:.1s">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            Interactive Learning Path
+<header class="hero">
+    <div class="hero-glow hero-glow-a"></div>
+    <div class="hero-glow hero-glow-b"></div>
+
+    <div class="hero-inner">
+        <div class="hero-pill anim-fade" style="animation-delay:.1s">
+            <span class="hero-dot"></span>
+            Go deeper · system design
         </div>
-        <h1 class="text-5xl md:text-7xl font-semibold tracking-tight leading-[1.05] mb-5 anim-fade" style="animation-delay:.25s">
-            System Design<br><span class="bg-gradient-to-r from-indigo-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent">Roadmap</span>
+        <h1 class="hero-title anim-fade" style="animation-delay:.25s">
+            System Design<br><span class="hero-accent">Roadmap</span>
         </h1>
-        <p class="text-neutral-400 text-base md:text-lg max-w-xl mx-auto leading-relaxed anim-fade" style="animation-delay:.4s">
-            Navigate essential architecture concepts. Each stop opens richer detail — static diagrams plus live canvas sketches where intuition helps (Round Robin paths, locking, queues, tiers, caches, resilience).
+        <p class="hero-sub anim-fade" style="animation-delay:.4s">
+            A big app is many small parts that work together.
+            This map shows the parts one by one: load balancers, caches, databases, queues and more.
+            Click a stop to open it. You get a short overview and a picture.
+            Some stops also have a moving sketch.
+            Each stop ends with the pros, the cons, and the trade-offs.
         </p>
-        <div class="mt-8 anim-fade" style="animation-delay:.55s">
-            <a href="#roadmap" class="inline-flex items-center gap-2 px-6 py-3 bg-indigo-500 hover:bg-indigo-600 rounded-full text-sm font-medium transition-colors">
-                Start the Journey <i data-lucide="arrow-down" class="w-4 h-4"></i>
+        <div class="hero-cta anim-fade" style="animation-delay:.55s">
+            <a href="#roadmap" class="btn-start">
+                Start the journey <i data-lucide="arrow-down" class="sd-icon-sm"></i>
             </a>
         </div>
     </div>
 
-    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 anim-float">
-        <i data-lucide="chevrons-down" class="w-5 h-5 text-neutral-500"></i>
+    <div class="hero-scroll anim-float">
+        <i data-lucide="chevrons-down" class="sd-icon-md"></i>
     </div>
 </header>
 
-<main id="roadmap" class="relative max-w-5xl mx-auto px-4 pb-32">
-    <div class="marker border border-indigo-500/30 bg-indigo-500/10 text-indigo-400 mb-12">
-        <i data-lucide="flag" class="w-3.5 h-3.5"></i> Begin Here
+<main id="roadmap" class="roadmap">
+    <div class="marker marker-start">
+        <i data-lucide="flag" class="sd-icon-sm"></i> Begin here
     </div>
 
     <div class="roadmap-line">
@@ -50,22 +64,18 @@
 
     <div id="roadmapItems"></div>
 
-    <div class="marker border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 mt-12">
-        <i data-lucide="trophy" class="w-3.5 h-3.5"></i> Keep Iterating
+    <div class="marker marker-end">
+        <i data-lucide="trophy" class="sd-icon-sm"></i> Keep iterating
     </div>
 </main>
 
 <div class="modal-ov" id="modal">
-    <div class="modal-box" id="modalBox"></div>
-</div>
-
-<div class="prog-float" id="progFloat">
-    <i data-lucide="map" class="w-3.5 h-3.5 text-indigo-400"></i>
-    <span id="progText">0 / 0 explored</span>
+    <div class="modal-box" id="modalBox" role="dialog" aria-modal="true" aria-label="Concept details"></div>
 </div>
 
 <script>
-  lucide.createIcons();
+  if (window.lucide) lucide.createIcons();
+  else window.lucide = { createIcons() {} };
 </script>
 <script src="js/ns.js"></script>
 <script src="js/config/zones.js"></script>
@@ -75,7 +85,9 @@
 <script src="js/data/architecture.js"></script>
 <script src="js/data/theory.js"></script>
 <script src="js/viz/diagrams.js"></script>
-<script src="js/viz/sketches.js"></script>
+<script src="js/viz/sketch-kit.js"></script>
+<script src="js/viz/sketches-flow.js"></script>
+<script src="js/viz/sketches-data.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

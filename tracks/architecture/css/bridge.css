@@ -1,0 +1,23 @@
+/* The roadmap's own variable names, mapped onto the site theme (hub/theme/tokens.css).
+   The value after each --lp- token is the light value, used when the page is opened
+   without the site build. Light and dark mode both come from the theme. */
+:root {
+  --sd-bg: var(--lp-bg, #faf8f3);
+  --sd-surface: var(--lp-surface, #ffffff);
+  --sd-surface-2: var(--lp-surface-2, #f3efe6);
+  --sd-text: var(--lp-text, #1f2933);
+  --sd-muted: var(--lp-text-muted, #5f6b7a);
+  --sd-line: var(--lp-line, #e4dfd3);
+  --sd-line-strong: color-mix(in srgb, var(--lp-line, #e4dfd3) 60%, var(--lp-text-muted, #5f6b7a));
+  --sd-accent: var(--lp-accent, #2f6fde);
+  --sd-on-accent: var(--lp-on-accent, #ffffff);
+  --sd-accent-soft: var(--lp-accent-soft, #e6eefc);
+  --sd-good: var(--lp-do, #1f9d55);
+  --sd-bad: var(--lp-warn, #c0392b);
+  --sd-violet: var(--lp-code-title, #6f42c1);
+  --sd-font: var(--lp-font, system-ui, -apple-system, 'Segoe UI', sans-serif);
+  --sd-mono: var(--lp-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  --sd-radius: var(--lp-radius, 12px);
+  --sd-shadow: var(--lp-shadow, 0 1px 2px rgba(31, 41, 51, 0.06), 0 6px 20px rgba(31, 41, 51, 0.07));
+  --sd-scrim: color-mix(in srgb, #000 45%, transparent);
+}

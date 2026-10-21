@@ -1,51 +1,63 @@
 /* AIP-C01 PWA service worker. Register only from http(s) — not file://. */
-var CACHE = "aip-c01-v6";
+var CACHE = "aip-c01-v7";
 var FONT_CACHE = "aip-c01-fonts-v1";
 var PRECACHE = [
   "./index.html",
   "./manifest.webmanifest",
-  "./css/base.css",
-  "./css/components.css",
-  "./css/layout.css",
   "./css/main.css",
   "./css/tokens.css",
-  "./js/app.js",
-  "./js/chapters.js",
-  "./js/config.js",
-  "./js/ns.js",
-  "./js/question-bank.js",
-  "./js/quiz.js",
-  "./js/render.js",
-  "./js/storage.js",
-  "./js/study-guide.js",
-  "./js/content/00-architecture-overview.js",
-  "./js/content/01-genai-foundations.js",
-  "./js/content/02-choosing-a-foundation-model.js",
-  "./js/content/03-amazon-bedrock.js",
-  "./js/content/04-prompt-engineering.js",
-  "./js/content/05-application-integration.js",
-  "./js/content/06-data-ingestion.js",
-  "./js/content/07-embeddings.js",
-  "./js/content/08-vector-databases.js",
-  "./js/content/09-rag.js",
-  "./js/content/10-bedrock-knowledge-bases.js",
-  "./js/content/11-agents.js",
-  "./js/content/12-agent-tools.js",
-  "./js/content/13-workflow-orchestration.js",
-  "./js/content/14-memory-and-state.js",
-  "./js/content/15-safety-and-guardrails.js",
-  "./js/content/16-security-and-privacy.js",
-  "./js/content/17-governance.js",
-  "./js/content/18-evaluation.js",
-  "./js/content/19-observability.js",
-  "./js/content/20-performance.js",
-  "./js/content/21-cost-optimization.js",
-  "./js/content/22-deployment.js",
-  "./js/content/23-cicd.js",
-  "./js/content/24-troubleshooting.js",
-  "./js/content/25-architecture-patterns.js",
-  "./js/content/26-exam-decision-guide.js",
-  "./js/content/27-final-architecture.js",
+  "./css/base.css",
+  "./css/layout.css",
+  "./css/components/overview.css",
+  "./css/components/topic.css",
+  "./css/components/topic-detail.css",
+  "./css/components/quiz.css",
+  "./css/components/responsive.css",
+  "./js/core/ns.js",
+  "./js/core/config.js",
+  "./js/course/study-guide.js",
+  "./js/course/chapters.js",
+  "./js/core/storage.js",
+  "./js/content/foundations/00-architecture-overview.js",
+  "./js/content/foundations/01-genai-foundations.js",
+  "./js/content/foundations/02-choosing-a-foundation-model.js",
+  "./js/content/foundations/03-amazon-bedrock.js",
+  "./js/content/foundations/04-prompt-engineering.js",
+  "./js/content/integration-agents/05-application-integration.js",
+  "./js/content/knowledge/06-data-ingestion.js",
+  "./js/content/knowledge/07-embeddings.js",
+  "./js/content/knowledge/08-vector-databases.js",
+  "./js/content/knowledge/09-rag.js",
+  "./js/content/knowledge/10-bedrock-knowledge-bases.js",
+  "./js/content/integration-agents/11-agents.js",
+  "./js/content/integration-agents/12-agent-tools.js",
+  "./js/content/integration-agents/13-workflow-orchestration.js",
+  "./js/content/integration-agents/14-memory-and-state.js",
+  "./js/content/trust/15-safety-and-guardrails.js",
+  "./js/content/trust/16-security-and-privacy.js",
+  "./js/content/trust/17-governance.js",
+  "./js/content/operate/18-evaluation.js",
+  "./js/content/operate/19-observability.js",
+  "./js/content/operate/20-performance.js",
+  "./js/content/operate/21-cost-optimization.js",
+  "./js/content/ship/22-deployment.js",
+  "./js/content/ship/23-cicd.js",
+  "./js/content/ship/24-troubleshooting.js",
+  "./js/content/exam/25-architecture-patterns.js",
+  "./js/content/exam/26-exam-decision-guide.js",
+  "./js/content/exam/27-final-architecture.js",
+  "./js/questions/examtopics/p01/examtopics-p01.js",
+  "./js/questions/examtopics/p01/examtopics-p02.js",
+  "./js/questions/examtopics/p01/examtopics-p03.js",
+  "./js/questions/examtopics/p01/examtopics-p04.js",
+  "./js/questions/examtopics/p01/examtopics-p05.js",
+  "./js/questions/examtopics/p02/examtopics-p06.js",
+  "./js/questions/examtopics/p02/examtopics-p07.js",
+  "./js/questions/examtopics/p02/examtopics-p08.js",
+  "./js/questions/examtopics/p02/examtopics-p09.js",
+  "./js/questions/examtopics/p02/examtopics-p10.js",
+  "./js/questions/examtopics/p03/examtopics-p11.js",
+  "./js/questions/examtopics/p03/examtopics-p12.js",
   "./js/questions/certsafari/p01/certsafari-p01.js",
   "./js/questions/certsafari/p01/certsafari-p02.js",
   "./js/questions/certsafari/p01/certsafari-p03.js",
@@ -82,26 +94,18 @@ var PRECACHE = [
   "./js/questions/certsafari/p07/certsafari-p34.js",
   "./js/questions/certsafari/p07/certsafari-p35.js",
   "./js/questions/certsafari/p08/certsafari-p36.js",
-  "./js/questions/examtopics/p01/examtopics-p01.js",
-  "./js/questions/examtopics/p01/examtopics-p02.js",
-  "./js/questions/examtopics/p01/examtopics-p03.js",
-  "./js/questions/examtopics/p01/examtopics-p04.js",
-  "./js/questions/examtopics/p01/examtopics-p05.js",
-  "./js/questions/examtopics/p02/examtopics-p06.js",
-  "./js/questions/examtopics/p02/examtopics-p07.js",
-  "./js/questions/examtopics/p02/examtopics-p08.js",
-  "./js/questions/examtopics/p02/examtopics-p09.js",
-  "./js/questions/examtopics/p02/examtopics-p10.js",
-  "./js/questions/examtopics/p03/examtopics-p11.js",
-  "./js/questions/examtopics/p03/examtopics-p12.js",
   "./js/questions/practice.js",
-  "./icons/apple-touch-icon.png",
-  "./icons/favicon-32.png",
-  "./icons/favicon-48.png",
-  "./icons/icon-192.png",
-  "./icons/icon-512-maskable.png",
-  "./icons/icon-512.png",
-  "./icons/icon.svg"
+  "./js/course/render.js",
+  "./js/exam/question-bank.js",
+  "./js/exam/quiz.js",
+  "./js/app.js",
+  "./icons/icon.svg",
+  "./icons/app/icon-192.png",
+  "./icons/app/icon-512.png",
+  "./icons/app/icon-512-maskable.png",
+  "./icons/browser/apple-touch-icon.png",
+  "./icons/browser/favicon-32.png",
+  "./icons/browser/favicon-48.png"
 ];
 
 function cleanUrl(request) {
@@ -156,6 +160,23 @@ self.addEventListener("fetch", function (event) {
         return cached || fetch(request);
       }).catch(function () {
         return caches.match("./index.html");
+      })
+    );
+    return;
+  }
+
+  // Site files outside this app (the shared theme, the step bar, path.json): network first,
+  // so theme updates arrive at once; the cached copy keeps the app styled offline.
+  if (url.origin === self.location.origin && url.href.indexOf(self.registration.scope) !== 0) {
+    event.respondWith(
+      fetch(request).then(function (response) {
+        if (response && response.status === 200) {
+          var copy = response.clone();
+          caches.open(CACHE).then(function (cache) { cache.put(cleanUrl(request), copy); });
+        }
+        return response;
+      }).catch(function () {
+        return caches.match(cleanUrl(request));
       })
     );
     return;

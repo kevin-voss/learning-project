@@ -5,27 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AI Engineering Field Guide · foundations, RAG, tools, agents, security, evals</title>
 <meta name="description" content="A step-by-step field guide to AI engineering: LLM internals, tokens and cost, RAG and search, tool calling, MCP, agents, memory, security, evals, and production systems.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/tokens.css">
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/components.css">
 <style>
   .landing { max-width: 1080px; margin: 0 auto; padding: clamp(56px, 9vw, 110px) 24px 80px; }
   .hero-kicker { font: 700 10.5px var(--mono); letter-spacing: .22em; text-transform: uppercase; color: var(--gold); }
-  .hero-title { font: 500 clamp(36px, 6vw, 64px)/1.06 var(--serif); letter-spacing: -.01em; margin: 18px 0 0; max-width: 16ch; color: var(--txt-strong); }
+  .hero-title { font: 700 clamp(36px, 6vw, 64px)/1.06 var(--serif); letter-spacing: -.01em; margin: 18px 0 0; max-width: 16ch; color: var(--txt-strong); }
   .hero-title em { font-style: italic; color: var(--gold); }
   .hero-sub { color: var(--dim); font-size: 17px; line-height: 1.65; max-width: 600px; margin: 24px 0 0; }
   .hero-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 22px; margin-top: 34px; }
   .hero-meta span { font: 11px var(--mono); letter-spacing: .08em; color: var(--faint); }
-  .start { display: inline-flex; align-items: center; gap: 10px; font: 500 12px var(--mono); letter-spacing: .06em;
-    color: var(--panel); background: var(--txt-strong); border-radius: 999px; padding: 12px 22px; text-decoration: none; transition: background .2s; }
-  .start:hover { color: var(--panel); background: var(--gold); text-decoration: none; }
+  .start { display: inline-flex; align-items: center; gap: 10px; font: 700 16px var(--sans);
+    color: var(--lp-on-accent, #fff); background: var(--gold); border-radius: 999px; padding: 12px 22px; text-decoration: none; transition: background .2s; }
+  .start:hover { color: var(--lp-on-accent, #fff); background: var(--info-hover); text-decoration: none; }
   .parts { margin-top: clamp(64px, 9vw, 110px); }
   .part { display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 20px clamp(28px, 5vw, 64px); padding: 34px 0 40px; border-top: 1px solid var(--edge-2); }
   .part-no { font: 700 10.5px var(--mono); letter-spacing: .2em; text-transform: uppercase; color: var(--gold); }
-  .part-title { margin: 8px 0 0; font: 500 26px/1.2 var(--serif); color: var(--txt-strong); }
+  .part-title { margin: 8px 0 0; font: 700 26px/1.2 var(--serif); color: var(--txt-strong); }
   .part-blurb { margin: 10px 0 0; color: var(--dim); font-size: 14px; line-height: 1.6; }
   .cards { list-style: none; margin: 0; padding: 0; }
   .cards li { margin: 0; border-bottom: 1px solid var(--edge); }
@@ -50,6 +47,7 @@
     <button class="tbtn search-btn" id="search-open" type="button" aria-label="Search the guide"><span>Search</span><kbd>⌘K</kbd></button>
     <a class="tbtn" href="../../hub/index.html">Learning hub</a>
     <a class="tbtn start-link" href="content/01-foundations/llm-internals.html">start reading</a>
+    <button type="button" class="lp-theme-toggle" data-theme-toggle aria-label="Switch light or dark">◐</button>
   </div>
 </header>
 

@@ -1,44 +1,63 @@
-/* Warm paper surfaces, ink text, and restrained earth and blue accents. */
+/* The AI guide's own variable names, mapped onto the site theme (hub/theme/tokens.css).
+   The value after each --lp- token is the old light value, used when this page is
+   opened without the site build. Light and dark mode both come from the theme. */
 :root {
-  /* Warm paper surfaces */
-  --bg: #f7f5f0;
-  --bg-soft: #efede7;
-  --panel: #fffefa;
-  --panel-2: #f1efe9;
-  --edge: #dedbd2;
-  --edge-2: #c9c5bb;
+  /* Surfaces */
+  --bg: var(--lp-bg, #faf8f3);
+  --bg-soft: var(--lp-surface-2, #f3efe6);
+  --panel: var(--lp-surface, #ffffff);
+  --panel-2: var(--lp-surface-2, #f3efe6);
+  --edge: var(--lp-line, #e4dfd3);
+  --edge-2: color-mix(in srgb, var(--lp-line, #e4dfd3) 72%, var(--lp-text-muted, #5f6b7a));
+  --edge-3: color-mix(in srgb, var(--lp-line, #e4dfd3) 45%, var(--lp-text-muted, #5f6b7a));
+  --overlay: color-mix(in srgb, #10131a 38%, transparent);
 
-  /* Ink and secondary text */
-  --txt: #343a40;
-  --txt-strong: #18222d;
-  --dim: #636d76;
-  --faint: #656e74;
+  /* Text */
+  --txt: var(--lp-text, #1f2933);
+  --txt-strong: var(--lp-text, #1f2933);
+  --dim: var(--lp-text-muted, #5f6b7a);
+  --faint: var(--lp-text-muted, #5f6b7a);
 
-  /* Accent colors */
-  --gold: #8a572f;
-  --gold-soft: rgba(138, 87, 47, .10);
-  --mint: #356846;
-  --deny: #963e3e;
-  --info: #315c79;
-  --info-hover: #1d425d;
+  /* Accents: one brand blue plus the read / do / check / warn colours */
+  --gold: var(--lp-accent, #2f6fde);
+  --gold-ink: var(--lp-accent, #2f6fde);
+  --gold-soft: var(--lp-accent-soft, #e6eefc);
+  --gold-line: color-mix(in srgb, var(--lp-accent, #2f6fde) 45%, transparent);
+  --mint: var(--lp-do, #1f9d55);
+  --mint-line: color-mix(in srgb, var(--lp-do, #1f9d55) 45%, transparent);
+  --deny: var(--lp-warn, #c0392b);
+  --deny-line: color-mix(in srgb, var(--lp-warn, #c0392b) 45%, transparent);
+  --watch: var(--lp-check, #b7791f);
+  --violet: var(--lp-code-title, #6f42c1);
+  --info: var(--lp-accent, #2f6fde);
+  --info-hover: color-mix(in srgb, var(--lp-accent, #2f6fde) 75%, var(--lp-text, #1f2933));
+  --info-line: color-mix(in srgb, var(--lp-read, #2f6fde) 40%, transparent);
 
-  /* Syntax colors for the light code surface */
-  --tk-k: #70458a;
-  --tk-s: #28603a;
-  --tk-f: #245582;
-  --tk-n: #8a4d1c;
-  --tk-c: #59666d;
-  --tk-t: #28556d;
-  --tk-a: #765812;
+  /* Soft box backgrounds */
+  --note-bg: var(--lp-note-bg, #eaf1fd);
+  --try-bg: var(--lp-try-bg, #e9f7ef);
+  --check-bg: var(--lp-check-bg, #fdf3e1);
+  --warn-bg: var(--lp-warn-bg, #fdecec);
+
+  /* Syntax colours */
+  --tk-k: var(--lp-code-keyword, #b8326e);
+  --tk-s: var(--lp-code-string, #1a7f37);
+  --tk-f: var(--lp-code-number, #0b5cad);
+  --tk-n: var(--lp-code-number, #0b5cad);
+  --tk-c: var(--lp-code-comment, #7c8591);
+  --tk-t: var(--lp-code-title, #6f42c1);
+  --tk-a: var(--lp-check, #b7791f);
 
   /* Code surfaces */
-  --code-bg: #eeece6;
-  --code-edge: #d8d4ca;
+  --code-bg: var(--lp-code-bg, #f4f1ea);
+  --code-bar: var(--lp-surface-2, #f3efe6);
+  --code-txt: var(--lp-code-text, #24292f);
+  --code-edge: var(--lp-line, #e4dfd3);
 
-  /* Typography */
-  --sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --serif: 'Fraunces', Georgia, 'Times New Roman', serif;
-  --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
+  /* Typography: one reading font for text and headings, one mono for code */
+  --sans: var(--lp-font, 'Atkinson Hyperlegible', system-ui, -apple-system, 'Segoe UI', sans-serif);
+  --serif: var(--lp-font, 'Atkinson Hyperlegible', system-ui, -apple-system, 'Segoe UI', sans-serif);
+  --mono: var(--lp-mono, 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace);
 
   /* Spacing and shape */
   --r-xs: 4px;
@@ -46,11 +65,11 @@
   --r-md: 16px;
   --r-lg: 26px;
   --r-xl: 44px;
-  --rad: 12px;
-  --rad-sm: 8px;
+  --rad: var(--lp-radius, 12px);
+  --rad-sm: var(--lp-radius-sm, 8px);
 
   /* Page chrome */
   --topbar-h: 56px;
   --sidebar-w: 280px;
-  --shadow: 0 24px 60px -30px rgba(27, 36, 44, .25);
+  --shadow: var(--lp-shadow, 0 1px 2px rgba(31, 41, 51, 0.06), 0 6px 20px rgba(31, 41, 51, 0.07));
 }

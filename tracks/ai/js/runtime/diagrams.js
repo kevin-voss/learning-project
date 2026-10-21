@@ -18,6 +18,57 @@ export function zoomDimensions(width, height, scale) {
   return { width: Math.max(1, width * scale), height: Math.max(1, height * scale) };
 }
 
+/* Diagram colours come from the site theme, read when the diagram is drawn. */
+const redraws = [];
+const token = (name, fallback) => getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
+
+function mermaidConfig() {
+  const bg = token('--lp-bg', '#faf8f3');
+  const surface = token('--lp-surface', '#ffffff');
+  const surface2 = token('--lp-surface-2', '#f3efe6');
+  const text = token('--lp-text', '#1f2933');
+  const line = token('--lp-line', '#e4dfd3');
+  const read = token('--lp-read', '#2f6fde');
+  const note = token('--lp-note-bg', '#eaf1fd');
+  const picture = token('--lp-picture-bg', '#fff6d9');
+  return {
+    startOnLoad: false, theme: 'base', securityLevel: 'strict',
+    flowchart: { htmlLabels: true, useMaxWidth: false, nodeSpacing: 44, rankSpacing: 56, padding: 14 },
+    sequence: { useMaxWidth: false, actorFontSize: 18, messageFontSize: 17, noteFontSize: 16, wrap: true },
+    themeVariables: {
+      darkMode: getComputedStyle(document.documentElement).colorScheme === 'dark',
+      background: surface, fontFamily: token('--lp-font', 'system-ui, sans-serif'), fontSize: '18px',
+      primaryColor: note, primaryTextColor: text, primaryBorderColor: read,
+      secondaryColor: picture, tertiaryColor: bg, textColor: text,
+      lineColor: read, edgeLabelBackground: surface, clusterBkg: surface2,
+      clusterBorder: line, noteBkgColor: picture, noteTextColor: text,
+      actorBkg: note, actorBorder: read, actorTextColor: text, signalColor: read, signalTextColor: text,
+    },
+  };
+}
+
+/* Lesson pages colour Mermaid classes with the old light palette. Swap each colour for its theme token. */
+const CLASS_COLOURS = {
+  '#e7edf0': '--lp-note-bg', '#ede7f4': '--lp-surface-2', '#e7efe7': '--lp-try-bg', '#f1e8dc': '--lp-check-bg',
+  '#557184': '--lp-read', '#735c83': '--lp-code-title', '#57704d': '--lp-do', '#a56d3e': '--lp-check', '#18222d': '--lp-text',
+};
+function themed(source) {
+  return source.replace(/#[0-9a-f]{6}\b/gi, (hex) => {
+    const name = CLASS_COLOURS[hex.toLowerCase()];
+    return name ? token(name, hex) : hex;
+  });
+}
+
+function onThemeChange(callback) {
+  let last = getComputedStyle(document.documentElement).getPropertyValue('--lp-bg');
+  const check = () => {
+    const now = getComputedStyle(document.documentElement).getPropertyValue('--lp-bg');
+    if (now !== last) { last = now; callback(); }
+  };
+  new MutationObserver(check).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', check);
+}
+
 let renderQueue = Promise.resolve();
 function enqueueRender(task) {
   const current = renderQueue.then(task, task);
@@ -47,6 +98,7 @@ function setupDiagram(node, mermaid) {
   const frame = node.closest('.diag-body') || node.parentElement;
   const shell = node.closest('.diagram') || frame;
   const source = node.textContent;
+  node.textContent = themed(source);
   frame.tabIndex = 0;
   frame.setAttribute('role', 'region');
   frame.setAttribute('aria-label', 'Scrollable diagram frame. Use the diagram controls to fit, zoom, or expand.');
@@ -102,7 +154,7 @@ function setupDiagram(node, mermaid) {
   function fail(error) {
     node.removeAttribute('data-processed');
     node.setAttribute('src-fallback', '');
-    node.textContent = source;
+    node.textContent = themed(source);
     status.textContent = 'Diagram could not render. Read the source below.';
     status.dataset.error = error?.message || 'render-failed';
     controls.querySelectorAll('button').forEach((button) => { button.disabled = true; });
@@ -196,6 +248,13 @@ function setupDiagram(node, mermaid) {
     expand.focus();
   }
 
+  redraws.push(() => {
+    if (rendering || !node.hasAttribute('data-processed')) return;
+    node.removeAttribute('data-processed');
+    node.textContent = themed(source);
+    render();
+  });
+
   if (!mermaid) {
     node.setAttribute('src-fallback', '');
     controls.querySelectorAll('button').forEach((button) => { button.disabled = true; });
@@ -218,19 +277,11 @@ export async function wireDiagrams() {
   let mermaid = null;
   try {
     mermaid = (await import('https://cdn.jsdelivr.net/npm/mermaid@11.12.0/dist/mermaid.esm.min.mjs')).default;
-    mermaid.initialize({
-      startOnLoad: false, theme: 'base', securityLevel: 'strict',
-      flowchart: { htmlLabels: true, useMaxWidth: false, nodeSpacing: 44, rankSpacing: 56, padding: 14 },
-      sequence: { useMaxWidth: false, actorFontSize: 18, messageFontSize: 17, noteFontSize: 16, wrap: true },
-      themeVariables: {
-        background: '#fffefa', fontFamily: 'Inter, sans-serif', fontSize: '18px',
-        primaryColor: '#e7edf0', primaryTextColor: '#18222d', primaryBorderColor: '#557184',
-        secondaryColor: '#f1e8dc', tertiaryColor: '#f7f5f0', textColor: '#25323c',
-        lineColor: '#557184', edgeLabelBackground: '#fffefa', clusterBkg: '#f1efe9',
-        clusterBorder: '#c9c5bb', noteBkgColor: '#f1e8dc', noteTextColor: '#18222d',
-        actorBkg: '#e7edf0', actorBorder: '#557184', actorTextColor: '#18222d', signalColor: '#315c79', signalTextColor: '#25323c',
-      },
-    });
+    mermaid.initialize(mermaidConfig());
   } catch { /* Source remains available when Mermaid cannot load. */ }
   nodes.forEach((node) => setupDiagram(node, mermaid));
+  if (mermaid) onThemeChange(() => {
+    mermaid.initialize(mermaidConfig());
+    redraws.forEach((redraw) => redraw());
+  });
 }

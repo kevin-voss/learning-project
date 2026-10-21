@@ -4,20 +4,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="description" content="AIP-C01 exam prep: learn AWS Generative AI with one real company-chat story, short chapters, quizzes, and a mock exam. Works from file://.">
-  <meta name="theme-color" content="#0f1115">
+  <meta name="theme-color" content="#faf8f3" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#15171c" media="(prefers-color-scheme: dark)">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="AIP-C01">
   <title>AIP-C01 · AWS Generative AI Developer Professional</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
-  <link rel="icon" href="icons/favicon-32.png" type="image/png" sizes="32x32">
-  <link rel="icon" href="icons/icon-192.png" type="image/png" sizes="192x192">
-  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="icons/browser/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="icons/app/icon-192.png" type="image/png" sizes="192x192">
+  <link rel="apple-touch-icon" href="icons/browser/apple-touch-icon.png">
   <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
@@ -74,45 +72,46 @@
         <div class="topbar-title" id="topTitle">AIP-C01</div>
         <div class="topbar-actions">
           <a class="btn" href="#/exam">Mock exam</a>
+          <button type="button" class="lp-theme-toggle" data-theme-toggle aria-label="Switch light or dark">◐</button>
         </div>
       </header>
       <main class="view" id="view" tabindex="-1"></main>
     </div>
   </div>
 
-  <script src="js/ns.js"></script>
-  <script src="js/config.js"></script>
-  <script src="js/study-guide.js"></script>
-  <script src="js/chapters.js"></script>
-  <script src="js/storage.js"></script>
-  <script src="js/content/00-architecture-overview.js"></script>
-  <script src="js/content/01-genai-foundations.js"></script>
-  <script src="js/content/02-choosing-a-foundation-model.js"></script>
-  <script src="js/content/03-amazon-bedrock.js"></script>
-  <script src="js/content/04-prompt-engineering.js"></script>
-  <script src="js/content/05-application-integration.js"></script>
-  <script src="js/content/06-data-ingestion.js"></script>
-  <script src="js/content/07-embeddings.js"></script>
-  <script src="js/content/08-vector-databases.js"></script>
-  <script src="js/content/09-rag.js"></script>
-  <script src="js/content/10-bedrock-knowledge-bases.js"></script>
-  <script src="js/content/11-agents.js"></script>
-  <script src="js/content/12-agent-tools.js"></script>
-  <script src="js/content/13-workflow-orchestration.js"></script>
-  <script src="js/content/14-memory-and-state.js"></script>
-  <script src="js/content/15-safety-and-guardrails.js"></script>
-  <script src="js/content/16-security-and-privacy.js"></script>
-  <script src="js/content/17-governance.js"></script>
-  <script src="js/content/18-evaluation.js"></script>
-  <script src="js/content/19-observability.js"></script>
-  <script src="js/content/20-performance.js"></script>
-  <script src="js/content/21-cost-optimization.js"></script>
-  <script src="js/content/22-deployment.js"></script>
-  <script src="js/content/23-cicd.js"></script>
-  <script src="js/content/24-troubleshooting.js"></script>
-  <script src="js/content/25-architecture-patterns.js"></script>
-  <script src="js/content/26-exam-decision-guide.js"></script>
-  <script src="js/content/27-final-architecture.js"></script>
+  <script src="js/core/ns.js"></script>
+  <script src="js/core/config.js"></script>
+  <script src="js/course/study-guide.js"></script>
+  <script src="js/course/chapters.js"></script>
+  <script src="js/core/storage.js"></script>
+  <script src="js/content/foundations/00-architecture-overview.js"></script>
+  <script src="js/content/foundations/01-genai-foundations.js"></script>
+  <script src="js/content/foundations/02-choosing-a-foundation-model.js"></script>
+  <script src="js/content/foundations/03-amazon-bedrock.js"></script>
+  <script src="js/content/foundations/04-prompt-engineering.js"></script>
+  <script src="js/content/integration-agents/05-application-integration.js"></script>
+  <script src="js/content/knowledge/06-data-ingestion.js"></script>
+  <script src="js/content/knowledge/07-embeddings.js"></script>
+  <script src="js/content/knowledge/08-vector-databases.js"></script>
+  <script src="js/content/knowledge/09-rag.js"></script>
+  <script src="js/content/knowledge/10-bedrock-knowledge-bases.js"></script>
+  <script src="js/content/integration-agents/11-agents.js"></script>
+  <script src="js/content/integration-agents/12-agent-tools.js"></script>
+  <script src="js/content/integration-agents/13-workflow-orchestration.js"></script>
+  <script src="js/content/integration-agents/14-memory-and-state.js"></script>
+  <script src="js/content/trust/15-safety-and-guardrails.js"></script>
+  <script src="js/content/trust/16-security-and-privacy.js"></script>
+  <script src="js/content/trust/17-governance.js"></script>
+  <script src="js/content/operate/18-evaluation.js"></script>
+  <script src="js/content/operate/19-observability.js"></script>
+  <script src="js/content/operate/20-performance.js"></script>
+  <script src="js/content/operate/21-cost-optimization.js"></script>
+  <script src="js/content/ship/22-deployment.js"></script>
+  <script src="js/content/ship/23-cicd.js"></script>
+  <script src="js/content/ship/24-troubleshooting.js"></script>
+  <script src="js/content/exam/25-architecture-patterns.js"></script>
+  <script src="js/content/exam/26-exam-decision-guide.js"></script>
+  <script src="js/content/exam/27-final-architecture.js"></script>
   <!-- Missing examtopics-pXX.js files should be empty stubs: AIP.registerQuestions([]); so file:// loads do not 404. -->
   <script src="js/questions/examtopics/p01/examtopics-p01.js"></script>
   <script src="js/questions/examtopics/p01/examtopics-p02.js"></script>
@@ -163,9 +162,9 @@
   <script src="js/questions/certsafari/p07/certsafari-p35.js"></script>
   <script src="js/questions/certsafari/p08/certsafari-p36.js"></script>
   <script src="js/questions/practice.js"></script>
-  <script src="js/render.js"></script>
-  <script src="js/question-bank.js"></script>
-  <script src="js/quiz.js"></script>
+  <script src="js/course/render.js"></script>
+  <script src="js/exam/question-bank.js"></script>
+  <script src="js/exam/quiz.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

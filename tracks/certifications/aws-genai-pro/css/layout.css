@@ -53,13 +53,13 @@
   border-radius: 8px;
   display: block;
   flex-shrink: 0;
-  background: #0f1115;
+  background: var(--bg);
   object-fit: cover;
 }
 .sidebar-brand > div { min-width: 0; }
 .sidebar-brand strong {
   display: block;
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: var(--display);
   font-size: 14px;
   letter-spacing: -0.02em;
   overflow: hidden;
@@ -105,7 +105,7 @@
   transition: width 0.35s ease;
 }
 .progress-ascii {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--mono);
   font-size: 11px;
   color: var(--teal);
   margin-top: 6px;
@@ -140,7 +140,7 @@
   text-transform: uppercase;
   border-radius: 8px;
 }
-.nav-group-btn:hover { color: var(--muted); background: rgba(255, 255, 255, 0.03); }
+.nav-group-btn:hover { color: var(--muted); background: color-mix(in srgb, var(--fg) 3%, transparent); }
 .nav-group-btn .chev { transition: transform 0.2s; }
 .nav-group.open .chev { transform: rotate(90deg); }
 .nav-group-body { display: none; }
@@ -164,15 +164,15 @@
   white-space: normal;
 }
 .nav-item > span:nth-child(2) { min-width: 0; }
-.nav-item:hover { background: rgba(255, 255, 255, 0.04); color: var(--fg); }
+.nav-item:hover { background: color-mix(in srgb, var(--fg) 4%, transparent); color: var(--fg); }
 .nav-item.active,
 .nav-item-wrap.active-wrap .nav-item {
-  background: rgba(45, 212, 191, 0.1);
+  background: color-mix(in srgb, var(--teal) 10%, transparent);
   color: var(--fg);
   box-shadow: inset 2px 0 0 var(--teal);
 }
 .nav-item .idx {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--mono);
   font-size: 11px;
   color: var(--dim);
   padding-top: 1px;
@@ -205,8 +205,8 @@
   padding: 4px 8px;
   border-radius: 6px;
 }
-.chapter-subs a:hover { color: var(--fg); background: rgba(255, 255, 255, 0.03); }
-.chapter-subs a.active { color: var(--teal); background: rgba(45, 212, 191, 0.08); }
+.chapter-subs a:hover { color: var(--fg); background: color-mix(in srgb, var(--fg) 3%, transparent); }
+.chapter-subs a.active { color: var(--teal); background: color-mix(in srgb, var(--teal) 8%, transparent); }
 
 .sidebar-foot {
   padding: 10px 12px 14px;
@@ -227,7 +227,7 @@
 }
 .sidebar-foot a:hover,
 .sidebar-foot button:hover {
-  background: rgba(255, 255, 255, 0.04);
+  background: color-mix(in srgb, var(--fg) 4%, transparent);
   color: var(--fg);
 }
 .install-btn {
@@ -265,7 +265,7 @@ html.standalone .install-ios { display: none !important; }
   padding-left: max(24px, env(safe-area-inset-left));
   padding-right: max(24px, env(safe-area-inset-right));
   border-bottom: 1px solid var(--border);
-  background: rgba(15, 17, 21, 0.88);
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   flex-shrink: 0;
@@ -273,14 +273,14 @@ html.standalone .install-ios { display: none !important; }
 .topbar-title {
   flex: 1;
   min-width: 0;
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: var(--display);
   font-size: 15px;
   font-weight: 600;
   overflow: hidden;
 }
 .topbar-title small {
   display: block;
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font);
   font-size: 11px;
   color: var(--dim);
   font-weight: 500;
@@ -288,7 +288,8 @@ html.standalone .install-ios { display: none !important; }
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.topbar-actions { display: flex; gap: 8px; flex-wrap: wrap; flex-shrink: 0; }
+.topbar-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; flex-shrink: 0; }
+.topbar-actions .lp-theme-toggle { width: 36px; height: 36px; padding: 0; border: 1px solid var(--border); border-radius: 999px; background: var(--card); color: var(--fg); font-size: 16px; line-height: 1; }
 
 .view {
   overflow: auto;
@@ -359,7 +360,7 @@ html.standalone .install-ios { display: none !important; }
     transform: none;
     visibility: visible;
     pointer-events: auto;
-    box-shadow: 8px 0 32px rgba(0, 0, 0, 0.45);
+    box-shadow: 8px 0 32px color-mix(in srgb, var(--shade) 45%, transparent);
   }
   .sidebar-close { display: grid; place-items: center; }
   .menu-btn { display: grid; place-items: center; }
@@ -367,7 +368,7 @@ html.standalone .install-ios { display: none !important; }
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.55);
+    background: color-mix(in srgb, var(--shade) 55%, transparent);
     z-index: 30;
   }
   .scrim.show { display: block; }
@@ -376,6 +377,6 @@ html.standalone .install-ios { display: none !important; }
     padding: env(safe-area-inset-top) max(16px, env(safe-area-inset-right)) 0 max(16px, env(safe-area-inset-left));
   }
   .view {
-    padding: 20px max(16px, env(safe-area-inset-right)) calc(64px + env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+    padding: 20px max(16px, env(safe-area-inset-right)) calc(88px + env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
   }
 }

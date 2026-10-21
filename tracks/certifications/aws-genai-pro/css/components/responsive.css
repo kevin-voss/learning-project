@@ -1,0 +1,55 @@
+/* Responsive rules for every component. Loaded last. */
+@media (max-width: 900px) {
+  .domain-dash { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .context-bar,
+  .how-layout {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 720px) {
+  .decision-grid,
+  .meta-grid { grid-template-columns: 1fr 1fr; }
+  .domain-dash { grid-template-columns: 1fr 1fr; }
+  .why-grid,
+  .exam-real-grid,
+  .component-grid,
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+  .quiz-meta {
+    flex-direction: column;
+    gap: 4px;
+  }
+  .exam-controls { grid-template-columns: 1fr; }
+  .bank-filter-grid { grid-template-columns: 1fr; }
+  .saved-run { align-items: flex-start; flex-direction: column; gap: 10px; }
+  .card { padding: 14px 16px; }
+}
+@media (max-width: 520px) {
+  .domain-dash,
+  .decision-grid,
+  .meta-grid { grid-template-columns: 1fr; }
+  .weak-row { grid-template-columns: 1fr; gap: 4px; }
+  .performance-chart-head { grid-template-columns: 1fr auto; }
+  .performance-chart-head span:last-child { text-align: left; }
+  .performance-chart-head strong { grid-column: 2; grid-row: 1 / span 2; }
+  .topic-header h1 { font-size: 32px; }
+  .workflow-steps,
+  .chapter-nav {
+    grid-template-columns: 1fr;
+  }
+  .chapter-link.next {
+    grid-column: auto;
+    text-align: left;
+  }
+  .component-io > div {
+    grid-template-columns: 1fr;
+    gap: 3px;
+  }
+  .btn { padding: 10px 12px; }
+  .choice { font-size: 14px; padding: 12px; }
+  .quiz-stem { font-size: 15px; }
+  .topbar-title { font-size: 14px; }
+  .hero h1 { font-size: clamp(26px, 8vw, 36px); }
+  .section-title h2 { font-size: 20px; }
+}

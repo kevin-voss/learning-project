@@ -1,26 +1,42 @@
+/* The exam app's own variable names, mapped onto the site theme (hub/theme/tokens.css).
+   The value after each --lp- token is the light value, used when the app is opened
+   without the site build (for example from file://). Light and dark come from the theme. */
 :root {
-  --bg: #0f1115;
-  --bg-2: #141820;
-  --sidebar: #11151b;
-  --card: #1a1e26;
-  --card-2: #202631;
-  --border: #2d333f;
-  --border-strong: #3d4654;
-  --fg: #f4f7fb;
-  --muted: #aab3c2;
-  --dim: #7c8798;
-  --aws: #ff9900;
-  --ai: #a78bfa;
-  --context: #60a5fa;
-  --warning: #f87171;
-  --amber: var(--aws);
-  --teal: var(--context);
-  --coral: var(--warning);
-  --violet: #a78bfa;
-  --green: #4ade80;
-  --red: #f87171;
-  --blue: #60a5fa;
+  /* Surfaces */
+  --bg: var(--lp-bg, #faf8f3);
+  --bg-2: var(--lp-surface-2, #f3efe6);
+  --sidebar: var(--lp-surface, #ffffff);
+  --card: var(--lp-surface, #ffffff);
+  --card-2: var(--lp-surface-2, #f3efe6);
+  --border: var(--lp-line, #e4dfd3);
+  --border-strong: color-mix(in srgb, var(--lp-line, #e4dfd3) 60%, var(--lp-text-muted, #5f6b7a));
+  --code: var(--lp-code-bg, #f4f1ea);
+  --shade: #000;
+
+  /* Text */
+  --fg: var(--lp-text, #1f2933);
+  --muted: var(--lp-text-muted, #5f6b7a);
+  --dim: var(--lp-text-muted, #5f6b7a);
+
+  /* Accents. --aws is the main accent (the site blue); the rest follow the step colours. */
+  --aws: var(--lp-accent, #2f6fde);
+  --amber: var(--lp-check, #b7791f);
+  --context: var(--lp-read, #2f6fde);
+  --blue: var(--lp-read, #2f6fde);
+  --teal: color-mix(in srgb, var(--lp-do, #1f9d55) 50%, var(--lp-read, #2f6fde));
+  --green: var(--lp-do, #1f9d55);
+  --warning: var(--lp-warn, #c0392b);
+  --coral: var(--lp-warn, #c0392b);
+  --red: var(--lp-warn, #c0392b);
+  --ai: var(--lp-code-title, #6f42c1);
+  --violet: var(--lp-code-title, #6f42c1);
+
+  /* Type and shape */
+  --font: var(--lp-font, 'Atkinson Hyperlegible', system-ui, -apple-system, 'Segoe UI', sans-serif);
+  --display: var(--lp-font, 'Atkinson Hyperlegible', system-ui, -apple-system, 'Segoe UI', sans-serif);
+  --mono: var(--lp-mono, 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace);
+
+  /* Layout */
   --sidebar-w: 320px;
   --header-h: 64px;
-  --code: #0b0e13;
 }

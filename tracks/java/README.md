@@ -6,11 +6,19 @@ The order of the steps lives in `hub/path.mjs`. This folder only holds the pages
 
 ## How a topic page works
 
-Every lesson follows the page shape from [docs/STYLE.md](../../docs/STYLE.md):
+A Java lesson is **in depth**: a student who has never heard of the topic reads one lesson and understands all of it. Every lesson follows this shape:
 
-**Picture → The idea → Tiny example → Try it → Check yourself**
+**Picture → Like you are six → The idea → Example (with output) → Step by step → Under the hood → Try it → Remember / Common mistakes → Check yourself**
 
-Each topic ends with one "Try it" (numbered steps and "You should see") and three "Check yourself" questions with hidden answers. Lessons marked **Deeper** are optional on the first pass.
+- **Picture** (`realWorld`): one everyday thing a child knows.
+- **Like you are six** (`kid`): the same idea as a little story, in very simple words.
+- **The idea** (`definition` + `explain`): the real explanation with the real words, each new word explained the first time.
+- **Example** (`code` + `output` + `codeExplanation`): a complete program that runs as it is, what it prints, and a walkthrough of the important lines.
+- **Step by step** (`sections`): small chapters, each with words, and where it helps a Mermaid diagram, a table or another runnable snippet with its output.
+- **Under the hood** (`technical`): what the compiler and the JVM really do.
+- **Check yourself** (`check`): questions with hidden answers, per lesson and once per topic.
+
+Lessons marked **Deeper** are optional on the first pass.
 
 ## Topics
 
@@ -60,18 +68,32 @@ java/
 
 ## Add or change a lesson
 
-A lesson is a plain object in `topics/<topic>/js/lessons.js`:
+A lesson is a plain object in `topics/<topic>/js/` (one or more files, each about 400 lines at most, at most 5 files per folder):
 
 ```js
 {
-  id: 'base-case', title: 'Countdown and the Base Case', category: 'concept',
+  id: 'base-case', title: 'Countdown and the Base Case', category: 'concept', icon: 'R',
+  tagline: 'Stop before you fall forever',
   realWorld: 'The picture: a thing a child knows.',
-  definition: 'The idea in 2–5 short sentences. `code` and [links](../x/index.html) work.',
-  fileName: 'Countdown.java', code: `...at most ~15 lines...`,
+  kid: ['A tiny story in very simple words.', 'A second paragraph.'],
+  definition: 'The idea in one or two sentences. `code`, **bold** and [links](../x/index.html) work.',
+  explain: ['More paragraphs with the real words.', 'Each new word explained.'],
+  why: 'Why it exists.', whenUse: 'When you use it.',
+  syntax: 'How to write it, in one line.',
+  fileName: 'Countdown.java', code: `...a complete program that runs...`,
+  output: 'what the program prints',
+  codeExplanation: [{ label: 'Line 3', code: 'countdown(n - 1);', text: 'What the line does and why.' }],
+  sections: [{
+    title: 'What happens on each call', text: ['Paragraph.', 'Paragraph.'], bullets: ['…'],
+    mermaid: 'flowchart TD\n  A --> B', diagramNote: 'How to read the picture.',
+    table: { head: ['…'], rows: [['…']], note: '…' },
+    code: `...`, fileName: 'Other.java', output: '…', tip: '…', warn: '…'
+  }],
+  technical: ['What the compiler and the JVM do.'],
   tryIt: { steps: ['Do this.', 'Then this.'], see: 'what appears.' },
   check: [{ q: 'A question?', a: 'The answer.' }],
   keyPoints: [], commonMistakes: [], related: ['Methods']
 }
 ```
 
-A topic's own `tryIt` and `check` go into the `details` of `Java.addCoreTopic(...)`, or onto `Java.topics.<name>` for topics with their own `categories.js`. Use `category: 'deeper'` for optional lessons. No build step: every page is plain `<script>` tags.
+A topic's own `tryIt` and `check` go into the `details` of `Java.addCoreTopic(...)`, or onto `Java.topics.<name>` for topics with their own `categories.js`. More lesson files for the same topic use `Java.addCoreLessons(id, lessons)`. Use `category: 'deeper'` for optional lessons. Diagrams are [Mermaid](https://mermaid.js.org/) text; the page loads Mermaid by itself. No build step: every page is plain `<script>` tags.

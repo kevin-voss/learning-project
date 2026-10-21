@@ -1,8 +1,9 @@
 // One function per block of a lesson page. The page shape is:
-// Picture → Idea → Code → Try it → Check (see docs/STYLE.md).
+// Picture → Like you are six → Idea → Code → Step by step → Under the hood → Try it → Check
+// (see docs/STYLE.md and tracks/java/README.md).
 (function () {
   const L = Java.lesson;
-  const { icons, escapeHtml, escapeAttribute, renderText, renderList, renderTextBlock } = L;
+  const { icons, escapeHtml, escapeAttribute, renderText, renderList, renderTextBlock, renderParagraphs } = L;
 
   function section(label, icon, body) {
     return `
@@ -35,6 +36,12 @@
     `);
   }
 
+  // lesson.kid: the same idea told to a six-year-old (one string or several paragraphs).
+  function renderKid(lesson) {
+    if (!lesson.kid) return '';
+    return section('Like you are six', icons.picture, `<div class="kid-box">${renderParagraphs(lesson.kid, lesson)}</div>`);
+  }
+
   function renderIdea(lesson) {
     const why = lesson.why || (lesson.pros && lesson.pros[0]);
     const when = lesson.whenUse || (lesson.keyPoints && lesson.keyPoints[0]);
@@ -44,8 +51,71 @@
     ].join('');
     return section('The idea', icons.info, `
       <p class="def-text">${renderText(lesson.definition, lesson)}</p>
+      ${renderParagraphs(lesson.explain, lesson, 'explain-text')}
       ${cards ? `<div class="beginner-map">${cards}</div>` : ''}
     `);
+  }
+
+  // One code panel with a copy button, plus what it prints.
+  function codePanel(code, fileName, language, output, lesson) {
+    return `
+      <div class="code-wrap">
+        <div class="code-head">
+          <div class="file">
+            <div class="dots"><span></span><span></span><span></span></div>
+            <span>${escapeHtml(fileName || 'Example.java')}</span>
+          </div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <pre><code class="language-${language || 'java'}">${escapeHtml(code)}</code></pre>
+      </div>
+      ${output ? `
+      <div class="code-output">
+        <div class="code-output-label">Output</div>
+        <pre>${escapeHtml(output)}</pre>
+      </div>` : ''}
+    `;
+  }
+
+  function renderDiagram(mermaid, note, lesson) {
+    if (!mermaid) return '';
+    return `
+      <div class="visual-panel">
+        <pre class="mermaid">${escapeHtml(mermaid)}</pre>
+        ${note ? `<div class="diagram-note">${renderText(note, lesson)}</div>` : ''}
+      </div>
+    `;
+  }
+
+  // lesson.sections: [{ title, text, bullets?, mermaid?, diagramNote?, code?, fileName?,
+  //   codeLanguage?, output?, table?: { head, rows, note }, tip?, warn? }]
+  // Each one is a small chapter: words first, then a picture or code, then a tip.
+  function renderDeepSections(lesson) {
+    if (!lesson.sections || !lesson.sections.length) return '';
+    return lesson.sections.map((part, index) => section(`${index + 1} · ${escapeHtml(part.title || 'Step')}`, part.code ? icons.code : icons.info, `
+      <div class="deep-part">
+        ${renderParagraphs(part.text, lesson, 'explain-text')}
+        ${part.bullets && part.bullets.length ? `<ul class="deep-bullets">${renderList(part.bullets, lesson)}</ul>` : ''}
+        ${part.table && part.table.rows ? `
+        <div class="lesson-table-wrap">
+          <table class="lesson-table">
+            <thead><tr>${part.table.head.map(cell => `<th>${renderText(cell, lesson)}</th>`).join('')}</tr></thead>
+            <tbody>${part.table.rows.map(row => `<tr>${row.map(cell => `<td>${renderText(cell, lesson)}</td>`).join('')}</tr>`).join('')}</tbody>
+          </table>
+        </div>
+        ${part.table.note ? `<p class="table-note">${renderText(part.table.note, lesson)}</p>` : ''}` : ''}
+        ${renderDiagram(part.mermaid, part.diagramNote, lesson)}
+        ${part.code ? codePanel(part.code, part.fileName, part.codeLanguage, part.output, lesson) : ''}
+        ${part.tip ? `<div class="deep-note deep-tip"><strong>Tip:</strong> ${renderText(part.tip, lesson)}</div>` : ''}
+        ${part.warn ? `<div class="deep-note deep-warn"><strong>Watch out:</strong> ${renderText(part.warn, lesson)}</div>` : ''}
+      </div>
+    `)).join('');
+  }
+
+  // lesson.technical: how Java really does it (compiler, JVM, memory), for the curious.
+  function renderTechnical(lesson) {
+    if (!lesson.technical) return '';
+    return section('Under the hood', icons.syntax, `<div class="tech-box">${renderParagraphs(lesson.technical, lesson)}</div>`);
   }
 
   function renderSyntax(lesson) {
@@ -123,16 +193,7 @@
     const items = L.codeExplanationItems(lesson);
     return section(lesson.exampleLabel || 'Tiny example', icons.code, `
       <div class="code-summary">${renderText(L.summarizeCode(lesson), lesson)}</div>
-      <div class="code-wrap">
-        <div class="code-head">
-          <div class="file">
-            <div class="dots"><span></span><span></span><span></span></div>
-            <span>${escapeHtml(lesson.fileName || `${lesson.title.replace(/\W+/g, '')}.java`)}</span>
-          </div>
-          <button class="copy-btn" onclick="copyCode(this)">copy</button>
-        </div>
-        <pre><code class="language-${lesson.codeLanguage || 'java'}">${escapeHtml(lesson.code)}</code></pre>
-      </div>
+      ${codePanel(lesson.code, lesson.fileName || `${lesson.title.replace(/\W+/g, '')}.java`, lesson.codeLanguage, lesson.output, lesson)}
       <details class="code-explain">
         <summary class="code-explain-title">Line by line</summary>
         <ol>
@@ -231,7 +292,12 @@
     section,
     renderAnim,
     renderPicture,
+    renderKid,
     renderIdea,
+    codePanel,
+    renderDiagram,
+    renderDeepSections,
+    renderTechnical,
     renderSyntax,
     renderPrimitiveTypes,
     renderTable,

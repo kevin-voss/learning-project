@@ -41,7 +41,7 @@
       <div class="container">
         <div class="section-head">
           <div><div class="num-tag">B / LESSON</div><h2>The Details</h2></div>
-          <p>Picture · idea · tiny example · try it · check</p>
+          <p>Picture · idea · example · step by step · try it · check</p>
         </div>
         <div class="detail-grid">
           <aside class="sidebar" id="sidebar"></aside>

@@ -67,11 +67,12 @@
     return html;
   }
 
-  // Text with glossary terms, `inline code` and [links](href).
+  // Text with glossary terms, `inline code`, **bold** and [links](href).
   function renderText(value, lesson, plain) {
     const str = String(value || '');
-    return str.split(/(`[^`]+`|\[[^\]]+\]\([^)\s]+\))/).map(part => {
+    return str.split(/(`[^`]+`|\*\*[^*]+\*\*|\[[^\]]+\]\([^)\s]+\))/).map(part => {
       if (/^`[^`]+`$/.test(part)) return `<code>${escapeHtml(part.slice(1, -1))}</code>`;
+      if (/^\*\*[^*]+\*\*$/.test(part)) return `<strong>${renderText(part.slice(2, -2), lesson, plain)}</strong>`;
       const link = part.match(/^\[([^\]]+)\]\(([^)\s]+)\)$/);
       if (link) return `<a href="${escapeAttribute(link[2])}">${escapeHtml(link[1])}</a>`;
       return plain ? escapeHtml(part) : glossaryText(part, lesson);
@@ -91,6 +92,13 @@
     if (!value) return '';
     if (Array.isArray(value)) return `<ul>${renderList(value, lesson)}</ul>`;
     return `<p>${renderText(value, lesson)}</p>`;
+  }
+
+  // A string is one paragraph, an array is several paragraphs (not a list).
+  function renderParagraphs(value, lesson, className) {
+    if (!value) return '';
+    const cls = className ? ` class="${className}"` : '';
+    return [].concat(value).map(item => `<p${cls}>${renderText(item, lesson)}</p>`).join('');
   }
 
   function indexToLetters(index) {
@@ -121,6 +129,7 @@
     renderInline,
     renderList,
     renderTextBlock,
+    renderParagraphs,
     indexToLetters,
     normalizeLookup
   });

@@ -312,3 +312,72 @@ details.code-explain > summary { cursor: pointer; list-style: revert; }
 /* Animation host inside the Picture block (scene styles come from hub/theme/anim) */
 .lesson-anim { margin-top: 16px; }
 details.code-explain:not([open]) > summary { margin-bottom: 0; }
+
+/* In-depth lesson blocks: like you are six, longer idea, step-by-step parts, output, under the hood */
+.kid-box, .tech-box {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--box-color);
+  border-radius: 0 12px 12px 0;
+  padding: 16px 18px;
+}
+.kid-box { --box-color: var(--amber); }
+.tech-box { --box-color: var(--violet); }
+.kid-box p, .tech-box p, .explain-text {
+  color: var(--fg);
+  font-size: 15px;
+  line-height: 1.65;
+  margin: 0 0 12px;
+}
+.kid-box p:last-child, .tech-box p:last-child { margin-bottom: 0; }
+.def-text + .explain-text { margin-top: 14px; }
+.deep-part > * + * { margin-top: 14px; }
+.deep-part .explain-text { margin: 0; }
+.deep-part .explain-text + .explain-text { margin-top: 10px; }
+.deep-bullets { margin: 0; padding-left: 22px; }
+.deep-bullets li { color: var(--fg); font-size: 14px; line-height: 1.6; margin-bottom: 6px; }
+.deep-note {
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--fg);
+  border: 1px solid var(--border);
+}
+.deep-tip { background: color-mix(in srgb, var(--green) 10%, transparent); }
+.deep-tip strong { color: var(--green); }
+.deep-warn { background: color-mix(in srgb, var(--coral) 10%, transparent); }
+.deep-warn strong { color: var(--coral); }
+.code-output {
+  margin-top: 10px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--code-bg);
+  overflow: hidden;
+}
+.code-output-label {
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--green);
+}
+.code-output pre {
+  margin: 0;
+  padding: 12px 14px;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--fg);
+  white-space: pre-wrap;
+}
+.kid-box code, .tech-box code, .explain-text code, .deep-bullets code, .deep-note code {
+  font-family: var(--mono);
+  font-size: 0.9em;
+  background: color-mix(in srgb, var(--fg) 6%, transparent);
+  border-radius: 4px;
+  padding: 1px 5px;
+}
+.kid-box a, .tech-box a, .explain-text a, .deep-bullets a, .deep-note a { color: var(--teal); }

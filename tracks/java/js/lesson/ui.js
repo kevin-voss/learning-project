@@ -1,7 +1,25 @@
 // Page behaviour shared by lesson pages: diagrams, glossary popovers, copy button, toast.
 (function () {
+  // Pages load mermaid themselves, or it is fetched the first time a lesson has a diagram.
+  const MERMAID_URL = 'https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js';
+
+  function loadMermaid(done) {
+    let script = document.getElementById('mermaidScript');
+    if (!script) {
+      script = document.createElement('script');
+      script.id = 'mermaidScript';
+      script.src = MERMAID_URL;
+      document.head.appendChild(script);
+    }
+    script.addEventListener('load', done, { once: true });
+  }
+
   function renderMermaidDiagrams(root) {
-    if (!window.mermaid) return;
+    if (!root.querySelector('.mermaid')) return;
+    if (!window.mermaid) {
+      loadMermaid(() => renderMermaidDiagrams(root));
+      return;
+    }
 
     // Colours come from the site theme at draw time, so light and dark both work.
     const css = getComputedStyle(document.documentElement);

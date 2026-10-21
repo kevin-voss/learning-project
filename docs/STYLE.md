@@ -15,6 +15,8 @@ Picture  →  One idea  →  Tiny example  →  Try it  →  Check  →  Next
 5. **Check.** Two or three questions with hidden answers.
 6. **Next.** One link: where the path goes now.
 
+The **Java hub** (`tracks/java/`) goes further: every lesson is in depth, so a student who has never seen the topic understands all of it from one read. It adds "Like you are six", step-by-step parts with Mermaid diagrams, full runnable programs with their output and "Under the hood". The shape is in [tracks/java/README.md](../tracks/java/README.md#how-a-topic-page-works).
+
 ## Sentences
 
 - Short sentences. Most are under 15 words.

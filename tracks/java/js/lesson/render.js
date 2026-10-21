@@ -100,12 +100,15 @@
         </div>
         <div class="detail-body">
           ${L.renderPicture(lesson)}
+          ${L.renderKid(lesson)}
           ${L.renderIdea(lesson)}
           ${L.renderSyntax(lesson)}
           ${L.renderPrimitiveTypes(lesson)}
           ${L.renderTable(lesson)}
           ${L.renderVisuals(lesson)}
           ${L.renderCodeExample(lesson)}
+          ${L.renderDeepSections(lesson)}
+          ${L.renderTechnical(lesson)}
           ${L.renderTryIt(lesson.tryIt, lesson)}
           ${L.renderCommands(lesson, config)}
           ${L.renderPracticePrompts(lesson)}

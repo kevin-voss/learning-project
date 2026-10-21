@@ -113,4 +113,4 @@ Then:
 
 ## Next
 
-Site or Postgres runs in Docker → finish Layer D (JDBC, server layers), then [todo-e2e](../../apps/todo-e2e/). Optional web depth later: [Phase 6](../../docs/LEARNING_PATH.md#phase-6--optional-web-depth-node--react--ts).
+Site or Postgres runs in Docker → finish Layer D (JDBC, server layers), then [Spring Boot](../../tracks/spring-boot/README.md). Optional web depth later: [Phase 6](../../docs/LEARNING_PATH.md#phase-6--optional-web-depth-node--react--ts).

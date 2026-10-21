@@ -10,7 +10,7 @@ Build a todo app with add, complete, delete, filter, edit, and localStorage pers
 > |---|---|
 > | **Phase** | Phase 6 (**optional**) |
 > | **Hours** | about 12–18 |
-> | **Java path** | **Off** the main spine. Only after Java Layers A–B feel solid. Or skip. Fullstack todos in Java come later via [todo-e2e](../../apps/todo-e2e/). |
+> | **Java path** | **Off** the main spine. Only after Java Layers A–B feel solid. Or skip. Java services come later via [Spring Boot](../../tracks/spring-boot/README.md). |
 
 ## Status
 
@@ -116,4 +116,4 @@ Then open [step-by-step](./docs/step-by-step.md) and scaffold with Vite when ins
 
 ## Next
 
-Back to the Java spine: Layer D → [todo-e2e](../../apps/todo-e2e/). Or more React/TS in [`apps/codestep/`](../../apps/codestep/).
+Back to the Java spine: Layer D → [Spring Boot](../../tracks/spring-boot/README.md). Or more TS in the [typescript sheet](../docs/typescript/README.md).

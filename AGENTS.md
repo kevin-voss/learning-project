@@ -4,17 +4,14 @@ Short orientation for AI agents. Full map: **[README.md](README.md)** and **[doc
 
 ## What this repo is
 
-A monorepo of **drills**, **tracks**, **apps**, **projects** (sheet → small build), and **programs**. **One spine:** [`docs/LEARNING_PATH.md`](docs/LEARNING_PATH.md): CS → web basics → **Java Layers A–F** (foundation A–D, apps E, deeper F) → infra/architecture/Spring. Root holds meta + `hub/` only.
+A monorepo of **drills**, **tracks**, **projects** (sheet → small build), and **programs**. **One spine:** [`docs/LEARNING_PATH.md`](docs/LEARNING_PATH.md): CS → web basics → **Java Layers A–F** (foundation A–D, deeper F) → infra/architecture/Spring. Root holds meta + `hub/` only.
 
 ## Layout
 
 | Area | Path | Stack / notes |
 |------|------|----------------|
-| Hub | `hub/` | Static landing |
+| Hub | `hub/` | Static landing; `build-site.mjs` builds the Vercel site (`vercel.json`) |
 | Drills | `drills/javascript/` | Bun tests via root `Makefile` |
-| CodeStep | `apps/codestep/` | Vite, React, TS, Tailwind; domains under `src/domains/` |
-| Todo e2e | `apps/todo-e2e/` | HTML/CSS/JS + Spring + JdbcTemplate + Postgres |
-| Pokédex | `apps/pokedex/` | React + Spring + JPA |
 | Java hub | `tracks/java/` | Static HTML/CSS/JS |
 | CS roadmap | `tracks/computer-science/` | Static + demos (`verify-demos.mjs`) |
 | Architecture | `tracks/architecture/` | Small static explorer (not Spring course) |
@@ -22,7 +19,6 @@ A monorepo of **drills**, **tracks**, **apps**, **projects** (sheet → small bu
 | AIP-C01 | `tracks/certifications/aws-genai-pro/` | Static prep app |
 | Projects | `projects/` | Four brief-only curricula |
 | Cleaning | `programs/code-for-cleaning/` | Slash commands in `programs/code-for-cleaning/.cursor/commands/` |
-| CodeStep specs | `docs/codestep/` | Phases 01–05 |
 | Learner memory | `docs/learner-memory/` | Long-term profile; skill `learner-memory`, `/reflect` |
 
 ## Cursor

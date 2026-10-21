@@ -10,7 +10,7 @@ Build a small command-line program that asks Open-Meteo for a city, then prints 
 > |---|---|
 > | **Layer** | Java **Layer C** only (HTTP client apply) |
 > | **Hours** | about 3–5 |
-> | **Java path** | **On** the main spine. Finish Gates A–B first. Next is Layer D (server layers + Postgres), not todo-e2e yet. |
+> | **Java path** | **On** the main spine. Finish Gates A–B first. Next is Layer D (server layers + Postgres), not Spring yet. |
 
 ## Status
 
@@ -102,12 +102,12 @@ When finished, you can explain:
 curl "https://geocoding-api.open-meteo.com/v1/search?name=London&count=1"
 ```
 
-## Next (Layer D, then fullstack)
+## Next (Layer D, then Spring)
 
-You are finishing **Layer C**. Do not jump to todo-e2e or Spring yet.
+You are finishing **Layer C**. Do not jump to Spring yet.
 
 1. Read [`../docs/java/server-layers.md`](../docs/java/server-layers.md) (controller → service → repository).
 2. Postgres + Docker + JDBC (Layer D). Project [02-docker-portfolio](../02-docker-portfolio/) helps with Docker practice.
-3. **Gate D**, then [`apps/todo-e2e`](../../apps/todo-e2e/).
+3. **Gate D**, then [Spring Boot](../../tracks/spring-boot/README.md).
 
 **Exit check:** GET vs POST, bad HTTP status handled, clear folder layout. You already passed Gates A–B before starting this project.

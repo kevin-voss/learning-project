@@ -36,6 +36,6 @@ Add a `.dockerignore` with `node_modules`, `.git`, `.env`.
 
 Deep Docker lessons live in the CS roadmap — open that, not long duplicate notes here:
 
-**[tracks/computer-science/index.html](../../tracks/computer-science/index.html)** — Docker / containers lessons (and Compose when you need multi-service).
+**[tracks/computer-science/index.html](../../../tracks/computer-science/index.html)** — Docker / containers lessons (and Compose when you need multi-service).
 
 [02 step-by-step](../../02-docker-portfolio/docs/step-by-step.md) · [Roadmap](../roadmap.md)

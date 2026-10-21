@@ -12,7 +12,7 @@ Canonical spec: [docs/learner-memory/README.md](../../docs/learner-memory/README
 
 ## Where the profile lives
 
-1. **Browser (CodeStep / static tracks):** `localStorage["learning-project:learner-memory:v1"]`
+1. **Browser (static tracks):** `localStorage["learning-project:learner-memory:v1"]`
 2. **Repo export (gitignored):** `.learner/profile.json` — merge via `node docs/learner-memory/scripts/export-merge.mjs`
 3. **Cursor personal store (long-term tutoring):**  
    `/Users/kevin.voss/Library/Application Support/Cursor/AgentStores/cursor_agent_stores/u170701032/files/learner-profile.json`  
@@ -50,9 +50,8 @@ Write the updated JSON back to `learner-profile.json` in the personal store.
 - Secrets, API keys, passwords
 - Verbatim copies of entire curriculum chapters
 
-## CodeStep helpers
+## Browser export
 
-- `adaptationHints()` in `apps/codestep/src/lib/learnerMemory.ts`
 - User can export from devtools: `localStorage.getItem("learning-project:learner-memory:v1")` → save as file → `export-merge.mjs`
 
 ## Invoke

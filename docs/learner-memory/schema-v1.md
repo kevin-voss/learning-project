@@ -11,15 +11,15 @@
   "preferences": {
     "explanationDepth": "brief | normal | deep",
     "pace": "slow | normal | fast",
-    "preferredSurfaces": ["codestep", "drills", "tracks/java"]
+    "preferredSurfaces": ["drills", "tracks/java", "tracks/cs"]
   },
   "completions": {
-    "codestep:variables:playground:task-1": "2026-10-20T11:00:00.000Z"
+    "drills:variables:task-01": "2026-10-20T11:00:00.000Z"
   },
   "struggles": [
     {
       "topicId": "loops",
-      "surface": "codestep",
+      "surface": "tracks/cs",
       "kind": "playground_fail",
       "count": 4,
       "lastAt": "2026-10-20T11:30:00.000Z",
@@ -30,7 +30,7 @@
     {
       "id": "q-uuid-or-slug",
       "askedAt": "2026-10-20T11:05:00.000Z",
-      "surface": "codestep",
+      "surface": "tracks/cs",
       "topicId": "loops",
       "text": "Why does i++ run after the body?",
       "resolved": false
@@ -39,7 +39,7 @@
   "feedback": [
     {
       "at": "2026-10-20T12:00:00.000Z",
-      "surface": "codestep",
+      "surface": "tracks/cs",
       "rating": 4,
       "text": "Playback too fast on step 3"
     }
@@ -47,7 +47,7 @@
   "behavior": {
     "topics": {
       "loops": {
-        "surface": "codestep",
+        "surface": "tracks/cs",
         "visitCount": 6,
         "timeMs": 420000,
         "playgroundAttempts": 8,
@@ -71,7 +71,6 @@
 
 Use stable slugs aligned with curriculum:
 
-- CodeStep: curriculum topic id (e.g. `variables`, `loops`)
 - Drills: `drills:variables`, `drills:arrays`
 - Tracks: `tracks:java:syntax-fundamentals`, `tracks:cs:lesson-hash`
 - Projects: `projects:01-weather-dashboard`

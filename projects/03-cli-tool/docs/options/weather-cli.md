@@ -43,4 +43,4 @@ You'll learn **`.env` for secrets** in Project 3 using a optional example (fake 
 
 ## See also
 
-[Code reference](../code-reference.md) · [Project 1 api.js pattern](../../01-weather-dashboard/docs/code-reference.md)
+[Code reference](../code-reference.md) · [Project 1 api.js pattern](../../../01-weather-dashboard/docs/code-reference.md)

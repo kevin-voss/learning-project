@@ -1,16 +1,5 @@
 # Integrations by surface
 
-## CodeStep (`apps/codestep/`)
-
-| Hook | Event |
-|------|--------|
-| Topic route change | `topic.visit` |
-| Playback step | `example.step` |
-| Playground run | `playground.attempt` |
-| Future settings panel | `feedback.submitted` |
-
-Import from `src/lib/learnerMemory.ts`. Call `adaptationHints()` when rendering explanations (deeper copy when `explanationDepth === "deep"`).
-
 ## Drills (`drills/javascript/`)
 
 Makefile tests do not run in browser — optional **post-run journal**:

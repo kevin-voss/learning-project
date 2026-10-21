@@ -180,4 +180,4 @@ docker push YOUR_DOCKERHUB_USERNAME/portfolio:v1
 
 ## Next project
 
-→ [03-cli-tool](../03-cli-tool/)
+→ [03-cli-tool](../../03-cli-tool/)

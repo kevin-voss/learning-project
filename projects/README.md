@@ -32,7 +32,7 @@ Sheet  →  Build  →  Checkpoint  →  Next
 | 03 | [Node weather CLI](./03-cli-tool/) *(optional)* | [nodejs](./docs/nodejs/) + [npm](./docs/npm/) | 4–8 | Phase 6 |
 | 04 | [React todo](./04-react-todo-app/) *(optional)* | [react](./docs/react/) sheet | 6–10 | Phase 6 |
 
-**Main path after 00 → 01 → Java foundation → 05:** Layer D ([server-layers](./docs/java/server-layers.md)) → [`apps/todo-e2e`](../apps/todo-e2e/) (JdbcTemplate + Postgres) → [`apps/pokedex`](../apps/pokedex/) → [`tracks/spring-boot`](../tracks/spring-boot/). Not React.
+**Main path after 00 → 01 → Java foundation → 05:** Layer D ([server-layers](./docs/java/server-layers.md)) → [`tracks/spring-boot`](../tracks/spring-boot/). Not React.
 
 Optional 03/04 are Phase 6 side paths. Skip them on the Java career track.
 
@@ -44,7 +44,7 @@ Optional 03/04 are Phase 6 side paths. Skip them on the Java career track.
 |-------|--------|---------|
 | HTML | [docs/html/](./docs/html/) | Project 00 (Phase 2) |
 | CSS | [docs/css/](./docs/css/) | Project 00 (Phase 2) |
-| Java (Layers A–C + Layer D picture) | [docs/java/](./docs/java/) · [server-layers](./docs/java/server-layers.md) | Foundation → 05 → todo-e2e |
+| Java (Layers A–C + Layer D picture) | [docs/java/](./docs/java/) · [server-layers](./docs/java/server-layers.md) | Foundation → 05 → Spring Boot |
 | Setup | [docs/setup/](./docs/setup/) | Early projects |
 | JavaScript (apply notes) | [docs/javascript/](./docs/javascript/) | Project 01 |
 | Git (apply only) | [docs/git/](./docs/git/) | Links CS Git |
@@ -67,8 +67,8 @@ Deep theory for networks, Docker, Git lives in **`tracks/computer-science/`**. N
 
 ## After the spine projects
 
-**Main (Java):** Gates A–D → [`apps/todo-e2e`](../apps/todo-e2e/) → [`apps/pokedex`](../apps/pokedex/) → [`tracks/spring-boot`](../tracks/spring-boot/) (Layers E–F).
+**Main (Java):** Gates A–D → [`tracks/spring-boot`](../tracks/spring-boot/) (Layer F).
 
-**Optional (Phase 6):** [typescript](./docs/typescript/) + [`apps/codestep`](../apps/codestep/) if you took React.
+**Optional (Phase 6):** [typescript](./docs/typescript/) if you took React.
 
 **→ [Roadmap](./docs/roadmap.md)** · **→ [LEARNING_PATH](../docs/LEARNING_PATH.md)**

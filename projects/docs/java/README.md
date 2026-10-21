@@ -88,7 +88,7 @@ Streams / advanced generics / concurrency wait until Layer F.
 ### 6. Server shape (before Spring deep-dive)
 
 Read [`server-layers.md`](./server-layers.md): controller → service → repository, plus DTO and entity.  
-Then Postgres + Docker + JDBC. Then todo-e2e.
+Then Postgres + Docker + JDBC. Then Spring Boot.
 
 ## Gates (honest checkpoints)
 
@@ -99,11 +99,11 @@ Then Postgres + Docker + JDBC. Then todo-e2e.
 | C | Weather CLI + GET vs POST |
 | D | Name controller / service / repo / DTO / entity · Postgres in Docker · one SQL `SELECT` |
 
-Only after **A–D** go deep (JVM detail, patterns catalog, Spring Boot course, JPA-heavy Pokédex).
+Only after **A–D** go deep (JVM detail, patterns catalog, Spring Boot course, JPA).
 
 ## Next clicks
 
 1. Hub Layer A topics (getting started → classes)  
 2. Collections + multi-file console practice  
 3. REST topic → project 05  
-4. [`server-layers.md`](./server-layers.md) → JDBC / Postgres / Docker → [`apps/todo-e2e`](../../../apps/todo-e2e/)
+4. [`server-layers.md`](./server-layers.md) → JDBC / Postgres / Docker → [Spring Boot](../../../tracks/spring-boot/README.md)

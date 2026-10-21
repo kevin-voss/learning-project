@@ -35,8 +35,8 @@ Never commit `.env`, API keys, `node_modules/`, `.DS_Store`, or `dist/`. Each pr
 
 Open the **CS roadmap Git lesson** (not this sheet for deep theory):
 
-**[tracks/computer-science/index.html](../../tracks/computer-science/index.html)** — find the Git lesson in the roadmap.
+**[tracks/computer-science/index.html](../../../tracks/computer-science/index.html)** — find the Git lesson in the roadmap.
 
-Also useful: **[tracks/java/topics/git-basics/](../../tracks/java/topics/git-basics/)** for a short Java-track walkthrough.
+Also useful: **[tracks/java/topics/git-basics/](../../../tracks/java/topics/git-basics/)** for a short Java-track walkthrough.
 
 [Roadmap](../roadmap.md) · [Setup](../setup/getting-started.md)

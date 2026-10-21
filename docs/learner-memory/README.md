@@ -1,6 +1,6 @@
 # Learner memory (long-term, feedback-driven)
 
-CodeStep, static tracks, drills, and Cursor tutoring share one **learner profile**: what you struggled with, asked about, rated, and how you behaved (time, retries, hints). The profile **improves over time** from events — not from duplicating lesson text in chat.
+Static tracks, drills, and Cursor tutoring share one **learner profile**: what you struggled with, asked about, rated, and how you behaved (time, retries, hints). The profile **improves over time** from events — not from duplicating lesson text in chat.
 
 ## Principles
 
@@ -15,11 +15,10 @@ CodeStep, static tracks, drills, and Cursor tutoring share one **learner profile
 |------|---------|
 | [schema-v1.md](./schema-v1.md) | JSON shape and field rules |
 | [events.md](./events.md) | Event types and when to emit them |
-| [integrations.md](./integrations.md) | Per-surface wiring (CodeStep, tracks, Cursor) |
+| [integrations.md](./integrations.md) | Per-surface wiring (drills, tracks, projects, Cursor) |
 
 ## Quick start (developers)
 
-- **CodeStep:** `apps/codestep/src/lib/learnerMemory.ts` — `recordEvent`, `getProfile`, `adaptationHints`.
 - **Static mini-sites:** copy or import [`lib/browser.js`](./lib/browser.js) (same storage key and API).
 - **Cursor:** skill [`.cursor/skills/learner-memory/SKILL.md`](../../.cursor/skills/learner-memory/SKILL.md) — update personal `learner-profile.json` after sessions.
 - **Export for backup:** `node docs/learner-memory/scripts/export-merge.mjs` (merge event log into profile file).
@@ -34,6 +33,5 @@ CodeStep, static tracks, drills, and Cursor tutoring share one **learner profile
 
 ## Roadmap
 
-- Phase doc: [`docs/codestep/05-learner-memory.md`](../codestep/05-learner-memory.md)
 - UI: in-app “What should I review?” driven by `struggles` (not built yet)
 - Optional merge of CS / AIP progress into unified `completions` map

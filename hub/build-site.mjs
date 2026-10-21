@@ -1,4 +1,4 @@
-// Builds the static site for the Vercel "site" service (see /vercel.json).
+// Builds the static site Vercel serves (see /vercel.json).
 // Copies the content buckets into dist/site and turns every .md into an .html
 // page (rendered in the browser with marked), so the hub can link to all of it.
 // Run from the repo root: node hub/build-site.mjs
@@ -7,7 +7,7 @@ import { copyFileSync, existsSync, mkdirSync, readdirSync, rmSync, writeFileSync
 import { dirname, join, relative } from 'node:path'
 
 const OUT = 'dist/site'
-const BUCKETS = ['hub', 'docs', 'tracks', 'projects', 'drills', 'programs', 'apps']
+const BUCKETS = ['hub', 'docs', 'tracks', 'projects', 'drills', 'programs']
 const SKIP = new Set(['node_modules', 'dist', 'target', 'solutions'])
 const MARKED = 'https://cdnjs.cloudflare.com/ajax/libs/marked/15.0.12/marked.min.js'
 

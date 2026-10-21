@@ -3,7 +3,7 @@
 **Scope:** Java **Layer D** (foundation). Not Spring Boot deep-dive. Not JPA.
 
 **Read after:** Gates A–C (language, collections, weather CLI).  
-**Then:** Postgres + Docker + [`apps/todo-e2e`](../../../apps/todo-e2e/) (Layer E).
+**Then:** Postgres + Docker, then [Spring Boot](../../../tracks/spring-boot/README.md) (Layer F).
 
 ## Problem
 
@@ -71,15 +71,15 @@ Always use **parameters** in SQL (prepared statements). Never glue user text int
 - Later run the **app** in a container too  
 - Compose file = "start DB (+ app) with one command"
 
-CS Docker lesson is canonical. Todo-e2e shows a real compose setup.
+CS Docker lesson is canonical.
 
 ## When to use what (persistence)
 
 | Approach | When |
 |----------|------|
 | Plain JDBC | Learning SQL and connections |
-| JdbcTemplate | Spring app, you still write SQL (todo-e2e) |
-| JPA / entities | After JDBC feels clear (Pokédex) |
+| JdbcTemplate | Spring app, you still write SQL |
+| JPA / entities | After JDBC feels clear |
 
 ## Pitfalls
 
@@ -90,7 +90,7 @@ CS Docker lesson is canonical. Todo-e2e shows a real compose setup.
 
 ## Checkpoint
 
-Point at a todo-e2e class and say: controller, repository, or neither.  
+Point at a class in a Spring sample and say: controller, repository, or neither.  
 Explain DTO vs entity in one sentence each.
 
-**Next:** CS SQL fundamentals → JDBC practice → [`apps/todo-e2e`](../../../apps/todo-e2e/) CODE-TOUR.
+**Next:** CS SQL fundamentals → JDBC practice → [Spring Boot](../../../tracks/spring-boot/README.md).

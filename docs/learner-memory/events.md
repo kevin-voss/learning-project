@@ -6,7 +6,7 @@ Every event is:
 {
   "type": "<name>",
   "at": "ISO-8601",
-  "surface": "codestep | drills | tracks/cs | tracks/java | projects | cursor",
+  "surface": "drills | tracks/cs | tracks/java | projects | cursor",
   "topicId": "optional-slug",
   "payload": {}
 }

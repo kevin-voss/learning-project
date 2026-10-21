@@ -203,4 +203,4 @@ weather notrealcity999     # Should error gracefully
 
 ## Next project
 
-→ [04-react-todo-app](../04-react-todo-app/)
+→ [04-react-todo-app](../../04-react-todo-app/)

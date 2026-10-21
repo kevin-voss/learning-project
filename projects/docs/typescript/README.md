@@ -1,8 +1,8 @@
 # TypeScript
 
-**Scope:** Phase 6 optional (with React / CodeStep). Not required for Java Layers A–F.
+**Scope:** Phase 6 optional (with React). Not required for Java Layers A–F.
 
-**When:** After optional project 04, or when you open [`apps/codestep`](../../../apps/codestep/). Zero knowledge is fine.
+**When:** After optional project 04. Zero knowledge is fine.
 
 Projects 00–04 use **plain JavaScript** on purpose. TypeScript is a side deepen, not the Java spine.
 
@@ -104,8 +104,7 @@ Vite template: `npm create vite@latest my-app -- --template react-ts`
 | Area | Language |
 |------|----------|
 | Projects 1–4 curriculum | JavaScript |
-| [`apps/codestep/`](../../apps/codestep/) CodeStep app | TypeScript |
-| [`drills/javascript/`](../../drills/javascript/) drills | JavaScript |
+| [`drills/javascript/`](../../../drills/javascript/) drills | JavaScript |
 
 Learning path: **JS projects → TS in frontend/** or convert todo app to `react-ts`.
 

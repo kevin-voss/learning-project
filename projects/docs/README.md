@@ -17,7 +17,7 @@ LEARNING_PATH / Roadmap phase  →  Sheet (5–20 min)  →  Build  →  Checkpo
 | [html/](./html/) | Phase 2 | Before project 00 (web craft, before Java Layer A) | [README](./html/README.md) |
 | [css/](./css/) | Phase 2 | Style project 00 (web craft, before Java Layer A) | [README](./css/README.md) |
 | [java/](./java/) | Layers A–C (foundation) | Language base before frameworks | [README](./java/README.md) |
-| [java/server-layers.md](./java/server-layers.md) | Layer D | Controller → service → repo picture before todo-e2e | [server-layers](./java/server-layers.md) |
+| [java/server-layers.md](./java/server-layers.md) | Layer D | Controller → service → repo picture before Spring | [server-layers](./java/server-layers.md) |
 | [setup/](./setup/) | Phase 2+ tools map | When to install what (web vs Java vs optional) | [getting-started](./setup/getting-started.md) |
 | [javascript/](./javascript/) | Phase 3 | Apply notes for weather UI | [by-project](./javascript/by-project.md) |
 | [git/](./git/) | Anytime after setup | Apply only → CS for depth | [README](./git/README.md) |

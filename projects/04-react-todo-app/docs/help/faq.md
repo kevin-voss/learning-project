@@ -44,4 +44,3 @@ No — use `todo.id`. Index keys break when you reorder or delete items.
 ## Where to learn next?
 
 - [React Learn](https://react.dev/learn)
-- Main repo [`apps/codestep/`](../../../apps/codestep/) CodeStep app for TypeScript + larger patterns

@@ -234,7 +234,6 @@ Install **React Developer Tools** browser extension.
 | Next | Where |
 |------|-------|
 | TypeScript + React | [typescript/README.md](../typescript/README.md) |
-| Larger app | [`apps/codestep/`](../../apps/codestep/) CodeStep |
 | Weather in React | Reuse Project 1 API logic in `useEffect` |
 | React Router | Multi-page apps |
 

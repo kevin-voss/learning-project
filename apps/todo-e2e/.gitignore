@@ -1,8 +1,0 @@
-backend/target/
-.run/
-.DS_Store
-*.iml
-.idea/
-.classpath
-.project
-.settings/

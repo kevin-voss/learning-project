@@ -11,7 +11,7 @@ This page is only **project and sheet checklists**. Use it for Learn → Build �
 | **Checkpoint** | You can explain or demo this |
 | **Layer** | Tag from LEARNING_PATH Phase 4 (or Web) |
 
-**Hard stop:** Do **not** open `apps/todo-e2e`, `apps/pokedex`, `tracks/spring-boot`, or design-patterns deep until **Gates A–D** are done.
+**Hard stop:** Do **not** open `tracks/spring-boot` or design-patterns deep until **Gates A–D** are done.
 
 ---
 
@@ -24,7 +24,6 @@ This page is only **project and sheet checklists**. Use it for Learn → Build �
 | Phase 4 Layers A–B | Java sheets + hub practice (no big apps yet) | A / B |
 | Phase 4 Layer C | Project 05 Java weather CLI | C |
 | Phase 4 Layer D / Phase 5 | Server layers + Postgres + Project 02 Docker | D |
-| After Gates A–D | todo-e2e → pokedex | E |
 | After Gates A–D | Spring Boot, patterns, architecture depth | F |
 | Optional after Java A–B | Projects 03 / 04 | Web (optional) |
 
@@ -98,7 +97,7 @@ Lock language and tools before frameworks. No Spring, no JPA, no pattern maratho
 
 ## Layer D — Server shape + Docker / Postgres
 
-Do this **before** todo-e2e.
+Do this **before** Spring Boot.
 
 Picture jobs: Request → Controller → Service → Repository; DTO on the wire; Entity in the DB.
 
@@ -120,7 +119,7 @@ Picture jobs: Request → Controller → Service → Repository; DTO on the wire
 | | |
 |---|---|
 | **Learn** | CS Docker · [docker apply sheet](./docker/README.md) |
-| **Build** | Static site (reuse 00) + Dockerfile + `docker run -p 8080:80` (Postgres compose later with todo-e2e) |
+| **Build** | Static site (reuse 00) + Dockerfile + `docker run -p 8080:80` |
 | **Checkpoint** | Site or Postgres runs in Docker |
 | **Layer** | D (Phase 5 apply) |
 
@@ -154,18 +153,7 @@ Skip if you prefer more Java time. Only after Layers A–B feel solid.
 | **Checkpoint** | Todos persist after refresh |
 | **Layer** | Web (optional, Phase 6) |
 
-Then optional [typescript sheet](./typescript/README.md) → [`apps/codestep`](../../apps/codestep/).
-
----
-
-## Layer E — First fullstack apps (after Gates A–D only)
-
-| | |
-|---|---|
-| **Learn** | Layer D sheets done; todo-e2e CODE-TOUR when you open the app |
-| **Build** | [`apps/todo-e2e`](../../apps/todo-e2e/) (controllers + JdbcTemplate + Postgres). Then [`apps/pokedex`](../../apps/pokedex/) (JPA after JDBC feels clear) |
-| **Checkpoint** | You ship a small CRUD API + UI without skipping foundation |
-| **Layer** | E |
+Then optional [typescript sheet](./typescript/README.md).
 
 ---
 

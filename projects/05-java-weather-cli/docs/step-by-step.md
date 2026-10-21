@@ -2,7 +2,7 @@
 
 Follow phases in order. Each phase has **Goal → Why → Do → Checkpoint**.
 
-> **Scope:** Java Layer C only (HTTP client). About 3–5 hours. Prerequisites: Gates A–B. Next after this guide: Layer D (server layers + Postgres), not todo-e2e yet.
+> **Scope:** Java Layer C only (HTTP client). About 3–5 hours. Prerequisites: Gates A–B. Next after this guide: Layer D (server layers + Postgres), not Spring yet.
 
 **Big picture:** [Learning path - Layer C](../../../docs/LEARNING_PATH.md#layer-c--java-features-that-finish-the-base)
 

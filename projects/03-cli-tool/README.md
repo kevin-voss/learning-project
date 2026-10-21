@@ -116,4 +116,4 @@ Then:
 
 ## Next
 
-Optional sibling: [04 React Todo App](../04-react-todo-app/). Main spine stays Java → Layer D → [todo-e2e](../../apps/todo-e2e/).
+Optional sibling: [04 React Todo App](../04-react-todo-app/). Main spine stays Java → Layer D → [Spring Boot](../../tracks/spring-boot/README.md).

@@ -55,7 +55,6 @@ Skip rewriting Git/Docker/HTTP elsewhere — only deepen later.
 | | |
 |---|---|
 | **Drill** | [`drills/javascript/`](../drills/javascript/README.md) — `make test` (variables → objects) |
-| **Optional guide** | [`apps/codestep/`](../apps/codestep/README.md) — walkthroughs only; skip TS pressure |
 | **Sheet** | CS web lessons (client/server, HTTP) if Phase 1 skimmed them |
 | **Project** | [`projects/01-weather-dashboard/`](../projects/01-weather-dashboard/) — browser `fetch` (~6–10 h) |
 | **Checkpoint** | Search a city → live weather; you can say what `async/await` is waiting for |
@@ -123,19 +122,12 @@ Request
 
 | Learn | Where |
 |-------|--------|
-| What each layer owns | Sheet [`projects/docs/java/server-layers.md`](../projects/docs/java/server-layers.md) · then todo-e2e CODE-TOUR |
+| What each layer owns | Sheet [`projects/docs/java/server-layers.md`](../projects/docs/java/server-layers.md) |
 | Postgres: tables, SQL CRUD | CS `database-sql-fundamentals` |
 | Connect from Java (JDBC) | Hub JDBC gap · try-with-resources |
-| Docker for Postgres (and later the app) | CS Docker · project 02 · todo-e2e compose |
+| Docker for Postgres (and later the app) | CS Docker · project 02 |
 
 **Gate D:** You can point at controller / service / repo / DTO / entity and say what each is for. You run Postgres in Docker and run one SQL `SELECT`.
-
-#### Layer E — First fullstack apps (apply foundation)
-
-| App | Why now |
-|-----|---------|
-| [`apps/todo-e2e`](../apps/todo-e2e/) | Controllers + JdbcTemplate + Postgres. No JPA yet. |
-| [`apps/pokedex`](../apps/pokedex/) | Same idea + JPA entities after JDBC feels clear |
 
 #### Layer F — Deeper knowledge (only after Gates A–D)
 
@@ -180,9 +172,9 @@ Only after Java Layers A–B feel solid. Or skip.
 |---|---|
 | **Optional** | [`projects/03-cli-tool/`](../projects/03-cli-tool/) · [`projects/04-react-todo-app/`](../projects/04-react-todo-app/) |
 
-### Phase 7 — Java apps and Spring course
+### Phase 7 — Spring course
 
-Same as Layers E–F: todo-e2e → pokedex → spring-boot. No shortcut past Gates A–D.
+Same as Layer F: [`tracks/spring-boot`](../tracks/spring-boot/). No shortcut past Gates A–D.
 
 ### Phase 8 — Architecture & system design basics
 
@@ -209,7 +201,6 @@ Same as Layers E–F: todo-e2e → pokedex → spring-boot. No shortcut past Gat
 | CS foundations, networks, Docker intro, Git intro | `tracks/computer-science/` | Thin project notes + links |
 | HTML / CSS first page | `projects/docs/html` + `css` → project `00` | — |
 | JS syntax drills | `drills/javascript/` | Project sheets = apply only |
-| Guided JS UI | `apps/codestep/` | — |
 | Java language & patterns | `tracks/java/` | Spring refs link; project `05` applies HTTP |
 | REST in Java | Java hub REST topic | Spring `web-and-api/` = Spring-flavored |
 | Architecture tradeoffs | `tracks/architecture/` | Spring = build |
@@ -229,11 +220,9 @@ Same as Layers E–F: todo-e2e → pokedex → spring-boot. No shortcut past Gat
 | 03 | `03-cli-tool` | Phase 6 optional | node + npm · off Java spine | 4–8 |
 | 04 | `04-react-todo-app` | Phase 6 optional | react · after Java A–B | 6–10 |
 
-| Apps (not under `projects/`) | Layer | After |
-|------------------------------|-------|--------|
-| `apps/todo-e2e` | **E** | Gates A–D · server-layers · SQL |
-| `apps/pokedex` | **E** | todo-e2e / JDBC comfort |
-| `tracks/spring-boot` | **F** | Gates A–D · ideally todo-e2e |
+| Course (not under `projects/`) | Layer | After |
+|--------------------------------|-------|--------|
+| `tracks/spring-boot` | **F** | Gates A–D · server-layers · SQL |
 
 Detail checklist: [`projects/docs/roadmap.md`](../projects/docs/roadmap.md).
 

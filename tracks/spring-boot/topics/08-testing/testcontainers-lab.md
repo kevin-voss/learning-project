@@ -61,6 +61,15 @@ In `pom.xml` (versions are managed by the Spring Boot parent):
 </dependency>
 ```
 
+Then pin the Testcontainers version in `<properties>` (step 10 already asked you to). The version Spring Boot 3.3 brings cannot talk to current Docker Engines and fails with `client version 1.32 is too old`:
+
+```xml
+<properties>
+    <java.version>21</java.version>
+    <testcontainers.version>1.21.4</testcontainers.version>
+</properties>
+```
+
 ### 2. Write the repository test
 
 Create `src/test/java/com/parcelpilot/ParcelRepositoryTest.java`:
@@ -138,7 +147,7 @@ class ParcelRepositoryTest {     // Replace.NONE = do NOT swap in H2; use our co
 }
 ```
 
-Adjust constructor/accessor names to match your actual `ParcelEntity` from step 10. The three annotations carry the weight:
+The constructor and accessors are the ones of the step-10 `ParcelEntity`. The three annotations carry the weight:
 
 - `@Testcontainers` + `@Container` — start the PostgreSQL container before the tests, stop and remove it after.
 - `@DynamicPropertySource` — the container's port is random, so this hands Spring the real URL, username, and password at runtime.

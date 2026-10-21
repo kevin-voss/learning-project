@@ -164,7 +164,7 @@ The step-04 lab caught `IllegalStateException` inside the method. Remove the `tr
 // BEFORE (shape from the step-04 lab)
 @PatchMapping("/{id}/status")
 public ResponseEntity<?> changeStatus(@PathVariable String id,
-                                      @Valid @RequestBody ChangeStatusRequest req) {
+                                      @Valid @RequestBody UpdateStatusRequest req) {
     Parcel parcel = store.get(id);
     if (parcel == null) {
         return ResponseEntity.notFound().build();
@@ -180,7 +180,7 @@ public ResponseEntity<?> changeStatus(@PathVariable String id,
 // AFTER
 @PatchMapping("/{id}/status")
 public ParcelResponse changeStatus(@PathVariable String id,
-                                   @Valid @RequestBody ChangeStatusRequest req) {
+                                   @Valid @RequestBody UpdateStatusRequest req) {
     Parcel parcel = store.get(id);
     if (parcel == null) {
         throw new ParcelNotFoundException(id);

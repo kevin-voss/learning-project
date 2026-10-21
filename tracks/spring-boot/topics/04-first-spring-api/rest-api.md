@@ -21,10 +21,10 @@ public void changeStatus(Status target) {
 }
 ```
 
-**2. Add a request DTO** in `ChangeStatusRequest.java`:
+**2. Add a request DTO** in `UpdateStatusRequest.java`:
 
 ```java
-public record ChangeStatusRequest(Status status) {}
+public record UpdateStatusRequest(Status status) {}
 ```
 
 **3. Add the endpoint to `ParcelController`:**
@@ -32,7 +32,7 @@ public record ChangeStatusRequest(Status status) {}
 ```java
 @PatchMapping("/{id}/status")
 public ResponseEntity<?> changeStatus(@PathVariable String id,
-                                      @RequestBody ChangeStatusRequest req) {
+                                      @RequestBody UpdateStatusRequest req) {
     Parcel parcel = store.get(id);
     if (parcel == null) {
         return ResponseEntity.notFound().build();                        // 404

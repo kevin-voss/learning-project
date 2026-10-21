@@ -50,7 +50,7 @@ public class ParcelEntity {
     private Status status;
 
     @Version                     // enables optimistic locking (see locking page)
-    private long version;
+    private Long version;        // Long: null means "new row" (see the README)
 
     // JPA needs a no-arg constructor; add getters/setters as needed
     protected ParcelEntity() {}

@@ -37,7 +37,7 @@ public class ParcelEntity {
     private String id;
     // ...
     @Version
-    private long version;   // Hibernate checks + bumps this on every UPDATE
+    private Long version;   // Hibernate checks + bumps this on every UPDATE
 }
 ```
 

@@ -26,10 +26,9 @@ com/parcelpilot/
 │   ├── Notifier.java             # PUBLIC: the port parcel needs others to implement
 │   ├── ParcelDelivered.java      # PUBLIC: event/DTO handed across the boundary
 │   └── internal/
-│       ├── Parcel.java           # domain rules
+│       ├── ParcelEntity.java     # JPA entity + status rules — NOBODY outside sees this
 │       ├── ParcelService.java    # use cases
 │       ├── ParcelController.java # HTTP adapter
-│       ├── ParcelEntity.java     # JPA entity — NOBODY outside sees this
 │       └── ParcelRepository.java
 └── notification/
     ├── LoggingNotifier.java      # PUBLIC-ish: implements parcel's Notifier port
@@ -90,7 +89,7 @@ public record ParcelDelivered(String parcelId, String recipient, Instant occurre
 
 ```java
 // parcel/internal/ParcelService.java — parcel PUSHES the fact out through its port
-notifier.parcelDelivered(new ParcelDelivered(parcel.id(), parcel.recipient(), clock.now()));
+notifier.parcelDelivered(new ParcelDelivered(saved.id(), saved.recipient(), Instant.now()));
 ```
 
 ```java
@@ -108,9 +107,9 @@ The event carries exactly the data the consumer needs, nothing more. Parcel's in
 
 ## The lab, step by step
 
-1. In `applications/parcelpilot`, restructure both modules into the root + `internal` layout above (this extends what step 11's README already had you build).
+1. Start from the layout the step 11 README built (root + `internal`). Add a `notification/internal/NotificationService.java` to play with.
 2. **Plant the violation:** make notification import `ParcelEntity`/`ParcelRepository` directly, as in the "before" sketch. Compile and run — note that *nothing complains*. That silence is the danger.
-3. **Fix it:** introduce the `ParcelDelivered` record in parcel's public API, pass it through the `Notifier` port, and delete the forbidden imports.
+3. **Fix it:** delete the forbidden imports and use only the `ParcelDelivered` event that arrives through the `Notifier` port.
 4. Run the proof below.
 
 ## Proof

@@ -52,9 +52,6 @@ sequenceDiagram
 
 We learn on RabbitMQ because its web page shows queues, messages and acks while they happen. Kafka and AWS SQS solve related problems; the comparison and the deeper theory (delivery guarantees, ordering, the outbox pattern) live in the [architecture track](../../../architecture/index.html) and in [Messaging and queues](../../references/architecture/messaging-and-queues.md).
 
-> [!NOTE]
-> **Your starting point** is the step-11 monolith in `applications/parcelpilot`: `parcel/Notifier.java` and `parcel/ParcelDelivered.java` are the parcel module's public API, everything else of the parcel module sits in `parcel/internal/` (`ParcelService`, `ParcelEntity`, `ParcelRepository`, `ParcelController`), and `notification/LoggingNotifier.java` implements `Notifier`. If your use-case class is still called `ParcelApplication`, it is the `ParcelService` of this page.
-
 ## Build it in ParcelPilot (do this exactly)
 
 The full files of this step are in [solution/](solution/README.md). Compare with them when you are stuck.
@@ -336,9 +333,6 @@ class ParcelDeliveredFlowTest {
 ```
 
 The imports are in the solution files: [TestcontainersConfiguration](solution/src/test/java/com/parcelpilot/TestcontainersConfiguration.java) and [ParcelDeliveredFlowTest](solution/src/test/java/com/parcelpilot/ParcelDeliveredFlowTest.java).
-
-> [!WARN]
-> Testcontainers in older Spring Boot versions cannot talk to new Docker Engines (error: `client version 1.32 is too old`). Add `<testcontainers.version>1.21.4</testcontainers.version>` to the `<properties>` of your `pom.xml`, as the [solution pom](solution/pom.xml) does.
 
 ## Test it
 

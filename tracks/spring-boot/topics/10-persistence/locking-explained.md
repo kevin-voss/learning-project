@@ -40,7 +40,7 @@ In JPA this is **automatic** once you add `@Version`:
 @Entity
 public class ParcelEntity {
     @Id private String id;
-    @Version private long version;   // JPA checks + increments this on every update
+    @Version private Long version;   // JPA checks + increments this on every update
     // ...
 }
 ```

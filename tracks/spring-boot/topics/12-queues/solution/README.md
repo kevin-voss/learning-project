@@ -6,7 +6,7 @@ Try the step on your own first. Open a file here when you are stuck, or to compa
 
 | File | What changed |
 |---|---|
-| [pom.xml](pom.xml) | `spring-boot-starter-amqp`; test helpers `testcontainers:rabbitmq` and `awaitility`; `testcontainers.version` for new Docker Engines |
+| [pom.xml](pom.xml) | `spring-boot-starter-amqp`; test helpers `testcontainers:rabbitmq` and `awaitility` |
 | [application.properties](src/main/resources/application.properties) | RabbitMQ address, retries, dead-lettering |
 | [V2__create_notifications.sql](src/main/resources/db/migration/V2__create_notifications.sql) | the table that remembers handled events |
 | [ParcelDelivered.java](src/main/java/com/parcelpilot/parcel/ParcelDelivered.java) | new first field `eventId` |

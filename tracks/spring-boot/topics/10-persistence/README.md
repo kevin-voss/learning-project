@@ -104,6 +104,20 @@ The `-v parcelpilot-postgres:/var/lib/postgresql/data` part is the **volume**: i
     <groupId>org.flywaydb</groupId>
     <artifactId>flyway-core</artifactId>
 </dependency>
+<dependency>
+    <!-- Flyway 10+ keeps PostgreSQL support in its own module; without it: "Unsupported Database" -->
+    <groupId>org.flywaydb</groupId>
+    <artifactId>flyway-database-postgresql</artifactId>
+</dependency>
+```
+
+Also pin the Testcontainers version in the `<properties>` block. You need it when you come back to the [Testcontainers lab](../08-testing/testcontainers-lab.md): the version that comes with Spring Boot 3.3 cannot talk to current Docker Engines.
+
+```xml
+<properties>
+    <java.version>21</java.version>
+    <testcontainers.version>1.21.4</testcontainers.version>
+</properties>
 ```
 
 ### 3. Configure from environment variables
@@ -133,7 +147,7 @@ CREATE TABLE parcels (
 
 ### 5. Turn `Parcel` into an entity and add a repository
 
-An `@Entity` maps to the table, and `@Version` enables optimistic locking automatically:
+An `@Entity` maps to the table, and `@Version` enables optimistic locking automatically. The two status rules move along from your step-02 `Parcel`:
 
 ```java
 package com.parcelpilot;
@@ -145,12 +159,42 @@ import jakarta.persistence.*;
 public class ParcelEntity {
     @Id
     private String id;
+    @Column(nullable = false)
     private String recipient;
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Status status;
     @Version
-    private long version;   // Spring/JPA checks this on update -> 409 on conflict
-    // getters/setters or use accessors as you prefer
+    private Long version;   // Long, not long: null tells Spring Data "new parcel", so save() inserts instead of merging
+
+    protected ParcelEntity() {
+        // JPA needs an empty constructor to build objects from rows
+    }
+
+    public ParcelEntity(String id, String recipient, Status status) {
+        this.id = id;
+        this.recipient = recipient;
+        this.status = status;
+    }
+
+    public void markPickedUp() {
+        if (status != Status.CREATED) {
+            throw new IllegalStateException("can only pick up a CREATED parcel");
+        }
+        status = Status.PICKED_UP;
+    }
+
+    public void markDelivered() {
+        if (status != Status.PICKED_UP) {
+            throw new IllegalStateException("can only deliver a PICKED_UP parcel");
+        }
+        status = Status.DELIVERED;
+    }
+
+    public String id() { return id; }
+    public String recipient() { return recipient; }
+    public Status status() { return status; }
+    public long version() { return version == null ? 0 : version; }
 }
 ```
 
@@ -165,7 +209,56 @@ public interface ParcelRepository extends JpaRepository<ParcelEntity, String> {
 }
 ```
 
-Then update the controller to use the repository instead of the in-memory `Map`.
+Then the controller uses the repository instead of the in-memory `Map`. Delete the `store` field, receive the repository in the constructor, and rewrite the four endpoints:
+
+```java
+private final ParcelRepository repository;
+
+public ParcelController(ParcelRepository repository) {
+    this.repository = repository;
+}
+
+@PostMapping
+@ResponseStatus(HttpStatus.CREATED)
+public ParcelResponse create(@Valid @RequestBody CreateParcelRequest req) {
+    if (repository.existsById(req.id())) {
+        throw new IllegalStateException("parcel " + req.id() + " already exists");   // -> 409
+    }
+    return toResponse(repository.save(new ParcelEntity(req.id(), req.recipient(), Status.CREATED)));
+}
+
+@GetMapping("/{id}")
+public ParcelResponse getOne(@PathVariable String id) {
+    return toResponse(load(id));
+}
+
+@GetMapping
+public List<ParcelResponse> list(@RequestParam(required = false) Status status) {
+    List<ParcelEntity> parcels = status == null ? repository.findAll() : repository.findByStatus(status);
+    return parcels.stream().map(this::toResponse).toList();
+}
+
+@PatchMapping("/{id}/status")
+public ParcelResponse changeStatus(@PathVariable String id, @Valid @RequestBody UpdateStatusRequest req) {
+    ParcelEntity parcel = load(id);
+    switch (Status.valueOf(req.status())) {   // status is a String since the step-05 lab (@Pattern)
+        case PICKED_UP -> parcel.markPickedUp();
+        case DELIVERED -> parcel.markDelivered();
+        case CREATED -> throw new IllegalStateException("a parcel cannot go back to CREATED");
+    }
+    return toResponse(repository.save(parcel));   // UPDATE ... WHERE version = ?, then version + 1
+}
+
+private ParcelEntity load(String id) {
+    return repository.findById(id).orElseThrow(() -> new ParcelNotFoundException(id));
+}
+
+private ParcelResponse toResponse(ParcelEntity p) {
+    return new ParcelResponse(p.id(), p.recipient(), p.status().name());
+}
+```
+
+Rules, storage and HTTP now sit in one class. That works, and it is the tangle step 11 cleans up.
 
 ### 6. Turn a lost-update clash into `409`
 

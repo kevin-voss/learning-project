@@ -2,7 +2,7 @@
 
 Date: 2026-10-21 · Scope: the whole repo · Method: every `href` in `hub/path.mjs` opened and read, plus every track, project, drill, program and student task. Line counts come from `wc -l`.
 
-This is a plan. Nothing in the content was changed by this audit.
+**Status (2026-10-21): carried out.** Phases 0–7 below are done and on `main`. The decisions on the open questions are at the end. Paths in the tables are the *before* state; the new layout is in §6 and [LEARNING_PATH.md](LEARNING_PATH.md).
 
 ---
 
@@ -387,13 +387,13 @@ Every step can ship on its own and leaves `make site` green. Checks used:
 
 ---
 
-## Open questions (decisions needed)
+## Decisions taken
 
-1. **Code for Cleaning**: it names real people and deadlines (round 1 closed 11 Oct 2026). May its tasks become public ladder projects with published solutions? Or should the ladder get its own copies, and CFC stay as it is?
-2. **Language**: English everywhere (translate the drills)? Student `TASK.md` files keep the original German text.
-3. **Who is the reader?** Is "6-year-old simple" the writing style, or the real age? Becky's task comes from a university course. The answer changes tone (emoji, games) and examples.
-4. **Theme**: light-first "warm paper" changes the dark CS, Java and AWS tracks. OK?
-5. **Project 03 (Node weather CLI)**: delete it, or re-theme it as a to-do CLI in Extras?
-6. **Where does "pro" end?** At ParcelPilot 16 + architecture, or should the AI field guide become a Level 5 on the main path?
-7. **AWS GenAI exam prep**: keep it on this site (and theme it), or move it to its own repo? It is 129 tracked files and unrelated to the beginner path.
-8. **Moving folders breaks old URLs and bookmarks** (progress is safe). OK with Vercel redirects for the moved pages?
+1. **Code for Cleaning** stays as it is (no solutions under `programs/`). The ladder has its own rewritten copies of the tasks with starters and solutions (projects 05–09, 12). The round files are grouped by reward.
+2. **Language:** English on the whole path, drills included. Student Übungen keep German where the teacher's task is German.
+3. **Reader:** "6-year-old simple" is the writing style (short sentences, pictures first), not the real age. Examples are real-world, not childish.
+4. **Theme:** light-first warm paper with a dark mode, on every track.
+5. **Project 03 (Node weather CLI):** deleted. Node and npm stay as look-up sheets.
+6. **Pro ends** at ParcelPilot 16 plus Go deeper. The AI guide and AWS prep stay optional extras.
+7. **AWS GenAI exam prep** stays on this site, themed, as an extra.
+8. **Moved URLs** get permanent Vercel redirects (`vercel.json`). Progress is safe, it is keyed by id.

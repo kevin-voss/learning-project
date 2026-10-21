@@ -19,7 +19,7 @@ Canonical overview: [README.md](../../README.md). Learning order: [docs/LEARNING
 | Projects | `projects/` | The project ladder `01`–`12` (each reuses the last skill, adds one): `README.md`, `step-by-step.md`, `starter/`, `solution/`, optional `help/`. Optional builds in `extras/` |
 | Programs | `programs/code-for-cleaning/` | Slash commands in `programs/code-for-cleaning/.cursor/commands/` must **not** write task solutions |
 | Learner memory | `docs/learner-memory/` | Profile schema, events, Cursor skill `learner-memory` |
-| Students | `students/<student>/<subject>/uebungen/uebung-NN-…/aufgabe-NN-k-…/` | Per-student Übungen; every Aufgabe has README, `meine-loesung/`, `musterloesung/`. Create via `/new-uebung`; tutor commands `/task` `/hint` `/explain` `/error` `/check` `/review` `/done`; see `students.mdc` |
+| Students | `students/<student>/<subject>/uebungen/uebung-NN-…/aufgabe-NN-k-…/` | Per-student Übungen; every Aufgabe has README, `meine-loesung/`, `musterloesung/`. Create via `/new-uebung`; see `students.mdc` |
 
 ## Stacks
 
@@ -33,4 +33,5 @@ Canonical overview: [README.md](../../README.md). Learning order: [docs/LEARNING
 - **Structure:** See [structure.mdc](./structure.mdc) — max 5 files per folder, ~400-line soft cap.
 - When scope spans buckets, update README / LEARNING_PATH cross-links.
 - Pages follow `docs/STYLE.md`: picture → one idea → tiny example → try it → check, English, short sentences, `> [!PICTURE]` / `[!TRY]` / `[!CHECK]` boxes. Colours only from `hub/theme/tokens.css` (`--lp-*`).
+- Cursor commands: students use `/next` → `/stuck` → `/check` → `/done` (rules in `tutor.mdc`, for Aufgaben, projects, drills, Code for Cleaning and path lessons); teachers use `/new-uebung` and `/new-content`. Do not add more commands: extend these.
 - Students follow one list: `hub/path.mjs`. New content goes on the path by adding a step there (never rename a step `id`, progress is saved by id). The `path`, `students` and `catalog` regions of `hub/index.html` are generated: run `make site`, never hand-edit between their markers.

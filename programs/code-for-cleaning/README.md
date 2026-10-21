@@ -11,7 +11,7 @@ The same ideas are also on the main learning path, as small projects with a star
 ## Read this order
 
 1. [Rules](rules.md) — submission, the explain-check, cleaning, what "solved" means.
-2. [Getting started](getting-started.md) — terminal, compile and run, several Java files without packages, how Java reads the keyboard, and the `/hint` commands.
+2. [Getting started](getting-started.md) — terminal, compile and run, several Java files without packages, how Java reads the keyboard, and the four Cursor helpers (`/next`, `/stuck`, `/check`, `/done`).
 3. [Categories](categories.md) — task types, and example projects for later rounds.
 4. [Round 1](round-01/README.md) — the 8 tasks for these two weeks.
 5. After each Sunday: fill in [progress](progress.md). The next round is written from that.

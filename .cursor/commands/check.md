@@ -1,23 +1,22 @@
 # /check
 
-The student wants to know: **does my program give the right answers?**
+The student asks: **is my work right?** You test it, then give short feedback like a friendly teacher.
 
-Follow the tutor rules in [`.cursor/rules/students.mdc`](../rules/students.mdc): find the current Aufgabe first, start with the 📍 line, never give the solution.
+Follow [`.cursor/rules/tutor.mdc`](../rules/tutor.mdc): find the current task, start with the 📍 line, never give the solution.
 
-## What to do
+## 1. Test it
 
-1. Compile and run the student's code from `meine-loesung/`, with every test example from the Aufgabe `README.md`. Feed the input through standard input, for example:
+1. Run their code against every example the task gives (see "Running their code" in the tutor rules): the Aufgabe's test examples, the project's "You should see" lines and tests, `make <topic>` for a drill, the must-list and self-test for Code for Cleaning.
+2. Show one table: input · expected · their output · ✅ or ❌. `1041,53` and `1041.53` count as the same.
+3. For every ❌, one sentence on **what** is different ("99 folders still pay shipping"), never how to fix it in code.
+4. Does not compile or run? Show the first error and say: `/stuck` with the red text.
 
-   ```bash
-   cd <aufgabe>/meine-loesung
-   mkdir -p /tmp/lp-check && javac -d /tmp/lp-check *.java
-   printf '80\n' | java -cp /tmp/lp-check FolderOrder
-   ```
+## 2. Feedback
 
-   The temporary folder keeps `.class` files out of their desk.
-2. Show one table: input · expected · their output · ✅ or ❌. Different decimal signs (`1041,53` vs `1041.53`) count as the same.
-3. For every ❌, one sentence on **what** is different ("99 folders still pay shipping"), never **how** to fix it in code.
-4. If it does not compile, show the first error and say: use `/error`.
-5. All ✅? Say so, and suggest `/review` for feedback, then `/done`.
+Only when it runs. Look at: every step of the task done · built with the ideas this lesson taught, not a trick it did not teach · each required file doing its one job · names they can explain · the edge cases (0, negative, exactly on the border).
 
-Do not edit their files. Do not run the Musterlösung in front of them.
+1. **What is good:** two or three points, by name and line.
+2. **What to improve:** at most three, most important first. Point at their lines; describe the change in words, never as code.
+3. **One question** they should be able to answer out loud about their own code.
+
+All ✅ and nothing big to improve? Say: ready for `/done`.

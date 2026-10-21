@@ -8,7 +8,7 @@ Order is free. Easy, then medium, then hard works best, because later tasks reus
 
 If Java is still new, plan for the high end of the time range. Getting stuck is part of the task. The steps on each page are there so you are not stuck on "what is a class?".
 
-Every Java task has more than one file. `Main.java` is the terminal. The other files are the logic. How that compiles, and why there is no `package` line yet, is in [Getting started](../getting-started.md). In Cursor, `/hint`, `/explain`, `/files`, `/run`, `/error`, `/review`, and `/check` will coach you and will not write the task.
+Every Java task has more than one file. `Main.java` is the terminal. The other files are the logic. How that compiles, and why there is no `package` line yet, is in [Getting started](../getting-started.md). In Cursor, `/next`, `/stuck`, `/check` and `/done` will coach you and will not write the task.
 
 | # | Task | Category | Time | Reward |
 |---|------|----------|------|--------|

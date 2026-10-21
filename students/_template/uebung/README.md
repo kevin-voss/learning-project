@@ -28,7 +28,7 @@ Status words: `todo` → `in progress` → `done`. Change them here when you fin
 4. Try every test example from the Aufgabe's `README.md`.
 5. Only when you are done (or really stuck for a long time): look at `musterloesung/`.
 
-In Cursor you can ask for help at any time, without getting the answer: `/task`, `/hint`, `/explain`, `/error`, `/check`, `/review`, `/done`.
+In Cursor you can ask for help at any time, without getting the answer: `/next` (where am I?), `/stuck` (stuck, red text or a new word), `/check` (is it right?), `/done` (finished).
 
 ---
 

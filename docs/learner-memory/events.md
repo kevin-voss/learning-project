@@ -23,7 +23,7 @@ Handlers update `behavior.topics`, `struggles`, `questions`, or `feedback`, then
 | `topic.visit` | Land on a topic or lesson | `{ "topicId" }` |
 | `example.step` | Guided step change | `{ "exampleId", "stepIndex" }` |
 | `playground.attempt` | Run tests | `{ "taskId", "passed": boolean, "attempt": number }` |
-| `hint.used` | Hint button or slash `/hint` | `{ "taskId", "level": 1 \| 2 }` |
+| `hint.used` | Hint button or Cursor `/stuck` | `{ "taskId", "level": 1 \| 2 }` |
 | `completion.mark` | Lesson or task done | `{ "completionKey" }` |
 
 ## Questions & feedback

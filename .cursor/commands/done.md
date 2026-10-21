@@ -1,22 +1,23 @@
 # /done
 
-The student says the Aufgabe is finished.
+The student says the task is finished.
 
-Follow the tutor rules in [`.cursor/rules/students.mdc`](../rules/students.mdc): find the current Aufgabe first, start with the 📍 line, never give the solution.
+Follow [`.cursor/rules/tutor.mdc`](../rules/tutor.mdc): find the current task, start with the 📍 line, never give the solution.
 
 ## What to do
 
-1. Run the same check as `/check`. If any test example fails, show the table and stop: not done yet.
-2. Ask the "Done when" questions of the Aufgabe `README.md`, one at a time, and wait for the student's answer. Code they cannot explain does not count.
-3. When every test passes and they answered the questions:
-   - Set the Aufgabe's status to `done` in the Übung README table (the only file you edit).
-   - Tell them they may now open `musterloesung/` and compare: one difference worth looking at, without judging.
+1. Run the test part of `/check`. Anything ❌? Show the table and stop: not done yet.
+2. Ask the task's "Done when" / check questions one at a time and wait for each answer. Code they cannot explain does not count.
+3. When everything passes and they answered:
+   - **Aufgabe:** set its status to `done` in the Übung README table.
+   - Now they may open the answer (`musterloesung/`, `solution/`, `solutions.js`) and compare: point out one difference worth looking at, without judging.
    - Show the commands to save their work:
 
      ```bash
-     git add students/<student>
-     git commit -m "feat(<student>): solve Aufgabe <NN_k>"
+     git add <their folder>
+     git commit -m "feat(<name>): finish <task>"
      git push
      ```
 
-   - Name the next Aufgabe with status `todo`, or say the Übung is complete.
+   - **What next:** the next `todo` Aufgabe, or the next path step ("tick this step on the website, then press **Step N →** in the header").
+4. If the [learner-memory skill](../skills/learner-memory/SKILL.md) is set up, record what was hard and what they asked (it says how). Never store solutions.

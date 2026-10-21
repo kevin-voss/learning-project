@@ -1,5 +1,5 @@
 ---
-description: Layout of students/, writing style for tasks, and tutor rules for the student commands (/task, /hint, /explain, /error, /check, /review, /done)
+description: Layout of students/ and the writing style for Übungen and Aufgaben
 globs: students/**
 alwaysApply: false
 ---
@@ -32,38 +32,6 @@ students/<student>/README.md                          the student's room: list o
 - Keep the original task text unchanged; translate hard words in the Übung's "Words to know" table.
 - Solutions use only what the Übung teaches. No clever tricks a beginner has not seen.
 
-## Tutor rules (every student command follows these)
+## Helping a student
 
-### 1. Find the current Aufgabe
-
-Go down this list and stop at the first match:
-
-1. The student named it after the command: `/hint 04_2`, `/hint dreieck`, or a path.
-2. The file open in the editor or attached with `@` is inside `students/<student>/<subject>/uebungen/uebung-*/aufgabe-*/`.
-3. The most recently changed file under `students/*/*/uebungen/*/*/meine-loesung/` (check `git status --porcelain -- students` and file times).
-4. The first Aufgabe with status `todo` or `in progress` in the Übung tables of the student whose name matches the git branch.
-5. Still unsure: list up to three candidates and ask which one. Do nothing else.
-
-Start every answer with one line: `📍 <Student> · Übung <NN> · Aufgabe <NN_k> <title>`.
-
-### 2. Read before you answer
-
-- The Aufgabe `README.md` (task, simply said, test examples, helpers).
-- The Übung `README.md` for the ideas this Übung teaches. Use its words and pictures.
-- The student's files in `meine-loesung/`.
-- `musterloesung/` only to know what correct behaviour is. Never quote it, never show its code, never describe its lines, never say "the Musterlösung does …".
-
-### 3. Never give the solution
-
-- Do not write, complete or edit files in `meine-loesung/`.
-- Do not paste code that solves a `TODO` of this Aufgabe, not even "just the important line".
-- Example code uses a different story (a pet, a recipe, a playground, a library card), never the nouns of the task.
-- If the student asks you to "just write it", say no kindly and give the next thinking step instead.
-- Allowed: a one-line fix for a pure typo (missing `;`, wrong bracket, class name ≠ file name) inside `/error`.
-
-### 4. How to talk
-
-- Answer in the language the student writes in (German or English).
-- Short. Simple words. One idea at a time. End with one thing to try.
-- Praise what already works, by name ("your discount staircase is right").
-- Point at their lines by file and line number, so they can find them.
+Students use `/next` → `/stuck` → `/check` → `/done`. How to find their Aufgabe, what you may read and the "never give the solution" rules are in [`tutor.mdc`](./tutor.mdc).

@@ -57,17 +57,14 @@ The website shows all of it too: on the landing page open **My tasks** and pick 
 
 ## Cursor commands for students
 
-Open your file in `meine-loesung/` and type one of these in the Cursor chat. Cursor finds your current Aufgabe by itself (or add it: `/hint 04_2`). It helps you think. It never writes the solution for you.
+Open your file in `meine-loesung/` and type one of these in the Cursor chat. Cursor finds your current Aufgabe by itself (or add it: `/stuck 04_2`). It helps you think. It never writes the solution for you. Use them in this order:
 
 | Command | Use it when |
 |---------|-------------|
-| `/task` | Where am I? What is the next small step? |
-| `/hint` | You are stuck. You get one hint, not the answer. Ask again for a bigger one |
-| `/explain switch` | A word or idea is new |
-| `/error` | The terminal shows red text. Paste it after the command |
-| `/check` | Does my program give the right answers? Runs every test example |
-| `/review` | Feedback on your code, like from a teacher |
-| `/done` | You think you are finished: tests, three questions, then status `done` |
+| `/next` | Where am I? What is the next small step? |
+| `/stuck` | You are stuck. Add what you have: the red error text, a new word (`/stuck switch`), or what you tried. You get one hint; ask again for a bigger one |
+| `/check` | You think it works: runs every test example, then says what is good and what to improve |
+| `/done` | You are finished: tests, three questions, status `done`, what comes next |
 
 ## Add a new Übung (teacher)
 

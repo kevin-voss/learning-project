@@ -22,7 +22,7 @@ cd learning-project
 git switch -c your-name
 ```
 
-Personal Übungen from a teacher are in [`students/<your-name>/`](students/README.md): one folder per Übung, one per Aufgabe. Write your code in the Aufgabe's `meine-loesung/`, compare with `musterloesung/`, commit and push. In Cursor, `/task`, `/hint`, `/check`, `/review` and `/done` help without giving the answer.
+Personal Übungen from a teacher are in [`students/<your-name>/`](students/README.md): one folder per Übung, one per Aufgabe. Write your code in the Aufgabe's `meine-loesung/`, compare with `musterloesung/`, commit and push. In Cursor, four commands help without giving the answer (below).
 
 ## Structure
 
@@ -86,6 +86,15 @@ node tracks/computer-science/scripts/verify-demos.mjs
 
 ## Cursor
 
-Rules: [`.cursor/rules/`](.cursor/rules/). Skills: `learner-memory`, `caveman`. Commands for students working on an Aufgabe: `/task`, `/hint`, `/explain`, `/error`, `/check`, `/review`, `/done` (shared tutor rules in `.cursor/rules/students.mdc`). For teachers: `/new-uebung`, `/path`, `/learning-path`, `/reflect`.
+Type `/` in the Cursor chat. Four commands for students, in the order you need them, on any task (an Aufgabe, a project, a drill, a lesson). None of them writes your solution.
+
+| Command | When |
+|---------|------|
+| `/next` | Where am I? What do I do now? |
+| `/stuck` | You are stuck. Add the red error text, a word you do not know, or what you tried |
+| `/check` | You think it works: it runs your examples and tells you what is good and what to improve |
+| `/done` | You are finished: last check, three questions, then what comes next |
+
+For teachers: `/new-uebung` (an exercise sheet for one student) and `/new-content` (a lesson, sheet, project or drill, in its one home). Rules: [`.cursor/rules/`](.cursor/rules/) (`tutor.mdc` for the student commands). Skills: `learner-memory`, `caveman`.
 
 Agents: [`AGENTS.md`](AGENTS.md).

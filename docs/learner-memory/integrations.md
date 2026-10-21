@@ -4,7 +4,7 @@
 
 Makefile tests do not run in browser — optional **post-run journal**:
 
-1. After `make variables`, learner runs a one-line reflect command (Cursor `/reflect`) or appends `completion.mark` via a small Bun script later.
+1. After `make variables`, learner finishes with Cursor `/done` (it records the session) or appends `completion.mark` via a small Bun script later.
 
 For now: Cursor skill records drill outcomes when the learner reports pass/fail in chat.
 
@@ -21,7 +21,7 @@ Include `browser.js` only when you add visit/completion hooks; do not fork schem
 ## Projects (`projects/`)
 
 - Milestones in roadmap → `completion.mark` with keys `projects:01-weather-dashboard:phase-3`.
-- Learner questions during build → `question.asked` via Cursor `/reflect` or future project journal file.
+- Learner questions during build → `question.asked` via Cursor `/done` or a future project journal file.
 
 ## Programs (`programs/code-for-cleaning/`)
 

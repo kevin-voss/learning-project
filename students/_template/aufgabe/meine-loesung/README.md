@@ -10,4 +10,4 @@ TODO: exact commands for {{LANGUAGE}}, run from this folder.
 
 - Change anything you like here.
 - Do not copy from [`../musterloesung/`](../musterloesung/README.md). Look there only when you are done.
-- Stuck? Read the [Übung page](../../README.md) again, then the helpers in the [Aufgabe](../README.md). In Cursor: `/hint`, `/check`, `/review`.
+- Stuck? Read the [Übung page](../../README.md) again, then the helpers in the [Aufgabe](../README.md). In Cursor: `/stuck`, then `/check`.

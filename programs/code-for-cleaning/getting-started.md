@@ -125,19 +125,16 @@ If `java Main` says it could not find the main class: you are in the wrong folde
 
 ## Ask Cursor without getting the answer
 
-In Cursor chat, type `/` and pick a command. The files are `programs/code-for-cleaning/.cursor/commands/`. Open the `programs/code-for-cleaning` folder as the Cursor window so that menu can see them. A command may explain an idea or show an unrelated example. It will not write your task.
+Open the whole `learning-project` folder in Cursor, type `/` in the chat and pick one of four commands. They explain, ask questions and show unrelated examples. None of them writes your task.
 
 | Type this | When |
 |-----------|------|
-| `/hint` | You are stuck and want one nudge, not the code. |
-| `/explain` | A word or idea does not make sense yet. |
-| `/files` | You are not sure how to split the work across files. |
-| `/run` | `javac` or `java` is the problem, not the idea. |
-| `/error` | The terminal printed an error and you want it translated. |
-| `/review` | You want feedback on the files you already wrote. |
-| `/check` | You want a Sunday rehearsal against the must-list. |
+| `/next` | Which must-item is next, and what is one small step? |
+| `/stuck` | You are stuck. Add what you have: the red error text, a word that makes no sense yet, or what you tried. Not sure how to split the work across files, or `javac`/`java` will not run? Also `/stuck`. |
+| `/check` | Sunday rehearsal: it walks the must-list, then gives feedback on your files and asks one explain-check question. |
+| `/done` | You think the task is finished. |
 
-Paste the task name, and paste the error or the file when you have one. "It doesn't work" is a weak `/hint`. "Task 1, length 7 crashes, here is the error" is a good one.
+Name the task and paste the error or the file when you have one. "It doesn't work" is a weak `/stuck`. "Task 1, length 7 crashes, here is the error" is a good one.
 
 ## Terminal I/O in Java
 

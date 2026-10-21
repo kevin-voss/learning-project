@@ -56,4 +56,4 @@ Write the updated JSON back to `learner-profile.json` in the personal store.
 
 ## Invoke
 
-User may say: "remember that I struggle with loops", "/reflect", or "use my learner profile". Load skill behavior immediately.
+User may say: "remember that I struggle with loops" or "use my learner profile", and `/done` records each finished task. Load skill behavior immediately.

@@ -1,140 +1,89 @@
-# Project 1: Weather Dashboard
+# Project 4: Weather dashboard
 
-**Your first app that talks to the internet.**
+Your first app that talks to the internet. You type a city, press Search, and see the real weather right now and for the next five days.
 
-Build a weather app where a person types a city, clicks Search, and sees real weather from a public weather service. Browser JavaScript only. No Java here.
+> [!PICTURE]
+> A tiny weather robot. You ask it: "What is the weather in London?" The robot phones a weather service on the internet, waits for the answer, and turns the numbers into a friendly card on your page.
 
-Think of this project like making a tiny weather robot:
+## What you build
 
-1. You ask the robot, "What is the weather in London?"
-2. The robot asks the internet.
-3. The internet sends back data.
-4. Your page turns that data into friendly text, numbers, and cards.
+- A search box for a city.
+- The weather now: city, temperature, words and an emoji, humidity and wind.
+- A 5-day forecast with high and low temperatures.
+- A loading line while the app waits, and friendly error messages ("City not found", no internet).
+- Buttons for your last 5 searches. They are still there after a reload.
 
-> **Scope**
->
-> | | |
-> |---|---|
-> | **Phase** | Phase 3 (JavaScript apply) |
-> | **Hours** | about 6–10 |
-> | **Java path** | Optional before Java. HTTP / `fetch` ideas help later with Layer C ([05 Java Weather CLI](../10-java-weather-cli)). Do **not** teach or require Java in this project. |
+The weather comes from [Open-Meteo](https://open-meteo.com/): free, no account, no key.
 
-## Status
+## New in this project
 
-This folder contains **guides only**. You create all HTML, CSS, and JavaScript files yourself.
+| New skill | You already know |
+|-----------|------------------|
+| `fetch`: ask a server for data | DOM and events (projects 2 and 3) |
+| `async` / `await`: wait for the answer | localStorage and JSON (project 2) |
+| Read a JSON answer and handle errors (`try` / `catch`) | Objects and arrays (drills) |
 
-That is on purpose. You learn more by making the folders and files with your own hands.
+## What you need to know
 
-## Where this sits
+- [Client and server](../../tracks/computer-science/index.html#client-server) and [HTTP requests and responses](../../tracks/computer-science/index.html#http-requests-responses)
+- [fetch and await](../../sheets/javascript/README.md): the pizza-phone picture
+- [JSON](../../sheets/javascript/json.md) and [DOM and events](../../sheets/javascript/dom.md)
 
-[Learning path - Phase 3 (JavaScript)](../../docs/LEARNING_PATH.md#phase-3--javascript)
+A word you do not know? Look it up in the [glossary](../../sheets/start/glossary.md).
 
-## Prerequisites
+## How this folder works
 
-- HTML, CSS, and basic JS (arrays, functions, loops) from Phase 2 and JS drills
-- [Getting Started](../../sheets/setup/README.md) - editor, Git, local server
-- **No account needed** - we use [Open-Meteo](https://open-meteo.com/) (free public API)
+| File or folder | What it is for |
+|----------------|----------------|
+| [step-by-step.md](step-by-step.md) | The build guide in eight steps. Each ends with "You should see …" |
+| [starter/](starter/) | **Your desk.** `index.html` and `style.css` are ready. `api.js`, `ui.js` and `app.js` have numbered `TODO`s |
+| [solution/](solution/) | One finished app. Peek only when you are done or really stuck |
+| [help/open-meteo.md](help/open-meteo.md) | The two weather addresses, what the answers look like, weather codes |
+| [help/troubleshooting.md](help/troubleshooting.md) | Common errors and questions |
 
-## Project goal
+Three JavaScript files, three jobs:
 
-By the end, your app should:
+| File | Job | Never does |
+|------|-----|------------|
+| `api.js` | The **messenger**: talks to Open-Meteo | touch the page |
+| `ui.js` | The **painter**: puts data on the page | call `fetch` |
+| `app.js` | The **coach**: listens to the form, tells the other two what to do | big jobs itself |
 
-- Let the user search for a city
-- Ask an API for that city's location
-- Ask another API for the weather at that location
-- Show current weather and a 5-day forecast
-- Show friendly errors when something goes wrong
-- Remember recent searches after refresh
+If the city search goes wrong, look in `api.js`. If the temperature is in the wrong place, look in `ui.js`. If Search does nothing, look in `app.js`.
 
-The deeper goal is bigger than weather: you are learning how websites get data from other computers.
+## How one search flows
 
-## What you'll build
-
-| Feature | Skill learned |
-|---------|---------------|
-| City search | Forms, events, validation |
-| Geocoding + forecast | Two-step API flow |
-| Current weather display | DOM updates, objects |
-| 5-day forecast | Daily data from JSON |
-| Loading spinner | UX, async timing |
-| Error messages | try/catch, empty results |
-| Recent searches | localStorage, JSON |
-| Responsive layout | CSS media queries |
-
-## Read this order
-
-| Doc | Read when |
-|-----|-----------|
-| [Project structure](./docs/structure.md) | First, to create folders/files in the terminal |
-| [Concepts](./docs/concepts.md) | Before API work - API, HTTP, JSON, fetch, async |
-| [Step-by-step plan](./docs/step-by-step.md) | **Main build guide** - follow this while coding |
-| [Code reference](./docs/code-reference.md) | When you need example code patterns |
-| [Help: FAQ](./docs/help/faq.md) | Quick answers |
-| [Help: Troubleshooting](./docs/help/troubleshooting.md) | When something breaks |
-| [Help: Glossary](./docs/help/glossary.md) | Term definitions |
-
-## First terminal commands
-
-From the repo root:
-
-```bash
-cd projects/04-weather-dashboard
-pwd
-mkdir -p css js assets
-touch index.html css/styles.css js/api.js js/ui.js js/app.js
+```text
+Search pressed
+  → empty?           show an error, stop
+  → show loading
+  → geocoding        city → latitude, longitude    (no results? "City not found")
+  → forecast         latitude, longitude → weather
+  → show weather and forecast, save the city
+  → error anywhere?  show a friendly message
+  → hide loading
 ```
 
-What those commands mean:
+## Done when
 
-- `cd` moves you into this project folder.
-- `pwd` prints where you are, so you can check you are in the right place.
-- `mkdir -p` creates folders. The `-p` means "do not complain if they already exist."
-- `touch` creates empty files.
+- [ ] Searching "London" shows the weather now and 5 forecast days.
+- [ ] "São Paulo" and "New York" work too.
+- [ ] An empty search shows an error and sends no request.
+- [ ] "asdfgh123" shows "City not found".
+- [ ] Without internet you see a friendly message, not a broken page.
+- [ ] A loading line shows while the app waits.
+- [ ] The last 5 cities are buttons, still there after a reload.
+- [ ] In the Network tab (F12) you can point to the geocoding and the forecast request.
+- [ ] Your work is committed and pushed on your branch.
 
-After that, open [Project structure](./docs/structure.md) to understand what each file is for.
-
-## Files you will create
-
-```
-01-weather-dashboard/
-├── index.html
-├── css/
-│   └── styles.css
-├── js/
-│   ├── app.js       # Main logic, event listeners
-│   ├── api.js       # fetch + Open-Meteo (geocode + forecast)
-│   └── ui.js        # Update DOM, loading, errors
-├── assets/          # Optional local icons
-├── .gitignore
-└── README.md
-```
-
-## Learning goals
-
-When finished, you can explain:
-
-- What an API is and why browsers use HTTP GET for weather data
-- How to test an API with `curl` before using it in JavaScript
-- How `fetch()` asks the internet for data
-- Why `async/await` exists (network takes time)
-- The difference between synchronous and asynchronous code
-- How to chain two API calls (city → coordinates → weather)
-- How to read the Network tab in DevTools
-- HTTP status codes 200, 404, 500
-- How to store and read JSON from localStorage
-
-## Quick start
-
-1. Open [Project structure](./docs/structure.md) and create the folders/files.
-2. Run `git init` in this folder.
-3. Follow [step-by-step](./docs/step-by-step.md).
-
-## Resources
-
-- [Open-Meteo API docs](https://open-meteo.com/en/docs)
-- [MDN Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)
-- [MDN async/await](https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Promises)
+> [!CHECK]
+> 1. Why do you need `await` in front of `fetch(...)`?
+>    <details><summary>Answer</summary>The answer takes time. Without <code>await</code> you get a Promise (a "comes later" note), not the response.</details>
+> 2. The geocoding answer has no <code>results</code>. What should the app do?
+>    <details><summary>Answer</summary>Throw an error like <code>City "…" not found</code>. The <code>catch</code> in <code>app.js</code> shows it to the user.</details>
+> 3. Which file should change if Open-Meteo gave you a new address?
+>    <details><summary>Answer</summary>Only <code>api.js</code>, the messenger. That is why the jobs are split.</details>
 
 ## Next
 
-When search → live weather works → [Learning path Phase 4 (Java)](../../docs/LEARNING_PATH.md#phase-4--java-main-focus). Same weather idea returns in Java at Layer C: [05-java-weather-cli](../10-java-weather-cli).
+Start the [step-by-step guide](step-by-step.md). The same weather service comes back in Java in [Project 10: Java weather CLI](../10-java-weather-cli/README.md).

@@ -1,31 +1,18 @@
-# Project 4: React Todo App
-
-**Optional React practice - not on the main Java spine.**
+# Extra: React todo app
 
 Build a todo app with add, complete, delete, filter, edit, and localStorage persistence - using React, JSX, and hooks.
 
-> **Scope**
->
-> | | |
-> |---|---|
-> | **Phase** | Phase 6 (**optional**) |
-> | **Hours** | about 12–18 |
-> | **Java path** | **Off** the main spine. Only after Java Layers A–B feel solid. Or skip. Java services come later via [Spring Boot](../../../tracks/spring-boot/README.md). |
+This is an **extra**: not on the main path. Do it any time after [Project 4: weather dashboard](../../04-weather-dashboard/README.md), or skip it.
 
 ## Status
 
-This folder contains **guides only**. You scaffold the Vite + React project yourself and write every component.
-
-## Where this sits
-
-[Learning path - Phase 6 (optional web depth)](../../../docs/LEARNING_PATH.md#phase-6--optional-web-depth-node--react--ts)
+This folder contains **guides only**. You scaffold the Vite + React app yourself (in `app/` inside this folder) and write every component.
 
 ## Prerequisites
 
-- Java Layers A–B solid (or you accept this is side practice)
-- Comfort with JS from Project 1; npm from Project 3 helps but is not required if you already use Vite elsewhere
-- [React](../../../sheets/react/README.md) - read per phase, not all upfront
-- [npm](../../../sheets/npm/README.md) - Vite scripts in Phase 1
+- Comfort with JavaScript from projects 2–4 ([shopping list](../../02-shopping-list-web/README.md) already does add, tick and remove without React)
+- [React](../../../sheets/react/README.md) - read per step, not all upfront
+- [npm](../../../sheets/npm/README.md) - Vite scripts in step 1
 - React Developer Tools browser extension installed
 
 ## What you'll build
@@ -45,7 +32,8 @@ This folder contains **guides only**. You scaffold the Vite + React project your
 
 You will build a todo list app from small pieces called components.
 
-Kid version: React is like building with blocks. One block is the header, one block is the input, one block is the list, and one block is a single todo item. The app works when the blocks pass information to each other in a clear way.
+> [!PICTURE]
+> React is like building with blocks. One block is the header, one block is the input, one block is the list, and one block is a single todo item. The app works when the blocks pass information to each other in a clear way.
 
 ## Documentation map
 
@@ -58,14 +46,15 @@ Kid version: React is like building with blocks. One block is the header, one bl
 | [Code reference](./docs/code-reference.md) | Example patterns (type yourself) |
 | [Help: FAQ](./docs/help/faq.md) | Quick answers |
 | [Help: Troubleshooting](./docs/help/troubleshooting.md) | React errors |
-| [Help: Glossary](./docs/help/glossary.md) | Term definitions |
+
+A word you do not know? Look it up in the [glossary](../../../sheets/start/glossary.md).
 
 ## Files you will create
 
 Scaffold with Vite first - then you add:
 
 ```
-04-react-todo-app/
+extras/react-todo/app/
 ├── public/
 ├── src/
 │   ├── components/
@@ -83,7 +72,7 @@ Scaffold with Vite first - then you add:
 └── README.md
 ```
 
-Do **not** scaffold until [step-by-step](./docs/step-by-step.md) Phase 1.
+Do **not** scaffold until [step-by-step](./docs/step-by-step.md) step 1.
 
 ## Learning goals
 
@@ -100,7 +89,7 @@ When finished, you can explain:
 From the repo root:
 
 ```bash
-cd projects
+cd projects/extras/react-todo
 pwd
 node -v
 npm -v
@@ -116,4 +105,4 @@ Then open [step-by-step](./docs/step-by-step.md) and scaffold with Vite when ins
 
 ## Next
 
-Back to the Java spine: Layer D → [Spring Boot](../../../tracks/spring-boot/README.md). Or more TS in the [typescript sheet](../../../sheets/typescript/README.md).
+Back to the [learning path](../../../hub/index.html). Want types? Read the [TypeScript sheet](../../../sheets/typescript/README.md).

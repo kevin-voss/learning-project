@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tic-tac-toe</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <main class="card">
+      <h1>Tic-tac-toe</h1>
+      <p id="status" aria-live="polite">Player X's turn</p>
+
+      <div class="board">
+        <button class="cell" data-row="0" data-col="0" aria-label="Row 1, column 1"></button>
+        <button class="cell" data-row="0" data-col="1" aria-label="Row 1, column 2"></button>
+        <button class="cell" data-row="0" data-col="2" aria-label="Row 1, column 3"></button>
+        <button class="cell" data-row="1" data-col="0" aria-label="Row 2, column 1"></button>
+        <button class="cell" data-row="1" data-col="1" aria-label="Row 2, column 2"></button>
+        <button class="cell" data-row="1" data-col="2" aria-label="Row 2, column 3"></button>
+        <button class="cell" data-row="2" data-col="0" aria-label="Row 3, column 1"></button>
+        <button class="cell" data-row="2" data-col="1" aria-label="Row 3, column 2"></button>
+        <button class="cell" data-row="2" data-col="2" aria-label="Row 3, column 3"></button>
+      </div>
+
+      <button id="reset" type="button">New game</button>
+    </main>
+  </body>
+</html>

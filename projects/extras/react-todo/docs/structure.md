@@ -1,12 +1,13 @@
 # Project Structure — React Todo App
 
-## Phase 1: Scaffold with Vite (you run this)
+## Step 1: Scaffold with Vite (you run this)
 
-From `projects/` directory:
+From the repo root:
 
 ```bash
-npm create vite@latest 04-react-todo-app -- --template react
-cd 04-react-todo-app
+cd projects/extras/react-todo
+npm create vite@latest app -- --template react
+cd app
 npm install
 npm run dev
 ```
@@ -16,7 +17,7 @@ Vite creates starter files. You'll **replace and extend** them — don't treat t
 ## Target layout after you build
 
 ```
-04-react-todo-app/
+extras/react-todo/app/
 ├── public/
 │   └── vite.svg              # Optional favicon
 ├── src/

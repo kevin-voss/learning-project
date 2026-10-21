@@ -1,4 +1,4 @@
-# Troubleshooting — Docker Portfolio
+# Docker portfolio: troubleshooting
 
 ## Docker won't run
 
@@ -21,8 +21,9 @@ Install Docker Desktop and restart terminal.
 
 ### `COPY failed: file not found`
 
-- Paths in COPY are relative to build context (usually `.`)
-- File must exist and not be in `.dockerignore`
+- Paths in COPY are relative to the build folder (the `.` in `docker build`)
+- Does `site/` exist next to the `Dockerfile`? Did you run `docker build` from `projects/extras/docker-portfolio`?
+- `site/` must not be listed in `.dockerignore`
 
 ---
 
@@ -47,7 +48,7 @@ Common causes:
 3. `docker exec -it NAME /bin/sh` → `ls /usr/share/nginx/html`
 4. Is `index.html` present?
 
-### CSS/images broken inside container but fine in Live Server
+### CSS broken inside the container but fine in the browser
 
 - Wrong paths (absolute vs relative)
 - Case sensitivity: `Styles.css` vs `styles.css` breaks on Linux inside container

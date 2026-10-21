@@ -1,6 +1,6 @@
-# Terminal Cheat Sheet — Docker Project
+# Terminal cheat sheet: Docker project
 
-Commands you'll use in Project 2 and beyond. Practice in Terminal (Mac) or PowerShell/WSL (Windows).
+Commands you use in this project and later. Practice in Terminal (Mac) or PowerShell/WSL (Windows).
 
 ## Navigation
 
@@ -94,15 +94,6 @@ cat /usr/share/nginx/html/index.html
 exit                 # Leave container shell
 ```
 
-## Git (same as other projects)
-
-```bash
-git status
-git add .
-git commit -m "Add Dockerfile"
-git push
-```
-
 ## Practice exercise
 
 From project folder, without looking:
@@ -116,4 +107,4 @@ From project folder, without looking:
 
 ## Next
 
-[Step-by-step plan](../step-by-step.md)
+Git commands are in the [git sheet](../../../../../sheets/git/README.md). Back to the [step-by-step guide](../step-by-step.md).

@@ -1,12 +1,12 @@
-# FAQ — Docker Portfolio
+# Docker portfolio: FAQ
 
 ## Do I need to know Linux?
 
 Basic commands help (`cd`, `ls`, `pwd`). This project includes a [terminal cheat sheet](./terminal-cheatsheet.md). You don't need to be a sysadmin.
 
-## Can I dockerize my weather app instead of a portfolio?
+## Can I put my weather app in the box instead?
 
-Yes. Any static HTML/CSS/JS site works. A portfolio is recommended so you have something to show employers.
+Yes. Any static HTML/CSS/JS site works. Copy its files into `site/` instead of the About-me page.
 
 ## Why Nginx instead of Node?
 

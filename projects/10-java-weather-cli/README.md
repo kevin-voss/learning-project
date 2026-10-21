@@ -1,113 +1,85 @@
-# Project 05: Java Weather CLI
+# Project 10: Java weather CLI
 
-**Same weather idea as the browser dashboard - but in the terminal with Java.**
+> [!PICTURE]
+> You send a messenger on a bike with a letter: "Where is Berlin?" He comes back with a lunchbox full of labelled notes (JSON).
+> You send him again: "How warm is it at 52.5, 13.4?" Another lunchbox. You take out one note: `13.3`.
+> `HttpClient` is the messenger. **Jackson** opens the lunchbox for you.
 
-Build a small command-line program that asks Open-Meteo for a city, then prints the temperature. No API key. No Spring yet.
+Same weather as your browser dashboard in [Project 4](../04-weather-dashboard/README.md), now in the terminal with Java.
 
-> **Scope**
->
-> | | |
-> |---|---|
-> | **Layer** | Java **Layer C** only (HTTP client apply) |
-> | **Hours** | about 3–5 |
-> | **Java path** | **On** the main spine. Finish Gates A–B first. Next is Layer D (server layers + Postgres), not Spring yet. |
-
-## Status
-
-This folder is **guides only**. You write every `.java` file yourself.
-
-## Where this sits
-
-[Learning path - Phase 4, Layer C](../../docs/LEARNING_PATH.md#layer-c--java-features-that-finish-the-base)
-
-Same public API as [01-weather-dashboard](../04-weather-dashboard) - city → coordinates → forecast - only now with `HttpClient` instead of browser `fetch`.
-
-## Prerequisites
-
-**Gates A–B** from the learning path (must feel comfortable):
-
-- Packages, classes, compile from the terminal
-- `ArrayList` / `HashMap` without copy-paste panic
-- Exceptions idea (fail safely)
-
-Also:
-
-1. [Java sheet](../../sheets/java/README.md) - class / object / `main` in toy words
-2. [Java hub](../../tracks/java/) through basics as needed
-3. Hub topic **REST & HTTP** - [`tracks/java/topics/rest-and-http/`](../../tracks/java/topics/rest-and-http/)
-4. **Ubuntu + Java 21** - follow the hub setup:
-
-```bash
-sudo apt update
-sudo apt install openjdk-21-jdk
-java --version
-javac --version
-```
-
-Both should report `21.x`. Details: [tracks/java/README.md](../../tracks/java/README.md).
-
-Optional but helpful: finished [01-weather-dashboard](../04-weather-dashboard) so geocoding + forecast already feel familiar.
-
-## Project goal
-
-By the end, something like this works in the terminal:
+## What you build
 
 ```text
-$ java WeatherCli London
-London: 15.2°C
+$ mvn -q compile exec:java -Dexec.args="Berlin"
+Berlin (Germany): 13.3 °C, wind 7.9 km/h
+
+$ mvn -q compile exec:java -Dexec.args="Qwxyzzz"
+No place called "Qwxyzzz" was found.
 ```
 
-(Your class name and args style can differ - see [structure.md](./docs/structure.md).)
+Your numbers differ: it is the weather right now. The free [Open-Meteo](https://open-meteo.com/en/docs) service needs no account and no key.
 
-## Read this order
+Two questions, one after the other:
 
-| Doc | Read when |
-|-----|-----------|
-| [Project structure](./docs/structure.md) | First - packages and files you will create |
-| [Step-by-step plan](./docs/step-by-step.md) | **Main build guide** |
-
-## First terminal commands
-
-From the repo root (Ubuntu terminal):
-
-```bash
-cd projects/10-java-weather-cli
-pwd
-mkdir -p src
-# pick one layout from structure.md, then create your .java file(s)
+```text
+1. https://geocoding-api.open-meteo.com/v1/search?count=1&name=Berlin
+   -> {"results":[{"name":"Berlin","country":"Germany","latitude":52.52,"longitude":13.41, ...}]}
+2. https://api.open-meteo.com/v1/forecast?current=temperature_2m,wind_speed_10m&latitude=52.52&longitude=13.41
+   -> {"current":{"temperature_2m":13.3,"wind_speed_10m":7.9, ...}, ...}
 ```
 
-## Learning goals
+A Maven project with these files:
 
-When finished, you can explain:
-
-- Why Java needs `javac` then `java` (bake, then eat)
-- How `java.net.http.HttpClient` does an HTTP GET
-- Why weather needs two steps (city name → lat/lon → temperature)
-- One way to pull a number out of a JSON string (library **or** a careful manual parse)
-
-## Quick start
-
-1. Confirm `java` / `javac` are 21.x.
-2. Open [structure.md](./docs/structure.md) and create your source file(s).
-3. Follow [step-by-step.md](./docs/step-by-step.md) phase by phase.
-
-## Resources
-
-- [Open-Meteo docs](https://open-meteo.com/en/docs) (no signup)
-- [HttpClient (Java SE)](https://docs.oracle.com/en/java/javase/21/docs/api/java.net.http/java/net/http/HttpClient.html)
-- Geocoding test:
-
-```bash
-curl "https://geocoding-api.open-meteo.com/v1/search?name=London&count=1"
+```text
+pom.xml                          Java 21, Jackson, JUnit
+src/main/java/weather/
+  Main.java                      reads the city from args, prints the line (ready)
+  Place.java                     name, country, latitude, longitude (ready)
+  Weather.java                   temperature and wind (ready)
+  WeatherClient.java             the HTTP requests and the JSON reading (your work)
+src/test/java/weather/
+  WeatherClientTest.java         3 tests with saved JSON, no internet needed
 ```
 
-## Next (Layer D, then Spring)
+## What you need to know
 
-You are finishing **Layer C**. Do not jump to Spring yet.
+- [REST and HTTP methods](../../tracks/java/topics/rest-and-http/index.html): GET, status codes like 200 and 404.
+- [HTTP requests and responses](../../tracks/computer-science/index.html#http-requests-responses).
+- [Build tools: Maven](../../tracks/java/topics/build-tools/index.html): a library (a "dependency") in `pom.xml`.
+- [Testing with JUnit](../../tracks/java/topics/testing/index.html) and the Maven layout from [Project 9](../09-household-budget/README.md).
 
-1. Read [`../docs/java/server-layers.md`](../../sheets/java/server-layers.md) (controller → service → repository).
-2. Postgres + Docker + JDBC (Layer D). Project [02-docker-portfolio](../extras/docker-portfolio) helps with Docker practice.
-3. **Gate D**, then [Spring Boot](../../tracks/spring-boot/README.md).
+New: `java.net.http.HttpClient` for web requests, and the Jackson library to read JSON.
 
-**Exit check:** GET vs POST, bad HTTP status handled, clear folder layout. You already passed Gates A–B before starting this project.
+## Rules
+
+- The city comes from the command line. No city prints a short "Usage" line.
+- A city with a space (`New York`) works.
+- An unknown city prints a clear sentence, not a stack trace.
+- A status other than 200, or no internet, prints `Could not get the weather: ...`.
+- No searching inside the JSON text with `indexOf`. Jackson reads it.
+
+## Done when
+
+- [ ] `mvn test` passes all 3 tests.
+- [ ] Berlin, `New York` and your own town print a temperature and wind.
+- [ ] `Qwxyzzz` prints `No place called "Qwxyzzz" was found.`
+- [ ] No city prints the usage line.
+- [ ] With Wi-Fi off, you get one friendly line.
+
+**Extra:** also ask for `relative_humidity_2m` and print it. Add a test for it first.
+
+## Files
+
+- [step-by-step.md](step-by-step.md): build it in small steps.
+- [starter/pom.xml](starter/pom.xml): the project with `TODO` comments in `WeatherClient.java`, and 3 tests that fail until you are done.
+- [solution/pom.xml](solution/pom.xml): one finished answer, see [WeatherClient.java](solution/src/main/java/weather/WeatherClient.java).
+
+> [!CHECK]
+> 1. Why are there two requests, not one?
+>    <details><summary>Answer</summary>The forecast service wants coordinates, not a name. Geocoding turns the name into latitude and longitude first.</details>
+> 2. Why do the tests use saved JSON instead of the real service?
+>    <details><summary>Answer</summary>The real weather changes every hour, and the internet can be off. Saved JSON always gives the same answer, so a test only fails when your code is wrong.</details>
+> 3. What does <code>path("results")</code> give when there is no "results" key?
+>    <details><summary>Answer</summary>An empty "missing" node, not null. <code>isEmpty()</code> is true, so you can print "not found" without a crash.</details>
+
+**Next:** [How a Java server is structured](../../sheets/java/server-layers.md), then Postgres and the [Parcel database](../11-parcel-database/README.md).

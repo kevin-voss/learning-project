@@ -1,0 +1,82 @@
+/* 1. The page: a soft background, and flexbox puts the card in the middle. */
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  box-sizing: border-box;
+  background: #f4efe6;
+  color: #2b2b2b;
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+}
+
+/* 2. The card: a white box. Flexbox puts the avatar next to the text. */
+.card {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  max-width: 40rem;
+  padding: 2rem;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* 3. The avatar: a round badge with initials (no image file needed). */
+.avatar {
+  flex-shrink: 0;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #2f6f5e;
+  color: #ffffff;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+h1 {
+  margin: 0;
+  color: #2f6f5e;
+}
+
+h2 {
+  margin-bottom: 0.25rem;
+  font-size: 1.1rem;
+}
+
+.tagline {
+  margin-top: 0.25rem;
+  color: #6b6b6b;
+}
+
+/* 4. The links sit in a row with space between them. */
+.links {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.links a {
+  color: #2f6f5e;
+  font-weight: bold;
+}
+
+/* 5. Small screens: stack the avatar on top and use less padding. */
+@media (max-width: 600px) {
+  .card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1.25rem;
+  }
+
+  .links {
+    justify-content: center;
+  }
+}

@@ -1,160 +1,80 @@
-# Code Reference — Docker Portfolio
+# Docker portfolio: code reference
 
-Reference examples to read and type yourself — not pre-built project files.
+Everything you type in this project, in one place. Type it yourself; do not copy blindly.
 
----
+## `Dockerfile`
 
-## Dockerfile (static site + Nginx)
+Put it in `projects/extras/docker-portfolio/`, next to `site/`. The name is exactly `Dockerfile`, no extension.
 
 ```dockerfile
-# Static portfolio served by Nginx
+# Your About-me page, served by Nginx
 FROM nginx:alpine
 
-LABEL maintainer="you@example.com"
-LABEL description="Developer portfolio"
-
-# Optional: remove default Nginx welcome page
-RUN rm /usr/share/nginx/html/index.html
-
-# Copy site files into Nginx web root
-COPY . /usr/share/nginx/html
+# Put the page where Nginx looks for files
+COPY site/ /usr/share/nginx/html/
 
 EXPOSE 80
 
+# Keep Nginx in the foreground, or the container stops at once
 CMD ["nginx", "-g", "daemon off;"]
 ```
 
-**Why `daemon off`?** Nginx normally backgrounds itself. Docker needs one foreground process or the container exits immediately.
-
----
-
 ## `.dockerignore`
 
-```
+```text
 .git
 .gitignore
 README.md
 docs/
-*.md
 .DS_Store
-Thumbs.db
-node_modules
 .env
-.env.local
-Dockerfile.*
-docker-compose*.yml
 ```
 
----
-
-## Build and run commands
+## Get the page into `site/`
 
 ```bash
-# Build (from folder containing Dockerfile)
-docker build -t portfolio:v1 .
-
-# Run detached, name container, map port
-docker run -d -p 8080:80 --name my-portfolio portfolio:v1
-
-# Follow logs
-docker logs -f my-portfolio
-
-# Stop and remove
-docker stop my-portfolio
-docker rm my-portfolio
-
-# Rebuild after HTML/CSS changes
-docker build -t portfolio:v1 .
-docker stop my-portfolio && docker rm my-portfolio
-docker run -d -p 8080:80 --name my-portfolio portfolio:v1
+mkdir -p site
+cp ../../01-about-me/starter/index.html ../../01-about-me/starter/style.css site/   # your own page
+# or the reference page:
+# cp ../../01-about-me/solution/index.html ../../01-about-me/solution/style.css site/
 ```
 
-Every code change requires **rebuild** unless you use volumes (advanced).
+## Build and run
 
----
+```bash
+docker build -t portfolio:v1 .                              # make the image
+docker run -d -p 8080:80 --name my-portfolio portfolio:v1   # start a container
+docker ps                                                   # is it Up?
+docker logs my-portfolio                                    # what did Nginx say?
+docker stop my-portfolio && docker rm my-portfolio          # stop and remove
+```
 
-## Docker Hub workflow
+After a change in `site/`: build again, remove the old container, run a new one.
+
+## Look inside
+
+```bash
+docker exec -it my-portfolio /bin/sh
+ls /usr/share/nginx/html
+exit
+```
+
+## Docker Hub (optional)
 
 ```bash
 docker login
-
-# Tag: username/repository:version
-docker tag portfolio:v1 johndoe/portfolio:v1
-
-docker push johndoe/portfolio:v1
-
-# Someone else (or you on another machine):
-docker pull johndoe/portfolio:v1
-docker run -d -p 8080:80 johndoe/portfolio:v1
+docker tag portfolio:v1 YOUR_DOCKERHUB_NAME/portfolio:v1
+docker push YOUR_DOCKERHUB_NAME/portfolio:v1
+docker pull YOUR_DOCKERHUB_NAME/portfolio:v1
 ```
 
----
-
-## Portfolio HTML outline (structure only)
-
-Plan sections — style your own way:
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Your Name — Developer</title>
-  <link rel="stylesheet" href="css/styles.css">
-</head>
-<body>
-  <header>
-    <h1>Your Name</h1>
-    <p>Frontend Developer · Learning JavaScript</p>
-  </header>
-
-  <main>
-    <section id="about">
-      <h2>About</h2>
-      <p>Short bio...</p>
-    </section>
-
-    <section id="projects">
-      <h2>Projects</h2>
-      <article class="project-card">
-        <h3>Weather Dashboard</h3>
-        <p>APIs, fetch, async/await</p>
-        <a href="https://github.com/you/weather-dashboard">GitHub</a>
-      </article>
-      <!-- More cards -->
-    </section>
-
-    <section id="contact">
-      <h2>Contact</h2>
-      <p>GitHub: <a href="https://github.com/you">@you</a></p>
-    </section>
-  </main>
-
-  <footer>
-    <p>Built with HTML, CSS, and Docker</p>
-  </footer>
-
-  <!-- Optional -->
-  <script src="js/app.js"></script>
-</body>
-</html>
-```
-
----
-
-## Optional HEALTHCHECK (advanced)
+## Optional: a health check
 
 ```dockerfile
 HEALTHCHECK --interval=30s --timeout=3s \
   CMD wget --quiet --tries=1 --spider http://localhost/ || exit 1
 ```
 
-Docker marks container unhealthy if Nginx stops responding.
+Docker then marks the container "unhealthy" when Nginx stops answering.
 
----
-
-## Next
-
-- [Step-by-step plan](./step-by-step.md)
-- [Terminal cheat sheet](./help/terminal-cheatsheet.md)
+Back to the [step-by-step guide](step-by-step.md).

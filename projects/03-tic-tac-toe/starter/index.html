@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tic-tac-toe</title>
+    <link rel="stylesheet" href="style.css" />
+    <!-- defer: the script waits until the HTML below exists. -->
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <main class="card">
+      <h1>Tic-tac-toe</h1>
+      <p id="status">Player X's turn</p>
+
+      <!-- TODO 1: add 9 cells inside the board, 3 rows of 3.
+           Each cell knows its place with data-row and data-col (0, 1 or 2):
+           <button class="cell" data-row="0" data-col="0"></button>
+           <button class="cell" data-row="0" data-col="1"></button>
+           ... up to data-row="2" data-col="2" -->
+      <div class="board">
+      </div>
+
+      <button id="reset" type="button">New game</button>
+    </main>
+  </body>
+</html>

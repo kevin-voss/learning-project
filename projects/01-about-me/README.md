@@ -1,90 +1,53 @@
-# Project 00: Static About-Me Page
+# Project 1: About-me page
 
-**Your first real web page - no JavaScript yet.**
+Your first real web page. No JavaScript yet: only HTML and CSS.
 
-Build a simple “about me” page with HTML and CSS. One card in the middle, a bit of color, and a layout that still looks okay on a phone.
+> [!PICTURE]
+> A web page is a dollhouse. **HTML** builds the rooms and puts the toys in them: a heading, a few sentences, a list, a link. **CSS** paints the walls and moves the furniture: colours, space, and where the card sits on the page.
 
-> **Scope**
->
-> | | |
-> |---|---|
-> | **Phase** | Phase 2 (HTML & CSS) |
-> | **Hours** | about 2–4 |
-> | **Java path** | **Not** a Java project. Do this before Java Layer A, or early in parallel. Sheets: [HTML](../../sheets/html/README.md) + [CSS](../../sheets/css/README.md) only. |
+## What you build
 
-## Status
+One card in the middle of the page about you: your name, a short bio, a list of things you like and one or two links. On a phone the card still looks good.
 
-This folder is **guides only**. You write every HTML and CSS file yourself.
+## What you need to know
 
-## Where this sits
+- [HTML sheet](../../sheets/html/README.md): tags, headings, paragraphs, lists, links
+- [CSS sheet](../../sheets/css/README.md): linking a stylesheet, flexbox, one media query
 
-[Learning path - Phase 2 (HTML & CSS)](../../docs/LEARNING_PATH.md#phase-2--html--css-sheets--tiny-site)
+A word you do not know? Look it up in the [glossary](../../sheets/start/glossary.md).
 
-## Prerequisites
+## How this folder works
 
-Read these sheets first (short):
+| File or folder | What it is for |
+|----------------|----------------|
+| [step-by-step.md](step-by-step.md) | The build guide. Small steps, each ends with "You should see …" |
+| [starter/](starter/) | **Your desk.** `index.html` and `style.css` with `TODO` comments. Your code goes here |
+| [solution/](solution/) | One finished page. Peek only when you are done or really stuck |
 
-1. [HTML sheet](../../sheets/html/README.md)
-2. [CSS sheet](../../sheets/css/README.md)
+Two files, two jobs:
 
-You do **not** need JavaScript or Java for this project.
+- `index.html` is the **dollhouse**: what is on the page (headings, paragraphs, links).
+- `style.css` is the **paint and furniture**: how it looks (colours, spacing, layout).
 
-## Project goal
+Keep HTML for meaning and CSS for looks.
 
-By the end you should have:
+## Done when
 
-- An `index.html` with a clear heading, a short bio, and a link or two
-- A linked `css/styles.css` that centers a card with flexbox
-- One media query so the page still looks fine on a narrow screen
+- [ ] The browser tab shows your name.
+- [ ] The page has an `<h1>`, a short bio, a list and at least one working link.
+- [ ] `style.css` is linked in `<head>` and changes what you see.
+- [ ] The card sits in the middle of the page (flexbox).
+- [ ] A narrow window changes the look (one `@media` rule).
+- [ ] Your work is committed on your branch (`git add`, `git commit`, `git push`, see the [git sheet](../../sheets/git/README.md)).
 
-## Read this order
-
-| Doc | Read when |
-|-----|-----------|
-| [Project structure](./docs/structure.md) | First - create folders and empty files |
-| [Step-by-step plan](./docs/step-by-step.md) | **Main build guide** - follow while coding |
-
-## First terminal commands
-
-From the repo root:
-
-```bash
-cd projects/01-about-me
-pwd
-mkdir -p css
-touch index.html css/styles.css
-ls
-ls css
-```
-
-Open the HTML file in a browser (double-click, or use Live Server / `npx serve .` if you like).
-
-## Files you will create
-
-```text
-00-static-page/
-├── index.html
-├── css/
-│   └── styles.css
-├── .gitignore
-└── README.md
-```
-
-## Learning goals
-
-When finished, you can explain:
-
-- What `<head>` vs `<body>` is for
-- How `<link>` loads a CSS file
-- Why flexbox is useful for centering a card
-- What a media query changes on a small screen
-
-## Quick start
-
-1. Open [structure.md](./docs/structure.md) and create the files.
-2. Follow [step-by-step.md](./docs/step-by-step.md) phase by phase.
-3. Stop at every checkpoint before moving on.
+> [!CHECK]
+> 1. Which file decides the colour of the heading: `index.html` or `style.css`?
+>    <details><summary>Answer</summary><code>style.css</code>. HTML says <em>what</em> is on the page, CSS says <em>how it looks</em>.</details>
+> 2. Which three flexbox lines put a box in the middle of the page?
+>    <details><summary>Answer</summary><code>display: flex;</code>, <code>justify-content: center;</code> and <code>align-items: center;</code> (plus <code>min-height: 100vh</code> so the page is tall enough).</details>
+> 3. What does <code>@media (max-width: 600px) { … }</code> mean?
+>    <details><summary>Answer</summary>"Use these rules only when the window is 600 pixels wide or less", for example on a phone.</details>
 
 ## Next
 
-When the page looks good on phone and desktop → [Learning path Phase 3](../../docs/LEARNING_PATH.md#phase-3--javascript) (JavaScript drills, then the weather dashboard).
+Start the [step-by-step guide](step-by-step.md). After this project the path goes on with the JavaScript drills, then [Project 2: shopping list](../02-shopping-list-web/README.md).

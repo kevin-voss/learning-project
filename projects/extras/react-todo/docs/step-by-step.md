@@ -1,8 +1,8 @@
 # Step-by-Step — React Todo App
 
-Follow phases in order. Learn **when each phase links a topic** — not all upfront.
+Follow the steps in order. Read a topic **when a step links it**, not all upfront.
 
-**Big picture:** [Roadmap — Project 4](../../../../docs/LEARNING_PATH.md#project-4--react-todo-app)
+**Brief:** [README](../README.md) · **Sheet:** [React](../../../../sheets/react/README.md)
 
 ## How to use this guide
 
@@ -18,7 +18,7 @@ Is this file a component, a style file, or app setup?
 - A **style file** changes how UI looks.
 - **App setup** files let Vite and React start the app.
 
-## Phase 1: Scaffold (≈1 hour)
+## Step 1: Scaffold
 
 **Learn:** [npm: Vite scripts](../../../../sheets/npm/README.md#npm-in-project-4-react) · [React: sections 1–3](../../../../sheets/react/README.md)
 
@@ -29,19 +29,19 @@ Is this file a component, a style file, or app setup?
 **Do:**
 - [ ] Skim [concepts.md](./concepts.md) — vocabulary preview OK
 - [ ] Install React DevTools browser extension
-- [ ] From `projects/` folder:
+- [ ] From the repo root:
 
 ```bash
-npm create vite@latest 04-react-todo-app -- --template react
-cd 04-react-todo-app
+cd projects/extras/react-todo
+npm create vite@latest app -- --template react
+cd app
 npm install
 npm run dev
 ```
 
 - [ ] Open URL shown (usually `http://localhost:5173`)
 - [ ] See default Vite + React page
-- [ ] `git init` and first commit
-- [ ] Copy curriculum `.gitignore` contents if needed (merge with Vite's)
+- [ ] First commit on your branch (Vite's own `.gitignore` already keeps `node_modules/` out). Never run `git init` here: see the [git sheet](../../../../sheets/git/README.md)
 
 **Checkpoint:** Dev server runs; you understand `npm run dev` uses Vite.
 
@@ -49,7 +49,7 @@ Beginner note: `npm run dev` starts a development server. Keep that terminal ope
 
 ---
 
-## Phase 2: Clean slate (≈30 min)
+## Step 2: Clean slate
 
 **Goal:** Remove demo code so the app is yours.
 
@@ -69,7 +69,7 @@ mkdir -p src/components
 
 ---
 
-## Phase 3: Component skeleton (≈2 hours)
+## Step 3: Component skeleton
 
 **Learn:** [React: components & props](../../../../sheets/react/README.md) · [component guide](./component-guide.md)
 
@@ -102,9 +102,9 @@ Beginner check: if a component does not show, check spelling in both the file na
 
 ---
 
-## Phase 4: State — add todos (≈2 hours)
+## Step 4: State — add todos
 
-**Learn:** [React: state & useState](../../../../sheets/react/README.md) · [JS: Project 4](../../../../sheets/javascript/by-project.md#project-4--react-todo-app)
+**Learn:** [React: state & useState](../../../../sheets/react/README.md)
 
 **Build:**
 
@@ -126,7 +126,7 @@ Why state matters: normal variables forget changes when React redraws. State is 
 
 ---
 
-## Phase 5: Display list (≈1 hour)
+## Step 5: Display list
 
 - [ ] `TodoList` receives `todos` prop, maps to `TodoItem`
 - [ ] Each `TodoItem` shows `todo.text` and checkbox
@@ -136,7 +136,7 @@ Why state matters: normal variables forget changes when React redraws. State is 
 
 ---
 
-## Phase 6: Toggle and delete (≈2 hours)
+## Step 6: Toggle and delete
 
 In `App.jsx`:
 
@@ -151,7 +151,7 @@ Pass to `TodoItem`. Wire checkbox and delete button.
 
 ---
 
-## Phase 7: Filters (≈1 hour)
+## Step 7: Filters
 
 **Learn:** [React: lifting state up](../../../../sheets/react/README.md)
 
@@ -165,7 +165,7 @@ Pass to `TodoItem`. Wire checkbox and delete button.
 
 ---
 
-## Phase 8: Inline edit (≈2 hours)
+## Step 8: Inline edit
 
 **Learn:** [React: useRef](../../../../sheets/react/README.md)
 
@@ -181,7 +181,7 @@ Pass to `TodoItem`. Wire checkbox and delete button.
 
 ---
 
-## Phase 9: localStorage (≈1 hour)
+## Step 9: localStorage
 
 **Learn:** [React: useEffect](../../../../sheets/react/README.md)
 
@@ -196,7 +196,7 @@ In `App.jsx`:
 
 ---
 
-## Phase 10: Polish (≈3 hours)
+## Step 10: Polish
 
 - [ ] Style form, list, buttons in `App.css`
 - [ ] Empty state: "No todos yet"
@@ -209,7 +209,7 @@ In `App.jsx`:
 
 ---
 
-## Phase 11: Build and deploy (≈1 hour)
+## Step 11: Build and deploy
 
 **Learn:** [Git: deploy](../../../../sheets/git/README.md) · [TypeScript: what's next](../../../../sheets/typescript/README.md) (optional)
 

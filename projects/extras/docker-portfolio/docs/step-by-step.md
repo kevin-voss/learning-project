@@ -1,183 +1,107 @@
-# Step-by-Step — Docker Portfolio
+# Docker portfolio: step by step
 
-Follow phases in order. Learn topics **when each phase links them** — not all upfront.
+Six small steps. Docker works out of sight, so check each step before you go on.
 
-**Big picture:** [Roadmap — Project 2](../../../../docs/LEARNING_PATH.md#project-2--docker-portfolio)
+**Brief:** [README](../README.md) · **Concepts:** [concepts](concepts.md) · **All code:** [code reference](code-reference.md)
 
-## How to use this guide
+## Step 1: Docker works
 
-Docker can feel strange because you cannot always see what it is doing. Move slowly:
-
-- **Goal** tells you what you are making.
-- **Why** tells you why the step exists.
-- **Command** blocks show what to type.
-- **Checkpoint** tells you what "working" looks like.
-
-## Phase 1: Prerequisites (≈1 hour)
-
-**Learn:** [Docker: concepts](../README.md) (first sections)
-
-**Goal:** Prove Docker is installed and can run a test container.
-
-**Why:** If `hello-world` fails, your portfolio container will fail too.
-
-**Do:**
-- [ ] Install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-- [ ] Start Docker Desktop (whale icon in menu bar / system tray)
-- [ ] Read [concepts.md](./concepts.md) — skim alongside Docker guide
+Install and start [Docker Desktop](https://www.docker.com/products/docker-desktop/) (the whale icon shows it is running). Read [Docker and containers](../../../../tracks/computer-science/index.html#docker-containers) if you have not yet.
 
 ```bash
 cd projects/extras/docker-portfolio
-pwd
 docker --version
 docker run hello-world
 ```
 
-**Apply:** `docker run hello-world` succeeds.
-- [ ] Skim [terminal cheat sheet](./help/terminal-cheatsheet.md)
+You should see "Hello from Docker!". If not, see [troubleshooting](help/troubleshooting.md).
 
-- [ ] Create [Docker Hub](https://hub.docker.com) account
+## Step 2: bring your page
 
-## Phase 2: Build portfolio site (≈2–3 hours)
-
-**Learn:** [JavaScript: Project 2 — paths](../../../../sheets/javascript/by-project.md#project-2--docker-portfolio)
-
-**Goal:** Create a simple website that works before Docker enters the story.
-
-**Why:** Docker should package a working site, not hide broken HTML or CSS.
-
-**Do:**
-You write all HTML/CSS yourself.
+You already built the page in Project 1. Copy it into a `site/` folder here:
 
 ```bash
-cd projects/extras/docker-portfolio
-git init
-mkdir -p css js images
-touch index.html css/styles.css js/app.js
-ls
+mkdir -p site
+cp ../../01-about-me/starter/index.html ../../01-about-me/starter/style.css site/
+ls site
 ```
 
-- [ ] Confirm `index.html`, `css/`, `js/`, and `images/` exist
-- [ ] Create `index.html` with semantic sections (header, main, footer)
-- [ ] Add About, Projects, Skills, Contact sections
-- [ ] Link project cards to your GitHub repos (or placeholders)
-- [ ] Create `css/styles.css` — layout, typography, colors
-- [ ] Use relative paths for all assets
-- [ ] Add `@media` query for mobile
-- [ ] Optional: `js/app.js` for small interactions
+No page of your own yet? Copy from `../../01-about-me/solution/` instead.
 
-**Checkpoint:** Open with Live Server — site looks good, all images load, links work.
+You should see `index.html` and `style.css`. Open `site/index.html` in the browser: it looks like your About-me page.
 
-## Phase 3: Dockerfile (≈1 hour)
+## Step 3: write the recipe
 
-**Learn:** [Docker: Dockerfile & Nginx](../README.md) · [code-reference](./code-reference.md)
+Create a file named `Dockerfile` (capital D, no extension) next to `site/`:
 
-**Goal:** Write a recipe that tells Docker how to package your website.
+```dockerfile
+FROM nginx:alpine
+COPY site/ /usr/share/nginx/html/
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
+```
 
-**Why:** A Dockerfile is like a cooking recipe. Docker follows it to make an image.
+Create `.dockerignore` too (see [code reference](code-reference.md#dockerignore)). What each line means: [concepts](concepts.md#the-dockerfile-lines-you-use).
 
-**Do:**
-- [ ] Create `Dockerfile` in project root (see [code-reference](./code-reference.md))
-- [ ] Use `FROM nginx:alpine`
-- [ ] `COPY . /usr/share/nginx/html`
-- [ ] `EXPOSE 80`
-- [ ] `CMD ["nginx", "-g", "daemon off;"]`
-- [ ] Create `.dockerignore`
+You should see `Dockerfile`, `.dockerignore` and `site/` when you run `ls -a`.
 
-**Checkpoint:** File saved, no typos in instruction names (Dockerfile keywords are uppercase by convention).
-
-## Phase 4: Build and run (≈2 hours)
-
-**Goal:** Turn your recipe into an image, then run that image as a container.
-
-**Why:** The image is the packed website. The container is the running website.
+## Step 4: build and run
 
 ```bash
 docker build -t portfolio:v1 .
-docker images                    # See your image listed
+docker images
 docker run -d -p 8080:80 --name my-portfolio portfolio:v1
-docker ps                        # Container should be "Up"
+docker ps
 ```
 
-- [ ] Visit `http://localhost:8080` — portfolio loads
-- [ ] Click links, check CSS and images
-- [ ] Run `docker logs my-portfolio` — no errors
-- [ ] Stop: `docker stop my-portfolio`
-- [ ] Start again: `docker start my-portfolio`
-- [ ] Remove when done testing: `docker stop my-portfolio && docker rm my-portfolio`
+Open `http://localhost:8080`.
 
-**Checkpoint:** Site works identically inside container.
+You should see your About-me page, with colours and the centred card. `docker ps` shows `my-portfolio` as "Up".
 
-If the browser cannot load it, ask:
+> [!TRY]
+> 1. `docker stop my-portfolio` and reload the browser: the page is gone.
+> 2. `docker start my-portfolio` and reload: it is back.
+> 3. `docker logs my-portfolio`: you see one line per page request.
 
-- Is Docker Desktop running?
-- Does `docker ps` show `my-portfolio`?
-- Did you map `8080` on your computer to `80` in the container with `-p 8080:80`?
-
-## Phase 5: Explore inside container (≈1 hour)
+## Step 5: look inside the box
 
 ```bash
-docker run -d -p 8080:80 --name explore portfolio:v1
-docker exec -it explore /bin/sh
-```
-
-Inside container shell:
-
-```sh
+docker exec -it my-portfolio /bin/sh
 ls /usr/share/nginx/html
 cat /usr/share/nginx/html/index.html
 exit
 ```
 
-- [ ] Confirm your files are where Nginx expects them
-- [ ] Understand container filesystem is separate from your Mac/PC
+You should see your `index.html` and `style.css` inside the container. The container has its own files, apart from your computer.
 
-## Phase 6: Push to Docker Hub (≈1–2 hours)
+> [!TRY]
+> Change the heading in `site/index.html` and reload the browser.
+> You should see **no** change: the image is a snapshot. Build again, remove the old container and run a new one ([code reference](code-reference.md#build-and-run)). Now you see it.
 
-**Learn:** [Git: portfolio links](../../../../sheets/git/README.md#connecting-projects-to-your-portfolio)
+## Step 6 (optional): share the image on Docker Hub
 
-**Build:**
+Make a free account on [hub.docker.com](https://hub.docker.com), then:
+
 ```bash
 docker login
-docker tag portfolio:v1 YOUR_DOCKERHUB_USERNAME/portfolio:v1
-docker push YOUR_DOCKERHUB_USERNAME/portfolio:v1
+docker tag portfolio:v1 YOUR_DOCKERHUB_NAME/portfolio:v1
+docker push YOUR_DOCKERHUB_NAME/portfolio:v1
 ```
 
-- [ ] Image visible on hub.docker.com
-- [ ] Test pull on same machine: remove local image, `docker pull`, `docker run` again
-- [ ] Add Docker Hub badge/link to project README
+You should see the image on your Docker Hub page. Test it: remove the local image, `docker pull` it, and `docker run` it again.
 
-## Phase 7: Document and publish source (≈1 hour)
+## Done
 
-- [ ] Update project README with:
-  - Screenshot of portfolio
-  - `docker build` and `docker run` commands
-  - Link to Docker Hub image
-- [ ] Push source code to GitHub (separate from image — code on GitHub, image on Docker Hub)
-- [ ] Verify `.gitignore` excludes secrets and junk
+Check every box under "Done when" in the [README](../README.md). Clean up and save your work:
 
-## Success checklist
+```bash
+docker stop my-portfolio && docker rm my-portfolio
+git add projects/extras/docker-portfolio
+git commit -m "Ship my about-me page in Docker"
+git push
+```
 
-- [ ] Explain image vs container without notes
-- [ ] Write a basic Dockerfile from memory
-- [ ] Map port 8080 on host to 80 in container
-- [ ] Use `docker ps`, `docker logs`, `docker exec`
-- [ ] Push and pull an image from Docker Hub
-- [ ] Use 10+ terminal commands from cheat sheet
+> [!NOTE]
+> Bonus ideas for later: a custom `nginx.conf`, Docker Compose with a volume for live reload, or a GitHub Action that builds the image on every push.
 
-## Bonus (later)
-
-- Custom `nginx.conf` for pretty URLs
-- Multi-stage build (if you add a build step)
-- Docker Compose with volume for live reload
-- GitHub Actions to build image on push
-
-## Stuck?
-
-- [FAQ](./help/faq.md)
-- [Troubleshooting](./help/troubleshooting.md)
-- [Code reference](./code-reference.md)
-
-## Next project
-
-→ [03-cli-tool](../../../../sheets/nodejs/README.md)
+**Stuck?** [FAQ](help/faq.md) · [Troubleshooting](help/troubleshooting.md) · [Terminal cheat sheet](help/terminal-cheatsheet.md)

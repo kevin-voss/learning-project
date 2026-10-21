@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather dashboard</title>
+    <link rel="stylesheet" href="style.css" />
+    <!-- Order matters: app.js uses functions from api.js and ui.js. -->
+    <script src="api.js" defer></script>
+    <script src="ui.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <main class="app">
+      <h1>Weather</h1>
+
+      <form id="search-form">
+        <label for="search-input" class="visually-hidden">City</label>
+        <input id="search-input" type="text" placeholder="London, São Paulo, Tokyo…" autocomplete="off" />
+        <button type="submit">Search</button>
+      </form>
+
+      <div id="recent-searches" class="recent"></div>
+
+      <p id="loading" class="loading" hidden>Asking the weather service…</p>
+      <p id="error" class="error" role="alert" hidden></p>
+
+      <section id="current-weather" class="card" hidden>
+        <span id="weather-icon" class="icon" aria-hidden="true"></span>
+        <div>
+          <h2 id="city-name"></h2>
+          <p id="temperature" class="temperature"></p>
+          <p id="description"></p>
+          <p class="details">Humidity <span id="humidity"></span> · Wind <span id="wind"></span></p>
+        </div>
+      </section>
+
+      <div id="forecast" class="forecast"></div>
+
+      <p class="credit">Weather data by <a href="https://open-meteo.com/">Open-Meteo.com</a></p>
+    </main>
+  </body>
+</html>

@@ -4,6 +4,8 @@ Programming tasks traded for bathroom cleaning. She solves a task and can explai
 
 Focus: **Java**, from a first real console program to classes, files, and a small parser. Short HTML/CSS/JS and Linux tasks in between. Every task is a real problem (passwords, a shared bill, a calendar, a server, a budget), not a toy exercise with no context.
 
+The same ideas are also on the main learning path, as small projects with a starter and a solution: [password generator](../../projects/05-password-generator/README.md), [shopping list](../../projects/06-shopping-list-java/README.md), [shared expenses](../../projects/07-shared-expenses/README.md), [calendar conflicts](../../projects/08-calendar-conflicts/README.md), [household budget](../../projects/09-household-budget/README.md) and [calculator](../../projects/12-calculator/README.md).
+
 **Current:** [Round 1](round-01/README.md) — 28 Sep 2026 through Sunday **11 Oct 2026, 12:00**.
 
 ## Read this order

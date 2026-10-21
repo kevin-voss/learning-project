@@ -1,0 +1,75 @@
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  box-sizing: border-box;
+  background: #f4efe6;
+  color: #2b2b2b;
+  font-family: system-ui, sans-serif;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+h1 {
+  margin: 0;
+  color: #2f6f5e;
+}
+
+#status {
+  min-height: 1.5em;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+/* CSS grid: 3 columns and 3 rows of the same size. */
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 90px);
+  grid-template-rows: repeat(3, 90px);
+  gap: 6px;
+}
+
+.cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2.5rem;
+  font-weight: bold;
+  background: #f4efe6;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.cell:hover {
+  background: #e8e0d2;
+}
+
+#reset {
+  margin-top: 1.25rem;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  background: #2f6f5e;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+@media (max-width: 400px) {
+  .board {
+    grid-template-columns: repeat(3, 72px);
+    grid-template-rows: repeat(3, 72px);
+  }
+}

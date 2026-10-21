@@ -1,74 +1,68 @@
-# Projects — sheets then small builds
+# Projects: the ladder
 
-Repo order (Java focus): **[../docs/LEARNING_PATH.md](../docs/LEARNING_PATH.md)**.
+Small builds, one after the other. Each project uses what the last one taught you and adds **one** new skill.
 
-**Pattern:** read a short sheet (5–20 min) → build the linked project (hours, not weeks) → checkpoint → next.
+> [!PICTURE]
+> A ladder. Every rung is one project. You only ever reach for the next rung, never two at once. And you always stand on the rung you just climbed.
 
-Docs only: you write all code. No pre-filled apps. Each project is a small sheet→build loop, measured in hours.
+The order and the time for each project live on the [learning path](../hub/index.html). This page shows how the projects fit together.
 
----
+## The ladder
 
-## Start here
+| # | Project | New skill | Reuses |
+|---|---------|-----------|--------|
+| 1 | [About-me page](01-about-me/README.md) | HTML + CSS: a page, a card, flexbox, one media query | — |
+| 2 | [Shopping list in the browser](02-shopping-list-web/README.md) | DOM, click events, localStorage | arrays, objects (drills) |
+| 3 | [Tic-tac-toe](03-tic-tac-toe/README.md) | game state, 2D array, win check | DOM, events |
+| 4 | [Weather dashboard](04-weather-dashboard/README.md) | `fetch`, JSON, `async` / `await` | DOM, localStorage |
+| 5 | [Password generator](05-password-generator/README.md) | first Java program, `Scanner`, `Random` | loops, `if` / `else` |
+| 6 | [Shopping list in Java](06-shopping-list-java/README.md) | classes, `ArrayList` | the same app as #2, a new language |
+| 7 | [Shared expenses](07-shared-expenses/README.md) | `HashMap`, money in cents | classes, lists |
+| 8 | [Calendar conflicts](08-calendar-conflicts/README.md) | sorting, merging intervals | lists, classes |
+| 9 | [Household budget](09-household-budget/README.md) | CSV files, exceptions, JUnit tests | maps, classes |
+| 10 | [Java weather CLI](10-java-weather-cli/README.md) | `HttpClient`, Maven, JSON in Java | the weather API from #4 |
+| 11 | [Parcel database](11-parcel-database/README.md) | Postgres in Docker, SQL, JDBC | Maven, classes |
+| 12 | [Calculator](12-calculator/README.md) | recursion, parsing | tests |
 
-1. Follow **[LEARNING_PATH](../docs/LEARNING_PATH.md)** Phases 0–2 first (CS + HTML/CSS), unless you already know those.
-2. Open **[docs/roadmap.md](../docs/LEARNING_PATH.md)** for phase checklists.
-3. When a phase says **Learn**, open that sheet, then code.
+Two stories run through the ladder. The **shopping list** (#2 web, #6 Java) shows that one idea works in two languages. The **parcel** (#11 database) carries on into ParcelPilot in the [Spring Boot track](../tracks/spring-boot/README.md).
+
+## Extras
+
+Not on the main path. Do them when you are curious, or skip them.
+
+| Extra | New skill | Reuses |
+|-------|-----------|--------|
+| [Docker portfolio](extras/docker-portfolio/README.md) | Docker image, Nginx, port mapping | your About-me page from #1 |
+| [React todo app](extras/react-todo/README.md) | React components, state, hooks | the add/tick/remove idea from #2 |
+
+## How a project folder works
+
+Every project folder looks the same, so you never get lost:
 
 ```text
-Sheet  →  Build  →  Checkpoint  →  Next
+02-shopping-list-web/
+├── README.md        ← the brief: what you build, what you need to know, "Done when", a check
+├── step-by-step.md  ← the build guide: small steps, each ends with "You should see …"
+├── starter/         ← YOUR DESK: files with TODO comments. Your code goes here
+├── solution/        ← one finished answer. Peek only when you are done or really stuck
+└── help/            ← sometimes: troubleshooting, extra facts
 ```
 
----
+1. Read the `README.md`. Look at "What you need to know" and open the sheets you have not read yet.
+2. Open `step-by-step.md` and work in `starter/`. Finish each step before the next one.
+3. Check every box under "Done when". Then compare with `solution/`. Different code can be right too.
+4. Save your work on your branch ([git sheet](../sheets/git/README.md)):
 
-## Project order (learning spine)
+```bash
+git add projects/02-shopping-list-web/starter
+git commit -m "Finish project 2: shopping list"
+git push
+```
 
-| # | Project | After you read… | Hours | Spine |
-|---|---------|-----------------|-------|-------|
-| 00 | [Static page](01-about-me) | [html](../sheets/html/) + [css](../sheets/css/) sheets | 2–4 | Phase 2 |
-| 01 | [Weather dashboard](04-weather-dashboard) | JS drills + HTTP (CS) | 6–10 | Phase 3 |
-| — | Java foundation (no numbered build yet) | [java](../sheets/java/) Layers A–C + [server-layers](../sheets/java/server-layers.md) | sheets | Phase 4 Layers A–C |
-| 05 | [Java weather CLI](10-java-weather-cli) | Java Layers A–C + hub REST | 3–5 | Gate C |
-| 02 | [Docker portfolio](extras/docker-portfolio) | CS Docker + [docker](extras/docker-portfolio/README.md) apply notes | 4–6 | Phase 5 / Layer D |
-| 03 | [Node weather CLI](../sheets/nodejs/README.md) *(optional)* | [nodejs](../sheets/nodejs/) + [npm](../sheets/npm/) | 4–8 | Phase 6 |
-| 04 | [React todo](extras/react-todo) *(optional)* | [react](../sheets/react/) sheet | 6–10 | Phase 6 |
+A word you do not know? Look it up in the [glossary](../sheets/start/glossary.md).
 
-**Main path after 00 → 01 → Java foundation → 05:** Layer D ([server-layers](../sheets/java/server-layers.md)) → [`tracks/spring-boot`](../tracks/spring-boot/). Not React.
-
-Optional 03/04 are Phase 6 side paths. Skip them on the Java career track.
-
----
-
-## Sheets (topic library)
-
-| Sheet | Folder | Used by |
-|-------|--------|---------|
-| HTML | [docs/html/](../sheets/html/) | Project 00 (Phase 2) |
-| CSS | [docs/css/](../sheets/css/) | Project 00 (Phase 2) |
-| Java (Layers A–C + Layer D picture) | [docs/java/](../sheets/java/) · [server-layers](../sheets/java/server-layers.md) | Foundation → 05 → Spring Boot |
-| Setup | [docs/setup/](../sheets/setup/) | Early projects |
-| JavaScript (apply notes) | [docs/javascript/](../sheets/javascript/) | Project 01 |
-| Git (apply only) | [docs/git/](../sheets/git/) | Links CS Git |
-| Docker (apply only) | [docs/docker/](extras/docker-portfolio/README.md) | Links CS Docker · project 02 |
-| Node / npm | [docs/nodejs/](../sheets/nodejs/) · [npm](../sheets/npm/) | Optional 03 |
-| React / TS | [docs/react/](../sheets/react/) · [typescript](../sheets/typescript/) | Optional 04 |
-
-Deep theory for networks, Docker, Git lives in **`tracks/computer-science/`**. Not recopied here.
-
----
-
-## Beginner rule
-
-1. Type commands yourself.  
-2. `pwd` / `ls` before creating files.  
-3. Stop at checkpoints.  
-4. Prefer one small win per session.
-
----
-
-## After the spine projects
-
-**Main (Java):** Gates A–D → [`tracks/spring-boot`](../tracks/spring-boot/) (Layer F).
-
-**Optional (Phase 6):** [typescript](../sheets/typescript/) if you took React.
-
-**→ [Roadmap](../docs/LEARNING_PATH.md)** · **→ [LEARNING_PATH](../docs/LEARNING_PATH.md)**
+> [!CHECK]
+> 1. Where does your own code go?
+>    <details><summary>Answer</summary>In the project's <code>starter/</code> folder, on your own branch.</details>
+> 2. When do you open <code>solution/</code>?
+>    <details><summary>Answer</summary>When every "Done when" box is checked, or when you are really stuck after trying.</details>

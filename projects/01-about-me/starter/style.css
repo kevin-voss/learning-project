@@ -1,0 +1,12 @@
+/* TODO 5: body — pick a background colour and a font.
+   Then use flexbox to put the card in the middle of the page:
+   display, min-height, justify-content, align-items. */
+body {
+}
+
+/* TODO 5: .card — a white box: background, padding, max-width, border-radius. */
+.card {
+}
+
+/* TODO 6: one media query for narrow screens (max-width: 600px).
+   Change something you can see: less padding, smaller h1, ... */

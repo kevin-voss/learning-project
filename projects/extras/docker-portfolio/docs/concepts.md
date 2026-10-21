@@ -1,132 +1,53 @@
-# Concepts — Docker Portfolio
+# Docker portfolio: concepts
 
-Keywords explained for beginners. Read before writing a Dockerfile.
+Only what this project needs. The big idea (what Docker is, image vs container, why it beats "works on my machine") lives in the CS lesson [Docker and containers](../../../../tracks/computer-science/index.html#docker-containers). Read that first.
 
-## Docker
+## Nginx: the waiter
 
-**Simple:** Shipping containers for software.
+> [!PICTURE]
+> Nginx is a waiter. A browser asks for `index.html`, Nginx brings it from the kitchen shelf.
 
-Your portfolio needs a web server (Nginx) and your HTML/CSS files. Docker bundles both so anyone with Docker can run:
+- The official `nginx:alpine` image is small and ready to use.
+- Inside the container Nginx listens on **port 80**.
+- It serves every file in `/usr/share/nginx/html`. Copy your page there and the default setup works. No config needed.
 
-```bash
-docker run -p 8080:80 your-image
+## Port mapping: the tunnel
+
+A container is closed off. `-p 8080:80` digs a tunnel from your computer into it:
+
+```text
+Browser → localhost:8080 → Docker → container port 80 → Nginx → index.html
 ```
 
-and see your site at `http://localhost:8080`.
+Left of the colon is **your** computer, right is the **container**. Port 8080 busy? Use `-p 9090:80` and open `localhost:9090`.
 
-See also [Docker guide](../README.md) for the full reference.
+## The Dockerfile lines you use
 
-## Image vs container
+| Line | What it does here |
+|------|-------------------|
+| `FROM nginx:alpine` | Start from the small official Nginx image |
+| `COPY site/ /usr/share/nginx/html/` | Put your page where Nginx looks |
+| `EXPOSE 80` | Note for humans: this container uses port 80 |
+| `CMD ["nginx", "-g", "daemon off;"]` | Start Nginx in the foreground, so the container keeps running |
 
-| | Image | Container |
-|---|-------|-----------|
-| **State** | Read-only template | Running (or stopped) instance |
-| **Analogy** | Cookie cutter | Cookie |
-| **Create with** | `docker build` | `docker run` |
-| **Count** | One image | Many containers from same image |
-
-```bash
-docker build -t portfolio:v1 .    # Creates IMAGE
-docker run -d -p 8080:80 portfolio:v1   # Creates CONTAINER
-docker run -d -p 8081:80 portfolio:v1   # Second CONTAINER, same IMAGE
-```
-
-## Dockerfile
-
-A recipe file named exactly `Dockerfile` (no extension) in your project root.
-
-Common instructions:
-
-| Instruction | Purpose |
-|-------------|---------|
-| `FROM` | Base image to start from |
-| `COPY` | Copy files from your computer into image |
-| `RUN` | Run a command while building (install packages) |
-| `EXPOSE` | Document which port the app uses |
-| `CMD` | Default command when container starts |
-| `LABEL` | Metadata (author, version) |
-
-Each line adds a **layer**. Docker caches layers — put things that change rarely (FROM) first, your site files (COPY) later.
-
-## Nginx
-
-**Simple:** A waiter that serves your website files to visitors.
-
-- Listens on port 80 inside the container
-- Serves files from `/usr/share/nginx/html` in the official `nginx:alpine` image
-- Industry standard for static sites — fast and small
-
-You don't configure Nginx deeply for this project. Copy your files to the right folder and the default config works.
-
-## Port mapping
-
-Containers are isolated. Port mapping creates a tunnel:
-
-```
-Browser → localhost:8080 → Docker → container:80 → Nginx
-```
-
-```bash
-docker run -p 8080:80 IMAGE
-#           host:container
-```
-
-| Port | Typical use |
-|------|-------------|
-| 80 | HTTP inside container |
-| 443 | HTTPS |
-| 8080 | Common host port for local testing |
-| 3000 | React dev server (Project 4) |
+Each line adds a **layer**. Docker remembers layers, so put the lines that rarely change (`FROM`) first and your page (`COPY`) late.
 
 ## `.dockerignore`
 
-Tells Docker what **not** to send when building. Like `.gitignore` for the build context.
+Like `.gitignore`, but for `docker build`. It keeps `.git`, `docs/` and notes out of the image so it stays small and clean. Never ignore `site/`.
 
-Exclude: `.git`, `README.md`, `node_modules`, docs you don't need in production.
+## Relative paths
+
+Inside the container the page sits in a different folder than on your computer. So links must be **relative**: `href="style.css"`, never `C:\Users\...` or `/Users/you/...`. The About-me page already does this.
 
 ## Docker Hub
 
-Registry to store and share images. Workflow:
+Docker Hub is to images what GitHub is to code: you `docker push` an image, others `docker pull` it. The tag says whose it is: `your-name/portfolio:v1`.
 
-1. Build locally
-2. Tag with your username: `username/portfolio:v1`
-3. `docker push`
-4. Others `docker pull`
+> [!CHECK]
+> 1. In which folder does Nginx look for your page?
+>    <details><summary>Answer</summary><code>/usr/share/nginx/html</code> inside the container.</details>
+> 2. Why does the Dockerfile need <code>daemon off;</code>?
+>    <details><summary>Answer</summary>A container stops when its main program ends. Normally Nginx moves itself to the background, so the container would stop at once. <code>daemon off;</code> keeps it in front.</details>
 
-## Static site requirements
-
-For Docker + Nginx, your site must:
-
-- Use **relative paths**: `css/styles.css` not `C:\Users\...`
-- Work when opened from site root (`index.html` at top level)
-- Use relative paths that work inside Docker
-
-## Virtualization (big picture)
-
-```
-Your computer
-  └── Docker Engine
-        ├── Container: portfolio (Nginx + your HTML)
-        └── Container: something else later
-```
-
-Containers share the host OS kernel — lighter than full virtual machines.
-
-## Workflow diagram
-
-```
-Write HTML/CSS
-    → Test locally (Live Server)
-    → Write Dockerfile
-    → docker build
-    → docker run -p 8080:80
-    → Test in browser
-    → docker push (optional)
-    → Document in README
-```
-
-## Further reading
-
-- [Step-by-step plan](./step-by-step.md)
-- [Terminal cheat sheet](./help/terminal-cheatsheet.md)
-- [Code reference](./code-reference.md)
+Back to the [step-by-step guide](step-by-step.md).

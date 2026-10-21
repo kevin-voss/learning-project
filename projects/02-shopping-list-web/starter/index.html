@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shopping list</title>
+    <link rel="stylesheet" href="style.css" />
+    <!-- defer: the script waits until the HTML below exists. -->
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <main class="card">
+      <h1>Shopping list</h1>
+
+      <!-- The ids below are name tags. app.js finds the elements by them. -->
+      <form id="add-form">
+        <label for="item-input" class="visually-hidden">New item</label>
+        <input id="item-input" type="text" placeholder="Milk, bread, apples…" autocomplete="off" />
+        <button type="submit">Add</button>
+      </form>
+
+      <!-- app.js fills this list. Leave it empty here. -->
+      <ul id="list"></ul>
+
+      <p id="count"></p>
+    </main>
+  </body>
+</html>

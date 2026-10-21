@@ -12,7 +12,7 @@ Canonical overview: [README.md](../../README.md). Learning order: [docs/LEARNING
 
 | Bucket | Path | Notes |
 |--------|------|--------|
-| Hub | `hub/` | Landing page + `scripts/` (`catalog.mjs` fills the landing catalog from disk, `build-site.mjs` builds the Vercel site, `check-links.mjs` guards it) — no course files at repo root |
+| Hub | `hub/` | Landing page + `path.mjs` (the one ordered step list) + `progress.js` (localStorage) + `scripts/` (`catalog.mjs`, `build-site.mjs`, `check-links.mjs`) — no course files at repo root |
 | Drills | `drills/javascript/` | `tasks.js` / `tasks.test.js`; root **`Makefile`** → `bun test` |
 | Tracks | `tracks/java/`, `tracks/computer-science/`, `tracks/architecture/`, `tracks/spring-boot/`, `tracks/ai/`, `tracks/certifications/aws-genai-pro/` | Static or markdown curricula — **one canonical home per topic** (link, don’t duplicate) |
 | Projects | `projects/` | Sheets → builds. Order/scopes follow `docs/LEARNING_PATH.md` (Java Layers A–F). `00`/`01` web, `05` Layer C, `02` Layer D, `03`/`04` optional Phase 6 |
@@ -31,4 +31,4 @@ Canonical overview: [README.md](../../README.md). Learning order: [docs/LEARNING
 - **Plain JS** in drills and static tracks unless noted.
 - **Structure:** See [structure.mdc](./structure.mdc) — max 5 files per folder, ~400-line soft cap.
 - When scope spans buckets, update README / LEARNING_PATH cross-links.
-- The landing catalog (Tracks, Sheets, Projects, Practice, Students, Docs) is generated: add folders, then run `make site`. Never hand-edit between the `catalog:start` / `catalog:end` markers in `hub/index.html`. Only the Roadmap section there is hand-written.
+- Students follow one list: `hub/path.mjs`. New content goes on the path by adding a step there (never rename a step `id`, progress is saved by id). The `path`, `students` and `catalog` regions of `hub/index.html` are generated: run `make site`, never hand-edit between their markers.

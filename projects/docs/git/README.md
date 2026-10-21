@@ -1,28 +1,32 @@
 # Git — apply sheet
 
-**Scope:** anytime after setup. Apply only; CS holds the theory.
+**Scope:** right after [Get set up](../setup/getting-started.md). Apply only; the [CS Git lesson](../../../tracks/computer-science/index.html#git-collaboration) holds the theory.
 
 Git saves snapshots of your project so you can undo mistakes, push backups to GitHub, and show employers real history. Use it on every project here after each meaningful change.
 
-## Commands for these projects
+## Your daily loop in this repo
+
+You cloned this repository in [Get set up](../setup/getting-started.md) and work on your own branch. You never run `git init` here: the repository already exists.
 
 ```bash
-git init                          # start tracking a project folder
 git status                        # what changed?
-git add .                         # stage files for the next snapshot
-git commit -m "Add weather form"  # save a snapshot (imperative message)
-git remote add origin <url>       # point at your GitHub repo (once)
-git push -u origin main           # upload (first time); later: git push
-git pull                          # download updates
+git add .                         # pick everything for the next snapshot
+git commit -m "Add weather form"  # save a snapshot (say what it does)
+git push                          # upload your branch to GitHub
+git pull origin main              # get new lessons from main
 git log --oneline                 # recent history
 ```
 
-Typical Project 1 start:
+First push of your branch: `git push -u origin your-name`. After that, `git push` is enough.
+
+## A project of your own
+
+Want a project in its own GitHub repository (for a portfolio)? Make a folder **outside** this repo, then:
 
 ```bash
-cd projects/01-weather-dashboard
+mkdir ~/code/weather-dashboard && cd ~/code/weather-dashboard
 git init && git add . && git commit -m "Initial commit"
-# create empty GitHub repo, then:
+# create an empty repository on GitHub, then:
 git remote add origin https://github.com/YOUR_USERNAME/weather-dashboard.git
 git branch -M main && git push -u origin main
 ```
@@ -35,7 +39,7 @@ Never commit `.env`, API keys, `node_modules/`, `.DS_Store`, or `dist/`. Each pr
 
 Open the **CS roadmap Git lesson** (not this sheet for deep theory):
 
-**[tracks/computer-science/index.html](../../../tracks/computer-science/index.html)** — find the Git lesson in the roadmap.
+**[Git and collaboration](../../../tracks/computer-science/index.html#git-collaboration)** in the computer-science track.
 
 Also useful: **[tracks/java/topics/git-basics/](../../../tracks/java/topics/git-basics/)** for a short Java-track walkthrough.
 

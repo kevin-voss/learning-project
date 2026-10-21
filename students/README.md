@@ -9,7 +9,7 @@ Think of this folder like a big school building.
 
 Everyone can open every room. Looking at how someone else solved a task is allowed and useful.
 
-Sheets, projects and courses that are the same for everyone live elsewhere: see the [landing page](../hub/index.html) (tracks, sheets, projects, practice). This folder is only for tasks that belong to **one** student.
+Lessons and projects that are the same for everyone are in the [learning path](../hub/index.html). This folder is only for extra tasks that belong to **one** student.
 
 ## What is inside one task box
 
@@ -33,29 +33,23 @@ students/
 
 ## Read on the web, work on your computer
 
-The website shows every task, including the code in `starter/` and `solution/`. To **do** a task you need the repository on your computer:
+The website shows every task, including the code in `starter/` and `solution/`. On the landing page, open **My tasks** and pick your name.
 
-```bash
-git clone https://github.com/kevin-voss/learning-project.git
-cd learning-project
-git switch -c becky/04-branches        # your own branch: <name>/<task>
-```
-
-Then:
+To **do** a task you need this repository on your computer and your own branch. If you have not done that yet, follow [Get set up](../projects/docs/setup/getting-started.md) first.
 
 1. Open `students/<your-name>/<subject>/<task>/README.md` and read it.
 2. Read `TASK.md`.
 3. Write your code in `starter/`. Run it there (for Java: `javac *.java` then `java <ClassName>`).
 4. Done and tested? Compare with `solution/`.
-5. Set the status of the task to `done` in your subject `README.md`, then save your work:
+5. Set the status of the task to `done` in your subject `README.md`, then save and upload your work:
 
 ```bash
 git add students/becky
 git commit -m "feat(becky): solve 04-branches"
-git push -u origin becky/04-branches
+git push
 ```
 
-Your teacher looks at the branch (or a pull request) and merges it.
+Your teacher looks at your branch (or a pull request) and merges it.
 
 ## Add a new task (teacher)
 
@@ -73,7 +67,7 @@ Same thing without make:
 node students/scripts/new-task.mjs --student becky --subject computer-science --title "Loops" --number 05
 ```
 
-`NUMBER` is optional. Without it the next free number is used (`01`, `02`, …). New students and new subjects are created on the fly. Every index page gets a new line, and the landing page lists the task in its **Students** section.
+`NUMBER` is optional. Without it the next free number is used (`01`, `02`, …). New students and new subjects are created on the fly. Every index page gets a new line, and the landing page lists the task under **My tasks**.
 
 Templates for all generated files live in `_template/` (not on the website). Change them there and every **new** task uses the change.
 

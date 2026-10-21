@@ -1,6 +1,8 @@
-// Writes the generated part of hub/index.html (between the catalog markers):
-// every track, sheet, project, practice set, doc and student task found on disk.
-// Nothing is listed by hand, so a new folder shows up on the landing page by itself.
+// Writes the generated parts of hub/index.html:
+//   path      the learning path from hub/path.mjs (checked: every link must exist)
+//   students  every student and task found under students/
+//   catalog   "look it up": every course, sheet, project, practice set and doc on disk
+// Only the path order is written by hand; new folders show up by themselves.
 //
 // Runs inside build-site.mjs and students/scripts/new-task.mjs. By hand, from anywhere:
 //   node hub/scripts/catalog.mjs
@@ -8,11 +10,10 @@
 import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
 import { basename, dirname, join, relative, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
+import { STAGES } from '../path.mjs'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const HUB = join(ROOT, 'hub')
-const START = '<!-- catalog:start -->'
-const END = '<!-- catalog:end -->'
 const SKIP = new Set(['node_modules', 'dist', 'target', 'solutions', '_template', 'scripts'])
 // Authoring notes: still published, just not listed for learners.
 const HIDDEN = new Set(['tracks/ai/content/README.md'])
@@ -156,21 +157,6 @@ function cardDirs(root, filter = () => true) {
     .flatMap((path) => (entryOf(path) ? [path] : cardDirs(path)))
 }
 
-function section({ id, eyebrow, title, intro, body }) {
-  return `<section class="section" id="${id}">
-      <div class="container">
-        <div class="section-head">
-          <div>
-            <div class="eyebrow">${eyebrow}</div>
-            <h2>${title}</h2>
-          </div>
-          <p>${intro}</p>
-        </div>
-        ${body}
-      </div>
-    </section>`
-}
-
 const grid = (cards) => `<div class="card-grid">
           ${cards.join('\n          ')}
         </div>`
@@ -209,61 +195,111 @@ function studentCard(studentDir) {
           </article>`
 }
 
-export function renderCatalog() {
-  const students = cardDirs('students').filter((dir) => existsSync(join(ROOT, dir, 'README.md')))
-  const sections = [
-    {
-      id: 'tracks', eyebrow: 'Deep courses', title: 'Tracks',
-      intro: 'One canonical home per subject. Sheets and projects link here instead of repeating it.',
-      body: grid(cardDirs('tracks').map((dir) => card(dir))),
-    },
-    {
-      id: 'sheets', eyebrow: 'Read in 5–20 minutes', title: 'Sheets',
-      intro: 'Short topic pages you read right before a project. <a href="../projects/docs/README.md">Sheet library</a> · <a href="../projects/docs/roadmap.md">Project roadmap</a>.',
-      body: grid(cardDirs('projects/docs').map((dir) => card(dir, SHEET_TAGS[basename(dir)] ?? 'js'))),
-    },
-    {
-      id: 'projects', eyebrow: 'Build in hours, not weeks', title: 'Projects',
-      intro: 'Small builds in roadmap order. Each has a step-by-step guide and help pages. <a href="../projects/README.md">Projects overview</a>.',
-      body: grid(cardDirs('projects', (name) => /^\d+-/.test(name)).map((dir) => card(dir, 'projects'))),
-    },
-    {
-      id: 'practice', eyebrow: 'Repetition', title: 'Practice',
-      intro: 'Drills and task programs to run locally after you clone the repo.',
-      body: grid([...cardDirs('drills'), ...cardDirs('programs')].map((dir) => card(dir, 'js'))),
-    },
-    {
-      id: 'students', eyebrow: 'Personal tasks', title: 'Students',
-      intro: 'Every student has a folder with one box per task: read me, task, starter, solution. Everyone can see every task. <a href="../students/README.md">How tasks work</a>.',
-      body: grid(students.map(studentCard)),
-    },
-    {
-      id: 'docs', eyebrow: 'Reference', title: 'Docs',
-      intro: 'The roadmap in full and the long-term learner profile.',
-      body: grid([
-        `<article class="card cs">
-            <div class="card-path">docs/LEARNING_PATH.md</div>
-            <h3><a href="../docs/LEARNING_PATH.md">Learning path</a></h3>
-            <p>The one ordered roadmap with phases, gates and the project map.</p>
-          </article>`,
-        ...cardDirs('docs').map((dir) => card(dir)),
-      ]),
-    },
-  ]
-  return sections.map(section).join('\n\n    ')
+// Turns a path href into the URL the site serves, the way the browser sees it:
+// .md becomes .html, index.html / README.html become the folder.
+function siteURL(path) {
+  const [file, hash = ''] = path.split('#')
+  return `/${file.replace(/\.md$/, '.html').replace(/(index|README)\.html$/, '')}${hash ? `#${hash}` : ''}`
 }
 
+// Every step, numbered, with its site URL. Optional steps get no number.
+export function pathSteps() {
+  let n = 0
+  return STAGES.flatMap((stage) => stage.steps.map((step) => {
+    if (step.href) {
+      const [file, hash] = step.href.split('#')
+      if (!existsSync(join(ROOT, file))) throw new Error(`path step "${step.id}": ${file} does not exist`)
+      if (hash && !CS_LESSONS.has(hash)) throw new Error(`path step "${step.id}": no computer-science lesson "${hash}"`)
+    }
+    return { ...step, stage: stage.id, optional: Boolean(stage.optional), n: stage.optional ? null : ++n, url: step.href ? siteURL(step.href) : null }
+  }))
+}
+
+// Lesson ids of the computer-science track, so '#lesson-id' links can be checked.
+function lessonIds(dir, ids = new Set()) {
+  for (const entry of readdirSync(join(ROOT, dir), { withFileTypes: true })) {
+    const path = join(dir, entry.name)
+    if (entry.isDirectory()) lessonIds(path, ids)
+    else for (const m of read(path).matchAll(/\bid:\s*['"]([a-z0-9-]+)['"]/g)) ids.add(m[1])
+  }
+  return ids
+}
+const CS_LESSONS = lessonIds('tracks/computer-science/js/data')
+
+const TYPE_LABEL = { read: 'Read', do: 'Do', check: 'Check' }
+
+function renderPath() {
+  const steps = pathSteps()
+  return STAGES.map((stage, index) => {
+    const items = steps.filter((step) => step.stage === stage.id).map((step) => {
+      const label = step.href ? `<a href="${href(step.href)}">${escape(step.title)}</a>` : `<span>${escape(step.title)}</span>`
+      return `<li class="step ${step.type}" id="${step.id}" data-step="${step.id}"${step.optional ? ' data-optional' : ''}>
+            <input type="checkbox" aria-label="Done: ${escape(step.title)}">
+            <span class="step-num">${step.n ?? '+'}</span>
+            <span class="step-type">${TYPE_LABEL[step.type]}</span>
+            <span class="step-title">${label}</span>
+            ${step.time ? `<span class="step-time">${escape(step.time)}</span>` : ''}
+          </li>`
+    })
+    return `<details class="stage" data-stage="${stage.id}"${stage.optional ? ' data-optional' : ''}>
+        <summary><span class="stage-num">${stage.optional ? 'Extra' : `Stage ${index + 1}`}</span><span class="stage-title">${escape(stage.title)}</span><span class="stage-count"></span></summary>
+        <p class="stage-goal">${escape(stage.goal)}</p>
+        <ol class="steps">
+          ${items.join('\n          ')}
+        </ol>
+      </details>`
+  }).join('\n      ')
+}
+
+function renderStudents() {
+  const students = cardDirs('students').filter((dir) => existsSync(join(ROOT, dir, 'README.md')))
+  const options = students.map((dir) => `<option value="${escape(basename(dir))}">${escape(pageTitle(join(dir, 'README.md')))}</option>`)
+  return `<label class="student-pick">I am <select id="student-select"><option value="">pick your name</option>${options.join('')}</select></label>
+        <div class="card-grid">
+          ${students.map((dir) => studentCard(dir).replace('<article class="card student">', `<article class="card student" data-student="${escape(basename(dir))}">`)).join('\n          ')}
+        </div>`
+}
+
+function renderLibrary() {
+  const groups = [
+    ['Courses', 'Big topics with many lessons.', cardDirs('tracks').map((dir) => card(dir))],
+    ['Short sheets', 'One topic on one page.', cardDirs('projects/docs').map((dir) => card(dir, SHEET_TAGS[basename(dir)] ?? 'js'))],
+    ['Projects', 'Every build with all its help pages.', cardDirs('projects', (name) => /^\d+-/.test(name)).map((dir) => card(dir, 'projects'))],
+    ['Practice', 'Drills and task rounds.', [...cardDirs('drills'), ...cardDirs('programs')].map((dir) => card(dir, 'js'))],
+    ['Docs', 'Background for teachers.', [
+      `<article class="card cs">
+            <div class="card-path">docs/LEARNING_PATH.md</div>
+            <h3><a href="../docs/LEARNING_PATH.md">Learning path in detail</a></h3>
+            <p>Why the path has this order, with the gates explained.</p>
+          </article>`,
+      ...cardDirs('docs').map((dir) => card(dir)),
+    ]],
+  ]
+  return groups.map(([title, intro, cards]) => `<h3 class="library-title">${title}</h3>
+        <p class="library-intro">${intro}</p>
+        ${grid(cards)}`).join('\n        ')
+}
+
+const REGIONS = { path: renderPath, students: renderStudents, catalog: renderLibrary }
+
+// Fills every <!-- name:start --> … <!-- name:end --> region of hub/index.html.
 export function writeCatalog() {
   const file = join(HUB, 'index.html')
   const html = readFileSync(file, 'utf8')
-  const start = html.indexOf(START)
-  const end = html.indexOf(END)
-  if (start === -1 || end < start) throw new Error(`no catalog markers in ${relative(process.cwd(), file)}`)
-  const next = `${html.slice(0, start)}${START}\n    ${renderCatalog()}\n    ${html.slice(end)}`
+  let next = html
+  for (const [name, render] of Object.entries(REGIONS)) {
+    const start = `<!-- ${name}:start -->`
+    const end = `<!-- ${name}:end -->`
+    const a = next.indexOf(start)
+    const b = next.indexOf(end)
+    if (a === -1 || b < a) throw new Error(`no ${name} markers in ${relative(process.cwd(), file)}`)
+    const indent = next.slice(next.lastIndexOf('\n', a) + 1, a)
+    next = `${next.slice(0, a)}${start}\n${indent}${render()}\n${indent}${next.slice(b)}`
+  }
   if (next !== html) writeFileSync(file, next)
   return next !== html
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   console.log(writeCatalog() ? 'Updated hub/index.html' : 'hub/index.html is up to date')
 }

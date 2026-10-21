@@ -1,50 +1,97 @@
-# Getting Started
+# Get set up
 
-**Scope:** Early web projects (00–01) and shared tools. Java setup lives in [`tracks/java`](../../../tracks/java/README.md) (Ubuntu, Java 21).
+**Time:** about 1 hour, once. **You need:** a computer and internet. Nothing else.
 
-Install tools **when the spine needs them**. You do not need everything on day one.
+At the end you have a terminal, an editor, Git, and this whole repository on your computer.
 
-| Tool | Needed for | Install when |
-|------|------------|--------------|
-| VS Code + browser | Projects 00–01 | Phase 2 |
-| Git | All projects | Phase 2 (apply sheet links CS) |
-| Live Server (or similar) | 00–01 | Phase 2–3 |
-| Java 21 + Ubuntu terminal | Java Layers A–C · project 05 | Phase 4 |
-| Docker Desktop | Project 02 · Layer D Postgres | Phase 5 / Layer D |
-| Node.js + npm | Optional 03–04 only | Phase 6 if you take it |
-| React DevTools | Optional 04 | Phase 6 if you take it |
+## 1. Open a terminal
 
-**Order:** [`LEARNING_PATH`](../../../docs/LEARNING_PATH.md) · project checklists: [`roadmap`](../roadmap.md)
+The terminal is a window where you type commands instead of clicking.
 
----
+| Your computer | What to do |
+|---------------|------------|
+| Mac | Press `Cmd + Space`, type `Terminal`, press Enter. |
+| Windows | Install Ubuntu through WSL: open PowerShell **as administrator**, run `wsl --install`, restart, then open the **Ubuntu** app. Use Ubuntu for everything in this course. |
+| Linux | Open the **Terminal** app. |
 
-## What you already need to know
+Type `pwd` and press Enter. It prints the folder you are in. That is your first command.
 
-**For Phase 2–3 (web):** basic HTML/CSS ideas help. JS drills cover arrays, functions, loops.
+## 2. Install Git
 
-**For Phase 4 (Java):** start from the [java foundation sheet](../java/README.md). No Spring yet.
-
----
-
-## First commands (web)
+Git saves snapshots of your work. Check if you have it:
 
 ```bash
-pwd
-ls
-cd projects/00-static-page
+git --version
 ```
 
-## First commands (Java later)
+If you see a version number, skip ahead. If not:
+
+| Your computer | Command |
+|---------------|---------|
+| Mac | `xcode-select --install` (click Install in the window that opens) |
+| Ubuntu / WSL / Linux | `sudo apt update && sudo apt install -y git` |
+
+Then tell Git your name and email (any email you use for GitHub):
 
 ```bash
-java --version
-javac --version
+git config --global user.name "Your Name"
+git config --global user.email "you@example.com"
 ```
 
-Both should report `21.x`. Details: [tracks/java README](../../../tracks/java/README.md).
+## 3. Install an editor
 
----
+Install [Visual Studio Code](https://code.visualstudio.com/). Open it, go to **Extensions** (the four squares on the left) and install:
 
-## Checkpoint
+- **Live Server** (shows your web pages and reloads them when you save)
+- On Windows also **WSL** (lets VS Code open folders inside Ubuntu)
 
-You know which tools belong to web vs Java vs optional Node/React.
+## 4. Get this repository
+
+```bash
+mkdir -p ~/code
+cd ~/code
+git clone https://github.com/kevin-voss/learning-project.git
+cd learning-project
+code .
+```
+
+VS Code opens with every lesson, project and task as files. The website shows the same files, just easier to read.
+
+## 5. Make your own branch
+
+A branch is your own copy of the work. Name it after yourself:
+
+```bash
+git switch -c your-name
+```
+
+Save your work like this, as often as you like:
+
+```bash
+git add .
+git commit -m "Finish project 00"
+git push -u origin your-name
+```
+
+Get new lessons from your teacher:
+
+```bash
+git pull origin main
+```
+
+## Install later, when the path says so
+
+You do not need these yet. The path tells you when.
+
+| Tool | When | Where it is explained |
+|------|------|------------------------|
+| Bun | Stage 5, JavaScript drills | [drills README](../../../drills/javascript/README.md) |
+| Java 21 | Stage 6, Java | [Java getting started](../../../tracks/java/topics/getting-started/index.html) |
+| Docker | Stage 9, servers and Docker | [Docker sheet](../docker/README.md) |
+| Node.js + npm | Extras only (projects 03 and 04) | [Node.js sheet](../nodejs/README.md) |
+
+## Check
+
+- `git --version` prints a version.
+- `cd ~/code/learning-project` and `ls` show `README.md`, `projects`, `tracks` and the other folders.
+- `git branch` shows your name with a `*` in front.

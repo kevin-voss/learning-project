@@ -136,7 +136,7 @@ DS.demos.observability = function (container) {
   window.obsDemoPrev = () => {
     phase = Math.max(phase - 1, 0);
     resetSignals();
-    for (let i = 0. I <= phase. I += 1) runPhase();
+    for (let i = 0; i <= phase; i += 1) runPhase();
     render();
   };
 

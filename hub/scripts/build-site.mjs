@@ -1,5 +1,6 @@
 // Builds the static site Vercel serves (see /vercel.json).
-// Refreshes the hub catalog, copies the content buckets into dist/site, turns
+// Refreshes the landing page (path, students, catalog), writes hub/path.json for
+// the step bar, copies the content buckets into dist/site, turns
 // every .md into an .html page (rendered in the browser with marked) and gives
 // every source file (.java, .py, …) a readable code page next to it.
 // Run from anywhere: node hub/scripts/build-site.mjs
@@ -7,7 +8,7 @@
 import { copyFileSync, existsSync, mkdirSync, readdirSync, rmSync, writeFileSync, readFileSync } from 'node:fs'
 import { basename, dirname, extname, join, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { writeCatalog } from './catalog.mjs'
+import { pathSteps, writeCatalog } from './catalog.mjs'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const OUT = join(ROOT, 'dist/site')
@@ -47,6 +48,7 @@ function shell(title, file, body, head = '') {
     <nav class="sheet-nav"><a href="/hub/">← Learning Project</a><span>${escape(file)}</span></nav>
 ${body}
   </main>
+  ${PROGRESS}
 </body>
 </html>
 `
@@ -78,12 +80,12 @@ function codePage(source, file) {
   <script>hljs.highlightAll()</script>`, `<link rel="stylesheet" href="${HLJS}/styles/github.min.css">`)
 }
 
-// Pages of the tracks get a small way back to the hub unless they link there already.
-const HUB_LINK = '<a class="hub-pill" href="/hub/" style="position:fixed;left:12px;bottom:12px;z-index:9999;padding:6px 12px;border-radius:999px;background:#172033;color:#fff;font:600 13px/1.2 system-ui,sans-serif;text-decoration:none;opacity:.85">← Learning Project</a>'
+// Every page outside the hub loads the progress script: it shows which path
+// step the page is and lets the student tick it (see hub/progress.js).
+const PROGRESS = '<script src="/hub/progress.js" defer></script>'
 
-function withHubLink(html) {
-  if (/href="[^"]*hub\/(index\.html)?"/.test(html) || !html.includes('</body>')) return html
-  return html.replace('</body>', `${HUB_LINK}\n</body>`)
+function withProgress(html) {
+  return html.includes('</body>') ? html.replace('</body>', `${PROGRESS}\n</body>`) : html
 }
 
 // Source files next to a README are listed under it, so starter/ and solution/
@@ -114,11 +116,14 @@ for (const file of BUCKETS.flatMap((bucket) => walk(bucket))) {
     }
   } else if (file.endsWith('.html')) {
     const html = readFileSync(source, 'utf8').replace(MD_LINK, '$1$2.html$3"')
-    writeFileSync(target, file.startsWith('hub/') ? html : withHubLink(html))
+    writeFileSync(target, file.startsWith('hub/') ? html : withProgress(html))
   } else {
     copyFileSync(source, target)
     if (CODE[extname(file)]) writeFileSync(`${target}.html`, codePage(readFileSync(source, 'utf8'), file))
   }
 }
+
+const steps = pathSteps().map(({ id, n, title, url, optional }) => ({ id, n, title, url, optional }))
+writeFileSync(join(OUT, 'hub/path.json'), JSON.stringify(steps))
 
 console.log(`Built ${relative(process.cwd(), OUT) || '.'}`)

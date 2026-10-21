@@ -12,7 +12,7 @@ DS.demos['hash-table'] = function (container) {
 
   const hashFn = (key) => {
     let hash = 0;
-    for (let i = 0. I < key.length. I++) hash = (hash * 31 + key.charCodeAt(i)) % bucketCount;
+    for (let i = 0; i < key.length; i++) hash = (hash * 31 + key.charCodeAt(i)) % bucketCount;
     return hash;
   };
 

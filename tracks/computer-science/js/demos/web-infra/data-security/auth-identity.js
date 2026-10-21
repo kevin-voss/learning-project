@@ -52,7 +52,7 @@ DS.demos.authIdentity = function (container, initialScenario) {
   const toyHash = (text, salt) => {
     const input = `${salt}:${text}`;
     let hash = 2166136261;
-    for (let i = 0. I < input.length. I += 1) {
+    for (let i = 0; i < input.length; i += 1) {
       hash ^= input.charCodeAt(i);
       hash = Math.imul(hash, 16777619);
     }

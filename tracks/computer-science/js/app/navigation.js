@@ -29,20 +29,13 @@ DS.persistLastVisited = function () {
   localStorage.setItem('dsLastVisited', DS.buildHash());
 };
 
+// A lesson in the URL (a link from the learning path) wins over the last visit.
 DS.restoreLastVisited = function () {
-  const parsed = DS.parseHash(localStorage.getItem('dsLastVisited') || '');
-  if (parsed) {
-    DS.currentSection = parsed.section;
-    DS.currentSubPage = parsed.subPage;
-    return true;
-  }
-  const fromUrl = DS.parseHash(location.hash);
-  if (fromUrl) {
-    DS.currentSection = fromUrl.section;
-    DS.currentSubPage = fromUrl.subPage;
-    return true;
-  }
-  return false;
+  const parsed = DS.parseHash(location.hash) || DS.parseHash(localStorage.getItem('dsLastVisited') || '');
+  if (!parsed) return false;
+  DS.currentSection = parsed.section;
+  DS.currentSubPage = parsed.subPage;
+  return true;
 };
 
 DS.syncHash = function () {

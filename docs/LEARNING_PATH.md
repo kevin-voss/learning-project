@@ -2,7 +2,7 @@
 
 One order. One home per topic. **Read a short sheet → build a small related project → next step.**
 
-Open the landing page anytime: [`hub/index.html`](../hub/index.html). It lists this roadmap plus every track, sheet, project, drill and student task.
+**Students do not need this file.** They follow the numbered steps on the landing page ([`hub/index.html`](../hub/index.html), list in [`hub/path.mjs`](../hub/path.mjs)). This file explains *why* the path has this order and what each gate means. When you change the order here, change `hub/path.mjs` too.
 
 ---
 
@@ -234,4 +234,4 @@ Detail checklist: [`projects/docs/roadmap.md`](../projects/docs/roadmap.md).
 - Max **5 files** per directory (subfolders OK).
 - Soft cap **~400 lines** per source/lesson file.
 - Root = meta only (`README`, `AGENTS`, `Makefile`, `vercel.json`, `.gitignore`) — content lives in buckets.
-- New folders show up on the landing page by themselves after `make site`.
+- New folders show up under **Look it up** on the landing page after `make site`. To put them on the path, add a step to `hub/path.mjs`.

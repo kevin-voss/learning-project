@@ -38,8 +38,8 @@ DS.demos.sorting = function (container) {
   const makeBubbleFrames = (values) => {
     const work = [...values];
     const out = [];
-    for (let i = 0. I < work.length - 1. I++) {
-      for (let j = 0. J < work.length - 1 - i. J++) {
+    for (let i = 0; i < work.length - 1; i++) {
+      for (let j = 0; j < work.length - 1 - i; j++) {
         out.push({ type: 'compare', a: j, b: j + 1, msg: `Compare index ${j} and ${j + 1}` });
         if (work[j] > work[j + 1]) {
           const left = work[j];
@@ -57,7 +57,7 @@ DS.demos.sorting = function (container) {
   const makeInsertionFrames = (values) => {
     const work = [...values];
     const out = [];
-    for (let i = 1. I < work.length. I++) {
+    for (let i = 1; i < work.length; i++) {
       const key = work[i];
       let j = i - 1;
       out.push({ type: 'range', active: [i], msg: `Pick ${key} as the key value` });
@@ -78,10 +78,10 @@ DS.demos.sorting = function (container) {
   const makeSelectionFrames = (values) => {
     const work = [...values];
     const out = [];
-    for (let i = 0. I < work.length - 1. I++) {
+    for (let i = 0; i < work.length - 1; i++) {
       let min = i;
       out.push({ type: 'range', active: [i], msg: `Start position ${i}. Look for the smallest remaining value` });
-      for (let j = i + 1. J < work.length. J++) {
+      for (let j = i + 1; j < work.length; j++) {
         out.push({ type: 'compare', a: min, b: j, msg: `Compare current min ${work[min]} with ${work[j]}` });
         if (work[j] < work[min]) {
           min = j;

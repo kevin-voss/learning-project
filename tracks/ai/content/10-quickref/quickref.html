@@ -11,19 +11,18 @@
 <link rel="stylesheet" href="../../css/base.css">
 <link rel="stylesheet" href="../../css/components.css">
 <link rel="stylesheet" href="../../css/flow.css">
-<link rel="stylesheet" href="../../css/print.css">
 </head>
 <body>
 
 <div id="progress"></div>
 
 <header class="topbar">
-  <button class="tbtn" id="nav-toggle" type="button" aria-label="Toggle navigation">☰</button>
+  <button class="tbtn" id="nav-toggle" type="button" aria-label="Open contents" aria-controls="toc" aria-expanded="false">☰</button>
   <a class="brand" href="../../index.html"><b>ai</b>·field-guide</a>
+  <a class="hub-link" href="../../../../hub/index.html">Learning hub</a>
   <div class="tools">
-    <input id="toc-filter" type="search" placeholder="filter · /" aria-label="Filter topics">
+    <button class="tbtn search-btn" id="search-open" type="button" aria-label="Search the guide"><span>Search</span><kbd>⌘K</kbd></button>
     <button class="tbtn" id="expand-all" type="button">expand</button>
-    <button class="tbtn" id="print-btn" type="button">print</button>
   </div>
 </header>
 
@@ -32,9 +31,10 @@
 <main class="main">
   <div class="content">
     <header class="topic-head">
-      <div class="kicker">Part 5 · Proof & production · 22/24</div>
+      <div class="kicker">Part 6 · Proof &amp; production · 31/31</div>
       <h1>The 30-second layer</h1>
-      <p class="lead">One line per topic: the default, the exceptions, the trap. Skim here, jump to the full reasoning only on demand.</p>
+      <p class="lead">One line per topic: the default, the exception, the trap. Skim here; follow the links for the reasoning.</p>
+      <p class="chapter-summary"><b>In this chapter</b> Recall the key system boundary, failure mode and first measurement to inspect for each layer of an AI product.</p>
     </header>
 
   <div class="grid2">
@@ -81,7 +81,7 @@
         <li><b>hard limits</b> → embedder max ≠ target, truncation is silent</li>
         <li><b>precision-critical</b> → contextual chunks · <b>logs</b> → fixed</li>
       </ul>
-      <a class="xl" href="#chunking">chunking →</a>
+      <a class="xl" href="../03-rag-search/chunking.html">chunking →</a>
     </div>
     <div class="wcard">
       <h4>search</h4>
@@ -133,14 +133,14 @@
       <ul>
         <li><b>ingest</b> → S3, SQS, idempotent workers, DLQ at 3 strikes</li>
         <li><b>agents</b> → Fargate + RDS checkpoints + Bedrock, VPC-only</li>
-        <li><b>streams</b> → bypass the API gateway 29s limit, ALB or WebSocket</li>
+        <li><b>streams</b> → ALB or WebSocket, not API Gateway (29 s cap)</li>
       </ul>
       <a class="xl" href="../09-systems/architecture.html">architecture →</a> · <a class="xl" href="../09-systems/aws.html">aws →</a>
     </div>
     <div class="wcard">
       <h4>security &amp; evals</h4>
       <ul>
-        <li><b>least privilege tools + human gates</b> → your two cheapest controls</li>
+        <li><b>least-privilege tools + human gates</b> → the two cheapest controls</li>
         <li><b>output filter</b> → block external URLs and images, always</li>
         <li><b>before v2 of anything</b> → golden set + the pyramid in CI</li>
       </ul>
@@ -149,22 +149,26 @@
   </div>
 
   <div class="beat checklist">
-    <div class="beat-h"><span class="bt">Checklist</span><span class="bh">before you ship, across the whole sheet</span></div>
+    <h2 class="beat-h" id="checklist-before-you-ship-across-the-whole-sheet"><span class="bt">Checklist</span><span class="bh">before you ship, across the whole sheet</span></h2>
     <ul>
-      <li><b>Retrieval first:</b> retrieval quality caps generation quality, fix <a class="xl" href="#rag-overview">retrieval</a> before blaming the model.</li>
-      <li><b>Measure before you tune:</b> a <a class="xl" href="../08-evals/evals.html">golden set</a> makes every change a fact instead of a guess.</li>
-      <li><b>Boring plumbing:</b> queues, Postgres and <a class="xl" href="../05-agents-orchestration/ops.html">checkpoints</a> beat clever, always.</li>
-      <li><b>Meter the output:</b> set max_tokens on every call, output is the pricey meter.</li>
-      <li><b>Validate at the edge:</b> check <a class="xl" href="../04-tools-mcp/tool-calling.html">tool output</a> server-side, write errors the model can act on.</li>
+      <li><b>Retrieval first:</b> retrieval quality caps generation quality; fix <a class="xl" href="../03-rag-search/rag-overview.html">retrieval</a> before blaming the model.</li>
+      <li><b>Measure before you tune:</b> a <a class="xl" href="../08-evals/evals.html">golden set</a> turns every change into a fact.</li>
+      <li><b>Boring plumbing:</b> queues, Postgres and <a class="xl" href="../05-agents-orchestration/ops.html">checkpoints</a> beat clever.</li>
+      <li><b>Meter the output:</b> max_tokens on every call.</li>
+      <li><b>Validate at the edge:</b> check <a class="xl" href="../04-tools-mcp/tool-calling.html">tool output</a> server-side, with errors the model can act on.</li>
       <li><b>Least privilege:</b> scoped tools plus human gates on anything that writes.</li>
-      <li><b>Filter the exits:</b> block external URLs and images in the output filter, always.</li>
+      <li><b>Filter the exits:</b> block external URLs and images in output.</li>
     </ul>
   </div>
   
+    <section class="references" aria-labelledby="primary-sources"><h2 id="primary-sources">Primary sources</h2><ul><li><a href="https://arxiv.org/abs/1706.03762" rel="noreferrer">Attention Is All You Need</a></li><li><a href="https://arxiv.org/abs/2005.11401" rel="noreferrer">Retrieval-Augmented Generation</a></li></ul></section>
+
+    <section class="lab-check" aria-labelledby="try-verify-explain"><h2 id="try-verify-explain">Try, verify, explain</h2><ol><li>Choose any two layers. For each, state the system boundary, a likely failure, the first metric or log to inspect and the owner of the control.</li><li>Check the "output is the pricey meter" line on your own app: log input tokens, output tokens and max_tokens for 20 requests, price them at your model's rates, and note the output share of cost and how often max_tokens truncates.</li><li>Explain why retrieval quality caps generation quality: what does even a perfect model do when top-k misses the answer chunk, and which metric, context recall or faithfulness, exposes it?</li></ol></section>
+
     <nav class="pager" id="pager"></nav>
 
     <footer class="footer">
-      learning-project · tracks/ai · print this page from the browser dialog · diagrams load mermaid from CDN once online
+      learning-project · tracks/ai · press ⌘K or / to search every chapter · diagrams load Mermaid from a CDN when online
     </footer>
   </div>
 </main>

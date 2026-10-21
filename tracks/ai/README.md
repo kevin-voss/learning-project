@@ -1,67 +1,29 @@
-# AI engineering track
+# AI engineering field guide
 
-A step-by-step dark field guide for AI systems: LLM internals, tokens and cost,
-context budgeting, RAG and search, tool calling, MCP, AG-UI, agents and orchestration,
-memory, prompt-injection defense, guardrails, evals, and AWS-style production systems.
+A step-by-step technical guide for advanced learners, from model internals through retrieval, tools, agents, safety, evaluation, and production systems. Each topic is a complete plain HTML page with stable deep links and a shared navigation shell.
 
-## Open it
+## Open and navigate
 
-- Double-click `index.html` (works offline from `file://`), or serve the folder
-  (`python3 -m http.server`) and open `http://localhost:8000`.
-- The landing page links all 24 topics in reading order. Each topic is one plain
-  HTML page under `content/` with prev/next links at the bottom: read them like a book.
-- The sidebar (toggle with `☰`) lists every topic, `/` filters it, and it collapses
-  so pages use the full screen width.
-- Mermaid diagrams load their library from a CDN on first view and render at full
-  content width. Offline, the readable diagram source shows instead.
-
-## Print / PDF
-
-Every topic page prints cleanly on its own: light palette, navigation hidden, code
-blocks and solutions expanded. Use the `print` button in the top bar or the browser
-print dialog. Print page by page (or "open all in tabs") — there is deliberately no
-giant single-file PDF mode.
+- From the repository root, run `python3 -m http.server` and open `http://localhost:8000/tracks/ai/index.html`. The interactive guide uses ES modules that browsers may block through `file://`; lesson HTML remains readable without JavaScript.
+- Start with `content/01-foundations/llm-internals.html`; use the contents panel (☰, collapsible) and previous/next links to follow the 31-chapter sequence in six parts.
+- Search: press ⌘K / Ctrl+K or `/` on any page. It fuzzy-matches chapter titles, section headings, mechanism cards and glossary terms, and falls back to full-text matches with snippets. Results jump straight to the section or open the matching card. On phones the contents panel opens as a drawer.
+- Interactive explainers (for example the sampling playground in chapter 01 and the KV-cache calculator in chapter 06) are plain HTML in the lesson; `js/runtime/widgets.js` only computes values. Motion is limited to scroll reveal, bar fills and slow animated loop edges, and it is disabled under `prefers-reduced-motion`.
+- This guide is the single source: there is no print, export or download mode.
+- The Learning hub is linked from the index. The legacy `cheatsheet.html` route redirects to the index.
+- Checks (from the repository root): `node tracks/ai/scripts/verify.mjs` for routes, anchors, assets, source size and Mermaid declarations; `node --test tracks/ai/scripts/tests/runtime.test.mjs` for diagram sizing, search and navigation helpers; `python3 -B tracks/ai/scripts/tests/example_boundaries_test.py` for the authored Python examples.
 
 ## Structure
 
 | Path | Role |
-|------|------|
-| `index.html` | Landing page: reading order + links to all topics |
-| `css/tokens.css` | Design tokens (near-black palette, one gold accent) |
-| `css/base.css` | Reset, typography, topbar, sidebar, pager |
-| `css/components.css` | Code cards, tables, tooltips, cards, diagrams |
-| `css/flow.css` | Topic stages: why → solutions → when → example |
-| `css/print.css` | Light print palette, page-break hygiene |
-| `js/app.js` | Sidebar + prev/next nav, code toggle/copy, tooltips, accordions, mermaid |
-| `content/README.md` | Authoring contract + section map (read before editing pages) |
-| `content/01-foundations/` … `content/10-quickref/` | One HTML page per topic |
+| --- | --- |
+| `index.html` | Six-part contents list and clear starting point |
+| `content/<part>/<topic>.html` | One authored lesson per topic |
+| `css/` | Shared warm-paper theme, components (incl. steps, stack, stats, bars, widgets, search), and topic rhythm |
+| `js/app.js` | Stable entry point for the runtime modules in `js/runtime/` (navigation, content, diagrams, search, widgets; `data.js` is the chapter order) |
+| `content/README.md` | Lesson authoring contract |
 
-Reading arc: foundations → tokens/context → RAG/search → tools/MCP → agents →
-memory → security → evals → production → quick reference.
+Lessons keep advanced technical detail. Use headings that fit the subject, then pace the explanation from a central model through mechanisms, trade-offs, examples, and a hands-on check. Shared classes and semantic HTML keep the guide coherent without forcing every topic into an identical outline.
 
-## Page rhythm
+Mermaid 11.12.0 is loaded from jsDelivr when available. The source remains on the page if loading or rendering fails. Diagrams open at a readable size: wide graphs shrink to the frame but never below 78% (about 14px labels, scrolling instead), and small graphs grow to at most 115%. Controls show the current zoom and offer Fit (whole diagram), 100%, zoom steps, and an accessible expanded view. Keep new diagrams within about 1000×650px at 100%. Runtime regression checks use Node's built-in test runner; no additional test package is needed.
 
-Every topic page follows the same loop, so the guide stays predictable:
-
-1. title + one-line description
-2. **Why you need it** — what breaks without this
-3. **Solutions** — the real alternatives, one expandable card each (details inside)
-4. **When to use · when not** — pros and cons side by side
-5. **Example** — a real scenario with a short code sample
-6. optional **Watch out** and **Remember** closers
-
-## Adding or editing a topic
-
-Read `content/README.md` first (page skeleton, stage markup, density rules,
-hard writing rules: no em-dashes, no semicolons in prose, ≤ 5 files per folder).
-Pages are plain HTML with a fixed shell — no build step, no templating.
-
-## Scope notes and deferrals
-
-- AWS **exam** content lives in [`../certifications/aws-genai-pro/`](../certifications/aws-genai-pro/).
-  This track covers engineering patterns only and links there for exam prep.
-- Audio/video generation is intentionally light (one subsection in multimodal):
-  this is a side path, the Java track is the main spine.
-- No fine-tuning hands-on labs here: decision guidance only, labs belong to project sheets.
-
-**Repo spine:** [`docs/LEARNING_PATH.md`](../../docs/LEARNING_PATH.md) · this track is optional depth.
+**Repo spine:** [`docs/LEARNING_PATH.md`](../../docs/LEARNING_PATH.md) · this guide is optional advanced depth.

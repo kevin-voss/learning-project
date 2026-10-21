@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Training &amp; alignment pipeline · AI Engineering Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../css/tokens.css">
+<link rel="stylesheet" href="../../css/base.css">
+<link rel="stylesheet" href="../../css/components.css">
+<link rel="stylesheet" href="../../css/flow.css">
+</head>
+<body>
+
+<div id="progress"></div>
+
+<header class="topbar">
+  <button class="tbtn" id="nav-toggle" type="button" aria-label="Open contents" aria-controls="toc" aria-expanded="false">☰</button>
+  <a class="brand" href="../../index.html"><b>ai</b>·field-guide</a>
+  <a class="hub-link" href="../../../../hub/index.html">Learning hub</a>
+  <div class="tools">
+    <button class="tbtn search-btn" id="search-open" type="button" aria-label="Search the guide"><span>Search</span><kbd>⌘K</kbd></button>
+    <button class="tbtn" id="expand-all" type="button">expand</button>
+  </div>
+</header>
+
+<nav class="sidebar" id="toc" aria-label="Topics"></nav>
+
+<main class="main">
+  <div class="content">
+    <header class="topic-head">
+      <div class="kicker">Part 1 · Model foundations · 03/31</div>
+      <h1>Training &amp; alignment pipeline</h1>
+      <p class="lead">An assistant is a pretrained next-token predictor reshaped by a stack of post-training stages, each with its own data, loss and characteristic failure. Knowing which stage produced a behavior tells you which lever can change it.</p>
+      <p class="chapter-summary"><b>In this chapter</b> Trace the pipeline from curated tokens to a deployed assistant, derive what SFT, RLHF, DPO, RLVR, distillation and LoRA each optimize, and predict how each one fails.</p>
+    </header>
+
+  <h2 class="stage-label sl-why" id="why-you-need-it">Why the pipeline matters</h2>
+  <div class="why">
+    <ul>
+      <li><b>Attribution:</b> sycophancy, refusals, verbosity and confident reasoning errors each trace to a specific stage and signal. Without that map you patch symptoms in prompts.</li>
+      <li><b>Model selection:</b> "base", "instruct", "reasoning" and "distilled" checkpoints differ in which stages ran. That predicts how they take prompts, templates and fine-tuning.</li>
+      <li><b>Your own tuning:</b> a LoRA run or a DPO pass is a small post-training stage. It inherits every failure mode below, at a scale where you own the eval. Whether to tune at all is covered in <a class="xl" href="finetune-decide.html">fine-tune vs RAG vs prompt</a>.</li>
+    </ul>
+  </div>
+
+  <h2 class="stage-label sl-sol" id="solutions">Mechanism</h2>
+  <p class="lead">Pretraining buys capability with compute. Every later stage spends far less compute to move probability mass toward behaviors someone can label, rank or verify.</p>
+
+  <ol class="steps">
+    <li><b>Pretrain</b><span>next-token loss on trillions of curated tokens</span></li>
+    <li><b>Mid-train</b><span>continued pretraining on a higher-quality, domain or long-context mix</span></li>
+    <li><b>SFT</b><span>imitate demonstrations in a chat template, loss on response tokens</span></li>
+    <li><b>Preference + RL</b><span>RLHF, DPO or verifiable rewards, KL-tethered to a reference</span></li>
+    <li><b>Distill / adapt</b><span>compress into students, LoRA for task deltas</span></li>
+  </ol>
+
+  <figure class="diagram">
+    <div class="diag-body"><pre class="mermaid">
+flowchart TB
+  subgraph RL["RLHF: reward model + RL"]
+    direction LR
+    P1["Pairs&lt;br/&gt;x, y_w, y_l"] --> RM["Reward model&lt;br/&gt;Bradley-Terry"]
+    RM --> PPO["PPO rollouts&lt;br/&gt;score, update"]
+    R1["SFT reference&lt;br/&gt;KL penalty"] --> PPO
+    PPO --> O1["Policy"]
+  end
+  subgraph DP["DPO: one offline loss"]
+    direction LR
+    P2["Pairs&lt;br/&gt;x, y_w, y_l"] --> L["Logistic loss&lt;br/&gt;on log-ratios"]
+    R2["SFT reference&lt;br/&gt;log-probs"] --> L
+    L --> O2["Policy"]
+  end
+  RL ~~~ DP</pre></div><figcaption>RLHF turns preferences into a learned reward and optimizes it online with sampling; DPO folds the same KL-constrained objective into a classification loss over fixed pairs, so the reference model replaces both the reward model and the rollout loop.</figcaption></figure>
+
+  <div class="sol-list">
+
+    <div class="sol-item open">
+      <button class="sol-head" type="button">
+        <span class="sol-no">A</span>
+        <span class="sol-name">Pretraining + mid-training</span>
+        <span class="sol-sum">data quality and the tokens-to-params ratio decide raw capability</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li><b>Objective:</b> minimize the <button class="term" type="button" data-tip="Cross-entropy of the true next token: −Σ log p(x_t | x_&lt;t), averaged over every position in the batch.">next-token loss</button> over every position. No labels, no task: capability is whatever helps predict text.</li>
+          <li><b>Curation is most of the work:</b> URL and language filtering, heuristic and classifier quality filters, exact and near-duplicate removal (MinHash-style), PII and toxicity filtering, and decontamination against eval sets. Duplicates waste compute and raise memorization.</li>
+          <li><b>Compute-optimal scaling:</b> training FLOPs are roughly 6 × params × tokens. Chinchilla found params and tokens should grow equally, about 20 tokens per parameter: 70B on 1.4T tokens beat 280B Gopher at the same compute.</li>
+          <li><b>Overtraining is deliberate:</b> Chinchilla optimizes training compute, not serving cost. Meta reports Llama 3 8B kept improving far past its ~200B-token optimum, on over 15T tokens, because a smaller model is cheaper for every future request.</li>
+          <li><b>Mid-training:</b> continued pretraining with the same loss on a reweighted mix, typically more code, math, synthetic reasoning or domain text, often with long-context extension and a decaying learning rate. Recipes are lab-specific and sparsely published.</li>
+        </ul>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><b>pro:</b> the only stage that adds broad knowledge and skill at scale.</li>
+          <li><b>con:</b> the result is a document continuer: it may answer a question with more questions. Base models need few-shot prompts.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+    <div class="sol-item">
+      <button class="sol-head" type="button">
+        <span class="sol-no">B</span>
+        <span class="sol-name">Supervised fine-tuning</span>
+        <span class="sol-sum">imitate demonstrations, train only on what the assistant says</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li><b>Data:</b> prompt-response pairs and multi-turn dialogs, human-written or model-generated then filtered. Small curated sets shift format and tone; quality and coverage beat volume.</li>
+          <li><b><button class="term" type="button" data-tip="Model-specific serialization of system/user/assistant turns into one token stream with special role and end-of-turn tokens.">Chat template</button>:</b> turns are serialized with role markers and an end-of-turn token. The model learns to emit that stop token; serve with a different template and it rambles or leaks role tags.</li>
+          <li><b>Loss masking:</b> the same next-token loss, but prompt, system and user tokens get label −100 (ignored). Gradient flows only from assistant tokens, so the model learns to answer, not to imitate users.</li>
+        </ul>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><b>pro:</b> stable, cheap, easy to debug: the loss is a direct likelihood.</li>
+          <li><b>con:</b> imitation caps quality at the demonstrations and teaches confident style even where the model lacks the knowledge, one driver of hallucination.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+    <div class="sol-item">
+      <button class="sol-head" type="button">
+        <span class="sol-no">C</span>
+        <span class="sol-name">Preference optimization: RLHF and DPO</span>
+        <span class="sol-sum">learn from "A is better than B", tethered to the SFT model by a KL term</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li><b>Shared objective:</b> maximize E[r(x, y)] − β · KL(π<sub>θ</sub> ‖ π<sub>ref</sub>). The <button class="term" type="button" data-tip="Penalty on divergence between the policy's token distribution and a frozen reference (usually the SFT model). β sets how far optimization may drift.">KL penalty</button> keeps the policy near the reference so it cannot drift into text the reward was never trained on.</li>
+          <li><b>RLHF (InstructGPT recipe):</b> fit a reward model on ranked pairs with a Bradley-Terry loss, then run PPO: sample responses, score them, update with a clipped policy gradient and a learned value baseline. Four models live in memory: policy, reference, reward, value.</li>
+          <li><b>DPO:</b> the KL-constrained optimum implies reward = β · log(π<sub>θ</sub>/π<sub>ref</sub>) up to a per-prompt constant. Substituting into Bradley-Terry gives loss = −log σ(β[(log-ratio of chosen) − (log-ratio of rejected)]). No reward model, no sampling.</li>
+          <li><b>DPO intuition:</b> push up the chosen response's likelihood relative to the reference and push down the rejected one's. Each pair's gradient is weighted by how wrongly the implicit reward currently orders it.</li>
+        </ul>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><span class="wlabel gotcha">gotcha</span> <b>con:</b> <button class="term" type="button" data-tip="The policy maximizes the proxy reward through features the reward model over-scores (length, flattery, hedging) instead of the intended behavior.">reward hacking</button>. A learned reward is a proxy; PPO finds its blind spots, commonly length, flattery and agreement with the user. Watch proxy reward rising while held-out human preference falls.</li>
+          <li><b>con:</b> DPO is offline. It never sees its own new mistakes, can lower the absolute likelihood of both responses while widening the margin, and is sensitive to β and to how far the pairs sit from the policy's own outputs.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+    <div class="sol-item">
+      <button class="sol-head" type="button">
+        <span class="sol-no">D</span>
+        <span class="sol-name">RL with verifiable rewards</span>
+        <span class="sol-sum">reward checkable answers, let the model discover how to reason</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li><b>Signal:</b> a program, not a person, scores the output: exact-match math answers, unit tests for code, schema checks. DeepSeek-R1-Zero used only rule-based accuracy and format rewards, explicitly avoiding neural reward models for reasoning because they get hacked at scale.</li>
+          <li><b>GRPO:</b> sample a group of G answers per prompt and set each one's <button class="term" type="button" data-tip="How much better a sampled output scored than expected. Positive advantages raise that output's token probabilities, negative ones lower them.">advantage</button> to (r<sub>i</sub> − mean(r)) / std(r). The group mean replaces PPO's value network, saving memory; a KL term to a reference remains.</li>
+          <li><b>Emergence:</b> with enough steps, response length grows and self-checking, backtracking and longer chains appear without reasoning demonstrations. Production recipes add cold-start SFT and later preference stages for readability.</li>
+        </ul>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><b>pro:</b> the reward is hard to fool when the verifier is sound, so RL can run far longer than against a learned reward.</li>
+          <li><b>con:</b> only covers tasks with a checker. Weak verifiers get hacked too (tests that pass trivially, answers parsed out of malformed text), and a group where every sample scores the same gives zero advantage and no gradient.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+    <div class="sol-item">
+      <button class="sol-head" type="button">
+        <span class="sol-no">E</span>
+        <span class="sol-name">AI feedback + distillation</span>
+        <span class="sol-sum">models write the critiques, the labels and the training data</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li><b>Constitutional AI:</b> a supervised phase where the model critiques and revises its own responses against written principles and is fine-tuned on the revisions, then an RL phase where an AI judge produces the preference labels (RLAIF). See <a href="https://arxiv.org/abs/2212.08073" rel="noreferrer">Bai et al. 2022</a>.</li>
+          <li><b>Logit distillation:</b> train the student on the teacher's full softened distribution (KL to teacher logits). Rich signal per token, but needs teacher logits and a shared vocabulary.</li>
+          <li><b>Sequence-level distillation:</b> the teacher generates complete outputs, the student runs plain SFT on them. Works across tokenizers and through an API; this is how R1 was distilled into Qwen and Llama students (about 800k samples, SFT only).</li>
+          <li><b>Distillation vs RL at small scale:</b> in the R1 paper, the distilled Qwen-32B scored 72.6 on AIME 2024 pass@1 versus 47.0 for the same base trained with large-scale RL.</li>
+        </ul>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><b>pro:</b> AI labels scale past human annotation budgets; principles become explicit and editable.</li>
+          <li><b>con:</b> the student inherits teacher errors and judge biases, and cannot exceed its teacher on the distilled skill. Check provider terms before training on another vendor's outputs.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+    <div class="sol-item">
+      <button class="sol-head" type="button">
+        <span class="sol-no">F</span>
+        <span class="sol-name">LoRA and QLoRA</span>
+        <span class="sol-sum">freeze the weights, train a low-rank delta</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li><b>Update math:</b> W = W<sub>0</sub> + (α/r) · BA with B ∈ ℝ<sup>d×r</sup>, A ∈ ℝ<sup>r×k</sup>, r ≪ min(d, k). B starts at zero so training begins exactly at the base model. Trainable parameters per matrix drop from dk to r(d + k).</li>
+          <li><b>Scale:</b> for a 4096 × 4096 projection at r = 16, that is 131,072 instead of 16.8M parameters, under 1%. On GPT-3 175B the LoRA paper reports ~10,000× fewer trainable parameters and ~3× less GPU memory.</li>
+          <li><b>Serving:</b> merge BA into W<sub>0</sub> for zero added latency, or keep adapters separate and hot-swap many tasks over one base.</li>
+          <li><b>QLoRA:</b> freeze the base in 4-bit NF4 with double-quantized scales, backpropagate through it into 16-bit adapters, page optimizer state. The paper fine-tunes a 65B model on one 48GB GPU. See <a href="https://arxiv.org/abs/2305.14314" rel="noreferrer">Dettmers et al. 2023</a>.</li>
+        </ul>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><b>pro:</b> cheap, reversible, composable; excellent for format, style, tool-call schemas and narrow classification.</li>
+          <li><b>con:</b> a low-rank delta reshapes existing capability well but adds new factual knowledge or new skills poorly, and full-parameter training usually wins on large shifts such as a new language or domain. It can still erode safety behavior learned upstream.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+  </div>
+
+  <h3 id="training-alignment--methods-compared">Post-training methods compared</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Method</th><th>Data needed</th><th>Training signal</th><th>Typical failure</th></tr></thead>
+      <tbody>
+        <tr><td>SFT</td><td>Prompt + ideal response</td><td>Likelihood of demonstration tokens</td><td>Imitates style beyond its knowledge; capped by data quality</td></tr>
+        <tr><td>RLHF (PPO)</td><td>Ranked pairs, then online prompts</td><td>Learned reward minus KL</td><td>Reward hacking: length, sycophancy; unstable, memory heavy</td></tr>
+        <tr><td>DPO</td><td>Fixed chosen/rejected pairs</td><td>Log-ratio margin vs reference</td><td>Off-policy drift; both likelihoods fall; β sensitive</td></tr>
+        <tr><td>RLVR (GRPO)</td><td>Prompts + a checker</td><td>Group-normalized verified reward</td><td>Verifier exploits; no gradient on all-pass or all-fail groups</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 class="stage-label sl-when" id="when-to-use-when-not">Decision boundary</h2>
+  <div class="pc">
+    <div class="pc-col pros"><h4 class="pc-h">Use when</h4>
+      <ul>
+        <li>SFT: you can write the exact output you want for representative inputs.</li>
+        <li>DPO: you can say which of two outputs is better more easily than write the ideal one, and want a stable offline run.</li>
+        <li>RLVR: correctness is mechanically checkable and the base already solves the task some of the time.</li>
+        <li>Distillation or LoRA: a big model already does the task and you need it cheaper, or the change is format, tone or a narrow skill.</li>
+      </ul>
+    </div>
+    <div class="pc-col cons"><h4 class="pc-h">Skip when</h4>
+      <ul>
+        <li>The gap is missing or fresh knowledge: retrieval fixes that better than any stage here, see <a class="xl" href="finetune-decide.html">fine-tune vs RAG vs prompt</a>.</li>
+        <li>You have no held-out <a class="xl" href="../08-evals/evals.html">eval</a> that measures the target behavior; every method here optimizes something you cannot see.</li>
+        <li>RL with a learned reward on a small team: PPO tuning cost rarely pays off over DPO.</li>
+        <li>RLVR on a task where the base model never succeeds: zero pass rate means zero signal.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2 class="stage-label sl-ex" id="example">Worked example</h2>
+  <div class="example">
+    <p class="ex-note">The DPO loss with prompt-token masking, written against a Hugging Face–style causal LM in PyTorch. For clarity it assumes one unpadded sequence per call and a shared prompt length; production code (for example TRL's DPOTrainer) batches and handles padding. Log the reward accuracy and margin, not only the loss.</p>
+    <pre class="code" data-lang="python" data-file="dpo_loss.py"><code><span class="tk-k">import</span> torch
+<span class="tk-k">import</span> torch.nn.functional <span class="tk-k">as</span> F
+
+<span class="tk-k">def</span> <span class="tk-f">seq_logprob</span>(model, input_ids, prompt_len):
+    <span class="tk-c"># log p(response | prompt), summed; prompt tokens are masked out</span>
+    logits = model(input_ids).logits[:, :-<span class="tk-n">1</span>]   <span class="tk-c"># position t predicts token t+1</span>
+    targets = input_ids[:, <span class="tk-n">1</span>:]
+    logp = torch.log_softmax(logits.float(), dim=-<span class="tk-n">1</span>)
+    tok = logp.gather(-<span class="tk-n">1</span>, targets.unsqueeze(-<span class="tk-n">1</span>)).squeeze(-<span class="tk-n">1</span>)
+    mask = torch.zeros_like(tok)
+    mask[:, prompt_len - <span class="tk-n">1</span>:] = <span class="tk-n">1.0</span>             <span class="tk-c"># first response token onward</span>
+    <span class="tk-k">return</span> (tok * mask).sum(-<span class="tk-n">1</span>)
+
+<span class="tk-k">def</span> <span class="tk-f">dpo_loss</span>(policy, ref, chosen, rejected, prompt_len, beta=<span class="tk-n">0.1</span>):
+    pc = seq_logprob(policy, chosen, prompt_len)
+    pr = seq_logprob(policy, rejected, prompt_len)
+    <span class="tk-k">with</span> torch.no_grad():                        <span class="tk-c"># frozen SFT reference</span>
+        rc = seq_logprob(ref, chosen, prompt_len)
+        rr = seq_logprob(ref, rejected, prompt_len)
+    margin = beta * ((pc - rc) - (pr - rr))        <span class="tk-c"># implicit reward gap</span>
+    loss = -F.logsigmoid(margin).mean()
+    stats = {
+        <span class="tk-s">"reward_acc"</span>: (margin &gt; <span class="tk-n">0</span>).float().mean().item(),
+        <span class="tk-s">"margin"</span>: margin.mean().item(),
+        <span class="tk-s">"chosen_logp_shift"</span>: (pc - rc).mean().item(),  <span class="tk-c"># &lt;0 means both falling</span>
+    }
+    <span class="tk-k">return</span> loss, stats</code></pre>
+    <p class="note"><b>Reading the numbers:</b> at step 0 the policy equals the reference, so the margin is 0 and the loss is log 2 ≈ 0.693. Reward accuracy climbing toward 1 while <code>chosen_logp_shift</code> goes negative is the "both likelihoods fall" pattern: the model is learning to avoid rejected text, not to produce the chosen text.</p>
+  </div>
+
+  <h2 class="stage-label sl-extra" id="watch-out">Failure modes</h2>
+  <div class="pit-list"><ul>
+    <li>Template mismatch · fine-tuning or serving with a different chat template than training · missing stop tokens, leaked role tags, runaway generations</li>
+    <li>Unmasked prompts in SFT · the model learns to imitate user turns and system prompts · check that labels are −100 outside assistant spans</li>
+    <li>Reward hacking · proxy reward climbs while quality falls · track length and held-out human or judge preference alongside reward, and raise β if KL explodes</li>
+    <li>Eval contamination · benchmark items in pretraining or synthetic SFT data inflate scores · decontaminate by n-gram overlap and keep a private <a class="xl" href="../08-evals/evals.html">eval set</a></li>
+    <li>Safety erosion · a small benign fine-tune can weaken refusals learned in post-training · re-run red-team and <a class="xl" href="../07-security/guardrails.html">guardrail</a> evals after every tuning run</li>
+    <li>Catastrophic forgetting · narrow tuning degrades general skills · mix in general data, keep LoRA rank and learning rate modest, eval outside the target task</li>
+  </ul></div>
+
+  <h2 class="stage-label sl-extra" id="remember">Keep in mind</h2>
+  <div class="remember"><ul>
+    <li>Pretraining buys capability; post-training mostly selects and shapes behavior already latent in the base.</li>
+    <li>Chinchilla is ~20 tokens per parameter for training compute; deployed models overtrain on purpose for cheaper inference.</li>
+    <li>SFT imitates, preference methods rank, RLVR verifies: pick by the signal you can actually produce.</li>
+    <li>DPO is RLHF's objective with the reward model solved away; the KL to the reference is still there as β.</li>
+    <li>Every learned reward gets hacked eventually; verifiers get hacked more slowly.</li>
+    <li>LoRA reshapes behavior cheaply; it is a poor way to add knowledge.</li>
+  </ul></div>
+
+    <section class="references" aria-labelledby="primary-sources"><h2 id="primary-sources">Primary sources</h2><ul><li><a href="https://arxiv.org/abs/2203.15556" rel="noreferrer">Training Compute-Optimal Large Language Models (Chinchilla)</a></li><li><a href="https://arxiv.org/abs/2203.02155" rel="noreferrer">Training language models to follow instructions with human feedback (InstructGPT)</a></li><li><a href="https://arxiv.org/abs/2305.18290" rel="noreferrer">Direct Preference Optimization</a></li><li><a href="https://arxiv.org/abs/2501.12948" rel="noreferrer">DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via RL</a></li><li><a href="https://arxiv.org/abs/2106.09685" rel="noreferrer">LoRA: Low-Rank Adaptation of Large Language Models</a></li></ul></section>
+
+    <section class="lab-check" aria-labelledby="try-verify-explain"><h2 id="try-verify-explain">Try, verify, explain</h2><ol><li>Derive DPO: start from max E[r] − β·KL(π ‖ π<sub>ref</sub>), write the optimal policy as π<sub>ref</sub>·exp(r/β)/Z(x), solve for r, substitute into the Bradley-Terry probability and show that Z(x) cancels.</li><li>Calculate the budget: with C ≈ 6·N·D, find the compute-optimal N and D for C = 10<sup>23</sup> FLOPs at 20 tokens per parameter, then count LoRA parameters at rank 16 on the q and v projections of a model with d<sub>model</sub> = 5120 and 48 layers, and express it as a fraction of N.</li><li>Explain why GRPO needs no value network, what happens to the gradient for a prompt where all G samples get the same reward, and why that makes prompt difficulty curation part of the algorithm.</li></ol></section>
+
+    <nav class="pager" id="pager"></nav>
+
+    <footer class="footer">
+      learning-project · tracks/ai · press ⌘K or / to search every chapter · diagrams load Mermaid from a CDN when online
+    </footer>
+  </div>
+</main>
+
+<script src="../../js/app.js"></script>
+</body>
+</html>

@@ -11,19 +11,18 @@
 <link rel="stylesheet" href="../../css/base.css">
 <link rel="stylesheet" href="../../css/components.css">
 <link rel="stylesheet" href="../../css/flow.css">
-<link rel="stylesheet" href="../../css/print.css">
 </head>
 <body>
 
 <div id="progress"></div>
 
 <header class="topbar">
-  <button class="tbtn" id="nav-toggle" type="button" aria-label="Toggle navigation">☰</button>
+  <button class="tbtn" id="nav-toggle" type="button" aria-label="Open contents" aria-controls="toc" aria-expanded="false">☰</button>
   <a class="brand" href="../../index.html"><b>ai</b>·field-guide</a>
+  <a class="hub-link" href="../../../../hub/index.html">Learning hub</a>
   <div class="tools">
-    <input id="toc-filter" type="search" placeholder="filter · /" aria-label="Filter topics">
+    <button class="tbtn search-btn" id="search-open" type="button" aria-label="Search the guide"><span>Search</span><kbd>⌘K</kbd></button>
     <button class="tbtn" id="expand-all" type="button">expand</button>
-    <button class="tbtn" id="print-btn" type="button">print</button>
   </div>
 </header>
 
@@ -32,132 +31,129 @@
 <main class="main">
   <div class="content">
     <header class="topic-head">
-      <div class="kicker">Part 5 · Proof & production · 21/24</div>
+      <div class="kicker">Part 6 · Proof &amp; production · 30/31</div>
       <h1>Full systems on AWS</h1>
-      <p class="lead">The layered box from <a class="xl" href="#architecture">the AI system architecture</a>, now with AWS names on the hops. Same seams, same queues, same traces, one ingest path and one query path.</p>
+      <p class="lead">The layered box from <a class="xl" href="architecture.html">the AI system architecture</a>, now with AWS names on the hops. Same seams, same queues, same traces, one ingest path and one query path.</p>
+      <p class="chapter-summary"><b>In this chapter</b> Map ingestion and query responsibilities onto AWS services while reasoning about identity, network, scaling and failure boundaries.</p>
     </header>
 
   <div class="beat problem">
-    <div class="beat-h"><span class="bt">Problem</span><span class="bh">a working notebook is not a system</span></div>
+    <h2 class="beat-h" id="problem-a-working-notebook-is-not-a-system"><span class="bt">Problem</span><span class="bh">a working notebook is not a system</span></h2>
     <ul>
-      <li><b>Friday 18:00:</b> 10,000 documents arrive at once. The ingest melts, or it eats the budget, or both.</li>
-      <li><b>Monday:</b> a 20-minute agent run dies mid-deploy, the answer stream times out behind the load balancer, and API keys sit in a repo.</li>
+      <li><b>Friday 18:00:</b> 10,000 documents arrive at once. Ingest melts, eats the budget, or both.</li>
+      <li><b>Monday:</b> a 20-minute agent run dies mid-deploy, the answer stream times out at the load balancer, and API keys sit in a repo.</li>
       <li><b>Nobody knows</b> which run cost 38 dollars or why the same PDF got processed twice.</li>
-      <li><b>None of these are model problems.</b> All of them are composition problems, the difference between a demo and a product.</li>
+      <li><b>None of these are model problems.</b> They are composition problems: the gap between demo and product.</li>
     </ul>
   </div>
 
   <div class="beat solution">
-    <div class="beat-h"><span class="bt">Solution</span><span class="bh">managed piece per job · queues as shock absorbers</span></div>
+    <h2 class="beat-h" id="solution-managed-piece-per-job-queues-as-shock-absorbers"><span class="bt">Solution</span><span class="bh">managed piece per job · queues as shock absorbers</span></h2>
     <ul>
-      <li><b>Ingest is a pipeline:</b> object storage absorbs uploads, a queue absorbs the burst, stateless workers parse, chunk and embed, an index serves queries. Ingestion mechanics per <a class="xl" href="#rag-overview">RAG overview</a>.</li>
+      <li><b>Ingest is a pipeline:</b> object storage absorbs uploads, a queue absorbs the burst, stateless workers parse, chunk and embed, an index serves queries. Mechanics per <a class="xl" href="../03-rag-search/rag-overview.html">RAG overview</a>.</li>
       <li><b>Queries are a path:</b> API edge, orchestrator compute, retrieval from the index, model access, tokens streamed back.</li>
-      <li><b>Long work is jobs:</b> queues plus worker fleets plus DLQs, the durable discipline of <a class="xl" href="../05-agents-orchestration/ops.html">ops</a> with AWS service names.</li>
+      <li><b>Long work is jobs:</b> queues, worker fleets and DLQs: the discipline of <a class="xl" href="../05-agents-orchestration/ops.html">ops</a> with AWS names.</li>
     </ul>
-    <div class="diagram">
+    <figure class="diagram">
       <div class="diag-body">
         <pre class="mermaid">
-flowchart LR
-  U["bulk upload"] --> S3[("S3 · raw docs")]
-  S3 -- "object created event" --> Q1[["SQS · parse queue"]]
-  Q1 --> W1["parse worker · Lambda or Fargate"]
-  W1 --> P[("S3 · parsed text")]
-  W1 --> Q2[["SQS · embed queue"]]
-  Q2 --> W2["chunk + embed worker"]
-  W2 --> IX[("index · OpenSearch or Aurora pgvector")]
-  Q1 -. "3 failed deliveries" .-> DLQ[["DLQ · park and replay"]]
-  C["client"] --> AG["API Gateway or ALB"]
-  AG --> OR["orchestrator · Lambda or ECS"]
-  OR --> RT["retrieve + rerank"]
+flowchart TB
+  S3[("S3 raw docs")] --> Q1[["SQS parse queue"]]
+  Q1 --> W1["Parse worker"]
+  Q1 -.-> DLQ[["DLQ · 3 fails"]]
+  W1 --> P[("S3 parsed")]
+  W1 --> Q2[["SQS embed queue"]]
+  Q2 --> W2["Chunk + embed"]
+  W2 --> IX[("Index")]
+  C["Client"] <--> AG["API GW / ALB"]
+  AG <--> OR["Orchestrator"]
+  OR <--> BR["Bedrock&lt;br/&gt;or LLM"]
+  OR --> RT["Retrieve&lt;br/&gt;+ rerank"]
   RT --> IX
-  OR --> BR["Bedrock or external LLM"]
-  BR -- "streamed tokens" --> OR
-  OR -- "SSE answer" --> AG
-  OR --> J[["SQS · agent jobs"]]
-  J --> AW["agent workers · checkpoints in Aurora"]
-  OR --> RDS[("Aurora Postgres · state + pgvector")]
+  OR --> J[["SQS jobs"]]
+  J --> AW["Agent workers"]
+  OR --> RDS[("Aurora")]
         </pre>
-      </div>
-    </div>
-    <p class="note">Ingest on top (async, queued, rate-limited by the queue), query below (sync, streamed), one shared index in the middle. Two paths, one system.</p>
+      </div><figcaption>Every async hop on the left has a queue in front of it, so bursts become backlog rather than throttles; the two paths only meet at the index, and double arrows are streamed responses.</figcaption></figure>
+    <p class="note">Ingest on the left (async, paced by queues), query on the right (sync, streamed), one shared index where they meet. Parse runs on Lambda or Fargate, the orchestrator on Lambda or ECS, the index on OpenSearch or Aurora pgvector, and agent workers checkpoint to Aurora Postgres.</p>
   </div>
 
   <div class="beat how">
-    <div class="beat-h"><span class="bt">How</span><span class="bh">ingest · query · async jobs · state · scopes · cost</span></div>
+    <h2 class="beat-h" id="how-ingest-query-async-jobs-state-scopes-cost"><span class="bt">How</span><span class="bh">ingest · query · async jobs · state · scopes · cost</span></h2>
 
     <h3 id="aws--the-document-rag-pipeline-stage-by-stage">the document RAG pipeline, stage by stage</h3>
     <ul>
-      <li><b>S3 for source docs:</b> durable, cheap, versioned, event-capable. Every later stage re-derives from here, so S3 is the source of truth for content.</li>
-      <li><b>Event into a queue, not into compute:</b> S3 notifications land in SQS. Without the queue, one upload spike means 10,000 concurrent parse jobs, dead rate limits and a spiked bill. The queue IS the rate limiter.</li>
-      <li><b>Parse workers:</b> Lambda for small, quick, bursty parsing (15-minute hard cap), Fargate or ECS containers for giant PDFs and layout models.</li>
-      <li><b>Chunk and embed workers on a second queue:</b> parsing is CPU-bound, embedding is API-bound with provider rate limits, so the stages scale on different knobs. Sizing choices live in <a class="xl" href="#chunking">chunking</a> and <a class="xl" href="../03-rag-search/embeddings.html">embeddings</a>.</li>
-      <li><b>Index:</b> OpenSearch for managed hybrid search (lexical plus k-NN), or Aurora Postgres with pgvector when the one-database story matters more than raw scale.</li>
-      <li><b>Incremental reindex:</b> content hash plus doc version in a registry. Unchanged doc means skip. Re-embed only when the doc or the embedding model changed, and treat a model swap as a planned backfill job, never a surprise full rebuild.</li>
-      <li><span class="wlabel gotcha">gotcha</span> <b>S3 events are at-least-once.</b> The same upload can notify twice. The worker dedupes on the registry key, deletes the duplicate message, moves on.</li>
+      <li><b>S3 for source docs:</b> durable, cheap, versioned, event-capable. Every later stage re-derives from here; S3 is the source of truth for content.</li>
+      <li><b>Event into a queue, not into compute:</b> S3 notifications land in SQS. Without it, one upload spike means 10,000 concurrent parse jobs, blown rate limits and a spiked bill. The queue IS the rate limiter.</li>
+      <li><b>Parse workers:</b> Lambda for small, bursty parsing (15-minute hard cap), Fargate or ECS containers for giant PDFs and layout models.</li>
+      <li><b>Chunk and embed on a second queue:</b> parsing is CPU-bound, embedding is bound by provider rate limits, so the stages scale on different knobs. Sizing in <a class="xl" href="../03-rag-search/chunking.html">chunking</a> and <a class="xl" href="../03-rag-search/embeddings.html">embeddings</a>.</li>
+      <li><b>Index:</b> OpenSearch for managed hybrid search (lexical plus k-NN), or Aurora Postgres with pgvector when one database matters more than raw scale.</li>
+      <li><b>Incremental reindex:</b> content hash plus doc version in a registry; unchanged means skip. Re-embed only when the doc or embedding model changed, and treat a model swap as a planned backfill, never a surprise rebuild.</li>
+      <li><span class="wlabel gotcha">gotcha</span> <b>S3 events are at-least-once.</b> The same upload can notify twice. Workers key on a stable business work ID, process idempotently and acknowledge only after durable completion, so a crash leaves retryable work.</li>
     </ul>
 
     <h3 id="aws--the-query-path">the query path</h3>
     <ul>
       <li><b>Edge:</b> API Gateway plus a WAF for simple request/response entry, or an ALB when answers stream for minutes.</li>
-      <li><b>Compute:</b> Lambda fits short orchestrations, containers on ECS or Fargate fit stateful long-lived orchestrators and streaming connections.</li>
-      <li><b>Model access:</b> Bedrock for VPC-only reachability and IAM-authenticated model calls, or an external LLM behind the facade from <a class="xl" href="architecture.html">the architecture page</a> when a niche model demands it.</li>
-      <li><b>Stream the answer back:</b> SSE from the orchestrator through the edge to the client. First token inside the sync budget, tokens stream after.</li>
-      <li><span class="wlabel gotcha">gotcha</span> <b>API Gateway caps integrations near 29 seconds.</b> Long streams get cut. Route them through an ALB or a WebSocket API, keep API Gateway for short control calls.</li>
+      <li><b>Compute:</b> Lambda for short orchestrations, ECS or Fargate containers for long-lived orchestrators and streaming connections.</li>
+      <li><b>Model access:</b> Bedrock for VPC-only reachability and IAM-authenticated calls, or an external LLM behind the <a class="xl" href="architecture.html">architecture page</a> facade when a niche model demands it.</li>
+      <li><b>Stream the answer back:</b> SSE from orchestrator through edge to client, first token inside the sync budget.</li>
+      <li><span class="wlabel gotcha">gotcha</span> <b>API Gateway caps integrations near 29 seconds.</b> Long streams get cut: route them through an ALB or WebSocket API, keep API Gateway for short calls.</li>
     </ul>
 
     <h3 id="aws--async-agent-jobs">async agent jobs</h3>
     <ul>
-      <li><b>SQS work queues plus a worker fleet:</b> deep research, report generation, batch evals. Workers checkpoint progress so a die-off resumes rather than restarts, mechanics per <a class="xl" href="../05-agents-orchestration/ops.html">ops</a>.</li>
-      <li><b>DLQ plus redrive:</b> maxReceiveCount near 3, park poison messages, inspect with the trace, fix the cause, replay fixed batches. An unwatched DLQ is a landfill.</li>
-      <li><b>Fan-out:</b> Step Functions Map for per-item retries over big batches (eval suites), or plain queue batching, receive up to 10, with per-item failure handling.</li>
-      <li><b>Human gates:</b> Step Functions waitForTaskToken pauses a flow for minutes or days and resumes on the approver's callback, the AWS shape of a HITL gate.</li>
-      <li><b>Visibility timeout above worst-case work:</b> a job longer than its timeout gets redelivered and runs twice concurrently. Heartbeat extensions for long jobs.</li>
+      <li><b>SQS work queues plus a worker fleet:</b> deep research, reports, batch evals. Workers checkpoint so a die-off resumes rather than restarts, per <a class="xl" href="../05-agents-orchestration/ops.html">ops</a>.</li>
+      <li><b>DLQ plus redrive:</b> maxReceiveCount near 3 parks poison messages; inspect with the trace, fix the cause, replay. An unwatched DLQ is a landfill.</li>
+      <li><b>Fan-out:</b> Step Functions Map for per-item retries over big batches (eval suites), or plain queue batches of up to 10 with per-item failure handling.</li>
+      <li><b>Human gates:</b> Step Functions waitForTaskToken pauses a flow for minutes or days until the approver's callback: the AWS shape of a HITL gate.</li>
+      <li><b>Visibility timeout above worst-case work:</b> a longer job is redelivered and runs twice concurrently. Extend by heartbeat for long jobs.</li>
     </ul>
 
     <h3 id="aws--state">state</h3>
     <ul>
-      <li><b>Aurora Postgres is the anchor:</b> app state, run checkpoints and pgvector knowledge in one place, so tenant rules and permission filters join the vector search in one transaction.</li>
-      <li><b>DynamoDB for sessions:</b> single-key session or conversation state with a TTL, high churn, no joins. One purpose, never the system of record.</li>
+      <li><b>Aurora Postgres is the anchor:</b> app state, run checkpoints and pgvector in one place, so tenant and permission filters join the vector search in one transaction.</li>
+      <li><b>DynamoDB for sessions:</b> single-key session state with a TTL, high churn, no joins. Never the system of record.</li>
     </ul>
 
     <h3 id="aws--secrets-and-scopes">secrets and scopes</h3>
     <ul>
-      <li><b>IAM role per worker type:</b> the parse worker reads S3 and writes the registry, the embed worker calls the model API, and neither can do the other's job. Least privilege per <a class="xl" href="../07-security/guardrails.html">guardrails</a>.</li>
-      <li><b>No long-lived keys in env vars or task definitions:</b> task execution roles and Secrets Manager instead, rotation without redeploying consumers.</li>
-      <li><b>VPC endpoints</b> keep model and index traffic off the public internet, which is also how compliance reviews end quickly.</li>
+      <li><b>IAM role per worker type:</b> the parse worker reads S3 and writes the registry, the embed worker calls the model API, neither can do the other's job. Least privilege per <a class="xl" href="../07-security/guardrails.html">guardrails</a>.</li>
+      <li><b>No long-lived keys in env vars or task definitions:</b> task roles and Secrets Manager, rotation without redeploys.</li>
+      <li><b>VPC endpoints</b> keep model and index traffic off the public internet, which also shortens compliance reviews.</li>
     </ul>
 
     <h3 id="aws--cost-and-latency-notes">cost and latency notes</h3>
     <ul>
-      <li><b>Batch embedding:</b> many inputs per API call where the provider allows it, fewer calls, better throughput against rate limits.</li>
+      <li><b>Batch embedding:</b> many inputs per call where the provider allows, for better throughput against rate limits.</li>
       <li><b>Cache before you call:</b> embedding cache for repeated text, exact answer cache before semantic, per <a class="xl" href="architecture.html">the architecture page</a>.</li>
-      <li><b>Route by model size:</b> small model as the default lane, big model on complexity signal. Model choice dominates cost per query.</li>
-      <li><b>Alarms that matter:</b> queue depth (backlog forming), DLQ above zero (poison), per-run spend (runaway loops), index write rejections (throttling).</li>
+      <li><b>Route by model size:</b> small model by default, big model on a complexity signal. Model choice dominates cost per query.</li>
+      <li><b>Alarms that matter:</b> queue depth (backlog), DLQ above zero (poison), per-run spend (runaway loops), index write rejections (throttling).</li>
     </ul>
   </div>
 
   <div class="beat when">
-    <div class="beat-h"><span class="bt">When</span><span class="bh">AWS building-block picker</span></div>
+    <h2 class="beat-h" id="when-aws-building-block-picker"><span class="bt">When</span><span class="bh">AWS building-block picker</span></h2>
     <div class="tbl-wrap">
       <table>
         <thead><tr><th>Block</th><th class="hu">Use when</th><th class="ha">Avoid when</th><th class="hw">Watch out</th></tr></thead>
         <tbody>
           <tr><td class="m">Lambda</td><td class="u">Short bursty parse and embed steps</td><td class="avoid">Long streams, heavy models in memory</td><td class="watch">Concurrency limits need the queue in front</td></tr>
-          <tr><td class="m">ECS or Fargate</td><td class="u">Agent apps, streaming answers, heavy parsing</td><td class="avoid">Tiny sub-second tasks</td><td class="watch">Health checks drain running agents on deploy</td></tr>
-          <tr><td class="m">Bedrock</td><td class="u">VPC-only egress, IAM auth, one bill across models</td><td class="avoid">A niche model only reachable via direct API</td><td class="watch">Model availability differs per region</td></tr>
-          <tr><td class="m">Aurora + pgvector</td><td class="u">The one-database story, joins with tenant rules</td><td class="avoid">Very large vector counts with hard p99</td><td class="watch">Index build params, bulk load windows</td></tr>
-          <tr><td class="m">OpenSearch</td><td class="u">Managed hybrid search at unknown scale</td><td class="avoid">Small corpora, the cost floor is high</td><td class="watch">Vector plus filter combos need index design care</td></tr>
-          <tr><td class="m">SQS</td><td class="u">Work queues: ingest, evals, background jobs</td><td class="avoid">Event routing to many systems, use a bus</td><td class="watch">Visibility timeout, DLQ, idempotent workers</td></tr>
-          <tr><td class="m">Step Functions</td><td class="u">Map fan-out, human gates with task tokens</td><td class="avoid">Chat-shaped streaming flows, keep those in the app</td><td class="watch">Per-transition pricing, no giant state loops</td></tr>
-          <tr><td class="m">DynamoDB</td><td class="u">Session state with TTL, high churn</td><td class="avoid">Anything needing joins or transactions across items</td><td class="watch">Not the system of record</td></tr>
+          <tr><td class="m">ECS or Fargate</td><td class="u">Agent apps, streaming, heavy parsing</td><td class="avoid">Tiny sub-second tasks</td><td class="watch">Health checks drain running agents on deploy</td></tr>
+          <tr><td class="m">Bedrock</td><td class="u">VPC-only egress, IAM auth, one bill</td><td class="avoid">A niche model only reachable via direct API</td><td class="watch">Model availability differs per region</td></tr>
+          <tr><td class="m">Aurora + pgvector</td><td class="u">One database, joins with tenant rules</td><td class="avoid">Very large vector counts with hard p99</td><td class="watch">Index build params, bulk load windows</td></tr>
+          <tr><td class="m">OpenSearch</td><td class="u">Managed hybrid search at unknown scale</td><td class="avoid">Small corpora, the cost floor is high</td><td class="watch">Vector plus filter needs index design</td></tr>
+          <tr><td class="m">SQS</td><td class="u">Work queues: ingest, evals, jobs</td><td class="avoid">Event routing to many systems, use a bus</td><td class="watch">Visibility timeout, DLQ, idempotent workers</td></tr>
+          <tr><td class="m">Step Functions</td><td class="u">Map fan-out, human gates with task tokens</td><td class="avoid">Chat-shaped streaming flows</td><td class="watch">Per-transition pricing, no giant state loops</td></tr>
+          <tr><td class="m">DynamoDB</td><td class="u">Session state with TTL, high churn</td><td class="avoid">Joins or cross-item transactions</td><td class="watch">Not the system of record</td></tr>
         </tbody>
       </table>
     </div>
-    <p class="note">This page stays on composition patterns. Service facts for the certification are separate: <a href="../certifications/aws-genai-pro/README.md">exam prep lives in the AWS track</a>.</p>
+    <p class="note">This page covers composition patterns; certification service facts are in the <a href="../../../certifications/aws-genai-pro/index.html">AWS track exam prep</a>.</p>
   </div>
 
   <div class="beat example">
-    <div class="beat-h"><span class="bt">Example</span><span class="bh">the whole ingest discipline in one worker loop</span></div>
+    <h2 class="beat-h" id="example-the-whole-ingest-discipline-in-one-worker-loop"><span class="bt">Example</span><span class="bh">the whole ingest discipline in one worker loop</span></h2>
     <pre class="code" data-lang="python" data-file="idempotent_worker.py"><code><span class="tk-k">import</span> boto3, hashlib
 sqs = boto3.client(<span class="tk-s">"sqs"</span>)
 
@@ -165,54 +161,57 @@ sqs = boto3.client(<span class="tk-s">"sqs"</span>)
     msgs = sqs.receive_message(
         QueueUrl=Q, MaxNumberOfMessages=<span class="tk-n">10</span>,
         VisibilityTimeout=<span class="tk-n">900</span>,          <span class="tk-c"># 15 min, above worst-case work</span>
-        WaitTimeSeconds=<span class="tk-n">20</span>,                <span class="tk-c"># long poll: no busy-spin, no cost</span>
+        WaitTimeSeconds=<span class="tk-n">20</span>,                <span class="tk-c"># long poll: fewer empty receives, request charges still apply</span>
     ).get(<span class="tk-s">"Messages"</span>, [])
 
     <span class="tk-k">for</span> m <span class="tk-k">in</span> msgs:
-        key = hashlib.sha256(m[<span class="tk-s">"Body"</span>].encode()).hexdigest()
-        <span class="tk-k">if</span> <span class="tk-k">not</span> registry.try_insert(key):       <span class="tk-c"># at-least-once: dedupe first</span>
-            sqs.delete_message(Q, m[<span class="tk-s">"ReceiptHandle"</span>])  <span class="tk-c"># already done: skip</span>
-            <span class="tk-k">continue</span>
-        process(m[<span class="tk-s">"Body"</span>])                   <span class="tk-c"># parse, chunk, embed, index</span>
-        sqs.delete_message(Q, m[<span class="tk-s">"ReceiptHandle"</span>])  <span class="tk-c"># success means delete</span>
-        <span class="tk-c"># crash before delete: message reappears, retried, then DLQ</span></code></pre>
+        work_id = stable_business_work_id(m[<span class="tk-s">"Body"</span>])
+        <span class="tk-c"># Contract: effects + durable completion commit atomically by work_id.</span>
+        <span class="tk-c"># Concurrent duplicates serialize; incomplete work remains retryable.</span>
+        process_idempotently(work_id, m[<span class="tk-s">"Body"</span>])
+        <span class="tk-c"># Acknowledge only after durable completion; crashes before here retry safely.</span>
+        sqs.delete_message(QueueUrl=Q, ReceiptHandle=m[<span class="tk-s">"ReceiptHandle"</span>])</code></pre>
     <ul>
-      <li><b>In the field:</b> quarterly filings arrive as a Friday spike of 40,000 documents, the queue drips them through parsing and embedding all weekend, Monday's search works and nobody was paged.</li>
+      <li><b>In the field:</b> a Friday spike of 40,000 quarterly filings drips through parsing and embedding all weekend; Monday's search works and nobody was paged.</li>
       <li><b>Same shape nightly</b> for e-commerce catalogs, so "cozy winter jacket" finds the right SKU by morning.</li>
-      <li><b>The agent flavor:</b> query path plus async jobs, a PR comment lands in a queue, a worker runs the fix agent, a task-token gate holds the merge for a human.</li>
+      <li><b>The agent flavor:</b> a PR comment lands in a queue, a worker runs the fix agent, a task-token gate holds the merge for a human.</li>
     </ul>
   </div>
 
   <div class="beat pitfalls">
-    <div class="beat-h"><span class="bt">Pitfalls</span><span class="bh">cross-region hops · reindex storms · throttles</span></div>
+    <h2 class="beat-h" id="pitfalls-cross-region-hops-reindex-storms-throttles"><span class="bt">Pitfalls</span><span class="bh">cross-region hops · reindex storms · throttles</span></h2>
     <ul>
-      <li><b>Cross-region latency:</b> docs in one region, index or workers in another, every hop pays inter-region round trips and transfer fees. Pick one region, and check model availability there before you design around it.</li>
-      <li><b>Reindex storms:</b> a deploy or config tweak triggers a full rebuild, thousands of embedding calls and index writes at once. Incremental by hash, backfills as budgeted background jobs.</li>
-      <li><b>Throttles from every side:</b> Lambda concurrency, embedding provider rate limits, index bulk-write queues. The fixes are one shape: queue in front, sensible batch size, backoff with jitter per <a class="xl" href="../05-agents-orchestration/ops.html">ops</a>.</li>
-      <li><b>The 29-second cut:</b> long streamed answers routed through API Gateway die at the integration cap. ALB or WebSocket for streams.</li>
-      <li><b>Visibility timeout below the job:</b> the queue hands the in-flight message to a second worker, double processing at full concurrency.</li>
-      <li><b>At-least-once everywhere:</b> S3 events, SQS redelivery, EventBridge. Any worker that is not idempotent will eventually bill someone twice.</li>
-      <li><b>Secrets in task definitions:</b> convenient, then leaked in a log line or a copy-pasted config. Task roles and Secrets Manager, always.</li>
+      <li><b>Cross-region latency:</b> docs in one region and index or workers in another means every hop pays round trips and transfer fees. Pick one region, after checking model availability there.</li>
+      <li><b>Reindex storms:</b> a deploy or config tweak triggers a full rebuild: thousands of embedding calls and index writes at once. Incremental by hash, backfills as budgeted jobs.</li>
+      <li><b>Throttles from every side:</b> Lambda concurrency, embedding rate limits, index bulk-write queues. One fix shape: queue in front, sensible batches, jittered backoff per <a class="xl" href="../05-agents-orchestration/ops.html">ops</a>.</li>
+      <li><b>The 29-second cut:</b> long streams through API Gateway die at the integration cap. ALB or WebSocket for streams.</li>
+      <li><b>Visibility timeout below the job:</b> the in-flight message goes to a second worker: double processing.</li>
+      <li><b>At-least-once everywhere:</b> S3 events, SQS redelivery, EventBridge. A non-idempotent worker will eventually bill someone twice.</li>
+      <li><b>Secrets in task definitions:</b> convenient, then leaked in a log line or pasted config. Task roles and Secrets Manager, always.</li>
     </ul>
   </div>
 
   <div class="beat checklist">
-    <div class="beat-h"><span class="bt">Checklist</span><span class="bh">seven bullets to remember</span></div>
+    <h2 class="beat-h" id="checklist-seven-bullets-to-remember"><span class="bt">Checklist</span><span class="bh">seven bullets to remember</span></h2>
     <ul>
       <li>Queue between upload and workers, the queue is the rate limiter</li>
-      <li>Two ingest stages, parse CPU-bound and embed API-bound, on separate scaling</li>
-      <li>Idempotent workers: registry hash, delete on done, DLQ at about 3, redrive tested</li>
+      <li>Two ingest stages, CPU-bound parse and API-bound embed, scaled separately</li>
+      <li>Idempotent workers: registry hash, delete on done, DLQ at about 3, tested redrive</li>
       <li>Incremental reindex by content hash, embedding model swaps are planned backfills</li>
       <li>Streams through ALB or WebSocket, API Gateway for short calls only</li>
       <li>Aurora Postgres for state plus pgvector, DynamoDB only for TTL session state</li>
-      <li>IAM role per worker, least privilege, batch embeddings, small-model default lane</li>
+      <li>IAM role per worker, batch embeddings, small model by default</li>
     </ul>
   </div>
   
+    <section class="references" aria-labelledby="primary-sources"><h2 id="primary-sources">Primary sources</h2><ul><li><a href="https://docs.aws.amazon.com/boto3/latest/guide/sqs-example-sending-receiving-msgs.html" rel="noreferrer">Boto3 SQS send and receive example</a></li><li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/what-is-bedrock.html" rel="noreferrer">Amazon Bedrock User Guide</a></li><li><a href="https://docs.aws.amazon.com/wellarchitected/latest/machine-learning-lens/welcome.html" rel="noreferrer">AWS Well-Architected Machine Learning Lens</a></li></ul></section>
+
+    <section class="lab-check" aria-labelledby="try-verify-explain"><h2 id="try-verify-explain">Try, verify, explain</h2><ol><li>For an AWS document-answering service, assign ingestion, object storage, vector retrieval, model inference, identity and audit responsibilities; identify one regional failure mode.</li><li>Size the queue: if 10,000 documents land at once, each parse takes 20 s and you allow 50 concurrent workers, compute the drain time, then pick a visibility timeout from the worst-case parse time and check the DLQ threshold against it.</li><li>Explain why S3 events plus SQS can process the same upload twice, and what the stable work ID and "acknowledge after durable completion" each prevent.</li></ol></section>
+
     <nav class="pager" id="pager"></nav>
 
     <footer class="footer">
-      learning-project · tracks/ai · print this page from the browser dialog · diagrams load mermaid from CDN once online
+      learning-project · tracks/ai · press ⌘K or / to search every chapter · diagrams load Mermaid from a CDN when online
     </footer>
   </div>
 </main>

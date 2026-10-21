@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reasoning models &amp; test-time compute · AI Engineering Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../css/tokens.css">
+<link rel="stylesheet" href="../../css/base.css">
+<link rel="stylesheet" href="../../css/components.css">
+<link rel="stylesheet" href="../../css/flow.css">
+</head>
+<body>
+
+<div id="progress"></div>
+
+<header class="topbar">
+  <button class="tbtn" id="nav-toggle" type="button" aria-label="Open contents" aria-controls="toc" aria-expanded="false">☰</button>
+  <a class="brand" href="../../index.html"><b>ai</b>·field-guide</a>
+  <a class="hub-link" href="../../../../hub/index.html">Learning hub</a>
+  <div class="tools">
+    <button class="tbtn search-btn" id="search-open" type="button" aria-label="Search the guide"><span>Search</span><kbd>⌘K</kbd></button>
+    <button class="tbtn" id="expand-all" type="button">expand</button>
+  </div>
+</header>
+
+<nav class="sidebar" id="toc" aria-label="Topics"></nav>
+
+<main class="main">
+  <div class="content">
+    <header class="topic-head">
+      <div class="kicker">Part 2 · Inference &amp; context · 09/31</div>
+      <h1>Reasoning models &amp; test-time compute</h1>
+      <p class="lead">Reasoning models are trained to spend output tokens thinking before they answer, which turns inference compute into a dial: more tokens or more samples buy accuracy on hard problems at a price in latency and cost.</p>
+      <p class="chapter-summary"><b>In this chapter</b> Explain how RL on verifiable rewards produces long reasoning, compare serial and parallel test-time scaling, configure effort, budgets and interleaved thinking through vendor APIs, and decide when the extra compute pays for itself.</p>
+    </header>
+
+  <h2 class="stage-label sl-why" id="why-you-need-it">Why this layer matters</h2>
+  <div class="why">
+    <ul>
+      <li><b>A new cost axis:</b> the same prompt can cost a few hundred or tens of thousands of output tokens depending on one effort setting, and the hidden part still bills at the output rate, see <a class="xl" href="../02-tokens-context/tokens-cost.html">tokens, cost, caching</a>.</li>
+      <li><b>Accuracy you can buy:</b> on math, code and multi-step planning, extra inference compute can beat a bigger model; on simple extraction it only adds latency.</li>
+      <li><b>Different integration contract:</b> reasoning state must be round-tripped across tool calls, output caps now include invisible tokens, and some sampling knobs are fixed or unsupported.</li>
+      <li><b>Prompting habits invert:</b> step-by-step scaffolding that helped chat models often adds nothing; clear goals and success criteria do the work.</li>
+    </ul>
+  </div>
+
+  <h2 class="stage-label sl-sol" id="solutions">Mechanism</h2>
+  <p class="lead">Test-time compute is spent in two directions: serially, as one longer reasoning chain, and in parallel, as many candidates filtered by a vote or a verifier. Reasoning models internalize the serial axis; your application can add the parallel one.</p>
+
+  <figure class="diagram">
+    <div class="diag-body"><pre class="mermaid">
+flowchart LR
+  P["Prompt + goal"] --> S["Serial: one long&lt;br/&gt;reasoning chain"]
+  P --> N["Parallel: N&lt;br/&gt;sampled chains"]
+  N --> V{"Majority vote or&lt;br/&gt;verifier score"}
+  S --> A["Final answer"]
+  V -- confident --> A
+  V -. "no consensus" .-> E["Escalate: more&lt;br/&gt;effort or human"]</pre></div><figcaption>Serial scaling lengthens one chain inside the model; parallel scaling samples many chains and needs an aggregator, either an extractable answer to vote on or a verifier to score candidates.</figcaption></figure>
+
+  <div class="sol-list">
+
+    <div class="sol-item open">
+      <button class="sol-head" type="button">
+        <span class="sol-no">A</span>
+        <span class="sol-name">How reasoning is trained</span>
+        <span class="sol-sum">RL on checkable answers rewards long chains that end correct</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li><b><button class="term" type="button" data-tip="Reinforcement learning with verifiable rewards: the reward comes from a program that checks the answer (unit tests, exact math match, format rules), not from a learned preference model.">RLVR</button>:</b> the model samples a chain plus answer, a checker scores only the outcome (tests pass, number matches), and the policy is updated toward high-reward samples. Details in <a class="xl" href="../01-foundations/training-alignment.html">training and alignment</a>.</li>
+          <li><b>Emergent length:</b> DeepSeek-R1-Zero, trained with RL from a base model without an SFT stage, grew its responses over training and began re-checking and backtracking on its own; nobody wrote those behaviors as rules.</li>
+          <li><b>Cold start and polish:</b> production recipes add curated long-chain SFT data before RL and preference tuning after it, fixing readability and language mixing that pure RL leaves behind.</li>
+          <li><b>Same architecture:</b> a reasoning model is still a decoder predicting tokens; the difference is a learned policy for spending <button class="term" type="button" data-tip="Output tokens the model generates while thinking before its final answer. Usually hidden or summarized by the API, always billed as output and counted against the output cap.">reasoning tokens</button> before the answer.</li>
+        </ul>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><b>pro:</b> strongest where answers are checkable, because that is where the reward signal was dense: math, code, logic, structured planning.</li>
+          <li><b>con:</b> outcome-only reward does not grade the chain itself, so the chain is optimized for usefulness, not for being an honest transcript.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+    <div class="sol-item">
+      <button class="sol-head" type="button">
+        <span class="sol-no">B</span>
+        <span class="sol-name">Test-time scaling strategies</span>
+        <span class="sol-sum">longer chains, votes, verifiers and search, each with its own cost curve</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li><b>Longer chains:</b> raise effort or budget; one sequential pass, latency grows with every reasoning token because decode is serial.</li>
+          <li><b><button class="term" type="button" data-tip="Sample several independent reasoning chains for the same prompt and return the most frequent final answer. Needs an answer format you can compare exactly.">Self-consistency</button>:</b> sample N chains, extract each final answer, return the mode. No extra model, but only works when answers are comparable (numbers, labels, test outcomes).</li>
+          <li><b>Best-of-N with a verifier:</b> score candidates with an outcome reward model, a <button class="term" type="button" data-tip="Process reward model: scores each intermediate step of a solution rather than only the final answer, so search can prune bad branches early.">PRM</button>, or a real checker such as a test suite; return the top one. A program-based verifier beats a learned one when you have it.</li>
+          <li><b>Tree search:</b> expand partial solutions step by step and prune with a PRM (beam search, lookahead). Spends compute where the verifier is uncertain instead of on full rollouts.</li>
+        </ul>
+        <div class="stats">
+          <div class="stat"><b>&gt;4×</b><span>compute efficiency over best-of-N when test-time compute is allocated per prompt by difficulty (Snell et al., 2024)</span></div>
+          <div class="stat"><b>14×</b><span>larger model outperformed at matched FLOPs, only on prompts where the small model already had non-trivial success (same study)</span></div>
+        </div>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><b>con:</b> returns diminish and vary by difficulty: easy prompts saturate fast, the hardest ones barely move, and there more pretraining compute wins.</li>
+          <li><b>con:</b> parallel methods multiply cost by N and inherit verifier errors; a reward model can be gamed by confident wrong answers.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+    <div class="sol-item">
+      <button class="sol-head" type="button">
+        <span class="sol-no">C</span>
+        <span class="sol-name">API controls and billing</span>
+        <span class="sol-sum">effort levels or budgets in, hidden tokens billed as output</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li><b>Depth control:</b> vendors converged on discrete effort levels; supported values and defaults vary per model. OpenAI: <code>reasoning.effort</code>. Anthropic: adaptive thinking plus <code>output_config.effort</code>, which replaces the older <code>budget_tokens</code> on newer models. Gemini: <code>thinking_level</code>. Adaptive modes may skip thinking on easy inputs.</li>
+          <li><b>Visibility:</b> raw chains are not returned. You get nothing or an opt-in summary written by a separate summarizer (OpenAI <code>reasoning.summary</code>, Anthropic <code>display: "summarized"</code>, Gemini thought summaries).</li>
+          <li><b>Billing:</b> all three bill the full reasoning, not the summary, at the output rate, and report it separately in usage (for example <code>output_tokens_details.reasoning_tokens</code>).</li>
+          <li><b>Caps:</b> the output limit covers reasoning plus answer. Hit it mid-thought and the response is <code>incomplete</code>, possibly with no visible text, and still billed.</li>
+        </ul>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>Effort</th><th>Reasoning tokens</th><th>Latency</th><th>Typical fit</th></tr></thead>
+          <tbody>
+            <tr><td class="m">none / minimal</td><td>few or none</td><td>closest to a chat model</td><td>extraction, classification, routing</td></tr>
+            <tr><td class="m">low</td><td>small</td><td>low</td><td>simple tool use, short edits</td></tr>
+            <tr><td class="m">medium</td><td>moderate</td><td>moderate</td><td>multi-step tasks, a common default</td></tr>
+            <tr><td class="m">high and above</td><td>large, task-dependent</td><td>seconds to minutes</td><td>hard math, debugging, long agent plans</td></tr>
+          </tbody>
+        </table></div>
+        <p class="note">Qualitative and illustrative: the token and latency columns show direction, not measured values. Actual spend per level differs by model and prompt; measure it on your own eval set.</p>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><span class="wlabel gotcha">gotcha</span> <b>con:</b> changing effort or budget mid-conversation can invalidate prompt-cache breakpoints (documented for Anthropic); pick a level per conversation and hold it.</li>
+          <li><b>con:</b> some vendors keep earlier turns' reasoning in context and bill it as input on later turns; long agent sessions grow faster than the visible transcript suggests.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+    <div class="sol-item">
+      <button class="sol-head" type="button">
+        <span class="sol-no">D</span>
+        <span class="sol-name">Interleaved thinking with tools</span>
+        <span class="sol-sum">reason after every tool result, and round-trip the encrypted state</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <ol class="steps">
+          <li><b>Think</b><span>plan which tool to call and why</span></li>
+          <li><b>Call tool</b><span>emit arguments; your code executes</span></li>
+          <li><b>Return result</b><span>with the prior reasoning items unchanged</span></li>
+          <li><b>Think again</b><span>judge the result, choose next step</span></li>
+          <li><b>Answer</b><span>when the success criteria are met</span></li>
+        </ol>
+        <h4>How it works</h4>
+        <ul>
+          <li><b>Within one turn:</b> the model reasons between tool calls instead of only up front, so it can react to a failing test or an empty search before committing to the next action. See <a class="xl" href="../04-tools-mcp/tool-calling.html">tool calling</a>.</li>
+          <li><b>Opaque state:</b> reasoning comes back as an <button class="term" type="button" data-tip="An encrypted copy of the model's full reasoning (Anthropic signature, OpenAI encrypted_content, Gemini thought signature). You cannot read it; you pass it back unchanged so the model can continue its own chain.">encrypted reasoning blob</button>. In stateless mode you resend it unchanged with the tool output; server-side conversation state does this for you.</li>
+          <li><b>Vendor shape:</b> OpenAI asks for all reasoning, call and output items since the last user message; Anthropic needs thinking blocks with signatures; Gemini needs thought signatures resent.</li>
+        </ul>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><b>pro:</b> fewer wasted tool calls and better recovery in long <a class="xl" href="../05-agents-orchestration/agent-patterns.html">agent loops</a>.</li>
+          <li><b>con:</b> dropping or editing the blob breaks continuity or errors out; middleware that "cleans" message history is a common culprit.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+    <div class="sol-item">
+      <button class="sol-head" type="button">
+        <span class="sol-no">E</span>
+        <span class="sol-name">Prompting a reasoner</span>
+        <span class="sol-sum">state the goal and how to verify it, not the steps</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li><b>Goal, constraints, format:</b> what to produce, what it must not violate, and the exact output shape. Vendor guides for reasoning models emphasize this over prescribed intermediate steps.</li>
+          <li><b>Define done:</b> for agentic work, state how the model should verify (run the tests, re-derive the total, cite the clause). It plans against that criterion.</li>
+          <li><b>Drop scaffolding:</b> "think step by step" or hand-written chains duplicate what training already does and can constrain a better plan.</li>
+          <li><b>Answer anchor:</b> ask for a fixed final line (for example <code>ANSWER: …</code>) when you vote, parse or grade. General patterns are in <a class="xl" href="../02-tokens-context/prompting.html">prompting</a>.</li>
+        </ul>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><b>con:</b> vague goals plus high effort yield long, expensive exploration of the wrong problem; effort is a tuning knob, not a substitute for a clear task.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+    <div class="sol-item">
+      <button class="sol-head" type="button">
+        <span class="sol-no">F</span>
+        <span class="sol-name">Evaluation and cost control</span>
+        <span class="sol-sum">measure cost per correct answer, cap budgets, route easy work away</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li><b>Sweep effort:</b> run your <a class="xl" href="../08-evals/evals.html">eval set</a> at each level, log accuracy, p50/p95 latency and output tokens; pick the knee of the curve, not the top.</li>
+          <li><b>Metric:</b> cost per correct answer, not cost per call. A cheaper level that needs retries can cost more.</li>
+          <li><b>Hard caps:</b> set the output limit with room for reasoning (OpenAI suggests reserving at least 25,000 tokens while experimenting), alert on <code>incomplete</code> responses.</li>
+          <li><b>Routing:</b> classify requests and send extraction and lookups to a non-reasoning model or minimal effort; reserve high effort for the hard tail.</li>
+        </ul>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><b>con:</b> a router adds a misclassification path; log routed-low failures and feed them back into the eval set.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+  </div>
+
+  <p class="warn"><b>Faithfulness caveat:</b> visible reasoning is not guaranteed to reflect the computation that produced the answer. Chen et al. (2025) planted hints in prompts; models that used a hint mentioned it in their chain often less than 20% of the time, and outcome-based RL improved this only up to a plateau. Treat chains and summaries as debugging aids, never as an audit trail.</p>
+
+  <h2 class="stage-label sl-when" id="when-to-use-when-not">Decision boundary</h2>
+  <div class="pc">
+    <div class="pc-col pros"><h4 class="pc-h">Use when</h4>
+      <ul>
+        <li>Correctness depends on multi-step derivation: math, proofs, algorithm design, tricky debugging.</li>
+        <li>Code with a checker: tests or compilers let you add best-of-N on top of the model's own reasoning.</li>
+        <li>Agentic tool loops where the model must judge each result and replan, with interleaved thinking enabled.</li>
+        <li>Planning under many constraints: scheduling, migrations, multi-document reconciliation.</li>
+        <li>A wrong answer costs far more than seconds of latency and extra output tokens.</li>
+      </ul>
+    </div>
+    <div class="pc-col cons"><h4 class="pc-h">Skip when</h4>
+      <ul>
+        <li>Latency is the product: autocomplete, voice turns, interactive UI under a second.</li>
+        <li>Simple extraction, classification or rewriting, where a chat model at a fraction of the tokens is as accurate.</li>
+        <li>Overthinking risk: trivial prompts trigger long chains that add cost and latency with no accuracy gain.</li>
+        <li>Very high volume with a fixed pattern; route to a small model or rules.</li>
+        <li>You need the reasoning itself as evidence; it is hidden, summarized and not guaranteed faithful.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2 class="stage-label sl-ex" id="example">Worked example</h2>
+  <div class="example">
+    <p class="ex-note">A finance-ops assistant gets two request types: pulling fields from an invoice (easy) and reconciling a ledger against bank lines (hard, one numeric answer). Easy requests go to low effort; hard ones get five medium-effort chains and a majority vote, escalating when no answer wins three votes. Hypothetical budget: if a hard chain uses about 4,000 output tokens, one vote costs about 20,000, so the vote is worth it only when the eval shows it lifts accuracy enough to beat a single high-effort call on cost per correct answer. Shown with the OpenAI Responses API; effort values vary by model.</p>
+    <pre class="code" data-lang="python" data-file="route_and_vote.py"><code><span class="tk-k">import</span> os
+<span class="tk-k">from</span> collections <span class="tk-k">import</span> Counter
+<span class="tk-k">from</span> openai <span class="tk-k">import</span> OpenAI
+
+client = OpenAI()
+MODEL = os.environ[<span class="tk-s">"REASONING_MODEL"</span>]  <span class="tk-c"># any model that accepts reasoning.effort</span>
+
+<span class="tk-k">def</span> <span class="tk-f">ask</span>(prompt, effort, cap=<span class="tk-n">25_000</span>):
+    r = client.responses.create(
+        model=MODEL, input=prompt,
+        reasoning={<span class="tk-s">"effort"</span>: effort},
+        max_output_tokens=cap)  <span class="tk-c"># caps reasoning + visible answer together</span>
+    <span class="tk-k">if</span> r.status == <span class="tk-s">"incomplete"</span>:
+        <span class="tk-k">raise</span> RuntimeError(<span class="tk-s">f"cap hit: </span>{r.incomplete_details.reason}<span class="tk-s">"</span>)
+    hidden = r.usage.output_tokens_details.reasoning_tokens
+    <span class="tk-f">print</span>(<span class="tk-s">f"</span>{effort}<span class="tk-s">: </span>{hidden}<span class="tk-s"> reasoning / </span>{r.usage.output_tokens}<span class="tk-s"> output tokens"</span>)
+    <span class="tk-k">return</span> r.output_text.strip()
+
+<span class="tk-k">def</span> <span class="tk-f">final</span>(text):
+    <span class="tk-k">return</span> text.rsplit(<span class="tk-s">"ANSWER:"</span>, <span class="tk-n">1</span>)[-<span class="tk-n">1</span>].strip()
+
+<span class="tk-k">def</span> <span class="tk-f">solve</span>(task, hard):
+    <span class="tk-k">if not</span> hard:  <span class="tk-c"># route: extraction never needs a vote</span>
+        <span class="tk-k">return</span> ask(task, <span class="tk-s">"low"</span>)
+    prompt = task + <span class="tk-s">"\nVerify the totals. End with one line: ANSWER: &lt;amount&gt;"</span>
+    votes = Counter(final(ask(prompt, <span class="tk-s">"medium"</span>)) <span class="tk-k">for</span> _ <span class="tk-k">in</span> <span class="tk-f">range</span>(<span class="tk-n">5</span>))
+    best, n = votes.most_common(<span class="tk-n">1</span>)[<span class="tk-n">0</span>]
+    <span class="tk-k">return</span> best <span class="tk-k">if</span> n &gt;= <span class="tk-n">3</span> <span class="tk-k">else</span> <span class="tk-k">None</span>  <span class="tk-c"># None: escalate to high effort or a human</span></code></pre>
+  </div>
+
+  <h2 class="stage-label sl-extra" id="watch-out">Failure modes</h2>
+  <div class="pit-list"><ul>
+    <li>Output cap too tight · the model spends it all thinking, returns <code>incomplete</code> with no answer, and you still pay · reserve headroom and alert on it</li>
+    <li>Reasoning blob dropped between tool calls · continuity breaks or the API rejects the turn · pass reasoning items and signatures back byte-for-byte</li>
+    <li>Treating the summary as the reasoning · it is written by a separate summarizer from hidden tokens and may omit what drove the answer · do not use it for compliance evidence</li>
+    <li>Overthinking simple prompts · long chains on trivial inputs burn tokens and latency · route easy traffic to minimal effort or a chat model</li>
+    <li>Voting without a canonical answer format · "1,200", "$1200" and "1200.00" split the vote · normalize before counting</li>
+    <li>Cost dashboards that count visible text · reasoning tokens and re-sent prior reasoning dominate the bill · read usage fields, not string length</li>
+  </ul></div>
+
+  <h2 class="stage-label sl-extra" id="remember">Keep in mind</h2>
+  <div class="remember"><ul>
+    <li>Reasoning models are decoders trained with RL on checkable outcomes to think before answering.</li>
+    <li>Test-time compute scales serially (longer chains) and in parallel (votes, verifiers, search).</li>
+    <li>Gains depend on difficulty: big on mid-hard checkable tasks, small on trivial or out-of-reach ones.</li>
+    <li>Hidden reasoning bills as output, counts against the cap and must be round-tripped in tool loops.</li>
+    <li>Prompt with goals and success criteria; effort is a tuning knob, not a fix for a vague task.</li>
+    <li>Optimize cost per correct answer, and never treat the visible chain as a faithful trace.</li>
+  </ul></div>
+
+    <section class="references" aria-labelledby="primary-sources"><h2 id="primary-sources">Primary sources</h2><ul><li><a href="https://arxiv.org/abs/2501.12948" rel="noreferrer">DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning</a></li><li><a href="https://arxiv.org/abs/2408.03314" rel="noreferrer">Scaling LLM Test-Time Compute Optimally can be More Effective than Scaling Model Parameters</a></li><li><a href="https://arxiv.org/abs/2505.05410" rel="noreferrer">Reasoning Models Don't Always Say What They Think</a></li><li><a href="https://developers.openai.com/api/docs/guides/reasoning" rel="noreferrer">OpenAI: Reasoning models guide</a></li><li><a href="https://platform.claude.com/docs/en/build-with-claude/thinking" rel="noreferrer">Anthropic: Thinking (adaptive, display, tool use)</a></li></ul></section>
+
+    <section class="lab-check" aria-labelledby="try-verify-explain"><h2 id="try-verify-explain">Try, verify, explain</h2><ol><li>Trace one interleaved tool turn: list every item your code must send back after the first tool call (user message, reasoning blob, tool call, tool result) and mark which one the model cannot read but still needs.</li><li>Measure the effort curve: run 30 eval items at low, medium and high effort, record accuracy, p95 latency and <code>reasoning_tokens</code>, then compute cost per correct answer = (total output tokens × output price) ÷ correct count, and pick the level at the knee.</li><li>Explain why self-consistency improves accuracy only when sampled chains make partly independent errors, and why a majority vote cannot help on a prompt where the model is confidently wrong in most samples.</li></ol></section>
+
+    <nav class="pager" id="pager"></nav>
+
+    <footer class="footer">
+      learning-project · tracks/ai · press ⌘K or / to search every chapter · diagrams load Mermaid from a CDN when online
+    </footer>
+  </div>
+</main>
+
+<script src="../../js/app.js"></script>
+</body>
+</html>

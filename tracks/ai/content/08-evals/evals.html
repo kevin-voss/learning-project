@@ -11,19 +11,18 @@
 <link rel="stylesheet" href="../../css/base.css">
 <link rel="stylesheet" href="../../css/components.css">
 <link rel="stylesheet" href="../../css/flow.css">
-<link rel="stylesheet" href="../../css/print.css">
 </head>
 <body>
 
 <div id="progress"></div>
 
 <header class="topbar">
-  <button class="tbtn" id="nav-toggle" type="button" aria-label="Toggle navigation">☰</button>
+  <button class="tbtn" id="nav-toggle" type="button" aria-label="Open contents" aria-controls="toc" aria-expanded="false">☰</button>
   <a class="brand" href="../../index.html"><b>ai</b>·field-guide</a>
+  <a class="hub-link" href="../../../../hub/index.html">Learning hub</a>
   <div class="tools">
-    <input id="toc-filter" type="search" placeholder="filter · /" aria-label="Filter topics">
+    <button class="tbtn search-btn" id="search-open" type="button" aria-label="Search the guide"><span>Search</span><kbd>⌘K</kbd></button>
     <button class="tbtn" id="expand-all" type="button">expand</button>
-    <button class="tbtn" id="print-btn" type="button">print</button>
   </div>
 </header>
 
@@ -32,152 +31,160 @@
 <main class="main">
   <div class="content">
     <header class="topic-head">
-      <div class="kicker">Part 5 · Proof & production · 19/24</div>
+      <div class="kicker">Part 6 · Proof &amp; production · 28/31</div>
       <h1>Evals &amp; observability</h1>
       <p class="lead">Every change to an LLM system moves behavior in ways nobody can hold in their head. Evals turn that unease into numbers measured on a fixed set of questions, and traces turn a bad number into a named stage. This is the topic that makes every other topic safe to change.</p>
+      <p class="chapter-summary"><b>In this chapter</b> Build an evaluation loop from representative cases, task metrics, regression slices and production traces without mistaking judge scores for truth.</p>
     </header>
 
   <div class="beat problem">
-    <div class="beat-h"><span class="bt">Problem</span><span class="bh">non-determinism ships regressions dressed as updates</span></div>
+    <h2 class="beat-h" id="problem-non-determinism-ships-regressions-dressed-as-updates"><span class="bt">Problem</span><span class="bh">non-determinism ships regressions dressed as updates</span></h2>
     <ul>
-      <li><b>Change anything and everything moves.</b> New model version, prompt edit, <a class="xl" href="#chunking">chunk size</a> 800 → 600: behavior shifts silently across the whole product.</li>
-      <li><b>Vibes do not scale.</b> A team without evals has one test, "seems fine". They either ship regressions or grow too scared to touch the prompt at all.</li>
-      <li><b>Non-determinism:</b> the same input gives a different answer on Tuesday. One manual spot check proves nothing, only a measured score over a fixed question set is an honest signal.</li>
-      <li><b>Wrong answer, no suspects.</b> Retrieval, tools, prompt, <a class="xl" href="../06-memory/memory.html">memory</a>: when the answer is bad you cannot tell which one broke. Debugging without traces is guessing with extra steps.</li>
+      <li><b>Change anything and everything moves.</b> New model version, prompt edit, <a class="xl" href="../03-rag-search/chunking.html">chunk size</a> 800 → 600: behavior shifts silently across the product.</li>
+      <li><b>Vibes do not scale.</b> Without evals the only test is "seems fine", so teams either ship regressions or stop touching the prompt.</li>
+      <li><b>Non-determinism:</b> the same input answers differently on Tuesday. A spot check proves nothing; only a score over a fixed question set is an honest signal.</li>
+      <li><b>Wrong answer, no suspects.</b> Retrieval, tools, prompt, <a class="xl" href="../06-memory/memory.html">memory</a>: without traces you cannot tell which one broke.</li>
     </ul>
   </div>
 
   <div class="beat solution">
-    <div class="beat-h"><span class="bt">Solution</span><span class="bh">the evaluation pyramid, run as a CI gate on every change</span></div>
+    <h2 class="beat-h" id="solution-the-evaluation-pyramid-run-as-a-ci-gate-on-every-change"><span class="bt">Solution</span><span class="bh">the evaluation pyramid, run as a CI gate on every change</span></h2>
     <ul>
-      <li><span class="wlabel why">why</span> <b>Four layers:</b> <b>component</b> (did each part work), <b>task</b> (is each answer good), <b>system</b> (is the pipeline fast, cheap and successful end to end), <b>online</b> (do real users succeed). Cheap and broad at the base, expensive and rare at the top.</li>
-      <li><b>A <button class="term" type="button" data-tip="30-200 curated questions with expected facts and sources. The fixed ruler every change gets scored against.">golden set</button> runs the pyramid in CI:</b> every prompt, model or retrieval change gets scored, a drop blocks the merge.</li>
+      <li><span class="wlabel why">why</span> <b>Four layers:</b> <b>component</b>, <b>task</b>, <b>system</b> (end to end), <b>online</b> (real users). Cheap and broad at the base, expensive and rare at the top.</li>
+      <li><b>A <button class="term" type="button" data-tip="30-200 curated questions with expected facts and sources. The fixed ruler every change gets scored against.">golden set</button> runs the pyramid in CI:</b> every prompt, model or retrieval change gets scored; a drop blocks the merge.</li>
       <li><b>A trace for every run</b> turns a red score into a named node: which query, which chunks, which tool call.</li>
     </ul>
-    <div class="diagram"><div class="diag-body"><pre class="mermaid">graph BT
-  C[Component · retrieval recall, tool-call validity, asserts] --> T[Task · answer quality per query, judged]
-  T --> S[System · end-to-end latency, cost, task success]
-  S --> O[Online · real users, A/B, drift]
-  O -.->|every production failure becomes a new golden case| C</pre></div></div>
+    <figure class="diagram"><div class="diag-body"><pre class="mermaid">flowchart TB
+  subgraph BASE["Cheap and broad"]
+    direction LR
+    C["Component&lt;br/&gt;recall, tool calls,&lt;br/&gt;asserts"] --> T["Task&lt;br/&gt;judged answer quality"]
+  end
+  subgraph TOP["Costly and rare"]
+    direction LR
+    S["System&lt;br/&gt;latency, cost, success"] --> O["Online&lt;br/&gt;real users, A/B, drift"]
+  end
+  BASE --> TOP
+  TOP -.->|"every prod failure →&lt;br/&gt;new golden case"| BASE</pre></div><figcaption>Run the cheap bottom row on every change and the costly top row rarely; the dotted arrow is the ratchet, where each production failure becomes a permanent golden case.</figcaption></figure>
   </div>
 
   <div class="beat how">
-    <div class="beat-h"><span class="bt">How</span><span class="bh">each layer · the golden set · judges and their biases · metrics · CI gates · traces</span></div>
+    <h2 class="beat-h" id="how-each-layer-the-golden-set-judges-and-their-biases-metrics-ci-gates-traces"><span class="bt">How</span><span class="bh">each layer · the golden set · judges and their biases · metrics · CI gates · traces</span></h2>
 
     <h3 id="evals--the-pyramid-layer-by-layer">the pyramid, layer by layer</h3>
     <ul>
-      <li><b>Component, did each part work:</b> retrieval recall against expected chunks, tool-call validity (right tool, sane arguments, valid JSON per <a class="xl" href="../04-tools-mcp/tool-calling.html">structured output</a>), deterministic asserts. Fast, cheap, pinpointed.</li>
-      <li><b>Task, is each answer good:</b> score every golden question. Rubrics and judges for the fuzzy middle, pairwise for decisions, a small human sample for calibration.</li>
-      <li><b>System, does the pipeline hold:</b> end-to-end runs over a workload. Latency p50 and p95, tokens and cost per task next to <a class="xl" href="../02-tokens-context/tokens-cost.html">token budgets</a>, task success rate.</li>
-      <li><b>Online, do real users succeed:</b> A/B on task-success metrics, weak signals like thumbs, drift watch as the corpus shifts.</li>
-      <li><b>Split retrieval from generation:</b> "answers are bad" is unactionable. "Recall fine, faithfulness tanked" names the layer and halves the debugging time. This split is the whole game, see <a class="xl" href="#rag-overview">RAG</a>.</li>
+      <li><b>Component, did each part work:</b> retrieval recall against expected chunks, tool-call validity (right tool, sane arguments, valid JSON per <a class="xl" href="../04-tools-mcp/tool-calling.html">structured output</a>), asserts. Fast and pinpointed.</li>
+      <li><b>Task, is each answer good:</b> score every golden question. Judges with rubrics for the fuzzy middle, pairwise for decisions, a human sample for calibration.</li>
+      <li><b>System, does the pipeline hold:</b> end-to-end runs over a workload: p50 and p95 latency, cost per task against <a class="xl" href="../02-tokens-context/tokens-cost.html">token budgets</a>, success rate.</li>
+      <li><b>Online, do real users succeed:</b> A/B on task success, thumbs, drift.</li>
+      <li><b>Split retrieval from generation:</b> "answers are bad" is unactionable; "recall fine, faithfulness tanked" names the layer. This split is the whole game, see <a class="xl" href="../03-rag-search/rag-overview.html">RAG</a>.</li>
     </ul>
 
     <h3 id="evals--the-golden-set-your-fixed-ruler">the golden set, your fixed ruler</h3>
     <ul>
       <li><b>30 to 200 curated questions,</b> each with expected facts (what a good answer must contain) and expected sources (the chunks retrieval should fetch).</li>
-      <li><b>Write it before v2 of anything.</b> Porting prompts, swapping models, tuning <a class="xl" href="../03-rag-search/search-rerank.html">search and rerankers</a> without a ruler means you cannot tell better from different.</li>
-      <li><b>Refresh from real failures:</b> every production incident becomes a new case. Reproduce it, fix it, and the suite proves it stays fixed. The floor ratchets up.</li>
-      <li><b>Version it like code:</b> reviewed diffs, an owner, a changelog. A golden set nobody can reproduce is a rumor, not a test.</li>
+      <li><b>Write it before v2 of anything.</b> Without a ruler, a ported prompt, swapped model or tuned <a class="xl" href="../03-rag-search/search-rerank.html">reranker</a> is only different, not provably better.</li>
+      <li><b>Refresh from real failures:</b> every incident becomes a case, so the suite proves the fix holds. The floor ratchets up.</li>
+      <li><b>Version it like code:</b> reviewed diffs, an owner, a changelog. A golden set nobody can reproduce is a rumor.</li>
       <li><b>Keep a holdout:</b> a slice you never tune against, so its score measures generalization, not memorization.</li>
-      <li><b>Freeze the world around it:</b> pinned model and judge versions, temperature 0 where possible, frozen corpus snapshot, fixed <a class="xl" href="../06-memory/memory.html">memory</a> fixtures. Otherwise runs are not comparable.</li>
+      <li><b>Freeze the world around it:</b> pinned model and judge versions, temperature 0 where possible, a corpus snapshot, fixed <a class="xl" href="../06-memory/memory.html">memory</a> fixtures. Otherwise runs are not comparable.</li>
     </ul>
 
     <h3 id="evals--offline-evals-deterministic-checks-first">offline evals, deterministic checks first</h3>
     <ul>
-      <li><b>Free and unglamorous, catches plenty:</b> does the JSON parse, is every citation real (present in the retrieved sources), does the answer mention the refund window, did each red-team prompt from <a class="xl" href="../07-security/injection.html">prompt injection</a> and <a class="xl" href="../07-security/guardrails.html">guardrails</a> get refused.</li>
-      <li><b>These are unit tests:</b> plain asserts in the existing suite, run on every commit. No judge, no tokens, no flakiness.</li>
-      <li><b>Only then the fuzzy middle:</b> faithful, complete, grounded, tone. Deterministic checks cannot grade these, that is the judge's job.</li>
+      <li><b>Free and unglamorous, catches plenty:</b> JSON parses, every citation is in the retrieved sources, the answer mentions the refund window, each red-team prompt from <a class="xl" href="../07-security/injection.html">prompt injection</a> and <a class="xl" href="../07-security/guardrails.html">guardrails</a> is refused.</li>
+      <li><b>These are unit tests:</b> plain asserts on every commit. No judge, no tokens, no flakiness.</li>
+      <li><b>Then the fuzzy middle:</b> faithful, complete, grounded, tone: the judge's job.</li>
     </ul>
 
     <h3 id="evals--llm-as-judge-with-humility">LLM-as-judge, with humility</h3>
     <ul>
-      <li><button class="term" type="button" data-tip="A second model scores outputs against a rubric. Cheap and scalable, but biased: first position wins, longer looks better, models prefer their own style.">LLM-as-judge</button> grades what asserts cannot: <b>faithful</b> (every claim supported by context, the anti-hallucination number), <b>complete</b> (answers the question asked), <b>grounded</b> (cites real sources).</li>
-      <li><b>Position bias:</b> in a comparison, the first answer quietly wins. <b>Mitigation:</b> run both orders and average.</li>
-      <li><b>Verbosity bias:</b> longer looks better. <b>Mitigation:</b> a concise rubric that requires reasons before scores.</li>
-      <li><b>Self-preference:</b> models favor outputs in their own style. <b>Mitigation:</b> an ensemble judge, several models vote, and pick a judge from a different family than the system under test.</li>
-      <li><b>Calibrate:</b> hand-score a human-labeled sample, measure judge agreement, re-check whenever the judge model changes. Read absolute scores as trend lines, not gospel.</li>
+      <li><button class="term" type="button" data-tip="A second model scores outputs against a rubric. Cheap and scalable, but biased: first position wins, longer looks better, models prefer their own style.">LLM-as-judge</button> grades <b>faithful</b> (every claim supported by context, the anti-hallucination number), <b>complete</b> (answers the question asked), <b>grounded</b> (cites real sources).</li>
+      <li><b>Position bias:</b> the first answer quietly wins. <b>Fix:</b> run both orders, average.</li>
+      <li><b>Verbosity bias:</b> longer looks better. <b>Fix:</b> a concise rubric, reasons before scores.</li>
+      <li><b>Self-preference:</b> models favor their own style. <b>Fix:</b> a judge ensemble, including a different model family than the system under test.</li>
+      <li><b>Calibrate:</b> measure agreement with a human-labeled sample; re-check when the judge model changes. Read scores as trends.</li>
     </ul>
 
     <h3 id="evals--ragas-style-metrics-plainly">RAGAS-style metrics, plainly</h3>
     <ul>
-      <li><b>Faithfulness:</b> the fraction of answer claims grounded in the retrieved context. High means answers stick to sources, low means hallucination.</li>
-      <li><b>Answer relevancy:</b> does the answer address the question actually asked, or something adjacent.</li>
-      <li><b>Context precision:</b> of the chunks retrieved, are the useful ones ranked at the top where the prompt will actually use them.</li>
-      <li><b>Context recall:</b> did retrieval fetch all the chunks the expected answer needs. Misses here are a retrieval problem, not a generation problem.</li>
-      <li><b>Read them as a pair:</b> low recall fixes <a class="xl" href="../03-rag-search/search-rerank.html">search</a>, high recall with low faithfulness fixes prompts and grounding. One number alone cannot say which.</li>
+      <li><b>Faithfulness:</b> share of answer claims grounded in the retrieved context. Low means hallucination.</li>
+      <li><b>Answer relevancy:</b> does the answer address the question asked, or something adjacent.</li>
+      <li><b>Context precision:</b> are the useful chunks ranked at the top, where the prompt uses them.</li>
+      <li><b>Context recall:</b> did retrieval fetch every chunk the expected answer needs. Misses are a retrieval problem.</li>
+      <li><b>Read them as a pair:</b> low recall means fix <a class="xl" href="../03-rag-search/search-rerank.html">search</a>; high recall with low faithfulness means fix prompts and grounding.</li>
     </ul>
 
     <h3 id="evals--agent-evals-trajectories-not-just-answers">agent evals, trajectories not just answers</h3>
     <ul>
-      <li><b>Tool-call correctness:</b> did the agent in <a class="xl" href="../05-agents-orchestration/agent-patterns.html">agent patterns</a> call the right tool with sane arguments in a sensible order. Grade the path, not just the destination.</li>
-      <li><b>Step efficiency:</b> loops and retries burn budget. Track steps per task alongside answer quality.</li>
-      <li><b>Compaction checks:</b> long-session evals verify the summary still holds the decision after three compactions, see <a class="xl" href="../06-memory/memory.html">memory</a>.</li>
+      <li><b>Tool-call correctness:</b> did the agent in <a class="xl" href="../05-agents-orchestration/agent-patterns.html">agent patterns</a> call the right tool, with sane arguments, in a sensible order. Grade the path, not just the answer.</li>
+      <li><b>Step efficiency:</b> loops and retries burn budget; track steps per task.</li>
+      <li><b>Compaction checks:</b> does the summary still hold the decision after three compactions, see <a class="xl" href="../06-memory/memory.html">memory</a>.</li>
     </ul>
 
     <h3 id="evals--online-evals-real-users">online evals, real users</h3>
     <ul>
       <li><b>A/B with task-success metrics:</b> resolution rate, completed checkout, retry count. Never thumbs alone.</li>
-      <li><b>Thumbs are a weak signal:</b> happy users click nothing, unhappy ones vanish without clicking either. Survivorship bias by design.</li>
-      <li><button class="term" type="button" data-tip="Route copies of real production requests to the new version and score it offline. Users never see it until the numbers say go.">Shadow traffic</button> before A/B: run the candidate on duplicated requests, judge the outputs offline, zero user risk.</li>
-      <li><b>Watch drift, not averages:</b> retrieval scores and query mix shift as the corpus and users change. A flat average can hide a newly broken query class.</li>
+      <li><b>Thumbs are a weak signal:</b> happy users click nothing, unhappy ones often leave silently.</li>
+      <li><button class="term" type="button" data-tip="Route copies of real production requests to the new version and score it offline. Users never see it until the numbers say go.">Shadow traffic</button> before A/B: run the candidate on duplicated requests, judge offline, zero user risk.</li>
+      <li><b>Watch drift, not averages:</b> query mix and retrieval scores shift with the corpus and users; slice by query class.</li>
     </ul>
 
     <h3 id="evals--regression-gates-in-ci">regression gates in CI</h3>
     <ul>
-      <li><b>Eval on every change:</b> prompt edit, model bump, chunking or retrieval tweak, <a class="xl" href="../07-security/guardrails.html">guardrail</a> rule. If it changes behavior, it runs the suite.</li>
-      <li><b>Block on drop:</b> fail the PR when any metric falls past a threshold (say 0.03) or latency and cost regress past budget.</li>
-      <li><b>Report per question,</b> not just the mean: an average can hide one badly broken query class.</li>
-      <li><b>Stage it:</b> a smoke subset (10-20 cases) on every PR, the full set nightly. Cache judge verdicts, they are pure cost on reruns.</li>
+      <li><b>Eval on every behavior change:</b> prompt edit, model bump, chunking or retrieval tweak, <a class="xl" href="../07-security/guardrails.html">guardrail</a> rule.</li>
+      <li><b>Block on drop:</b> fail the PR when a metric falls past a threshold (say 0.03) or latency or cost exceed budget.</li>
+      <li><b>Report per question,</b> not just the mean, which hides a broken query class.</li>
+      <li><b>Stage it:</b> a smoke subset (10-20 cases) per PR, the full set nightly. Cache judge verdicts; reruns are pure cost.</li>
     </ul>
-    <p class="warn"><b>A flaky red is worse than no eval.</b> The moment a team learns red sometimes means nothing, they stop trusting green too. Fix flakiness (unfrozen fixtures, live APIs, temperature above 0) the day it appears.</p>
+    <p class="warn"><b>A flaky red is worse than no eval.</b> Once red sometimes means nothing, nobody trusts green either. Fix flakiness (unfrozen fixtures, live APIs, temperature above 0) the day it appears.</p>
 
     <h3 id="evals--observability-trace-every-run">observability, trace every run</h3>
     <ul>
-      <li><b>One run, one tree:</b> every prompt, retrieved chunk with its score, tool call and result, token counts, latency, cost. The <button class="term" type="button" data-tip="The full record of one run: every input, output, retrieval, tool call and timing, stored and queryable.">trace</button> is the difference between debugging and guessing.</li>
-      <li><b>Log what the model saw,</b> including injected memory and retrieved context, so any past answer can be explained after the fact.</li>
-      <li><b>Tooling:</b> LangSmith, Braintrust, OpenTelemetry. A span table you own and can query is the honest minimum.</li>
+      <li><b>One run, one tree:</b> every prompt, retrieved chunk and score, tool call and result, tokens, latency, cost. The <button class="term" type="button" data-tip="The full record of one run: every input, output, retrieval, tool call and timing, stored and queryable.">trace</button> is the difference between debugging and guessing.</li>
+      <li><b>Log what the model saw,</b> including injected memory and retrieved context, so any past answer is explainable.</li>
+      <li><b>Tooling:</b> LangSmith, Braintrust, OpenTelemetry; a queryable span table you own is the minimum.</li>
     </ul>
-    <div class="diagram"><div class="diag-body"><pre class="mermaid">graph TD
-  R[Bad answer reported] --> O[Open the trace]
-  O --> Q1{Retrieval recall ok?}
-  Q1 -->|no| F1[Fix chunking or search]
-  Q1 -->|yes| Q2{Faithfulness ok?}
-  Q2 -->|no| F2[Tighten prompt, rerank, grounding]
-  Q2 -->|yes| Q3{Tool calls valid?}
-  Q3 -->|no| F3[Fix schemas or agent loop]
-  Q3 -->|yes| F4[Rewrite the prompt]
-  F1 --> G[Add the case to the golden set]
-  F2 --> G
-  F3 --> G
-  F4 --> G
-  G --> CI[CI gate proves it stays fixed]</pre></div></div>
+    <figure class="diagram"><div class="diag-body"><pre class="mermaid">flowchart TB
+  subgraph TRI["Bad answer: open the trace"]
+    direction LR
+    Q1{{"Recall ok?"}} --> Q2{{"Faithful?"}}
+    Q1 -.-> F1["Fix chunking&lt;br/&gt;or search"]
+    Q2 --> Q3{{"Tools valid?"}}
+    Q2 -.-> F2["Tighten prompt,&lt;br/&gt;rerank, grounding"]
+    Q3 --> F4["Rewrite&lt;br/&gt;the prompt"]
+    Q3 -.-> F3["Fix schemas&lt;br/&gt;or agent loop"]
+  end
+  TRI --> LOCK
+  subgraph LOCK["Every fix ends here"]
+    direction LR
+    G["Add the case to&lt;br/&gt;the golden set"] --> CI["CI gate proves&lt;br/&gt;it stays fixed"]
+  end</pre></div><figcaption>Check retrieval before generation before tools: solid arrows mean the check passed, dotted ones lead to that stage's fix, and no fix is done until it is a golden case.</figcaption></figure>
   </div>
 
   <div class="beat when">
-    <div class="beat-h"><span class="bt">When</span><span class="bh">eval method picker</span></div>
+    <h2 class="beat-h" id="when-eval-method-picker"><span class="bt">When</span><span class="bh">eval method picker</span></h2>
     <div class="tbl-wrap">
       <table>
         <thead><tr><th>Method</th><th class="hu">Use when</th><th class="ha">Avoid when</th><th class="hw">Watch out</th></tr></thead>
         <tbody>
           <tr><td>Deterministic asserts</td><td class="u">Every commit. Schema, citations, red-team injections</td><td class="avoid">Fuzzy quality questions asserts cannot grade</td><td class="watch">Green asserts can still hide a bad answer</td></tr>
-          <tr><td>Retrieval metrics</td><td class="u">Any <a class="xl" href="#rag-overview">RAG</a> change: chunking, hybrid, rerank</td><td class="avoid">Pure generation tasks with no retrieval</td><td class="watch">Only as good as the expected-source labels</td></tr>
-          <tr><td>LLM-as-judge</td><td class="u">Scaled scoring of faithfulness and rubrics</td><td class="avoid">High-stakes calls with no human in sight</td><td class="watch">Position, verbosity and self-preference bias. Calibrate</td></tr>
-          <tr><td>Pairwise + swap</td><td class="u">Deciding between two models or prompts</td><td class="avoid">Broad coverage questions, use the judge instead</td><td class="watch">Without the swap the first answer quietly wins</td></tr>
-          <tr><td>Human review</td><td class="u">Calibration, weekly samples, regulated domains</td><td class="avoid">Scoring everything by hand, it caps around 50 items</td><td class="watch">Annotator disagreement is a spec problem</td></tr>
+          <tr><td>Retrieval metrics</td><td class="u">Any <a class="xl" href="../03-rag-search/rag-overview.html">RAG</a> change: chunking, hybrid, rerank</td><td class="avoid">Pure generation tasks with no retrieval</td><td class="watch">Only as good as the expected-source labels</td></tr>
+          <tr><td>LLM-as-judge</td><td class="u">Scaled scoring of faithfulness and rubrics</td><td class="avoid">High-stakes calls with no human in sight</td><td class="watch">Position, verbosity, self-preference bias</td></tr>
+          <tr><td>Pairwise + swap</td><td class="u">Deciding between two models or prompts</td><td class="avoid">Broad coverage, use the judge instead</td><td class="watch">Without the swap the first answer quietly wins</td></tr>
+          <tr><td>Human review</td><td class="u">Calibration, weekly samples, regulated domains</td><td class="avoid">Scoring everything; it caps around 50 items</td><td class="watch">Annotator disagreement is a spec problem</td></tr>
           <tr><td>Online A/B</td><td class="u">Post-launch truth on task success</td><td class="avoid">Pre-launch, no traffic means no signal</td><td class="watch">Survivorship bias, averages hide drift</td></tr>
         </tbody>
       </table>
     </div>
-    <p class="note"><b>No golden set yet?</b> Start today with 30 questions pulled from real logs, expected facts jotted per question, deterministic asserts around them. A small ruler beats vibes immediately, and it grows with every incident you feed it.</p>
+    <p class="note"><b>No golden set yet?</b> Start today: 30 questions from real logs, expected facts per question, deterministic asserts around them. A small ruler beats vibes immediately and grows with every incident you feed it.</p>
   </div>
 
   <div class="beat example">
-    <div class="beat-h"><span class="bt">Example</span><span class="bh">the ruler, the judge, the report</span></div>
+    <h2 class="beat-h" id="example-the-ruler-the-judge-the-report"><span class="bt">Example</span><span class="bh">the ruler, the judge, the report</span></h2>
     <ul>
-      <li><b>Headline numbers are eval results.</b> Anthropic's "contextual retrieval cuts retrieval failures by 49 percent" is a golden-set measurement, that is what made it shippable.</li>
-      <li><b>Support bots</b> gate every prompt change behind a 100-ticket golden set. Regressions die in CI, not in the ticket queue.</li>
-      <li><b>Teams with trend dashboards</b> (faithfulness next to latency and cost) refactor prompts weekly. Teams without them have not touched the prompt since launch. Be the first team.</li>
+      <li><b>Headline numbers are eval results.</b> Anthropic's "contextual retrieval cuts retrieval failures by 49 percent" is a golden-set measurement; that is what made it shippable.</li>
+      <li><b>Support bots</b> gate prompt changes behind a 100-ticket golden set, so regressions die in CI, not the ticket queue.</li>
+      <li><b>Teams with trend dashboards</b> (faithfulness next to latency and cost) refactor prompts weekly; teams without them freeze the prompt at launch.</li>
     </ul>
     <pre class="code" data-lang="sql" data-file="golden.sql"><code><span class="tk-k">CREATE TABLE</span> golden_case (
   case_id          uuid <span class="tk-k">PRIMARY KEY</span>,
@@ -190,65 +197,67 @@
   added_by         text <span class="tk-k">NOT NULL</span>         <span class="tk-c">-- version it like code, own the diff</span>
 );</code></pre>
     <pre class="code" data-lang="python" data-file="judge.py"><code>RUBRIC = (
-    <span class="tk-s">"Grade ANSWER against CONTEXT for faithfulness.
-"</span>
-    <span class="tk-s">"1. List every claim in ANSWER.
-"</span>
-    <span class="tk-s">"2. Mark each claim supported or unsupported by CONTEXT.
-"</span>
-    <span class="tk-s">"3. Output JSON only, for example: "</span>
-    <span class="tk-s">'{"supported": 6, "unsupported": 1}'</span>
-    <span class="tk-s">"Reason first, score last."</span>
+    <span class="tk-s">"Grade ANSWER against CONTEXT for faithfulness.\n"</span>
+    <span class="tk-s">"1. List every claim in ANSWER.\n"</span>
+    <span class="tk-s">"2. Mark each claim supported or unsupported by CONTEXT.\n"</span>
+    <span class="tk-s">"3. Return one valid JSON object only, with no prose outside it. Schema: {\"claims\": [{\"claim\": string, \"supported\": boolean, \"evidence\": string}], \"summary\": {\"supported\": integer, \"unsupported\": integer}}. Counts must match the claim objects."</span>
 )
 
 verdict = <span class="tk-f">judge_model</span>(RUBRIC, context=run.chunks, answer=run.answer)
 <span class="tk-c"># pairwise: swap A and B, run both orders, average the verdicts</span></code></pre>
-    <pre class="code" data-lang="python" data-file="ragas_eval.py"><code><span class="tk-k">from</span> ragas <span class="tk-k">import</span> evaluate
-<span class="tk-k">from</span> ragas.metrics <span class="tk-k">import</span> faithfulness, answer_relevancy, context_precision, context_recall
-<span class="tk-k">from</span> datasets <span class="tk-k">import</span> Dataset
+    <pre class="code" data-lang="python" data-file="retrieval_metrics.py"><code>def retrieval_metrics(retrieved_ids, relevant_ids):
+    """Precision@k counts unique retrieved IDs; recall uses unique gold IDs."""
+    retrieved = list(dict.fromkeys(retrieved_ids))
+    relevant = set(relevant_ids)
+    hits = sum(item in relevant for item in retrieved)
+    precision = hits / len(retrieved) if retrieved else 0.0
+    recall = hits / len(relevant) if relevant else None  # undefined: no gold items
+    return precision, recall
 
-ds = Dataset.<span class="tk-f">from_dict</span>({
-    <span class="tk-s">"question"</span>: [c.question <span class="tk-k">for</span> c <span class="tk-k">in</span> golden],
-    <span class="tk-s">"answer"</span>:   [r.answer <span class="tk-k">for</span> r <span class="tk-k">in</span> runs],
-    <span class="tk-s">"contexts"</span>: [r.chunks <span class="tk-k">for</span> r <span class="tk-k">in</span> runs],  <span class="tk-c"># what retrieval actually fetched</span>
-})
-
-report = <span class="tk-f">evaluate</span>(ds, metrics=[
-    faithfulness, answer_relevancy, context_precision, context_recall,
-])
-<span class="tk-c"># CI gate: fail the PR when any metric drops by more than 0.03</span></code></pre>
+# Offline fixture: one relevant hit among two unique retrieved; two gold items.
+precision, recall = retrieval_metrics(["a", "x", "a"], ["a", "b"])
+print(f"precision@k={precision:.2f}, recall@k={recall:.2f}")
+# Expected: precision@k=0.50, recall@k=0.50
+# Empty retrieval -> precision 0.0; empty relevant set -> recall None (undefined).
+assert retrieval_metrics([], ["a"]) == (0.0, 0.0)
+assert retrieval_metrics(["a"], [])[1] is None</code></pre>
+    <p class="note">This ID-based precision@k / recall@k fixture needs only labeled chunk IDs, no model judgment. Ragas has reference-based metrics (context precision/recall against reference contexts or answers) and reference-free ones (faithfulness, answer relevancy); check each metric’s required dataset fields first. See the <a href="https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/context_precision/" rel="noreferrer">current context precision documentation</a>.</p>
   </div>
 
   <div class="beat pitfalls">
-    <div class="beat-h"><span class="bt">Pitfalls</span><span class="bh">overfitting · judge drift · the cost of measuring</span></div>
+    <h2 class="beat-h" id="pitfalls-overfitting-judge-drift-the-cost-of-measuring"><span class="bt">Pitfalls</span><span class="bh">overfitting · judge drift · the cost of measuring</span></h2>
     <ul>
-      <li><b>Overfitting the golden set:</b> you optimize 100 questions, not your users. Keep the holdout, refresh quarterly from production, retire stale cases.</li>
-      <li><b>Judge drift:</b> the judge model gets silently updated and scores move with zero code change on your side. Pin the judge version, re-calibrate on the human-labeled sample on a schedule.</li>
-      <li><b>Cost of evals:</b> full-suite judge runs burn tokens and minutes on every PR. Smoke per PR, full nightly, cache verdicts, sample instead of scoring everything always.</li>
-      <li><b>Flaky goldens:</b> live APIs, unfrozen memory, unpinned models produce random reds. Random reds train the team to ignore reds.</li>
-      <li><b>Averages hide regressions:</b> one broken query class sits happily behind a fine mean. Per-question diffs on every report.</li>
-      <li><b>Env mismatch:</b> evals on a stale corpus snapshot or a different model than production score a system you do not actually run.</li>
-      <li><b>Survivorship bias online:</b> silence is not satisfaction. Pair thumbs with task-success metrics before believing them.</li>
+      <li><b>Overfitting the golden set:</b> you optimize 100 questions, not users. Keep the holdout, refresh quarterly from production, retire stale cases.</li>
+      <li><b>Judge drift:</b> a silent judge update moves scores with zero code change. Pin the judge version; re-calibrate on the human sample on a schedule.</li>
+      <li><b>Cost of evals:</b> full judge runs burn tokens and minutes. Smoke per PR, full nightly, cache verdicts, sample.</li>
+      <li><b>Flaky goldens:</b> live APIs, unfrozen memory and unpinned models produce random reds that teach the team to ignore red.</li>
+      <li><b>Averages hide regressions:</b> one broken query class sits behind a fine mean. Per-question diffs on every report.</li>
+      <li><b>Env mismatch:</b> a stale corpus snapshot or a different model than production scores a system you do not run.</li>
+      <li><b>Survivorship bias online:</b> silence is not satisfaction. Pair thumbs with task-success metrics.</li>
     </ul>
   </div>
 
   <div class="beat checklist">
-    <div class="beat-h"><span class="bt">Checklist</span><span class="bh">the evals review in 7 lines</span></div>
+    <h2 class="beat-h" id="checklist-the-evals-review-in-7-lines"><span class="bt">Checklist</span><span class="bh">the evals review in 7 lines</span></h2>
     <ul>
-      <li>Pyramid: component → task → system → online. Cheap and broad at the base, rare and expensive at the top.</li>
-      <li>Golden set: 30-200 questions with expected facts and sources, versioned like code, refreshed from real failures.</li>
-      <li>Deterministic first: JSON parses, citations real, injections refused, in plain unit tests.</li>
-      <li>Judges: reasons before scores, swap order, ensemble, calibrate against humans, read trends not gospel.</li>
-      <li>Metrics: faithfulness, answer relevancy, context precision, context recall. Split retrieval from generation.</li>
-      <li>CI gate on every behavior change: block on drop, report per question, smoke per PR and full nightly.</li>
-      <li>Trace every run, prompts to chunks to tools to tokens. Bad answer → trace → stage → fix → new golden case.</li>
+      <li>Pyramid: component → task → system → online, cheap and broad at the base.</li>
+      <li>Golden set: 30-200 questions with expected facts and sources, versioned, refreshed from real failures.</li>
+      <li>Deterministic first: JSON parses, citations real, injections refused.</li>
+      <li>Judges: reasons before scores, swap order, ensemble, calibrate against humans.</li>
+      <li>Metrics: faithfulness, answer relevancy, context precision; context recall needs reference contexts. Split retrieval from generation.</li>
+      <li>CI gate on every behavior change: block on drop, per-question report, smoke per PR, full nightly.</li>
+      <li>Trace every run. Bad answer → trace → stage → fix → new golden case.</li>
     </ul>
   </div>
   
+    <section class="references" aria-labelledby="primary-sources"><h2 id="primary-sources">Primary sources</h2><ul><li><a href="https://arxiv.org/abs/2211.09110" rel="noreferrer">HELM: Holistic Evaluation of Language Models</a></li><li><a href="https://opentelemetry.io/docs/specs/semconv/gen-ai/" rel="noreferrer">OpenTelemetry semantic conventions for GenAI</a></li></ul></section>
+
+    <section class="lab-check" aria-labelledby="try-verify-explain"><h2 id="try-verify-explain">Try, verify, explain</h2><ol><li>Create one adversarial regression case for a retrieval/tool workflow, name a measurable success metric and one human review signal that could disagree with an LLM judge.</li><li>Measure position bias: take 20 answer pairs, have a judge pick the winner in A/B order, then again in B/A order. Count how often the verdict flips; that flip rate is the noise floor for any pairwise result you report.</li><li>Explain why "faithfulness dropped from 0.91 to 0.78" sends you to prompts and grounding while "context recall dropped" sends you to chunking and search, and which golden-set fields make that split measurable.</li></ol></section>
+
     <nav class="pager" id="pager"></nav>
 
     <footer class="footer">
-      learning-project · tracks/ai · print this page from the browser dialog · diagrams load mermaid from CDN once online
+      learning-project · tracks/ai · press ⌘K or / to search every chapter · diagrams load Mermaid from a CDN when online
     </footer>
   </div>
 </main>

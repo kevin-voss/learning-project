@@ -11,19 +11,18 @@
 <link rel="stylesheet" href="../../css/base.css">
 <link rel="stylesheet" href="../../css/components.css">
 <link rel="stylesheet" href="../../css/flow.css">
-<link rel="stylesheet" href="../../css/print.css">
 </head>
 <body>
 
 <div id="progress"></div>
 
 <header class="topbar">
-  <button class="tbtn" id="nav-toggle" type="button" aria-label="Toggle navigation">☰</button>
+  <button class="tbtn" id="nav-toggle" type="button" aria-label="Open contents" aria-controls="toc" aria-expanded="false">☰</button>
   <a class="brand" href="../../index.html"><b>ai</b>·field-guide</a>
+  <a class="hub-link" href="../../../../hub/index.html">Learning hub</a>
   <div class="tools">
-    <input id="toc-filter" type="search" placeholder="filter · /" aria-label="Filter topics">
+    <button class="tbtn search-btn" id="search-open" type="button" aria-label="Search the guide"><span>Search</span><kbd>⌘K</kbd></button>
     <button class="tbtn" id="expand-all" type="button">expand</button>
-    <button class="tbtn" id="print-btn" type="button">print</button>
   </div>
 </header>
 
@@ -32,27 +31,28 @@
 <main class="main">
   <div class="content">
     <header class="topic-head">
-      <div class="kicker">Part 2 · Retrieval · 01/24</div>
+      <div class="kicker">Part 3 · Retrieval · 12/31</div>
       <h1>Chunking</h1>
-      <p class="lead">Chunking picks the addressable unit of retrieval. The chunk you embed is the chunk you get back, so where you cut decides what search can ever find and what context the model ever sees.</p>
+      <p class="lead">Chunking picks the addressable unit of retrieval. The chunk you embed is the chunk you get back, so where you cut decides what search can find and what context the model sees.</p>
+      <p class="chapter-summary"><b>In this chapter</b> Choose boundaries that preserve meaning and provenance, then measure retrieval quality rather than tuning overlap by intuition.</p>
     </header>
 
-  <div class="stage-label sl-why">Why you need it</div>
+  <h2 class="stage-label sl-why" id="why-you-need-it">Why this layer matters</h2>
   <div class="why">
     <ul>
-      <li><b>Hard input limit:</b> embedding models cap at 512 to 8,192 tokens (see <a class="xl" href="#embeddings">embeddings</a>). Oversized input is truncated silently. The tail stops existing, and your conclusions section was on page 40.</li>
-      <li><b>One vector is averaged meaning:</b> embed an 80-page manual and pricing, safety, install and legal blend into one topic-mush point that nothing matches well.</li>
+      <li><b>Hard input limit:</b> embedding models cap at 512 to 8,192 tokens (see <a class="xl" href="embeddings.html">embeddings</a>), and most truncate oversized input silently. Your conclusions on page 40 stop existing.</li>
+      <li><b>One vector is averaged meaning:</b> embed an 80-page manual and pricing, safety, install and legal blend into one point that nothing matches well.</li>
       <li><b>Granularity is what you get back:</b> one giant chunk means paying for 79 irrelevant pages around the paragraph the model needed.</li>
-      <li><b>Too small bites the other way:</b> fragments lose antecedents ("it" points nowhere) and one thought needs many pieces to cover it.</li>
-      <li><b>The dial:</b> addressable precision vs surviving context. Chunking is choosing a point on that dial.</li>
+      <li><b>Too small bites the other way:</b> fragments lose antecedents ("it" points nowhere) and one thought spans many pieces.</li>
+      <li><b>The dial:</b> addressable precision vs surviving context. Chunking picks a point on it.</li>
     </ul>
   </div>
 
-  <div class="stage-label sl-sol">Solutions</div>
-  <p class="lead">Five ways to cut. Pick one per corpus, then apply the shared sizing, overlap and metadata rules below.</p>
+  <h2 class="stage-label sl-sol" id="solutions">Chunking mechanics</h2>
+  <p class="lead">Five ways to cut. Pick one per corpus, then apply the shared sizing, overlap and metadata rules.</p>
   <div class="sol-list">
 
-    <div class="sol-item">
+    <div class="sol-item open">
       <button class="sol-head" type="button">
         <span class="sol-no">A</span>
         <span class="sol-name">Fixed-size</span>
@@ -62,13 +62,13 @@
       <div class="sol-body"><div class="sol-inner"><div class="sol-content">
         <h4>How it works</h4>
         <ul>
-          <li>Cut every N tokens, no attention paid to content. Deterministic, predictable sizes, trivially simple.</li>
-          <li>Cuts mid-sentence by design, so pair it with overlap or severed ideas get lost.</li>
+          <li>Cut every N tokens, ignoring content. Deterministic, predictable sizes, trivially simple.</li>
+          <li>Cuts mid-sentence by design, so pair it with overlap.</li>
         </ul>
         <h4>Trade-offs</h4>
         <ul>
-          <li><b>pro:</b> the dumbest cut in the room, and exactly right for logs and homogeneous streams where no structure exists.</li>
-          <li><b>con:</b> shreds prose, orphans ideas and antecedents, worthless boundaries for anything human-written.</li>
+          <li><b>pro:</b> the dumbest cut in the room, and exactly right for logs and homogeneous streams with no structure.</li>
+          <li><b>con:</b> shreds prose, orphans ideas and antecedents.</li>
         </ul>
       </div></div></div>
     </div>
@@ -83,14 +83,14 @@
       <div class="sol-body"><div class="sol-inner"><div class="sol-content">
         <h4>How it works</h4>
         <ul>
-          <li>Try the biggest boundary first: paragraphs, then lines, then sentences, then words. Split at the biggest boundary that fits the size cap.</li>
-          <li>Structure-aware without needing structure to exist. The sane default for docs, wikis and knowledge bases.</li>
-          <li>Respect headings where they exist, and tune to 400 to 800 tokens with 10 to 15% overlap (sizing below).</li>
+          <li>Split at the biggest boundary that fits the size cap: paragraphs, then lines, then sentences, then words.</li>
+          <li>Structure-aware without needing structure. The sane default for docs, wikis and knowledge bases.</li>
+          <li>Respect headings where they exist; 400 to 800 tokens with 10 to 15% overlap (sizing below).</li>
         </ul>
         <h4>Trade-offs</h4>
         <ul>
-          <li><b>pro:</b> one configuration covers most corpora, most docs sites run exactly this and sleep fine.</li>
-          <li><b>con:</b> size and overlap are knobs, they still need retrieval <a class="xl" href="#evals">evals</a> to tune honestly.</li>
+          <li><b>pro:</b> one configuration covers most corpora.</li>
+          <li><b>con:</b> size and overlap are knobs that still need retrieval <a class="xl" href="../08-evals/evals.html">evals</a> to tune honestly.</li>
         </ul>
       </div></div></div>
     </div>
@@ -105,15 +105,14 @@
       <div class="sol-body"><div class="sol-inner"><div class="sol-content">
         <h4>How it works</h4>
         <ul>
-          <li>Cut where structure already breaks: headings, sections, list items. One subsection = one chunk, prose stays whole as long as possible.</li>
-          <li>Markdown from the <a class="xl" href="rag-overview.html">parser</a> makes this nearly free, and the section path lands in chunk metadata for free.</li>
-          <li>Section-locked corpora like legal go structure-first and let sections choose their own size.</li>
+          <li>Cut where structure already breaks: headings, sections, list items. One subsection = one chunk.</li>
+          <li>Markdown from the <a class="xl" href="rag-overview.html">parser</a> makes heading-aware cuts easy; the section path rides along as metadata for provenance.</li>
         </ul>
         <h4>Trade-offs</h4>
         <ul>
-          <li><b>pro:</b> ideas survive whole, breadcrumbs and citations come from the section path.</li>
-          <li><b>con:</b> sections vary wildly in size, cap the big ones and fall back to recursive inside oversized sections.</li>
-          <li><b>con:</b> flat text with no markup to cut on gains nothing over recursive.</li>
+          <li><b>pro:</b> ideas survive whole, citations come from the section path.</li>
+          <li><b>con:</b> sections vary wildly in size: cap the big ones, fall back to recursive inside them.</li>
+          <li><b>con:</b> flat text with no markup gains nothing over recursive.</li>
         </ul>
       </div></div></div>
     </div>
@@ -128,13 +127,13 @@
       <div class="sol-body"><div class="sol-inner"><div class="sol-content">
         <h4>How it works</h4>
         <ul>
-          <li>Embed consecutive sentences, then cut where similarity between neighbors dips. The dip IS the topic change.</li>
-          <li>Fits topic-hopping prose and support transcripts, where one ticket's ranting never blurs into the next topic's vector.</li>
+          <li>Embed consecutive sentences, cut where neighbor similarity dips. The dip IS the topic change.</li>
+          <li>Fits topic-hopping prose and support transcripts.</li>
         </ul>
         <h4>Trade-offs</h4>
         <ul>
           <li><b>pro:</b> boundaries land on meaning, not character counts, so each chunk is one idea by construction.</li>
-          <li><b>con:</b> an extra embedding pass at ingest, avoid for latency-critical ingestion.</li>
+          <li><b>con:</b> an extra embedding pass at ingest.</li>
         </ul>
       </div></div></div>
     </div>
@@ -149,13 +148,13 @@
       <div class="sol-body"><div class="sol-inner"><div class="sol-content">
         <h4>How it works</h4>
         <ul>
-          <li>Prepend a tiny LLM-written context line ("from the Q3 pricing section") to each chunk before embedding.</li>
-          <li>The line carries provenance when a chunk is matched alone, and big recall jumps are reported. One LLM call per chunk at ingest, cache the lines, they are stable across re-indexes of unchanged text.</li>
+          <li>Prepend a short LLM-written context line ("from the Q3 pricing section") to each chunk before embedding.</li>
+          <li>The line carries provenance when a chunk matches alone; large recall gains are reported.</li>
         </ul>
         <h4>Trade-offs</h4>
         <ul>
-          <li><b>pro:</b> legal, medical, compliance, anywhere a retrieval miss costs money or health.</li>
-          <li><b>con:</b> one LLM call per chunk, cache the context lines or the re-index bill bites twice.</li>
+          <li><b>pro:</b> worth it in legal, medical, compliance, anywhere a miss costs money or health.</li>
+          <li><b>con:</b> one LLM call per chunk at ingest. Cache the lines, they are stable for unchanged text, or the re-index bill bites twice.</li>
         </ul>
       </div></div></div>
     </div>
@@ -164,17 +163,17 @@
 
   <h4>Beyond the five</h4>
   <ul>
-    <li><b>Sentence-window:</b> embed single sentences, return each hit with its neighbors. Match at sentence precision, answer with the paragraph. Window size is a manual knob.</li>
-    <li><b>Parent / small-to-big:</b> embed small for sharp vectors, paste the parent block for context. Two granularities, two indexes to keep in sync.</li>
-    <li><b>Late chunking:</b> run a long-context embedder over the whole document once, then pool token ranges into chunks. Whole-doc context at zero per-chunk LLM cost, young ecosystem.</li>
+    <li><b>Sentence-window:</b> embed single sentences, return each hit with its neighbors. Match at sentence precision, answer with the paragraph.</li>
+    <li><b>Parent / small-to-big:</b> embed small for sharp vectors, paste the parent block for context.</li>
+    <li><b>Late chunking:</b> run a long-context embedder over the whole document once, then pool token ranges into chunks. Whole-doc context at zero per-chunk LLM cost.</li>
   </ul>
 
   <h4>Sizing · why a max exists at all</h4>
   <ul>
-    <li><span class="wlabel why">architecture</span> BERT-style encoders have exactly <b>512 positional embeddings</b>, one learned coordinate per slot. Token 513 has no coordinate, the model cannot attend to it.</li>
-    <li><span class="wlabel why">training</span> embedders are contrastively trained on passages (MS MARCO question-answer pairs). A few hundred tokens. A 6,000-token chunk is out of distribution even when the API technically accepts it.</li>
-    <li><span class="wlabel why">mean pooling</span> the output vector averages all token vectors (see <a class="xl" href="#embeddings">embeddings</a>). More tokens per chunk dilutes each one, so precision falls long before the hard limit.</li>
-    <li><span class="wlabel gotcha">silent truncation</span> most APIs accept oversized input and drop the tail without an error. Chunk to the model's recommended size, never its maximum.</li>
+    <li><span class="wlabel why">architecture</span> BERT-style encoders have exactly <b>512 positional embeddings</b>. Token 513 has no position, the model cannot attend to it.</li>
+    <li><span class="wlabel why">training</span> embedders are contrastively trained on passages of a few hundred tokens (MS MARCO question-answer pairs). A 6,000-token chunk is out of distribution even when the API accepts it.</li>
+    <li><span class="wlabel why">mean pooling</span> the output vector averages all token vectors (see <a class="xl" href="embeddings.html">embeddings</a>), so each extra token dilutes the rest and precision falls long before the hard limit.</li>
+    <li><span class="wlabel gotcha">silent truncation</span> most APIs drop the tail of oversized input without an error. Chunk to the recommended size, never the maximum.</li>
   </ul>
   <div class="tbl-wrap">
     <table>
@@ -187,47 +186,47 @@
       </tbody>
     </table>
   </div>
-  <p class="note"><b>The 400 to 800 default and when to leave it alone:</b> it sits inside every mainstream embedder's recommended range and keeps roughly one chunk on one idea. Leave it there until retrieval <a class="xl" href="#evals">evals</a> say otherwise. Deviate on purpose: dense reference docs with one fact per line go smaller, section-locked corpora like legal go structure-first and let sections choose their own size.</p>
+  <p class="note"><b>The 400 to 800 default:</b> it sits inside every mainstream embedder's recommended range and keeps roughly one idea per chunk. Leave it until retrieval <a class="xl" href="../08-evals/evals.html">evals</a> say otherwise. Deviate on purpose: dense reference docs with one fact per line go smaller, section-locked corpora like legal go structure-first and let sections set their size.</p>
 
   <h4>Overlap · 10 to 15 percent</h4>
   <ul>
-    <li><b>What it protects:</b> the sentence severed at the boundary. With bleed, the key sentence lives in two chunks and either can match the query.</li>
-    <li><b>Where it matters:</b> fixed-size and recursive cuts, which can land mid-thought. Cuts on real boundaries like headings and sections need less.</li>
-    <li><b>Too much overlap:</b> near-duplicate chunks that crowd top-k results and multiply storage. 10 to 15% is the tested band, not a starter guess.</li>
+    <li><b>What it protects:</b> the sentence severed at the boundary. With bleed it lives in two chunks and either can match.</li>
+    <li><b>Where it matters:</b> fixed-size and recursive cuts, which can land mid-thought. Heading and section cuts need less.</li>
+    <li><b>Too much overlap:</b> near-duplicate chunks crowd top-k and multiply storage. 10 to 15% is a common band; confirm it with evals.</li>
   </ul>
 
   <h4>Metadata travels with every chunk</h4>
   <ul>
-    <li><b>Source:</b> document id, title, URL. No source, no citation, no trust.</li>
-    <li><b>Section path:</b> handbook &gt; refunds &gt; policy. Restores the context a cut removes, and powers breadcrumb citations.</li>
-    <li><b>Date and version:</b> retrieve "the current policy", not the 2022 policy that embeds identically.</li>
-    <li><b>ACL / tenant:</b> filter access rights in retrieval, before the model sees a token. Tenancy that lives only in the prompt is a leak waiting to happen.</li>
-    <li><b>Page number:</b> the cheapest debugging hook you will ever ship, and it links answers back to source pages.</li>
-    <li><span class="wlabel why">filtering beats bigger chunks</span> a metadata pre-filter narrows candidates before similarity runs, so chunks stay small and vectors stay sharp. Growing chunks to smuggle context in dilutes them instead (see <a class="xl" href="#search-rerank">search and filtering</a>).</li>
+    <li><b>Source:</b> document id, title, URL. No source, no citation.</li>
+    <li><b>Section path:</b> handbook &gt; refunds &gt; policy. Restores the context a cut removes and powers breadcrumb citations.</li>
+    <li><b>Date and version:</b> retrieve the current policy, not the 2022 one that embeds identically.</li>
+    <li><b>ACL / tenant:</b> filter access in retrieval, before the model sees a token. Tenancy that lives only in the prompt is a leak.</li>
+    <li><b>Page number:</b> the cheapest debugging hook you will ship, and it links answers to source pages.</li>
+    <li><span class="wlabel why">filtering beats bigger chunks</span> a metadata pre-filter narrows candidates before similarity runs, so chunks stay small and sharp. Growing chunks to smuggle context in dilutes them (see <a class="xl" href="search-rerank.html">search and filtering</a>).</li>
   </ul>
 
   <h4>The chain to answer quality, and re-chunking cost</h4>
   <ul>
-    <li><b>The chain:</b> chunk boundaries decide what is addressable, retrieval can only return addressable units, the model can only cite what retrieval returned. Chunking quietly caps every later stage.</li>
-    <li><b>A strategy change re-embeds everything:</b> new size, new overlap or new method means re-chunk, re-embed, re-store and re-index the whole corpus. Embedding spend scales with every migration.</li>
-    <li><b>Consequence:</b> fix parsing and strategy before scale (see <a class="xl" href="rag-overview.html">ingestion</a>), and measure chunk changes with retrieval <a class="xl" href="#evals">evals</a> so every migration buys real recall.</li>
+    <li><b>The chain:</b> boundaries decide what is addressable, retrieval returns only addressable units, the model cites only what retrieval returned. Chunking caps every later stage.</li>
+    <li><b>A strategy change re-embeds everything:</b> new size, overlap or method means re-chunk, re-embed and re-index the whole corpus.</li>
+    <li><b>Consequence:</b> fix parsing and strategy before scale (see <a class="xl" href="rag-overview.html">ingestion</a>), and prove each change with retrieval <a class="xl" href="../08-evals/evals.html">evals</a> so every migration buys real recall.</li>
   </ul>
 
-  <div class="stage-label sl-when">When to use · when not</div>
+  <h2 class="stage-label sl-when" id="when-to-use-when-not">Decision boundary</h2>
   <div class="pc">
     <div class="pc-col pros"><h4 class="pc-h">Use when</h4>
       <ul>
-        <li>Documents exceed the embedder's input cap, whole-doc embedding is not an option.</li>
-        <li>Search must return precise addressable passages, not metered walls of context.</li>
-        <li>Citations must link answers back to a source page or section.</li>
-        <li>Metadata filtering by tenant, date or section has to narrow candidates before similarity runs.</li>
+        <li>Documents exceed the embedder's input cap.</li>
+        <li>Search must return precise passages, not metered walls of context.</li>
+        <li>Citations must link answers to a source page or section.</li>
+        <li>Tenant, date or section filters must narrow candidates before similarity runs.</li>
       </ul>
     </div>
     <div class="pc-col cons"><h4 class="pc-h">Skip when</h4>
       <ul>
-        <li>The corpus is tiny and whole documents fit the embedder's recommended window.</li>
+        <li>Whole documents fit the embedder's recommended window.</li>
         <li>A one-shot paste into a long context answers the demo fine.</li>
-        <li>Retrieval quality is not measured yet (see <a class="xl" href="#evals">evals</a>), every knob turns into vibes-tuning.</li>
+        <li>Retrieval quality is not measured yet (see <a class="xl" href="../08-evals/evals.html">evals</a>): every knob becomes vibes-tuning.</li>
       </ul>
     </div>
   </div>
@@ -235,8 +234,8 @@
     <table>
       <thead><tr><th>Method</th><th class="hu">Use when</th><th class="ha">Avoid when</th><th class="hw">Watch out</th></tr></thead>
       <tbody>
-        <tr><td class="m">Fixed-size</td><td class="u">Logs, homogeneous streams</td><td class="avoid">Prose, it cuts mid-sentence and orphans ideas</td><td class="watch">Needs overlap, dumbest cut in the room</td></tr>
-        <tr><td class="m">Recursive character</td><td class="u">Docs, wikis, knowledge bases, the 80% answer</td><td class="avoid">Nothing much</td><td class="watch">Tune 400 to 800 tokens, overlap 10 to 15%, respect headings</td></tr>
+        <tr><td class="m">Fixed-size</td><td class="u">Logs, homogeneous streams</td><td class="avoid">Prose, it cuts mid-sentence</td><td class="watch">Needs overlap</td></tr>
+        <tr><td class="m">Recursive character</td><td class="u">Docs, wikis, knowledge bases, the 80% answer</td><td class="avoid">Nothing much</td><td class="watch">400 to 800 tokens, 10 to 15% overlap, respect headings</td></tr>
         <tr><td class="m">Document-structure</td><td class="u">Corpora with real headings: manuals, specs, policy</td><td class="avoid">Flat text with no markup to cut on</td><td class="watch">Sections vary wildly in size, cap the big ones</td></tr>
         <tr><td class="m">Semantic</td><td class="u">Topic-hopping prose, transcripts</td><td class="avoid">Latency-critical ingestion</td><td class="watch">An extra embedding pass at ingest</td></tr>
         <tr><td class="m">Contextual chunks</td><td class="u">Legal, medical, compliance, misses are expensive</td><td class="avoid">Cost-sensitive ingestion</td><td class="watch">One LLM call per chunk, cache the context lines</td></tr>
@@ -247,9 +246,9 @@
     </table>
   </div>
 
-  <div class="stage-label sl-ex">Example</div>
+  <h2 class="stage-label sl-ex" id="example">Worked example</h2>
   <div class="example">
-    <p class="ex-note">The default cut in practice, then the splitter itself: recursive character splitting at 800 characters with 15% overlap, separators tried biggest-boundary first.</p>
+    <p class="ex-note">The default cut in practice, then the splitter: recursive character splitting at 800 characters with 15% overlap, biggest boundary first.</p>
     <div class="grid2">
       <div class="wcard">
         <h4>docs site · recursive</h4>
@@ -261,15 +260,15 @@
       <div class="wcard">
         <h4>legal and medical · contextual</h4>
         <ul>
-          <li>Prepend an LLM context line per chunk when retrieval misses cost money or health.</li>
-          <li>Cache the lines, they are stable across re-indexes of unchanged text.</li>
+          <li>An LLM context line per chunk, because misses cost money or health.</li>
+          <li>Lines cached across re-indexes.</li>
         </ul>
       </div>
       <div class="wcard">
         <h4>support transcripts · semantic</h4>
         <ul>
           <li>Semantic cuts so one ticket's ranting never blurs into the next topic's vector.</li>
-          <li>Worth the extra embedding pass at ingest volume.</li>
+          <li>Worth the extra embedding pass.</li>
         </ul>
       </div>
     </div>
@@ -281,38 +280,42 @@ splitter = RecursiveCharacterTextSplitter(
     separators=[<span class="tk-s">"\n\n"</span>, <span class="tk-s">"\n"</span>, <span class="tk-s">". "</span>, <span class="tk-s">" "</span>],  <span class="tk-c"># biggest boundary first</span>
 )
 chunks = splitter.split_text(markdown_doc)</code></pre>
-    <p class="note"><b>Why 800/120:</b> those are characters, about 4 per token. 800 characters is roughly 200 tokens, safely inside every embedder's sweet spot. For markdown, split on headings first and fall back to recursive inside oversized sections.</p>
+    <p class="note"><b>Why 800/120:</b> those are characters, about 4 per token, so 800 characters is roughly 200 tokens, inside every embedder's sweet spot. For markdown, split on headings first and fall back to recursive inside oversized sections.</p>
   </div>
 
-  <div class="stage-label sl-extra">Watch out</div>
+  <h2 class="stage-label sl-extra" id="watch-out">Failure modes</h2>
   <div class="pit-list">
     <ul>
-      <li><b>Silent truncation:</b> chunking to the embedder's maximum instead of its recommended size quietly deletes every tail · chunk small and verify with a token count.</li>
-      <li><b>Characters vs tokens:</b> 800 characters is about 200 tokens · confusing the units silently triples or thirds your real chunk size.</li>
+      <li><b>Silent truncation:</b> chunking to the embedder's maximum quietly deletes tails · chunk to the recommended size and verify with a token count.</li>
+      <li><b>Characters vs tokens:</b> 800 characters is about 200 tokens · confusing the units quadruples or quarters your real chunk size.</li>
       <li><b>Shredded structure:</b> a table or code block split across chunks answers nothing · keep them atomic or serialize the rows.</li>
-      <li><b>Overlap overdone:</b> 30% overlap fills top-k with near-duplicates and doubles storage for almost no recall.</li>
-      <li><b>Most-tuned, least-evaluated knob:</b> teams nudge chunk size weekly on vibes · measure with retrieval <a class="xl" href="#evals">evals</a> or do not touch it.</li>
-      <li><b>Re-chunk amnesia:</b> every strategy change re-embeds the corpus · budget the migration and version the strategy alongside the index.</li>
-      <li><b>Contextual cost:</b> one LLM call per chunk at ingest · cache the context lines or the re-index bill bites twice.</li>
+      <li><b>Overlap overdone:</b> 30% overlap fills top-k with near-duplicates and inflates storage for almost no recall.</li>
+      <li><b>Most-tuned, least-evaluated knob:</b> teams nudge chunk size on vibes · measure with retrieval <a class="xl" href="../08-evals/evals.html">evals</a> or leave it.</li>
+      <li><b>Re-chunk amnesia:</b> every strategy change re-embeds the corpus · budget the migration and version the strategy with the index.</li>
+      <li><b>Contextual cost:</b> one LLM call per chunk at ingest · cache the context lines.</li>
     </ul>
   </div>
 
-  <div class="stage-label sl-extra">Remember</div>
+  <h2 class="stage-label sl-extra" id="remember">Keep in mind</h2>
   <div class="remember">
     <ul>
       <li>Start recursive, 400 to 800 tokens, overlap 10 to 15%, cut on headings where they exist.</li>
-      <li>Chunk to the embedder's recommended size, never its maximum, and count tokens not characters.</li>
-      <li>Keep tables and code blocks atomic, one table = one chunk.</li>
-      <li>Attach source, section path, date, ACL and page to every chunk, and filter on metadata before similarity.</li>
-      <li>Try contextual chunks when misses are expensive, and cache the LLM context lines.</li>
-      <li>Treat strategy changes as migrations: re-chunk, re-embed, re-index, and prove the recall gain with evals.</li>
+      <li>Chunk to the recommended size, never the maximum, and count tokens, not characters.</li>
+      <li>Keep tables and code blocks atomic.</li>
+      <li>Attach source, section path, date, ACL and page to every chunk; filter on metadata before similarity.</li>
+      <li>Try contextual chunks when misses are expensive, and cache the context lines.</li>
+      <li>Treat strategy changes as migrations: re-chunk, re-embed, re-index, prove the recall gain with evals.</li>
     </ul>
   </div>
   
+    <section class="references" aria-labelledby="primary-sources"><h2 id="primary-sources">Primary sources</h2><ul><li><a href="https://www.anthropic.com/news/contextual-retrieval" rel="noreferrer">Anthropic: Contextual Retrieval</a></li><li><a href="https://arxiv.org/abs/2104.08663" rel="noreferrer">BEIR retrieval benchmark</a></li></ul></section>
+
+    <section class="lab-check" aria-labelledby="try-verify-explain"><h2 id="try-verify-explain">Try, verify, explain</h2><ol><li>Take a heading, two paragraphs and a table row. Propose chunk boundaries that retain the heading and table meaning, then explain how you would evaluate the choice.</li><li>Run the 800/120 splitter from the worked example over one real document, count tokens per chunk with your embedder's tokenizer, and report the median, the maximum and how many chunks exceed its recommended size.</li><li>Explain why a 6,000-token chunk can retrieve worse than a 400-token one on an 8,191-token embedder, even though nothing is truncated.</li></ol></section>
+
     <nav class="pager" id="pager"></nav>
 
     <footer class="footer">
-      learning-project · tracks/ai · print this page from the browser dialog · diagrams load mermaid from CDN once online
+      learning-project · tracks/ai · press ⌘K or / to search every chapter · diagrams load Mermaid from a CDN when online
     </footer>
   </div>
 </main>

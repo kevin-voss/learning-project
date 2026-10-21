@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inference &amp; serving · AI Engineering Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../css/tokens.css">
+<link rel="stylesheet" href="../../css/base.css">
+<link rel="stylesheet" href="../../css/components.css">
+<link rel="stylesheet" href="../../css/flow.css">
+</head>
+<body>
+
+<div id="progress"></div>
+
+<header class="topbar">
+  <button class="tbtn" id="nav-toggle" type="button" aria-label="Open contents" aria-controls="toc" aria-expanded="false">☰</button>
+  <a class="brand" href="../../index.html"><b>ai</b>·field-guide</a>
+  <a class="hub-link" href="../../../../hub/index.html">Learning hub</a>
+  <div class="tools">
+    <button class="tbtn search-btn" id="search-open" type="button" aria-label="Search the guide"><span>Search</span><kbd>⌘K</kbd></button>
+    <button class="tbtn" id="expand-all" type="button">expand</button>
+  </div>
+</header>
+
+<nav class="sidebar" id="toc" aria-label="Topics"></nav>
+
+<main class="main">
+  <div class="content">
+    <header class="topic-head">
+      <div class="kicker">Part 2 · Inference &amp; context · 06/31</div>
+      <h1>Inference &amp; serving</h1>
+      <p class="lead">Serving an LLM is a scheduling problem over two very different workloads: a compute-bound prefill and a memory-bandwidth-bound decode that shares GPU memory with a growing KV cache.</p>
+      <p class="chapter-summary"><b>In this chapter</b> Explain why prefill and decode bottleneck differently, size a KV cache from a model config, and pick batching, quantization, speculative decoding and parallelism levers against TTFT, inter-token latency and goodput targets.</p>
+    </header>
+
+  <h2 class="stage-label sl-why" id="why-you-need-it">Why serving mechanics matter</h2>
+  <div class="why">
+    <ul>
+      <li><b>Latency is two numbers:</b> users feel time-to-first-token and streaming speed separately; one average hides which phase is slow and which knob fixes it.</li>
+      <li><b>Memory caps concurrency:</b> on a single GPU, the KV cache, not FLOPs, usually decides how many requests run at once and how long their contexts can be.</li>
+      <li><b>Self-hosting is capacity planning:</b> GPU count, precision and batch policy set cost per token; a wrong guess means idle GPUs or latency cliffs under load.</li>
+      <li><b>API users still pull these levers:</b> streaming, batch endpoints, prompt caching and routing map directly onto the mechanisms below; billing details live in <a class="xl" href="tokens-cost.html">tokens, cost, caching</a>.</li>
+    </ul>
+  </div>
+
+  <h2 class="stage-label sl-sol" id="solutions">Serving mechanics</h2>
+  <p class="lead">Modern servers schedule at the granularity of one forward pass: every step they assemble a batch of decode tokens plus prefill work, run it, stream tokens out and recycle KV memory from finished requests.</p>
+
+  <figure class="diagram">
+    <div class="diag-body"><pre class="mermaid">
+flowchart LR
+  Q["Request queue"] --> S["Scheduler&lt;br/&gt;every step"]
+  S --> F["One forward pass&lt;br/&gt;decodes + prefill"]
+  F --> E{"Done?"}
+  E -- "no: next token" --> S
+  E -- yes --> R["Free KV blocks&lt;br/&gt;admit next"]</pre></div><figcaption>Continuous batching re-forms the batch after every forward pass, so a finished request frees its KV blocks immediately and a queued one joins mid-flight instead of waiting for the whole batch to drain.</figcaption></figure>
+
+  <div class="sol-list">
+
+    <div class="sol-item open">
+      <button class="sol-head" type="button">
+        <span class="sol-no">A</span>
+        <span class="sol-name">Two phases, two bottlenecks</span>
+        <span class="sol-sum">prefill saturates compute, decode saturates memory bandwidth</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li><b>Prefill:</b> all prompt tokens go through each weight matrix as one large matrix-matrix multiply, roughly 2 × params FLOPs per token. Each weight byte loaded is reused across hundreds or thousands of tokens, so high <button class="term" type="button" data-tip="FLOPs performed per byte moved from memory. Below the GPU's ridge point (peak FLOPs ÷ memory bandwidth) a kernel is bandwidth-bound; above it, compute-bound.">arithmetic intensity</button> makes it compute-bound.</li>
+          <li><b>Decode:</b> each step produces one token per sequence, so every weight byte is read to serve only the current batch. At BF16 intensity is about the batch size in FLOPs per byte; an H100 SXM's ridge is near 295 (≈989 dense BF16 TFLOPS ÷ 3.35 TB/s), so small batches sit far below it.</li>
+          <li><b>KV reads never amortize:</b> weights are shared across the batch, but each sequence reads its own KV cache every step, so long contexts keep decode bandwidth-bound even at large batch.</li>
+          <li><b>Metrics:</b> <b>TTFT</b> = queueing + prefill. <b>TPOT</b> = (end-to-end − TTFT) ÷ (output tokens − 1), a per-request mean; <b>ITL</b> is each individual token gap. <b>Throughput</b> is total tokens or requests per second; <b><button class="term" type="button" data-tip="Requests per second served while meeting latency SLOs, typically on both TTFT and TPOT. Throughput that violates the SLO does not count.">goodput</button></b> counts only requests that met their SLOs.</li>
+          <li><b>Percentiles:</b> report p50 and p95 (or p99) per metric under realistic concurrency; end-to-end ≈ TTFT + TPOT × (N − 1).</li>
+        </ul>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><b>con:</b> larger batches raise throughput but lengthen every step, so ITL rises; batch size is a throughput-latency dial.</li>
+          <li><b>con:</b> a long prefill in the same step stalls every running decode; that interference motivates chunked prefill and prefill/decode disaggregation (DistServe).</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+    <div class="sol-item">
+      <button class="sol-head" type="button">
+        <span class="sol-no">B</span>
+        <span class="sol-name">KV-cache memory math</span>
+        <span class="sol-sum">2 × layers × kv_heads × head_dim × bytes × tokens</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li><b>Formula:</b> KV bytes = 2 (K and V) × layers × kv_heads × head_dim × bytes per element × tokens, summed over every live sequence.</li>
+          <li><b><button class="term" type="button" data-tip="Grouped-query attention: many query heads share fewer key/value heads. Only KV heads are cached, so GQA shrinks the KV cache by heads ÷ kv_heads.">GQA</button> matters:</b> Llama 3.1 8B has 32 query heads but 8 KV heads, a 4× smaller cache than full multi-head attention. Always read <code>num_key_value_heads</code>, not <code>num_attention_heads</code>.</li>
+          <li><b>Linear in tokens:</b> weights are a fixed cost; context length × concurrency is the variable one.</li>
+          <li><b>Where it lives:</b> the server reserves a fraction of GPU memory (vLLM's <code>gpu_memory_utilization</code>); whatever weights and activations leave becomes the KV pool.</li>
+        </ul>
+        <div class="widget" data-widget="kv-cache">
+          <div class="w-title">Try it · KV-cache memory (defaults: Llama 3.1 8B, BF16)</div>
+          <div class="w-controls">
+            <label>layers<input type="number" min="1" max="200" value="32" data-input="layers"></label>
+            <label>KV heads<input type="number" min="1" max="256" value="8" data-input="kv-heads"></label>
+            <label>head dim<input type="number" min="16" max="512" value="128" data-input="head-dim"></label>
+            <label>bytes per value<select data-input="bytes"><option value="2" selected>2 · BF16 / FP16</option><option value="1">1 · FP8 / INT8</option><option value="0.5">0.5 · INT4</option></select></label>
+            <label>tokens per sequence<input type="number" min="1" max="2000000" step="1024" value="8192" data-input="tokens"></label>
+            <label>concurrent sequences<input type="number" min="1" max="4096" value="16" data-input="sequences"></label>
+          </div>
+          <div class="w-result">
+            <div><b data-out="per-token">–</b><span>per token · 2 × layers × KV heads × head dim × bytes</span></div>
+            <div><b data-out="per-sequence">–</b><span>per sequence at this length</span></div>
+            <div><b data-out="total">–</b><span>whole batch, before weights and activations</span></div>
+          </div>
+        </div>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><b>con:</b> setting the maximum model length to the full advertised window does not cost memory up front with paged allocation, but a few long sessions can evict or preempt many short ones.</li>
+          <li><b>pro:</b> FP8 KV cache halves the per-token cost and roughly doubles concurrent context, at a small, model-dependent quality risk.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+    <div class="sol-item">
+      <button class="sol-head" type="button">
+        <span class="sol-no">C</span>
+        <span class="sol-name">Batching + KV management</span>
+        <span class="sol-sum">continuous batching, paged KV, chunked prefill, prefix reuse</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li><b>Static batching:</b> the batch ends when its longest output finishes; short requests idle as padding, new arrivals wait.</li>
+          <li><b>Continuous batching:</b> iteration-level scheduling (Orca; TensorRT-LLM calls it in-flight batching) admits and retires requests at every step, the loop in the diagram.</li>
+          <li><b><button class="term" type="button" data-tip="vLLM's attention kernel that reads keys and values from fixed-size, non-contiguous blocks via a per-sequence block table, like OS virtual memory pages.">PagedAttention</button>:</b> KV lives in fixed-size blocks mapped by a block table, so memory is allocated as tokens arrive, fragmentation is near zero, and blocks can be shared (parallel sampling, beams, common prefixes). The vLLM paper reports 2 to 4× throughput over prior systems at similar latency.</li>
+          <li><b>Chunked prefill:</b> long prompts are split into chunks that share a step with ongoing decodes under a token budget, so a 30K-token prompt no longer freezes everyone's stream (Sarathi-Serve). vLLM V1 enables it by default where possible; <code>max_num_batched_tokens</code> trades ITL against TTFT.</li>
+          <li><b>Prefix caching:</b> KV blocks for an identical token prefix (system prompt, tool schemas, few-shot examples) are hashed and reused, skipping that part of prefill. vLLM exposes it as automatic prefix caching; SGLang's RadixAttention keeps a radix tree of prefixes.</li>
+        </ul>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><b>con:</b> when the KV pool runs out, the scheduler preempts sequences and must swap or recompute them; p95 latency jumps abruptly rather than degrading smoothly.</li>
+          <li><b>con:</b> prefix reuse needs byte-identical token prefixes; a timestamp at the top kills every hit, see <a class="xl" href="context-budget.html">placement discipline</a>.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+    <div class="sol-item">
+      <button class="sol-head" type="button">
+        <span class="sol-no">D</span>
+        <span class="sol-name">Quantization</span>
+        <span class="sol-sum">fewer bits per weight, activation or KV entry, fewer bytes per step</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li><b>Weight-only (W8A16, W4A16):</b> weights are stored at 8 or 4 bits with per-group scales and dequantized inside the matmul. It cuts bytes read per decode step, so it speeds bandwidth-bound decode and frees memory for KV; prefill math stays 16-bit.</li>
+          <li><b>Weights + activations (W8A8 INT8, FP8):</b> the matmul itself runs on low-precision tensor cores, which also speeds compute-bound prefill. Activation outliers make this harder than weight-only; FP8 needs hardware support (Hopper, Ada and newer on NVIDIA).</li>
+          <li><b>KV cache (FP8, sometimes INT8/INT4):</b> independent of weight precision; it buys concurrency and context length.</li>
+          <li><b>GPTQ:</b> one-shot, layer by layer, uses approximate second-order information from a small calibration set and updates not-yet-quantized weights to absorb each rounding error.</li>
+          <li><b>AWQ:</b> uses activation statistics to find the small fraction of salient weight channels and rescales them before quantizing so they lose less precision; no backpropagation.</li>
+        </ul>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><b>con:</b> INT4 usually loses little on broad benchmarks yet can regress math, code, long-context and low-resource languages. Evaluate on your own <a class="xl" href="../08-evals/evals.html">eval set</a>, not the model card.</li>
+          <li><b>con:</b> calibration data unlike production traffic protects the wrong channels.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+    <div class="sol-item">
+      <button class="sol-head" type="button">
+        <span class="sol-no">E</span>
+        <span class="sol-name">Speculative decoding</span>
+        <span class="sol-sum">draft k tokens cheaply, verify them in one target pass, keep the same distribution</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li><b>Draft:</b> a small model with the same tokenizer proposes k tokens autoregressively. Self-speculative variants skip the separate model: extra prediction heads (Medusa, EAGLE), skipped layers, or n-gram lookup in the prompt.</li>
+          <li><b>Verify:</b> the target scores all k positions in one forward pass. Because decode is bandwidth-bound, checking k + 1 positions costs about as much as generating one.</li>
+          <li><b>Exactness:</b> draft token x is accepted with probability min(1, p(x) ÷ q(x)); on rejection the target resamples from the normalized residual max(0, p − q). This rejection-sampling step makes the output distribution identical to sampling the target alone; greedy mode simply accepts while tokens match the target argmax.</li>
+          <li><b>Payoff:</b> with per-token <button class="term" type="button" data-tip="Probability the target model accepts a drafted token. Expected tokens per target pass with k drafts is (1 − α^(k+1)) ÷ (1 − α).">acceptance rate</button> α, expected tokens per target pass is (1 − α<sup>k+1</sup>) ÷ (1 − α); α = 0.8 and k = 4 gives about 3.4, before subtracting draft cost.</li>
+        </ul>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><b>con:</b> at large batch the target is closer to compute-bound, so verifying rejected tokens wastes real FLOPs; gains shrink or turn negative under heavy load.</li>
+          <li><b>con:</b> acceptance drops when traffic drifts from the draft's training data, and the draft adds its own weights and KV cache.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+    <div class="sol-item">
+      <button class="sol-head" type="button">
+        <span class="sol-no">F</span>
+        <span class="sol-name">Parallelism, stacks, API levers</span>
+        <span class="sol-sum">split the model when it will not fit, pick an engine, or use provider knobs</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li><b>Tensor parallel:</b> each layer's matrices are sharded across GPUs with all-reduces inside every layer. It cuts per-GPU memory (weights and KV heads) and per-token latency but needs NVLink-class links, so it stays within a node.</li>
+          <li><b>Pipeline parallel:</b> contiguous layer groups live on different GPUs or nodes; micro-batches hide pipeline bubbles. It scales capacity across nodes but does not shorten a single request.</li>
+          <li><b>Expert parallel:</b> in MoE models, experts are spread across GPUs and tokens travel via all-to-all dispatch and combine; load imbalance across experts becomes the bottleneck.</li>
+          <li><b>Data parallel:</b> independent replicas behind a load balancer; the default throughput lever.</li>
+          <li><b>API levers:</b> streaming cuts perceived latency to TTFT without changing total time; batch APIs trade hours of turnaround for price; prompt caching skips repeated prefill; a gateway routes easy requests to small models and handles fallback, rate limits and per-tenant metering. Pricing is in <a class="xl" href="tokens-cost.html">tokens, cost, caching</a>.</li>
+        </ul>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>Stack</th><th>Fits</th><th>Note (as of Oct 2026)</th></tr></thead>
+          <tbody>
+            <tr><td>vLLM</td><td>General GPU serving, broad model and hardware support</td><td>PagedAttention, OpenAI-compatible server</td></tr>
+            <tr><td>SGLang</td><td>Prefix-heavy, multi-turn, agentic and structured output</td><td>RadixAttention prefix reuse</td></tr>
+            <tr><td>TensorRT-LLM</td><td>Peak performance on NVIDIA hardware</td><td>Compiled engines, NVIDIA-only</td></tr>
+            <tr><td>TGI</td><td>Existing Hugging Face deployments</td><td>Maintenance mode; HF recommends vLLM or SGLang</td></tr>
+            <tr><td>llama.cpp / Ollama</td><td>Local, single user, CPU, Apple Silicon, consumer GPUs</td><td>GGUF quantized models</td></tr>
+          </tbody>
+        </table></div>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><b>con:</b> tensor parallel across nodes is usually slower than fewer, larger GPUs; communication dominates.</li>
+          <li><b>con:</b> engine features and defaults move every few releases; pin the version and re-benchmark on upgrade.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+  </div>
+
+  <h2 class="stage-label sl-when" id="when-to-use-when-not">Decision boundary</h2>
+  <div class="pc">
+    <div class="pc-col pros"><h4 class="pc-h">Use when (self-host and tune)</h4>
+      <ul>
+        <li>Steady, high volume keeps GPUs busy; utilization is what makes self-hosted cost per token competitive.</li>
+        <li>Data residency, air-gapped or on-prem requirements rule out a hosted API.</li>
+        <li>An open-weight or fine-tuned model is good enough, and you need control over TTFT and ITL SLOs.</li>
+        <li>Workloads share long prefixes (agents, RAG templates) that prefix caching exploits.</li>
+      </ul>
+    </div>
+    <div class="pc-col cons"><h4 class="pc-h">Skip when</h4>
+      <ul>
+        <li>Traffic is spiky or low; idle reserved GPUs cost more than per-token pricing.</li>
+        <li>You need a frontier closed model; tune the API-side levers instead.</li>
+        <li>No one owns GPU operations, upgrades and on-call; see <a class="xl" href="../05-agents-orchestration/ops.html">LLM ops</a>.</li>
+        <li>Latency is dominated by retrieval or tool calls, not generation; profile first, see <a class="xl" href="../09-systems/architecture.html">system architecture</a>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2 class="stage-label sl-ex" id="example">Worked example</h2>
+  <div class="example">
+    <p class="ex-note">Example capacity plan: serve Llama 3.1 8B (32 layers, 8 KV heads, head_dim 128, 8.03B parameters, per its published config) on one 80 GB H100 SXM for a support assistant with conversations up to 8K tokens. All figures are estimates from the formula, not benchmarks.</p>
+    <div class="stats">
+      <div class="stat"><b>128 KiB</b><span>KV per token at BF16: 2 × 32 × 8 × 128 × 2 bytes</span></div>
+      <div class="stat"><b>1 GiB</b><span>KV for one 8K-token conversation</span></div>
+      <div class="stat"><b>16 GiB</b><span>KV for one full 128K-token context, more than the BF16 weights</span></div>
+      <div class="stat"><b>≈4.8 ms</b><span>batch-1 decode floor: 16 GB of weights ÷ 3.35 TB/s, so at most ≈210 tokens/s per stream</span></div>
+    </div>
+    <div class="viz-bars">
+      <div class="vb-title">Example estimate · Llama 3.1 8B memory in GiB (idealized: elements × bits)</div>
+      <div class="vb"><span class="vb-label">Weights BF16</span><span class="vb-track"><span class="vb-fill" style="--v:94%"></span></span><span class="vb-val">15.0</span></div>
+      <div class="vb"><span class="vb-label">Weights INT8</span><span class="vb-track"><span class="vb-fill" style="--v:47%"></span></span><span class="vb-val">7.5</span></div>
+      <div class="vb"><span class="vb-label">Weights INT4</span><span class="vb-track"><span class="vb-fill" style="--v:23%"></span></span><span class="vb-val">3.7</span></div>
+      <div class="vb hot"><span class="vb-label">KV BF16 · 16 × 8K</span><span class="vb-track"><span class="vb-fill" style="--v:100%"></span></span><span class="vb-val">16.0</span></div>
+      <div class="vb"><span class="vb-label">KV FP8 · 16 × 8K</span><span class="vb-track"><span class="vb-fill" style="--v:50%"></span></span><span class="vb-val">8.0</span></div>
+      <div class="vb"><span class="vb-label">KV INT4 · 16 × 8K</span><span class="vb-track"><span class="vb-fill" style="--v:25%"></span></span><span class="vb-val">4.0</span></div>
+    </div>
+    <p class="note">Shipped INT8 and INT4 checkpoints run larger than these bars: group scales add a few percent and embeddings or the LM head often stay 16-bit. Sixteen 8K conversations already outweigh the BF16 weights.</p>
+    <pre class="code" data-lang="python" data-file="kv_budget.py"><code>GIB = <span class="tk-n">2</span> ** <span class="tk-n">30</span>
+<span class="tk-c"># Llama 3.1 8B config.json: 32 layers, 8 KV heads (GQA), head_dim 128</span>
+LAYERS, KV_HEADS, HEAD_DIM, PARAMS = <span class="tk-n">32</span>, <span class="tk-n">8</span>, <span class="tk-n">128</span>, <span class="tk-n">8.03e9</span>
+
+<span class="tk-k">def</span> <span class="tk-f">kv_bytes_per_token</span>(kv_bytes):
+    <span class="tk-k">return</span> <span class="tk-n">2</span> * LAYERS * KV_HEADS * HEAD_DIM * kv_bytes  <span class="tk-c"># 2 = K and V</span>
+
+<span class="tk-k">def</span> <span class="tk-f">max_sequences</span>(weight_bytes, kv_bytes, seq_tokens=<span class="tk-n">8192</span>,
+                  gpu_gib=<span class="tk-n">80</span>, util=<span class="tk-n">0.9</span>, overhead_gib=<span class="tk-n">4</span>):
+    <span class="tk-c"># overhead_gib: activations, CUDA graphs, allocator slack (assumed)</span>
+    weights_gib = PARAMS * weight_bytes / GIB
+    pool_gib = gpu_gib * util - weights_gib - overhead_gib
+    per_seq_gib = kv_bytes_per_token(kv_bytes) * seq_tokens / GIB
+    <span class="tk-k">return</span> weights_gib, pool_gib, <span class="tk-f">int</span>(pool_gib // per_seq_gib)
+
+<span class="tk-f">print</span>(kv_bytes_per_token(<span class="tk-n">2</span>) / <span class="tk-n">1024</span>, <span class="tk-s">"KiB per token"</span>)  <span class="tk-c"># 128.0</span>
+<span class="tk-k">for</span> label, w, kv <span class="tk-k">in</span> [(<span class="tk-s">"bf16 weights, bf16 KV"</span>, <span class="tk-n">2</span>, <span class="tk-n">2</span>),
+                     (<span class="tk-s">"fp8 weights,  fp8 KV "</span>, <span class="tk-n">1</span>, <span class="tk-n">1</span>),
+                     (<span class="tk-s">"int4 weights, fp8 KV "</span>, <span class="tk-n">0.5</span>, <span class="tk-n">1</span>)]:
+    wg, pool, n = max_sequences(w, kv)
+    <span class="tk-f">print</span>(<span class="tk-s">f"{label}: weights {wg:4.1f} GiB, KV pool {pool:4.1f} GiB, "</span>
+          <span class="tk-s">f"{n} full 8K conversations"</span>)
+<span class="tk-c"># bf16 weights, bf16 KV: weights 15.0 GiB, KV pool 53.0 GiB, 53 full 8K conversations</span>
+<span class="tk-c"># fp8 weights,  fp8 KV : weights  7.5 GiB, KV pool 60.5 GiB, 121 full 8K conversations</span>
+<span class="tk-c"># int4 weights, fp8 KV : weights  3.7 GiB, KV pool 64.3 GiB, 128 full 8K conversations</span></code></pre>
+    <p class="ex-note">A worst case: paged allocation spends memory only on tokens that exist, so shorter conversations admit more. FP8 to INT4 weights adds few slots; halving KV precision doubled them. Whether that batch meets a p95 ITL target is a measurement, not a formula.</p>
+  </div>
+
+  <h2 class="stage-label sl-extra" id="watch-out">Failure modes</h2>
+  <div class="pit-list"><ul>
+    <li>Benchmarking one request at a time · it measures the batch-1 floor, not production · load-test at target concurrency and report p50 and p95 TTFT and ITL</li>
+    <li>Synthetic fixed-length prompts · real input and output length distributions change prefill share, KV pressure and preemption · replay sampled production traffic</li>
+    <li>KV pool exhaustion · preemption and recompute make p95 jump in a cliff · cap max model length per tenant, alert on preemptions and queue depth</li>
+    <li>Quantized model passes generic benchmarks and regresses your domain · gate every precision change on <a class="xl" href="../08-evals/evals.html">task evals</a></li>
+    <li>Speculative decoding enabled globally · it helps at low load and can hurt at high load or under drift · track acceptance rate and toggle per traffic tier</li>
+    <li>Prefix cache hit rate near zero · volatile tokens (timestamps, request IDs, reordered tools) sit before the stable prefix · move them to the end</li>
+  </ul></div>
+
+  <h2 class="stage-label sl-extra" id="remember">Keep in mind</h2>
+  <div class="remember"><ul>
+    <li>Prefill is compute-bound and sets TTFT; decode is bandwidth-bound and sets ITL.</li>
+    <li>KV bytes = 2 × layers × kv_heads × head_dim × bytes × tokens; read kv_heads from the config.</li>
+    <li>Continuous batching plus paged KV is the baseline; chunked prefill and prefix caching protect latency.</li>
+    <li>Quantize weights for bandwidth, activations for compute, KV for concurrency, then eval.</li>
+    <li>Speculative decoding is exact, and it pays most when the GPU is underused.</li>
+    <li>Optimize goodput at p95 against an SLO, not mean throughput.</li>
+  </ul></div>
+
+    <section class="references" aria-labelledby="primary-sources"><h2 id="primary-sources">Primary sources</h2><ul><li><a href="https://arxiv.org/abs/2309.06180" rel="noreferrer">Efficient Memory Management for LLM Serving with PagedAttention (vLLM)</a></li><li><a href="https://arxiv.org/abs/2403.02310" rel="noreferrer">Taming Throughput-Latency Tradeoff in LLM Inference with Sarathi-Serve</a></li><li><a href="https://arxiv.org/abs/2401.09670" rel="noreferrer">DistServe: Disaggregating Prefill and Decoding for Goodput-optimized LLM Serving</a></li><li><a href="https://arxiv.org/abs/2211.17192" rel="noreferrer">Fast Inference from Transformers via Speculative Decoding</a></li><li><a href="https://docs.vllm.ai/en/latest/configuration/optimization.html" rel="noreferrer">vLLM docs: optimization and tuning (chunked prefill)</a></li></ul></section>
+
+    <section class="lab-check" aria-labelledby="try-verify-explain"><h2 id="try-verify-explain">Try, verify, explain</h2><ol><li>Derive the KV budget for Llama 3.1 70B (80 layers, 8 KV heads, head_dim 128): bytes per token at BF16 and FP8, and how many 32K-token sessions fit on two 80 GB GPUs with FP8 weights under tensor parallel 2 (check: 320 KiB per token at BF16).</li><li>Measure goodput: serve one model, replay prompts with input length 1,024 and output length 256 at 1, 4 and 16 requests per second, record p50 and p95 TTFT and ITL, and find the highest rate that holds TTFT under 1 s and p95 ITL under 50 ms.</li><li>Explain why accepting a drafted token with probability min(1, p/q) and resampling rejections from the residual leaves the target distribution unchanged, and why the same scheme speeds up batch 1 more than batch 128.</li></ol></section>
+
+    <nav class="pager" id="pager"></nav>
+
+    <footer class="footer">
+      learning-project · tracks/ai · press ⌘K or / to search every chapter · diagrams load Mermaid from a CDN when online
+    </footer>
+  </div>
+</main>
+
+<script src="../../js/app.js"></script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AG-UI · generative UI · AI Engineering Field Guide</title>
+<title>AG-UI · agent-to-frontend events · AI Engineering Field Guide</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -11,19 +11,18 @@
 <link rel="stylesheet" href="../../css/base.css">
 <link rel="stylesheet" href="../../css/components.css">
 <link rel="stylesheet" href="../../css/flow.css">
-<link rel="stylesheet" href="../../css/print.css">
 </head>
 <body>
 
 <div id="progress"></div>
 
 <header class="topbar">
-  <button class="tbtn" id="nav-toggle" type="button" aria-label="Toggle navigation">☰</button>
+  <button class="tbtn" id="nav-toggle" type="button" aria-label="Open contents" aria-controls="toc" aria-expanded="false">☰</button>
   <a class="brand" href="../../index.html"><b>ai</b>·field-guide</a>
+  <a class="hub-link" href="../../../../hub/index.html">Learning hub</a>
   <div class="tools">
-    <input id="toc-filter" type="search" placeholder="filter · /" aria-label="Filter topics">
+    <button class="tbtn search-btn" id="search-open" type="button" aria-label="Search the guide"><span>Search</span><kbd>⌘K</kbd></button>
     <button class="tbtn" id="expand-all" type="button">expand</button>
-    <button class="tbtn" id="print-btn" type="button">print</button>
   </div>
 </header>
 
@@ -32,152 +31,175 @@
 <main class="main">
   <div class="content">
     <header class="topic-head">
-      <div class="kicker">Part 3 · Tools & agents · 09/24</div>
-      <h1>AG-UI · generative UI</h1>
-      <p class="lead">The agent does not have to answer in prose. It returns UI intent as typed events, and the frontend renders tool calls as live components while the text keeps streaming around them.</p>
+      <div class="kicker">Part 4 · Tools &amp; agents · 19/31</div>
+      <h1>AG-UI · agent-to-frontend events</h1>
+      <p class="lead">AG-UI is an event protocol from agent to frontend: text, lifecycle, tool-call and state events. The application maps events to its own components; the protocol prescribes no markup or rendering framework.</p>
+      <p class="chapter-summary"><b>In this chapter</b> Read AG-UI as an event protocol between an agent backend and a user interface; separate protocol events from rendering choices.</p>
     </header>
 
-<div class="beat problem">
-  <div class="beat-h"><span class="bt">Problem</span><span class="bh">chat is a lossy channel</span></div>
-  <ul>
-    <li><b>Data through a keyhole:</b> the agent has the table, the chart data, the sources. Its only way to show you is prose. Narrating data that could simply be rendered is describing a painting over the phone.</li>
-    <li><b>Event soup:</b> every backend framework emits its own streaming events, so frontends get rewritten per backend. The N×M matrix again, now between agent engines and UIs.</li>
-  </ul>
-</div>
+    <h2 class="stage-label sl-why" id="why-you-need-it">Why this layer matters</h2>
+    <div class="why">
+      <ul>
+        <li><b>Data through a keyhole:</b> tables, charts and sources narrated as prose.</li>
+        <li><b>Event soup:</b> every agent backend emits its own streaming events.</li>
+        <li><b>N×M again:</b> each frontend rewritten per backend, per engine.</li>
+        <li><b>Tool calls are typed:</b> prose is not the only channel worth rendering.</li>
+      </ul>
+    </div>
 
-<div class="beat solution">
-  <div class="beat-h"><span class="bt">Solution</span><span class="bh">a standard event stream, plus tools that render</span></div>
-  <ul>
-    <li><b>Split the problem:</b> <a class="xl" href="mcp.html">MCP</a> standardizes agent to tools. AG-UI standardizes agent to interface.</li>
-    <li><b>One alphabet:</b> the backend emits a defined set of events: lifecycle, text deltas, tool-call progress, state sync. Any AG-UI frontend renders any AG-UI backend, and adapters exist for the major <a class="xl" href="../05-agents-orchestration/agent-patterns.html">agent</a> frameworks.</li>
-    <li><b>Generative UI is the showstopper:</b> a tool call becomes your React component, mounted mid-answer while text keeps flowing around it. The chat bubble stops being the only thing an agent can draw.</li>
-  </ul>
-  <div class="diagram">
-    <div class="diag-body"><pre class="mermaid">
+    <h2 class="stage-label sl-sol" id="solutions">Event flow</h2>
+    <p>Three rendering levels for agent output, cheapest first.</p>
+    <div class="sol-list">
+
+      <div class="sol-item open">
+        <button class="sol-head" type="button">
+          <span class="sol-no">A</span>
+          <span class="sol-name">Markdown streaming</span>
+          <span class="sol-sum">text deltas rendered as chat prose, zero contract</span>
+          <span class="sol-chev">▶</span>
+        </button>
+        <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+          <h4>How it works</h4>
+          <ul>
+            <li>Concatenate text deltas for the typing effect, render markdown in bubbles.</li>
+            <li>Lifecycle events (RUN_STARTED, RUN_FINISHED) drive the spinner.</li>
+          </ul>
+          <h4>Trade-offs</h4>
+          <ul>
+            <li><b>pro:</b> works with any backend, nothing to design.</li>
+            <li><b>con:</b> live data gets narrated instead of shown.</li>
+            <li><b>con:</b> markdown injection from tool output (<a class="xl" href="../07-security/injection.html">injection</a>).</li>
+          </ul>
+        </div></div></div>
+      </div>
+
+      <div class="sol-item">
+        <button class="sol-head" type="button">
+          <span class="sol-no">B</span>
+          <span class="sol-name">App-owned tool components</span>
+          <span class="sol-sum">application maps recognized tool calls to trusted components</span>
+          <span class="sol-chev">▶</span>
+        </button>
+        <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+          <h4>How it works</h4>
+          <ul>
+            <li>An app-owned registry maps a recognized tool name to a local component: run_query selects a Chart renderer.</li>
+            <li>Validated arguments populate it as events arrive (<a class="xl" href="tool-calling.html">tool calling</a>); the app keeps control of rendering.</li>
+            <li>The result arrives and the component fills with data.</li>
+          </ul>
+          <h4>Trade-offs</h4>
+          <ul>
+            <li><b>pro:</b> typed, styleable, interactive. The model cannot touch your chart axis.</li>
+            <li><b>con:</b> every tool implies loading, empty and error design.</li>
+          </ul>
+        </div></div></div>
+      </div>
+
+      <div class="sol-item">
+        <button class="sol-head" type="button">
+          <span class="sol-no">C</span>
+          <span class="sol-name">Hybrid <span class="sol-tag best">sweet spot</span></span>
+          <span class="sol-sum">prose lanes plus component cards plus state sync</span>
+          <span class="sol-chev">▶</span>
+        </button>
+        <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+          <h4>How it works</h4>
+          <ul>
+            <li>Text keeps streaming around mounted component cards.</li>
+            <li>STATE_DELTA patches sync agent state into the frontend, no re-fetch.</li>
+          </ul>
+          <h4>Trade-offs</h4>
+          <ul>
+            <li><b>pro:</b> explanations and live artifacts in one answer.</li>
+            <li><b>con:</b> shared state needs merge rules, budget like <a class="xl" href="../05-agents-orchestration/ops.html">durable ops</a>.</li>
+          </ul>
+        </div></div></div>
+      </div>
+
+    </div>
+
+    <h4>The event alphabet · four families</h4>
+    <ul>
+      <li><b>Lifecycle:</b> run started, finished, errored. Brackets everything.</li>
+      <li><b>Text deltas:</b> model tokens as they <a class="xl" href="../01-foundations/llm-internals.html">stream from the LLM</a>.</li>
+      <li><b>Tool-call events:</b> identify calls and may stream arguments before a result exists; an event never authorizes execution.</li>
+      <li><b>State sync:</b> patches keep the UI aligned with agent state.</li>
+    </ul>
+    <p class="note">AG-UI connects compatible agent backends and frontend adapters; both ends still need matching event support. <a class="xl" href="mcp.html">MCP</a> covers host-client-server integration with tools and data; AG-UI covers agent-to-frontend events.</p>
+
+    <figure class="diagram"><div class="diag-body"><pre class="mermaid">
 flowchart LR
-  U["user"] --> UI["UI · AG-UI client"]
-  UI -- "user message" --> AG["agent runtime&lt;br/&gt;LLM + tools + state"]
-  AG -- "MCP · tools/call" --> S["MCP server"]
-  S --> X["the world&lt;br/&gt;APIs · DBs · files"]
-  X -- "results" --> AG
-  AG -- "AG-UI events&lt;br/&gt;text deltas · tool calls · state deltas" --> UI
-  UI -- "renders text + live components" --> U
-  AG -- "checkpoint per step" --> PG[("Postgres&lt;br/&gt;state + pgvector")]
-  classDef d fill:#141826,stroke:#3d3d5c,color:#e6e6f0;
-  classDef v fill:#1c1430,stroke:#a78bfa,color:#e6e6f0;
-  classDef m fill:#0d2818,stroke:#4ade80,color:#e6e6f0;
-  class UI,AG v;
-  class S,X d;
-  class U,PG m;
-    </pre></div>
-  </div>
-</div>
+  U["user"] --> UI["AG-UI client"]
+  UI --> AG["agent runtime&lt;br/&gt;LLM + tools"]
+  AG &lt;--&gt; S["MCP servers"]
+  AG -- "typed events" --> UI
+    </pre></div><figcaption>The agent runtime sits between two protocols: MCP toward tools, AG-UI typed events toward the user. The frontend only renders events and never calls MCP servers itself.</figcaption></figure>
 
-<div class="beat how">
-  <div class="beat-h"><span class="bt">How</span><span class="bh">the event alphabet, and how a call becomes a component</span></div>
+    <h2 class="stage-label sl-when" id="when-to-use-when-not">Decision boundary</h2>
+    <div class="pc">
+      <div class="pc-col pros"><h4 class="pc-h">Use when</h4><ul>
+        <li>Answers carry data users should see live: charts, tables, forms.</li>
+        <li>The agent co-drives the app, filling forms and flipping states.</li>
+        <li>Approvals deserve real cards, not yes/no prompts.</li>
+        <li>Multiple frontends must render one agent backend.</li>
+      </ul></div>
+      <div class="pc-col cons"><h4 class="pc-h">Skip when</h4><ul>
+        <li>Words are the product: FAQs, support prose.</li>
+        <li>One backend, one frontend, no sharing pressure.</li>
+        <li>Nobody can maintain component contracts and their states.</li>
+        <li>Print and PDF fidelity matters more than live interaction.</li>
+      </ul></div>
+    </div>
 
-  <h4>the event protocol · one stream, four families</h4>
-  <ul>
-    <li><b>Lifecycle:</b> run started / finished / errored. Brackets for everything below. The UI knows when to spin and when to stop.</li>
-    <li><b>Text message deltas:</b> the model's tokens as they <a class="xl" href="../01-foundations/llm-internals.html">stream from the LLM</a>. The typing effect is literally these events concatenated.</li>
-    <li><b>Tool-call events:</b> call starts, arguments stream in chunks (they are just tokens, <a class="xl" href="tool-calling.html">tool calling</a>), result arrives. Show "searching restaurants..." with the query building live, before any result exists.</li>
-    <li><b>State events:</b> the agent's working state syncs to the frontend as patches. <span class="wlabel why">why this matters</span> the UI reflects what the agent knows (form half-filled, filter selected), not just what it says. No re-fetch, no guessing.</li>
-  </ul>
+    <h2 class="stage-label sl-ex" id="example">Worked example</h2>
+    <div class="example">
+      <p class="ex-note">Render only a completed, schema-validated local view model; show a loading state while streamed arguments are partial. Events carry arguments, not authorization. A fixed component allowlist owns rendering.</p>
+      <pre class="code" data-lang="tsx" data-file="tool_renderer.tsx"><code>type View =
+  | { kind: "chart"; points: Array&lt;{ x: string; y: number }&gt; }
+  | { kind: "sources"; items: Source[] }
+  | { kind: "approval"; requestId: string };
 
-  <pre class="code" data-lang="json" data-file="agui_events.json"><code><span class="tk-c">// lifecycle brackets the run</span>
-{ <span class="tk-s">"type"</span>: <span class="tk-s">"RUN_STARTED"</span>, <span class="tk-s">"threadId"</span>: <span class="tk-s">"t-91"</span> }
-<span class="tk-c">// text streams token by token</span>
-{ <span class="tk-s">"type"</span>: <span class="tk-s">"TEXT_MESSAGE_CONTENT"</span>, <span class="tk-s">"messageId"</span>: <span class="tk-s">"m-1"</span>, <span class="tk-s">"delta"</span>: <span class="tk-s">"Revenue is up "</span> }
-<span class="tk-c">// a tool call mounts a component · args arrive in chunks</span>
-{ <span class="tk-s">"type"</span>: <span class="tk-s">"TOOL_CALL_START"</span>,  <span class="tk-s">"toolCallId"</span>: <span class="tk-s">"c-1"</span>, <span class="tk-s">"name"</span>: <span class="tk-s">"run_query"</span> }
-{ <span class="tk-s">"type"</span>: <span class="tk-s">"TOOL_CALL_ARGS"</span>,   <span class="tk-s">"toolCallId"</span>: <span class="tk-s">"c-1"</span>, <span class="tk-s">"delta"</span>: <span class="tk-s">"metric='revenue'"</span> }
-{ <span class="tk-s">"type"</span>: <span class="tk-s">"TOOL_CALL_ARGS"</span>,   <span class="tk-s">"toolCallId"</span>: <span class="tk-s">"c-1"</span>, <span class="tk-s">"delta"</span>: <span class="tk-s">" range='q3'"</span> }
-{ <span class="tk-s">"type"</span>: <span class="tk-s">"TOOL_CALL_RESULT"</span>, <span class="tk-s">"toolCallId"</span>: <span class="tk-s">"c-1"</span>, <span class="tk-s">"content"</span>: <span class="tk-s">"92 rows"</span> }
-<span class="tk-c">// agent state syncs as patches</span>
-{ <span class="tk-s">"type"</span>: <span class="tk-s">"STATE_DELTA"</span>, <span class="tk-s">"patch"</span>: [ { <span class="tk-s">"op"</span>: <span class="tk-s">"replace"</span>, <span class="tk-s">"path"</span>: <span class="tk-s">"filters/quarter"</span>, <span class="tk-s">"value"</span>: <span class="tk-s">"q3"</span> } ] }
-<span class="tk-c">// and it ends</span>
-{ <span class="tk-s">"type"</span>: <span class="tk-s">"RUN_FINISHED"</span> }</code></pre>
-
-  <h4>custom component rendering · the flow</h4>
-  <ul>
-    <li><b>1 · Emit:</b> the backend emits typed events and tool-call messages over the one stream. The tool names are the contract.</li>
-    <li><b>2 · Map:</b> the frontend keeps a registry from tool call name to component. run_query mounts a Chart, search_docs mounts a SourceList.</li>
-    <li><b>3 · Stream:</b> the component renders from arguments while they stream, so the chart builds live, then fills with data when the result arrives.</li>
-  </ul>
-
-  <h4>why tools, not markdown</h4>
-  <ul>
-    <li><span class="wlabel why">typed</span> a component is typed, styleable and interactive. The model cannot inject prose into your chart axis.</li>
-    <li><span class="wlabel gotcha">gotcha</span> every tool now implies a design decision: loading, empty and error states. A tool that renders badly is worse than a tool that does not render.</li>
-  </ul>
-</div>
-
-<div class="beat when">
-  <div class="beat-h"><span class="bt">When</span><span class="bh">rendering level picker</span></div>
-  <div class="tbl-wrap">
-    <table>
-      <thead><tr><th>Level</th><th class="hu">Use when</th><th class="ha">Avoid when</th><th class="hw">Watch out</th></tr></thead>
-      <tbody>
-        <tr><td class="m">markdown chat bubbles</td><td class="u">Support bots, FAQs, words are the product</td><td class="avoid">Data the user should see live</td><td class="watch">Markdown injection from tool output, sanitize, see <a class="xl" href="../07-security/injection.html">prompt injection</a></td></tr>
-        <tr><td class="m">tool-rendered widgets · generative UI</td><td class="u">Actions have structure: charts, forms, tables, maps mid-answer</td><td class="avoid">Pure prose answers</td><td class="watch">Every tool implies a design decision, empty states included</td></tr>
-        <tr><td class="m">state-synced copilots</td><td class="u">The agent co-drives the app: fills forms, flips UI states</td><td class="avoid">Read-only chat sidebars</td><td class="watch">Shared state needs conflict rules, budget for it like <a class="xl" href="../05-agents-orchestration/ops.html">durable ops</a></td></tr>
-      </tbody>
-    </table>
-  </div>
-  <p class="note"><b>Rule of thumb:</b> if the answer is words, render words. If the answer is a thing (a table, a form, an approval), let the tool call be the thing.</p>
-</div>
-
-<div class="beat example">
-  <div class="beat-h"><span class="bt">Example</span><span class="bh">a tool call becomes a component</span></div>
-  <pre class="code" data-lang="tsx" data-file="tool_renderer.tsx"><code><span class="tk-k">function</span> <span class="tk-f">ToolRenderer</span>({ call }: { call: ToolCall }) {
-  <span class="tk-k">switch</span> (call.name) {
-    <span class="tk-k">case</span> <span class="tk-s">"run_query"</span>:        <span class="tk-c">// args stream in · chart builds live</span>
-      <span class="tk-k">return</span> &lt;<span class="tk-t">Chart</span> data={JSON.parse(call.args)} /&gt;
-    <span class="tk-k">case</span> <span class="tk-s">"search_docs"</span>:
-      <span class="tk-k">return</span> &lt;<span class="tk-t">SourceList</span> items={call.result?.sources} /&gt;
-    <span class="tk-k">case</span> <span class="tk-s">"request_approval"</span>:
-      <span class="tk-k">return</span> &lt;<span class="tk-t">ApprovalCard</span> txn={call.args} /&gt;
-    <span class="tk-k">default</span>:
-      <span class="tk-k">return</span> &lt;<span class="tk-t">InlineTool</span> name={call.name} status={call.status} /&gt;
+function ToolRenderer({ call }: { call: ToolCall }) {
+  if (call.status === "streaming" || !call.validatedView) return &lt;ToolLoading /&gt;;
+  const view = call.validatedView as View; // local schema validation completed
+  switch (view.kind) {
+    case "chart": return &lt;Chart data={view.points} /&gt;;
+    case "sources": return &lt;SourceList items={view.items} /&gt;;
+    case "approval": return &lt;ApprovalCard requestId={view.requestId} /&gt;;
   }
-}
-<span class="tk-c">// text deltas render as prose · tool calls mount real components mid-stream</span></code></pre>
-  <ul>
-    <li><b>In-app data analysts</b> stream "querying revenue..." while a live chart mounts mid-answer. The tool call IS the UI event.</li>
-    <li><b>Support copilots</b> render ticket cards and refund forms inline instead of describing them.</li>
-    <li><b>Approval cards</b> carry amount, reason and risk with one click to decide. Human in the loop, rendered as UI instead of a yes/no prompt.</li>
-    <li><b>CopilotKit</b> is the reference stack: AG-UI grew out of its patterns, which is why the event names feel so UI-native.</li>
-  </ul>
-</div>
+}</code></pre>
+      <ul>
+        <li><b>In-app analysts:</b> "querying revenue..." streams while a live chart mounts.</li>
+        <li>The approval server authenticates the actor and authorizes the action; a frontend card only displays the request.</li>
+      </ul>
+    </div>
 
-<div class="beat pitfalls">
-  <div class="beat-h"><span class="bt">Pitfalls</span><span class="bh">the cost side of custom UI</span></div>
-  <ul>
-    <li><b>Component contract drift:</b> a renamed tool or a changed arg breaks renderers silently. Pin names and schemas, test backend and frontend together.</li>
-    <li><b>Over-custom UI cost:</b> every bespoke component is design, build and maintenance forever. Ship few, good ones, fall back to InlineTool for the rest.</li>
-    <li><b>Accessibility:</b> streamed components must be keyboard navigable and announced by screen readers. Loading states need aria-live, charts need text alternatives.</li>
-    <li><b>Print and export:</b> dynamic UI does not survive paper or PDF by default. Give every component a serialized fallback (the chart plus its data table).</li>
-    <li><b>The prose lane still leaks:</b> markdown injection from tool output applies to every text delta, see <a class="xl" href="../07-security/injection.html">prompt injection</a>.</li>
-    <li><b>State conflicts:</b> when agent and user edit the same state, last-write-wins bites eventually. Define merge rules before you need them.</li>
-  </ul>
-</div>
+    <h2 class="stage-label sl-extra" id="watch-out">Failure modes</h2>
+    <div class="pit-list"><ul>
+      <li><b>Contract drift:</b> a renamed tool breaks renderers silently. Pin names, test both ends.</li>
+      <li><b>Cost:</b> every bespoke component is design and maintenance forever. Ship few.</li>
+      <li><b>Accessibility:</b> aria-live for loading states, text alternatives for charts.</li>
+      <li><b>Print:</b> give every component a serialized fallback for paper and PDF.</li>
+      <li><b>Prose lane leaks:</b> sanitize markdown from tool output (<a class="xl" href="../07-security/injection.html">injection</a>).</li>
+    </ul></div>
 
-<div class="beat checklist">
-  <div class="beat-h"><span class="bt">Checklist</span><span class="bh">6 things to remember</span></div>
-  <ul>
-    <li>The agent returns UI intent, the frontend owns rendering. Never let the model emit raw HTML.</li>
-    <li>Map tool name to component in one registry, with a default fallback for unknown tools.</li>
-    <li>Design three states per component: loading (args streaming), empty or error, result.</li>
-    <li>Keep the event alphabet small: lifecycle, text message, tool call, state.</li>
-    <li>Sanitize the prose lane, treat tool output as untrusted input.</li>
-    <li>Plan keyboard access, screen readers and print export from day one.</li>
-  </ul>
-</div>
+    <h2 class="stage-label sl-extra" id="remember">Keep in mind</h2>
+    <div class="remember"><ul>
+      <li>The protocol carries events; the frontend owns rendering. Validate event data, never run model-supplied markup as trusted UI.</li>
+      <li>One registry maps tool name to component, with a default fallback.</li>
+      <li>Design three states per component: loading, empty or error, result.</li>
+      <li>Keep the alphabet small: lifecycle, text, tool calls, state.</li>
+      <li>Sanitize the prose lane, tool output is untrusted input.</li>
+    </ul></div>
+
+    <section class="references" aria-labelledby="primary-sources"><h2 id="primary-sources">Primary sources</h2><ul><li><a href="https://docs.ag-ui.com/introduction" rel="noreferrer">AG-UI protocol introduction</a></li><li><a href="https://docs.ag-ui.com/concepts/events" rel="noreferrer">AG-UI event protocol</a></li></ul></section>
+
+    <section class="lab-check" aria-labelledby="try-verify-explain"><h2 id="try-verify-explain">Try, verify, explain</h2><ol><li>Read a run as events: start, message chunk, tool-call start/result, state update and finish. Explain which event drives UI rendering and which event grants permission to execute.</li><li>Stream one <code>run_query</code> call and timestamp <code>TOOL_CALL_START</code>, each <code>TOOL_CALL_ARGS</code> chunk, <code>TOOL_CALL_END</code> and the result. Compute time to first visual feedback versus time to rendered chart; that gap is how long your loading state must carry the UI.</li><li>Explain why <code>STATE_DELTA</code> patches only make sense on top of a <code>STATE_SNAPSHOT</code>, and what the frontend must do when a delta arrives after a dropped or reordered event.</li></ol></section>
 
     <nav class="pager" id="pager"></nav>
 
     <footer class="footer">
-      learning-project · tracks/ai · print this page from the browser dialog · diagrams load mermaid from CDN once online
+      learning-project · tracks/ai · press ⌘K or / to search every chapter · diagrams load Mermaid from a CDN when online
     </footer>
   </div>
 </main>

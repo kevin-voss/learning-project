@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A2A · Agent2Agent protocol · AI Engineering Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../css/tokens.css">
+<link rel="stylesheet" href="../../css/base.css">
+<link rel="stylesheet" href="../../css/components.css">
+<link rel="stylesheet" href="../../css/flow.css">
+</head>
+<body>
+
+<div id="progress"></div>
+
+<header class="topbar">
+  <button class="tbtn" id="nav-toggle" type="button" aria-label="Open contents" aria-controls="toc" aria-expanded="false">☰</button>
+  <a class="brand" href="../../index.html"><b>ai</b>·field-guide</a>
+  <a class="hub-link" href="../../../../hub/index.html">Learning hub</a>
+  <div class="tools">
+    <button class="tbtn search-btn" id="search-open" type="button" aria-label="Search the guide"><span>Search</span><kbd>⌘K</kbd></button>
+    <button class="tbtn" id="expand-all" type="button">expand</button>
+  </div>
+</header>
+
+<nav class="sidebar" id="toc" aria-label="Topics"></nav>
+
+<main class="main">
+  <div class="content">
+    <header class="topic-head">
+      <div class="kicker">Part 4 · Tools &amp; agents · 18/31</div>
+      <h1>A2A · Agent2Agent protocol</h1>
+      <p class="lead">A2A is an open wire protocol for delegating work to an agent whose internals you cannot see: discover it from an Agent Card, send it Messages, and follow the Task it creates until the task completes, asks for input or fails.</p>
+      <p class="chapter-summary"><b>In this chapter</b> Read an Agent Card, trace a Task through its v1.0 lifecycle over JSON-RPC, gRPC or HTTP+JSON, secure the trust boundary between agents, and decide when remote delegation beats a tool call or a shared graph.</p>
+    </header>
+
+  <h2 class="stage-label sl-why" id="why-you-need-it">Why this layer matters</h2>
+  <div class="why">
+    <ul>
+      <li><b>Opaque peers:</b> the agent that can do the job often belongs to another team or vendor, with its own model, prompts, tools and memory that you cannot and should not import. A tool schema cannot describe a multi-turn, hours-long negotiation with it.</li>
+      <li><b>Bespoke glue, again:</b> without a shared contract every agent pair needs its own API, auth and status polling: the N×M integration problem that <a class="xl" href="../04-tools-mcp/mcp.html">MCP</a> solved for tools, one level up.</li>
+      <li><b>Delegation is stateful:</b> remote work needs states such as working, waiting for input and waiting for authorization, plus streaming and callbacks. Plain request/response loses all of that.</li>
+      <li><b>Complement, not replacement:</b> MCP connects an agent to tools and context it controls; A2A connects it to a peer that keeps its internals private. Typical systems use A2A between agents and MCP inside each one.</li>
+    </ul>
+  </div>
+
+  <h2 class="stage-label sl-sol" id="solutions">Protocol mechanics</h2>
+  <p><b>Version:</b> this chapter follows the A2A specification <b>v1.0</b> (v1.0.0 released March 2026, patch v1.0.1 May 2026), an Apache-2.0 project contributed by Google and hosted by the Linux Foundation. The wire version is negotiated as <code>Major.Minor</code>, so peers say <code>1.0</code>. v1.0 broke compatibility with v0.3: method names, enum spellings and the Part shape all changed, so check which version an SDK or peer speaks before reading its payloads. Every interaction follows one loop: fetch the card, send a Message, follow the Task the server creates until it is interrupted or terminal.</p>
+
+  <ol class="steps">
+    <li><b>SUBMITTED</b><span>Server creates the Task and assigns <code>id</code> plus <code>contextId</code>; clients never pick task ids.</span></li>
+    <li><b>WORKING</b><span>Remote agent runs its own loop and emits <code>statusUpdate</code> and <code>artifactUpdate</code> events.</span></li>
+    <li><b>INPUT_REQUIRED · AUTH_REQUIRED</b><span>Interrupted: the client replies with the same <code>taskId</code>, or resolves authorization out of band.</span></li>
+    <li><b>COMPLETED · FAILED · CANCELED · REJECTED</b><span>Terminal and immutable: further messages to the task return <code>UnsupportedOperationError</code>.</span></li>
+  </ol>
+  <p class="note">On the wire every state carries the <code>TASK_STATE_</code> prefix, for example <code>TASK_STATE_INPUT_REQUIRED</code>. v0.3 used lowercase <code>input-required</code>; some v1.0 prose still does.</p>
+
+  <figure class="diagram">
+    <div class="diag-body"><pre class="mermaid">
+sequenceDiagram
+  participant C as Client agent
+  participant R as Remote agent
+  participant W as Client webhook
+  C->>R: SendMessage + push config&lt;br/&gt;returnImmediately: true
+  R-->>C: Task SUBMITTED (id, contextId)
+  R->>W: statusUpdate INPUT_REQUIRED
+  C->>R: SendMessage (taskId, answer)
+  R->>W: artifactUpdate (lastChunk)
+  R->>W: statusUpdate COMPLETED
+  C->>R: GetTask (id)
+  R-->>C: Task with artifacts</pre></div><figcaption>For long-running work the client does not hold a connection: it registers a webhook, answers the interruption by reusing the server-issued <code>taskId</code>, and fetches the final Task once the webhook reports a terminal state.</figcaption></figure>
+
+  <div class="sol-list">
+
+    <div class="sol-item open">
+      <button class="sol-head" type="button">
+        <span class="sol-no">A</span>
+        <span class="sol-name">Agent Card</span>
+        <span class="sol-sum">JSON manifest: endpoints, skills, capabilities, auth, optional signature</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li><b>Discovery:</b> every A2A server must publish an <button class="term" type="button" data-tip="A JSON self-description of an A2A agent: identity, endpoints per protocol binding, capabilities, skills and the authentication it requires.">Agent Card</button>, conventionally at <code>https://{domain}/.well-known/agent-card.json</code>; registries and pre-configured URLs are also allowed.</li>
+          <li><b>Endpoints:</b> <code>supportedInterfaces</code> is an ordered list of <code>{url, protocolBinding, protocolVersion, tenant?}</code>. Clients take the first entry they support and, if <code>tenant</code> is set, copy it into every request. v0.3's top-level <code>url</code>, <code>preferredTransport</code> and <code>protocolVersion</code> are gone.</li>
+          <li><b>Contract:</b> <code>capabilities</code> declares <code>streaming</code>, <code>pushNotifications</code>, <code>extendedAgentCard</code> and <code>extensions</code>; calling an undeclared capability yields an error. <code>skills[]</code> (<code>id</code>, <code>name</code>, <code>description</code>, <code>tags</code>, <code>examples</code>, input and output media types) describe what the agent is likely to succeed at; they are descriptive, not callable functions.</li>
+          <li><b>Auth declaration:</b> <code>securitySchemes</code> names API key, HTTP auth, OAuth 2.0, OpenID Connect or mutual TLS schemes; <code>securityRequirements</code> says which apply, card-wide or per skill.</li>
+          <li><b>Signatures:</b> optional <code>signatures[]</code> are JWS (RFC 7515) over the card canonicalized with JCS (RFC 8785), excluding the signature field; the key is found via <code>kid</code>/<code>jku</code> or a trusted key store.</li>
+          <li><b>Extended card:</b> with <code>extendedAgentCard: true</code>, authenticated clients call <code>GetExtendedAgentCard</code> for extra skills or quotas hidden from the public card.</li>
+        </ul>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><b>pro:</b> standard HTTP caching (<code>Cache-Control</code>, <code>ETag</code>) applies, so discovery costs one conditional GET.</li>
+          <li><b>con:</b> an unsigned card is a claim, not an identity. Skills are free text a malicious card can tune to win routing decisions.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+    <div class="sol-item">
+      <button class="sol-head" type="button">
+        <span class="sol-no">B</span>
+        <span class="sol-name">Task, Message, Part, Artifact</span>
+        <span class="sol-sum">messages carry turns, tasks carry state, artifacts carry results</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li><b>Message:</b> one turn: <code>messageId</code> (creator-generated), <code>role</code> (<code>ROLE_USER</code> for client to server, <code>ROLE_AGENT</code> back), <code>parts</code>, optional <code>taskId</code>, <code>contextId</code>, <code>referenceTaskIds</code>, <code>metadata</code>.</li>
+          <li><b>Part:</b> exactly one of <code>text</code>, <code>raw</code> (base64 bytes), <code>url</code> or <code>data</code> (any JSON value), plus optional <code>mediaType</code> and <code>filename</code>. v0.3's <code>kind</code> discriminator and separate TextPart, FilePart and DataPart types are removed.</li>
+          <li><b><button class="term" type="button" data-tip="A2A's stateful unit of work: server-generated id, current status (state plus optional message), output artifacts and turn history.">Task</button>:</b> <code>id</code>, <code>contextId</code>, <code>status</code> (<code>state</code>, optional <code>message</code>, <code>timestamp</code>), <code>artifacts</code>, <code>history</code>. A <code>SendMessage</code> result holds either a <code>task</code> or a direct <code>message</code>; the agent decides whether work deserves a task.</li>
+          <li><b>Artifact:</b> a deliverable with <code>artifactId</code>, <code>name</code>, <code>parts</code>. Status messages explain; artifacts are the output.</li>
+          <li><b><button class="term" type="button" data-tip="Server-generated id that groups related tasks and messages into one conversation; clients treat it as opaque and send it back to continue.">contextId</button> vs taskId:</b> a context groups many tasks into one conversation; a taskId continues one task. Mismatched pairs must be rejected, and a client-supplied taskId must name an existing task.</li>
+        </ul>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><b>pro:</b> media types per part let a client advertise <code>acceptedOutputModes</code> and get JSON, images or files without a side channel.</li>
+          <li><span class="wlabel gotcha">gotcha</span> <b>con:</b> JSON uses camelCase fields and ProtoJSON enum strings (<code>"TASK_STATE_COMPLETED"</code>), not the proto's snake_case names or integers.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+    <div class="sol-item">
+      <button class="sol-head" type="button">
+        <span class="sol-no">C</span>
+        <span class="sol-name">Bindings and methods</span>
+        <span class="sol-sum">one abstract API, three standard bindings: JSON-RPC, gRPC, HTTP+JSON</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li><b>Operations:</b> <code>SendMessage</code>, <code>SendStreamingMessage</code>, <code>GetTask</code>, <code>ListTasks</code>, <code>CancelTask</code>, <code>SubscribeToTask</code>, <code>CreateTaskPushNotificationConfig</code>, <code>GetTaskPushNotificationConfig</code>, <code>ListTaskPushNotificationConfigs</code>, <code>DeleteTaskPushNotificationConfig</code>, <code>GetExtendedAgentCard</code>. The normative source is <code>a2a.proto</code>, package <code>lf.a2a.v1</code>.</li>
+          <li><b>JSON-RPC 2.0:</b> POST to the interface URL with <code>"method": "SendMessage"</code>. PascalCase replaced v0.3's <code>message/send</code> and <code>tasks/get</code>; streaming uses Server-Sent Events, one JSON-RPC response per event.</li>
+          <li><b>gRPC:</b> service <code>A2AService</code> with the same method names; streams are server-streaming RPCs.</li>
+          <li><b>HTTP+JSON:</b> resource routes such as <code>POST /message:send</code>, <code>GET /tasks/{id}</code>, <code>POST /tasks/{id}:cancel</code>, media type <code>application/a2a+json</code>.</li>
+          <li><b>Versioning:</b> clients must send <code>A2A-Version: 1.0</code> (header or query parameter); servers read an empty value as 0.3 and return <code>VersionNotSupportedError</code> otherwise. Errors map per binding, e.g. <code>TaskNotFoundError</code> is JSON-RPC <code>-32001</code>, gRPC <code>NOT_FOUND</code>, HTTP 404.</li>
+          <li><b>Blocking:</b> by default <code>SendMessage</code> waits until the task is terminal or interrupted; <code>configuration.returnImmediately: true</code> returns the task as soon as it exists.</li>
+        </ul>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><b>pro:</b> bindings are functionally equivalent, so the choice is operational: JSON-RPC for simplicity, gRPC for typed internal meshes, HTTP+JSON for gateways and caches.</li>
+          <li><b>con:</b> forgetting the version header silently downgrades you to 0.3 semantics on a dual-version server.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+    <div class="sol-item">
+      <button class="sol-head" type="button">
+        <span class="sol-no">D</span>
+        <span class="sol-name">Streaming and push notifications</span>
+        <span class="sol-sum">poll, hold an SSE stream, or register a webhook, same event shapes</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li><b>StreamResponse:</b> each event holds exactly one of <code>task</code>, <code>message</code>, <code>statusUpdate</code> (<code>TaskStatusUpdateEvent</code>) or <code>artifactUpdate</code> (<code>TaskArtifactUpdateEvent</code>, with <code>append</code> and <code>lastChunk</code> for chunked output).</li>
+          <li><b>Streaming:</b> a task stream starts with the Task, delivers events in generation order and closes at a terminal state. <code>SubscribeToTask</code> reattaches after a dropped connection; several streams may watch one task.</li>
+          <li><b>Push:</b> pass <code>configuration.taskPushNotificationConfig</code> in <code>SendMessage</code>, or call <code>CreateTaskPushNotificationConfig</code> later, with <code>url</code>, optional <code>token</code> and <code>authentication {scheme, credentials}</code>. The agent POSTs the same StreamResponse JSON with an <code>Authorization</code> header built from that config, whatever binding the task used.</li>
+          <li><b>Delivery:</b> at least once, retries with backoff allowed, 10 to 30 s timeouts recommended. Receivers return 2xx, deduplicate and check the task id is one they created.</li>
+        </ul>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><b>pro:</b> webhooks free the client from holding connections across hours-long tasks or restarts.</li>
+          <li><b>con:</b> the client must expose a reachable HTTPS endpoint, and the agent now makes outbound requests to caller-chosen URLs, an SSRF surface.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+    <div class="sol-item">
+      <button class="sol-head" type="button">
+        <span class="sol-no">E</span>
+        <span class="sol-name">Authentication and authorization</span>
+        <span class="sol-sum">declared in the card, obtained out of band, checked on every request</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li><b>Out of band:</b> the client reads <code>securitySchemes</code>, obtains credentials through the scheme's normal flow (OAuth 2.0 client credentials, authorization code with PKCE, device code, OIDC, mTLS), and sends them as HTTP headers or gRPC metadata. Identity never travels inside A2A message bodies.</li>
+          <li><b>Server duties:</b> authenticate every request; authorize per skill, action, data and tenant; scope <code>ListTasks</code> and <code>GetTask</code> to the caller before touching storage so other tenants' task ids do not leak.</li>
+          <li><b>In-task auth:</b> when the agent needs a downstream credential or human approval mid-task, it moves to <code>TASK_STATE_AUTH_REQUIRED</code> with an explanatory status message. Credentials should arrive out of band, directly to the agent; the client may delegate up its own chain.</li>
+          <li><b>Transport:</b> production requires HTTPS or TLS; clients should validate the server certificate.</li>
+        </ul>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><b>pro:</b> reuses existing IdPs, gateways and audit tooling; nothing agent-specific to invent.</li>
+          <li><b>con:</b> passing credentials in-band through a chain of agents exposes them to every hop; if an extension does it, bind them to the requesting agent and encrypt them.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+    <div class="sol-item">
+      <button class="sol-head" type="button">
+        <span class="sol-no">F</span>
+        <span class="sol-name">Trust boundary threats</span>
+        <span class="sol-sum">a remote agent is an untrusted principal, its output is untrusted data</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li><b>Impersonation:</b> anyone can publish a card claiming any name. Pin agents by domain allowlist, TLS identity and verified card signatures from keys you trust, not by <code>name</code> or skill text.</li>
+          <li><b>Cross-agent <a class="xl" href="../07-security/injection.html">prompt injection</a>:</b> remote text, files and data parts enter your model's context. A compromised or malicious peer can embed instructions; treat every part as data and gate privileged follow-up actions with <a class="xl" href="../07-security/guardrails.html">guardrails</a>.</li>
+          <li><b>Data leakage:</b> everything in a Message, including history you forward via a shared <code>contextId</code>, leaves your trust domain. Send the minimum the skill needs; never forward secrets or other users' data.</li>
+          <li><b>Webhook abuse:</b> agents should reject private, loopback and link-local webhook targets; receivers verify the credential they issued, use one single-purpose token per config and rate-limit.</li>
+        </ul>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><b>con:</b> opacity is the point of A2A and also its cost: you cannot inspect the remote agent's tools or prompts, so contracts, evals and logs on your side are the only evidence.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+  </div>
+
+  <h2 class="stage-label sl-when" id="when-to-use-when-not">Decision boundary</h2>
+  <div class="pc">
+    <div class="pc-col pros"><h4 class="pc-h">Use when</h4>
+      <ul>
+        <li>The callee is an agent owned by another team, vendor or trust domain and must stay opaque.</li>
+        <li>Work is long-running or multi-turn: it may ask questions, need authorization or stream partial artifacts.</li>
+        <li>Several agent frameworks must interoperate without sharing a runtime or codebase.</li>
+        <li>You need discovery: callers pick agents at runtime from cards in a registry.</li>
+      </ul>
+    </div>
+    <div class="pc-col cons"><h4 class="pc-h">Skip when</h4>
+      <ul>
+        <li>The capability is a deterministic function with typed inputs: expose it as a <a class="xl" href="tool-calling.html">tool</a> or <a class="xl" href="../04-tools-mcp/mcp.html">MCP</a> server.</li>
+        <li>All agents live in one process and team: a shared <a class="xl" href="../05-agents-orchestration/graphs.html">orchestration graph</a> gives typed state and checkpoints without network hops.</li>
+        <li>The peer is a human UI: agent-to-frontend events belong to <a class="xl" href="ag-ui.html">AG-UI</a>.</li>
+        <li>Latency budgets are tight: each delegation adds a network round trip plus a full remote agent loop.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 id="a2a--mcp-vs-a2a">MCP vs A2A</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Aspect</th><th>MCP</th><th>A2A</th></tr></thead>
+      <tbody>
+        <tr><td class="m">connects</td><td>agent host to tools, resources, prompts</td><td>agent to agent, as peers</td></tr>
+        <tr><td class="m">callee visibility</td><td>schemas and results are the whole surface</td><td>opaque: model, tools, memory stay private</td></tr>
+        <tr><td class="m">discovery</td><td>runtime listing after the session handshake</td><td>Agent Card at a well-known URL or registry</td></tr>
+        <tr><td class="m">unit of work</td><td>a tool call returning a result</td><td>a Task with lifecycle, artifacts, history</td></tr>
+        <tr><td class="m">who decides</td><td>host and its model choose and mediate each call</td><td>remote agent plans and executes its own loop</td></tr>
+        <tr><td class="m">long-running</td><td>possible, depends on negotiated features</td><td>core: streaming, resubscribe, webhooks, interrupted states</td></tr>
+        <tr><td class="m">wire</td><td>JSON-RPC over stdio or Streamable HTTP</td><td>JSON-RPC, gRPC or HTTP+JSON over HTTPS</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 id="a2a--delegate-call-or-graph">A2A, tool call or shared graph</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Option</th><th>Pick it when</th><th>Coupling</th></tr></thead>
+      <tbody>
+        <tr><td class="m">function or tool call</td><td>fixed contract, one shot, you own the code or the API</td><td class="u">lowest</td></tr>
+        <tr><td class="m">shared graph</td><td>same team and runtime, need shared state, retries, checkpoints, see <a class="xl" href="../05-agents-orchestration/agent-patterns.html">agent patterns</a></td><td class="watch">code and state</td></tr>
+        <tr><td class="m">A2A delegation</td><td>independent owner, opaque internals, multi-turn or long-running</td><td class="u">contract only</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 class="stage-label sl-ex" id="example">Worked example</h2>
+  <div class="example">
+    <p class="ex-note">A planner agent delegates a flight booking to a remote travel agent over the v1.0 JSON-RPC binding, using plain httpx. The remote agent stops at <code>TASK_STATE_INPUT_REQUIRED</code> to ask a question; the client answers on the same task until it completes. The token comes from the OAuth flow the card declares; card signature verification is omitted here and belongs in production.</p>
+    <pre class="code" data-lang="python" data-file="a2a_delegate.py"><code><span class="tk-k">import</span> uuid
+<span class="tk-k">import</span> httpx
+
+BASE = <span class="tk-s">"https://travel-agent.example.com"</span>
+HEADERS = {<span class="tk-s">"A2A-Version"</span>: <span class="tk-s">"1.0"</span>, <span class="tk-s">"Authorization"</span>: <span class="tk-s">"Bearer ACCESS_TOKEN"</span>}  <span class="tk-c"># token obtained out of band</span>
+
+card = httpx.get(<span class="tk-s">f"{BASE}/.well-known/agent-card.json"</span>, timeout=<span class="tk-n">10</span>).raise_for_status().json()
+iface = <span class="tk-f">next</span>(i <span class="tk-k">for</span> i <span class="tk-k">in</span> card[<span class="tk-s">"supportedInterfaces"</span>]  <span class="tk-c"># ordered by server preference</span>
+             <span class="tk-k">if</span> i[<span class="tk-s">"protocolBinding"</span>] == <span class="tk-s">"JSONRPC"</span> <span class="tk-k">and</span> i[<span class="tk-s">"protocolVersion"</span>] == <span class="tk-s">"1.0"</span>)
+
+<span class="tk-k">def</span> <span class="tk-f">send</span>(text, task=<span class="tk-k">None</span>):
+    msg = {<span class="tk-s">"messageId"</span>: <span class="tk-f">str</span>(uuid.uuid4()), <span class="tk-s">"role"</span>: <span class="tk-s">"ROLE_USER"</span>, <span class="tk-s">"parts"</span>: [{<span class="tk-s">"text"</span>: text}]}
+    <span class="tk-k">if</span> task:  <span class="tk-c"># continue the same task; contextId must match it</span>
+        msg.update(taskId=task[<span class="tk-s">"id"</span>], contextId=task[<span class="tk-s">"contextId"</span>])
+    params = {<span class="tk-s">"message"</span>: msg, <span class="tk-s">"configuration"</span>: {<span class="tk-s">"acceptedOutputModes"</span>: [<span class="tk-s">"text/plain"</span>]}}
+    <span class="tk-k">if</span> iface.get(<span class="tk-s">"tenant"</span>):
+        params[<span class="tk-s">"tenant"</span>] = iface[<span class="tk-s">"tenant"</span>]
+    rpc = {<span class="tk-s">"jsonrpc"</span>: <span class="tk-s">"2.0"</span>, <span class="tk-s">"id"</span>: <span class="tk-f">str</span>(uuid.uuid4()), <span class="tk-s">"method"</span>: <span class="tk-s">"SendMessage"</span>, <span class="tk-s">"params"</span>: params}
+    reply = httpx.post(iface[<span class="tk-s">"url"</span>], json=rpc, headers=HEADERS, timeout=<span class="tk-n">120</span>).raise_for_status().json()
+    <span class="tk-k">if</span> <span class="tk-s">"error"</span> <span class="tk-k">in</span> reply:
+        <span class="tk-k">raise</span> RuntimeError(<span class="tk-s">f"A2A {reply['error']['code']}: {reply['error']['message']}"</span>)
+    <span class="tk-k">return</span> reply[<span class="tk-s">"result"</span>]  <span class="tk-c"># exactly one of "task" or "message"</span>
+
+<span class="tk-k">def</span> <span class="tk-f">text_of</span>(parts):
+    <span class="tk-k">return</span> <span class="tk-s">" "</span>.join(p[<span class="tk-s">"text"</span>] <span class="tk-k">for</span> p <span class="tk-k">in</span> parts <span class="tk-k">if</span> <span class="tk-s">"text"</span> <span class="tk-k">in</span> p)
+
+result = send(<span class="tk-s">"Book economy LIS to BER on 12 Nov, under 250 EUR"</span>)
+task = result.get(<span class="tk-s">"task"</span>)
+<span class="tk-k">while</span> task <span class="tk-k">and</span> task[<span class="tk-s">"status"</span>][<span class="tk-s">"state"</span>] == <span class="tk-s">"TASK_STATE_INPUT_REQUIRED"</span>:
+    question = text_of(task[<span class="tk-s">"status"</span>].get(<span class="tk-s">"message"</span>, {}).get(<span class="tk-s">"parts"</span>, []))
+    result = send(<span class="tk-f">input</span>(<span class="tk-s">f"agent asks: {question}\n&gt; "</span>), task)
+    task = result.get(<span class="tk-s">"task"</span>)
+
+<span class="tk-k">if</span> task <span class="tk-k">is</span> <span class="tk-k">None</span>:  <span class="tk-c"># agent replied with a direct Message, no task</span>
+    <span class="tk-f">print</span>(text_of(result[<span class="tk-s">"message"</span>][<span class="tk-s">"parts"</span>]))
+<span class="tk-k">elif</span> task[<span class="tk-s">"status"</span>][<span class="tk-s">"state"</span>] == <span class="tk-s">"TASK_STATE_COMPLETED"</span>:
+    <span class="tk-k">for</span> art <span class="tk-k">in</span> task.get(<span class="tk-s">"artifacts"</span>, []):
+        <span class="tk-f">print</span>(art.get(<span class="tk-s">"name"</span>, art[<span class="tk-s">"artifactId"</span>]), text_of(art[<span class="tk-s">"parts"</span>]))
+<span class="tk-k">else</span>:  <span class="tk-c"># AUTH_REQUIRED, FAILED, REJECTED, CANCELED: surface it, do not guess</span>
+    <span class="tk-f">print</span>(task[<span class="tk-s">"id"</span>], task[<span class="tk-s">"status"</span>][<span class="tk-s">"state"</span>])</code></pre>
+    <p class="note">The default <code>SendMessage</code> blocks until the task is terminal or interrupted, which is why one loop suffices. For work measured in minutes or hours, set <code>returnImmediately: true</code> and add a <code>taskPushNotificationConfig</code> or use <code>SendStreamingMessage</code>, as in the sequence diagram.</p>
+  </div>
+
+  <h2 class="stage-label sl-extra" id="watch-out">Failure modes</h2>
+  <div class="pit-list"><ul>
+    <li>Version drift · a v0.3 peer expects <code>message/send</code>, <code>kind</code> fields and lowercase states · send <code>A2A-Version</code> and pick the interface whose <code>protocolVersion</code> you implement</li>
+    <li>Treating remote artifacts as instructions · a peer's text lands in your model's context · apply the same <a class="xl" href="../07-security/injection.html">injection</a> defenses as for retrieved documents</li>
+    <li>Trusting card names · a look-alike card wins routing on skill text · allowlist domains and verify signatures with keys you control</li>
+    <li>Orphaned tasks · a dropped stream or lost webhook leaves a task <code>WORKING</code> forever on your side · reconcile with <code>GetTask</code>, resubscribe, and <code>CancelTask</code> on timeout</li>
+    <li>Over-sharing context · reusing one <code>contextId</code> across users or forwarding full history leaks data · one context per user conversation, minimal messages</li>
+    <li>Webhook as attack surface · forged or replayed POSTs, SSRF via caller-chosen URLs · verify per-config tokens, dedupe by task and event, block private targets</li>
+  </ul></div>
+
+  <h2 class="stage-label sl-extra" id="remember">Keep in mind</h2>
+  <div class="remember"><ul>
+    <li>MCP is agent to tool; A2A is agent to opaque agent; most systems need both.</li>
+    <li>The Agent Card is discovery plus contract: interfaces, capabilities, skills, auth, optional JWS signature.</li>
+    <li>Server owns task ids; clients continue work by echoing <code>taskId</code> and <code>contextId</code>.</li>
+    <li>Interrupted states pause, terminal states are final: four terminal, two interrupted.</li>
+    <li>Poll, stream or webhook: the event shapes are the same StreamResponse.</li>
+    <li>Credentials travel out of band in HTTP auth; remote output is always untrusted data.</li>
+  </ul></div>
+
+    <section class="references" aria-labelledby="primary-sources"><h2 id="primary-sources">Primary sources</h2><ul><li><a href="https://a2a-protocol.org/latest/specification/" rel="noreferrer">A2A Protocol Specification (latest, v1.0)</a></li><li><a href="https://github.com/a2aproject/A2A/blob/v1.0.1/specification/a2a.proto" rel="noreferrer">a2a.proto at tag v1.0.1, the normative data model</a></li><li><a href="https://a2a-protocol.org/latest/whats-new-v1/" rel="noreferrer">What's new in A2A v1.0 (breaking changes from v0.3)</a></li><li><a href="https://a2a-protocol.org/latest/topics/a2a-and-mcp/" rel="noreferrer">A2A and MCP: detailed comparison</a></li></ul></section>
+
+    <section class="lab-check" aria-labelledby="try-verify-explain"><h2 id="try-verify-explain">Try, verify, explain</h2><ol><li>Trace a booking task that hits <code>TASK_STATE_INPUT_REQUIRED</code> and then <code>TASK_STATE_AUTH_REQUIRED</code>: list every request, which side generates each <code>messageId</code>, <code>taskId</code> and <code>contextId</code>, and which state transitions a webhook would report.</li><li>Measure delegation overhead: run one local A2A sample agent, send 20 identical <code>SendMessage</code> calls and 20 direct calls to the same underlying function, and compare p50 and p95 latency and bytes on the wire per call.</li><li>Explain why A2A keeps authentication out of message bodies and pushes in-task credentials out of band, and what goes wrong when a credential is forwarded in-band through a chain of three agents.</li></ol></section>
+
+    <nav class="pager" id="pager"></nav>
+
+    <footer class="footer">
+      learning-project · tracks/ai · press ⌘K or / to search every chapter · diagrams load Mermaid from a CDN when online
+    </footer>
+  </div>
+</main>
+
+<script src="../../js/app.js"></script>
+</body>
+</html>

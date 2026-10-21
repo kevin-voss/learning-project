@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Transformer architecture · AI Engineering Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../css/tokens.css">
+<link rel="stylesheet" href="../../css/base.css">
+<link rel="stylesheet" href="../../css/components.css">
+<link rel="stylesheet" href="../../css/flow.css">
+</head>
+<body>
+
+<div id="progress"></div>
+
+<header class="topbar">
+  <button class="tbtn" id="nav-toggle" type="button" aria-label="Open contents" aria-controls="toc" aria-expanded="false">☰</button>
+  <a class="brand" href="../../index.html"><b>ai</b>·field-guide</a>
+  <a class="hub-link" href="../../../../hub/index.html">Learning hub</a>
+  <div class="tools">
+    <button class="tbtn search-btn" id="search-open" type="button" aria-label="Search the guide"><span>Search</span><kbd>⌘K</kbd></button>
+    <button class="tbtn" id="expand-all" type="button">expand</button>
+  </div>
+</header>
+
+<nav class="sidebar" id="toc" aria-label="Topics"></nav>
+
+<main class="main">
+  <div class="content">
+    <header class="topic-head">
+      <div class="kicker">Part 1 · Model foundations · 02/31</div>
+      <h1>Transformer architecture</h1>
+      <p class="lead">A decoder-only transformer is a stack of identical blocks that read from and write back into one residual stream; attention moves information between positions, the MLP transforms each position on its own.</p>
+      <p class="chapter-summary"><b>In this chapter</b> Derive attention from Q, K and V, size the KV cache under MHA, MQA and GQA, place RoPE, RMSNorm, SwiGLU and mixture-of-experts in the block, and explain why long context costs what it does.</p>
+    </header>
+
+  <h2 class="stage-label sl-why" id="why-you-need-it">Why the block matters</h2>
+  <div class="why">
+    <ul>
+      <li><b>Memory math:</b> KV cache size, and therefore batch size and max context per GPU, falls straight out of layer count, KV heads and head dimension. You cannot size a deployment without it.</li>
+      <li><b>Model cards:</b> "70B dense", "47B total / 13B active", "GQA-8", "RoPE base 500k", "128k via YaRN" are architecture claims with direct cost and quality consequences.</li>
+      <li><b>Long-context reality:</b> quadratic prefill, bounded sliding windows and extended positions explain why a model accepts 128k tokens yet degrades or slows well before that.</li>
+      <li><b>Beyond the loop:</b> <a class="xl" href="llm-internals.html">How LLMs actually work</a> treats the network as a next-token scorer; this chapter opens the scorer.</li>
+    </ul>
+  </div>
+
+  <h2 class="stage-label sl-sol" id="solutions">Inside one decoder block</h2>
+  <p>Token ids become vectors of width <i>d</i> (the model dimension) via an embedding lookup. That vector is the <button class="term" type="button" data-tip="The per-position vector of width d that flows through every layer. Each sublayer reads a normalized copy and adds its output back, so the stream accumulates contributions.">residual stream</button>. Every block applies two pre-normed sublayers that each add their output back; after the last block a final norm and the unembedding matrix produce logits over the vocabulary. Read the stack top to bottom as one block.</p>
+
+  <ol class="stack">
+    <li><b>RMSNorm</b><span>rescale the stream to unit RMS with a learned gain; no mean subtraction, no bias</span></li>
+    <li><b>Attention (GQA + RoPE)</b><span>project to Q, K, V; rotate Q and K by position; causal softmax(QKᵀ/√d<sub>k</sub>)V per head; output projection W<sub>O</sub></span></li>
+    <li><b>Residual add</b><span>x ← x + Attn(Norm(x)): the only path where information crosses positions</span></li>
+    <li><b>RMSNorm</b><span>second pre-norm, independent gain</span></li>
+    <li><b>MLP (SwiGLU) or MoE</b><span>W<sub>down</sub>(SiLU(xW<sub>gate</sub>) ⊙ xW<sub>up</sub>), applied to each position independently; MoE swaps in k of E routed experts</span></li>
+    <li><b>Residual add</b><span>x ← x + MLP(Norm(x)); repeat for all L blocks</span></li>
+  </ol>
+
+  <figure class="diagram">
+    <div class="diag-body"><pre class="mermaid">
+flowchart TB
+  Q["Q = x·W_Q + RoPE"]
+  K["K = x·W_K + RoPE"]
+  V["V = x·W_V"]
+  Q --> S["Q·Kᵀ / √d_k&lt;br/&gt;T × T per head"]
+  K --> S
+  K -.-> C[("KV cache")]
+  V -.-> C
+  S --> M["causal mask j &gt; i → −∞&lt;br/&gt;then row softmax"]
+  M --> O["weights · V&lt;br/&gt;concat heads · W_O"]
+  V --> O
+  O --> R["x + out&lt;br/&gt;residual add"]</pre></div><figcaption>From the normed stream x, only K and V are cached for later positions; the T × T score matrix is the quadratic term, and the causal mask is what makes parallel prefill and token-by-token decode compute the same function.</figcaption></figure>
+
+  <div class="sol-list">
+
+    <div class="sol-item open">
+      <button class="sol-head" type="button">
+        <span class="sol-no">A</span>
+        <span class="sol-name">Scaled dot-product attention</span>
+        <span class="sol-sum">each position builds a softmax-weighted mix of earlier values, keyed by query-key similarity</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li><b>Projections:</b> per head, Q = xW<sub>Q</sub>, K = xW<sub>K</sub>, V = xW<sub>V</sub>, each T × d<sub>k</sub> with d<sub>k</sub> = d / H typically. Query asks, key advertises, value is what gets copied.</li>
+          <li><b>Scores:</b> S = QKᵀ / √d<sub>k</sub>. If q and k components have unit variance, their dot product has variance d<sub>k</sub>; dividing by √d<sub>k</sub> keeps logits in a range where softmax does not saturate and gradients survive.</li>
+          <li><b>Causal mask:</b> set S<sub>ij</sub> = −∞ for j &gt; i before the row-wise softmax, so position i depends only on positions ≤ i. That is what lets training and prefill compute all T positions in one pass with the same result as sequential decode.</li>
+          <li><b>Mix and write:</b> output = softmax(S)V, heads concatenated, multiplied by W<sub>O</sub> and added to the residual stream. Attention is the only sublayer that moves information between positions.</li>
+          <li><b>Embeddings:</b> input embedding is a V × d lookup; the unembedding maps d → vocabulary logits. Some models tie the two matrices, many large ones do not.</li>
+        </ul>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><b>pro:</b> fully parallel over positions during training and prefill, unlike recurrence.</li>
+          <li><b>con:</b> attention scores scale as T² per head per layer; decode is linear per token but must stream the whole KV cache from memory each step.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+    <div class="sol-item">
+      <button class="sol-head" type="button">
+        <span class="sol-no">B</span>
+        <span class="sol-name">MHA, MQA, GQA</span>
+        <span class="sol-sum">share key/value heads across query heads to shrink the KV cache</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li><b>MHA:</b> H query heads, H key heads, H value heads. Each head can attend to a different relation.</li>
+          <li><b>MQA:</b> H query heads share one K and one V head. Cache shrinks by H×; quality and training stability can drop.</li>
+          <li><b><button class="term" type="button" data-tip="Grouped-query attention: H query heads split into G groups, each group shares one key head and one value head. G = H is MHA, G = 1 is MQA.">GQA</button>:</b> G KV heads, each shared by H/G query heads. The GQA paper also up-trains existing MHA checkpoints into GQA with a small fraction of the original pretraining compute.</li>
+          <li><b>Cache formula:</b> bytes per token = 2 (K and V) × L × G × d<sub>head</sub> × bytes per element. Query heads do not appear: they are never cached.</li>
+        </ul>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>Variant</th><th>KV heads</th><th>KV cache / token</th><th>At 4,096 tokens</th></tr></thead>
+          <tbody>
+            <tr><td>MHA</td><td>64</td><td>2,560 KiB</td><td>10 GiB</td></tr>
+            <tr><td>GQA-8</td><td>8</td><td>320 KiB</td><td>1.25 GiB</td></tr>
+            <tr><td>MQA</td><td>1</td><td>40 KiB</td><td>160 MiB</td></tr>
+          </tbody>
+        </table></div>
+        <p class="note">Computed for the published Llama 2 70B shape (80 layers, 64 query heads, d<sub>head</sub> 128, 16-bit cache, one sequence). Llama 2 70B ships as GQA-8; the MHA and MQA rows are counterfactuals on the same shape.</p>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><b>pro:</b> decode is usually memory-bandwidth bound; fewer KV bytes means more concurrent sequences and faster steps. Serving-side paging and quantization are in <a class="xl" href="../02-tokens-context/inference-serving.html">inference serving</a>.</li>
+          <li><b>con:</b> attention FLOPs barely change, since every query head still scores every key; GQA buys memory and bandwidth, not prefill compute.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+    <div class="sol-item">
+      <button class="sol-head" type="button">
+        <span class="sol-no">C</span>
+        <span class="sol-name">Position: sinusoidal to RoPE</span>
+        <span class="sol-sum">attention is order-blind, so position is injected; RoPE rotates Q and K so scores see relative offset</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li><b>Why needed:</b> without a mask or position signal, attention is permutation-equivariant. The causal mask leaks some order, not enough.</li>
+          <li><b>Absolute:</b> the original transformer added fixed sinusoids to the input embedding; GPT-2-style models learn a position table. Both hard-cap or degrade past the trained length.</li>
+          <li><b><button class="term" type="button" data-tip="Rotary Position Embedding: rotate each 2-D pair of Q and K dimensions by an angle proportional to position, so the Q·K dot product depends on the offset between positions.">RoPE</button>:</b> split q and k into 2-D pairs; rotate pair i at position m by angle m·θ<sub>i</sub>, θ<sub>i</sub> = base<sup>−2i/d</sup>. Then q<sub>m</sub>·k<sub>n</sub> depends on m − n. Applied inside every attention layer to Q and K only, never to V or the residual stream.</li>
+          <li><b>Context extension:</b> position interpolation rescales indices so a longer sequence maps into the trained angle range, then fine-tunes briefly. YaRN interpolates per frequency band (high-frequency pairs left mostly intact, low-frequency pairs stretched) and adjusts attention temperature, needing far less data. Raising the RoPE base is another common lever; exact recipes are model-specific.</li>
+        </ul>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><b>pro:</b> relative position for free, no extra parameters, works with the KV cache since cached keys are already rotated.</li>
+          <li><b>con:</b> an advertised window is not an effective window; extended models can pass needle tests and still reason poorly at depth. Evaluate at your real length, see <a class="xl" href="../02-tokens-context/context-budget.html">context budgeting</a>.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+    <div class="sol-item">
+      <button class="sol-head" type="button">
+        <span class="sol-no">D</span>
+        <span class="sol-name">Pre-norm, RMSNorm, SwiGLU</span>
+        <span class="sol-sum">stable deep stacks plus a gated MLP that holds most parameters</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li><b>Pre-norm:</b> x + f(Norm(x)) instead of the original post-norm Norm(x + f(x)). The residual path stays an identity, so gradients reach early layers cleanly in deep stacks; a final norm precedes the unembedding.</li>
+          <li><b>RMSNorm:</b> x / √(mean(x²) + ε) · g. Drops LayerNorm's mean subtraction and bias; cheaper and empirically as good.</li>
+          <li><b>SwiGLU MLP:</b> W<sub>down</sub>(SiLU(xW<sub>gate</sub>) ⊙ xW<sub>up</sub>). Three matrices instead of two, so the hidden width is shrunk (often toward ~8/3·d, model-specific) to keep parameters comparable to a 4d two-matrix MLP.</li>
+          <li><b>Parameter intuition:</b> attention ≈ 4d² per layer with MHA (less with GQA), a 4d MLP ≈ 8d², so a dense model ≈ 12·L·d² plus V·d per embedding matrix. GPT-3's L = 96, d = 12,288 gives ≈ 174B of its 175B.</li>
+        </ul>
+        <div class="stats">
+          <div class="stat"><b>~2/3</b><span>share of block parameters in the MLP under the 12·d² rule</span></div>
+          <div class="stat"><b>~69B</b><span>Llama 2 70B shape recount: 80 × (151M attention + 705M SwiGLU) + two 262M embeddings</span></div>
+          <div class="stat"><b>~2N</b><span>forward FLOPs per token for N dense parameters, before attention-score terms</span></div>
+        </div>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><b>con:</b> pre-norm lets the residual stream norm grow with depth; some models add extra norms (for example on Q and K) to tame it. Vendor-specific.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+    <div class="sol-item">
+      <button class="sol-head" type="button">
+        <span class="sol-no">E</span>
+        <span class="sol-name">Mixture of experts</span>
+        <span class="sol-sum">many MLPs per layer, a router sends each token to k of them: total ≠ active parameters</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li><b>Router:</b> a linear layer scores E experts per token; the top-k are run and their outputs summed, weighted by the normalized router scores. Attention stays dense and shared.</li>
+          <li><b><button class="term" type="button" data-tip="Parameters actually used for one token's forward pass. Total parameters must all sit in memory; active parameters set per-token compute.">Active vs total</button>:</b> Mixtral 8x7B has 8 experts per layer, top-2, 47B total and 13B active per token. Compute tracks active; memory tracks total.</li>
+          <li><b>Load balancing:</b> without pressure the router collapses onto a few experts. Common fixes: an auxiliary loss rewarding uniform routing (Switch Transformer style), capacity limits that drop or overflow tokens, or bias-adjusted routing without an auxiliary loss (used by some recent models).</li>
+          <li><b>Variants:</b> fine-grained experts (many small ones, higher k) and always-on shared experts are common in recent open models; details differ per family.</li>
+        </ul>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><b>pro:</b> more capacity per FLOP; quality of a larger dense model at a smaller per-token compute bill.</li>
+          <li><b>con:</b> all experts must be resident; expert parallelism adds all-to-all traffic; at large batch most experts are touched every step, so bandwidth savings shrink. Fine-tuning can disturb routing, see <a class="xl" href="finetune-decide.html">fine-tune or not</a>.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+    <div class="sol-item">
+      <button class="sol-head" type="button">
+        <span class="sol-no">F</span>
+        <span class="sol-name">Long-context mechanics</span>
+        <span class="sol-sum">quadratic scores, IO-aware exact kernels, and windows that bound the cache</span>
+        <span class="sol-chev">▶</span>
+      </button>
+      <div class="sol-body"><div class="sol-inner"><div class="sol-content">
+        <h4>How it works</h4>
+        <ul>
+          <li><b>Cost shape:</b> per token and layer, score work (QKᵀ and weights·V) is about 4·T·d FLOPs versus about 24·d² for the projections and a 4d MLP. Rule of thumb for a dense MHA model: attention scores dominate only once T exceeds roughly 6·d, which is why short prompts feel linear and very long ones do not.</li>
+          <li><b><button class="term" type="button" data-tip="An attention kernel that tiles Q, K, V into on-chip SRAM and uses an online softmax, so the T × T matrix never goes to GPU HBM. Exact result, fewer memory reads and writes.">FlashAttention</button>:</b> tiles Q, K, V into on-chip SRAM and keeps a running max and sum (online softmax), so the T × T matrix is never written to HBM. Exact attention, not an approximation; memory becomes linear in T, FLOPs stay quadratic, wall-clock drops because the kernel was IO-bound.</li>
+          <li><b>Sliding-window attention:</b> each token attends only to the last W positions. Per-layer cost and KV cache become O(W); stacked layers still propagate information up to roughly L·W back. Some models interleave local-window and global layers.</li>
+        </ul>
+        <h4>Trade-offs</h4>
+        <ul>
+          <li><b>pro:</b> FlashAttention is a drop-in kernel; sliding windows cap memory for unbounded streams.</li>
+          <li><b>con:</b> windowed layers cannot directly retrieve a fact beyond W; recall over very long inputs depends on the global layers.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+  </div>
+
+  <h2 class="stage-label sl-when" id="when-to-use-when-not">Decision boundary</h2>
+  <div class="pc">
+    <div class="pc-col pros"><h4 class="pc-h">Use when</h4>
+      <ul>
+        <li>Choosing a self-hosted model: compare KV bytes per token and total vs active params, not only benchmark scores.</li>
+        <li>Planning GPU memory: weights plus KV cache × concurrent sequences × context length must fit.</li>
+        <li>Evaluating long-context claims: check position scheme, extension method and windowed layers before trusting the number.</li>
+        <li>Debugging latency: split prefill (compute, T²) from decode (bandwidth, KV size).</li>
+      </ul>
+    </div>
+    <div class="pc-col cons"><h4 class="pc-h">Skip when</h4>
+      <ul>
+        <li>You only call a hosted API: price per token already folds in architecture; reason with <a class="xl" href="../02-tokens-context/tokens-cost.html">tokens and cost</a>.</li>
+        <li>Inferring behavior from architecture alone: data and post-training dominate quality differences between similar shapes.</li>
+        <li>Reading per-layer or per-head stories into a model: interpretability claims need measurement, not block diagrams.</li>
+        <li>Hand-writing attention for production: use framework kernels (SDPA, FlashAttention) unless you are building kernels.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2 class="stage-label sl-ex" id="example">Worked example</h2>
+  <div class="example">
+    <p class="ex-note">NumPy grouped-query attention with a causal mask, then the KV-cache formula on the Llama 2 70B shape. Runnable as is; it prints the output shape and the three cache sizes from the table above.</p>
+    <pre class="code" data-lang="python" data-file="gqa_attention.py"><code><span class="tk-k">import</span> numpy <span class="tk-k">as</span> np
+
+<span class="tk-k">def</span> <span class="tk-f">gqa_attention</span>(x, Wq, Wk, Wv, Wo, n_heads, n_kv):
+    T, d = x.shape
+    hd = d // n_heads
+    q = (x @ Wq).reshape(T, n_heads, hd).transpose(<span class="tk-n">1</span>, <span class="tk-n">0</span>, <span class="tk-n">2</span>)  <span class="tk-c"># (H, T, hd)</span>
+    k = (x @ Wk).reshape(T, n_kv, hd).transpose(<span class="tk-n">1</span>, <span class="tk-n">0</span>, <span class="tk-n">2</span>)     <span class="tk-c"># (G, T, hd)</span>
+    v = (x @ Wv).reshape(T, n_kv, hd).transpose(<span class="tk-n">1</span>, <span class="tk-n">0</span>, <span class="tk-n">2</span>)
+    rep = n_heads // n_kv                          <span class="tk-c"># query heads per KV head</span>
+    k, v = np.repeat(k, rep, axis=<span class="tk-n">0</span>), np.repeat(v, rep, axis=<span class="tk-n">0</span>)
+    s = q @ k.transpose(<span class="tk-n">0</span>, <span class="tk-n">2</span>, <span class="tk-n">1</span>) / np.sqrt(hd)        <span class="tk-c"># (H, T, T)</span>
+    future = np.triu(np.ones((T, T), dtype=bool), k=<span class="tk-n">1</span>)
+    s = np.where(future, -np.inf, s)               <span class="tk-c"># causal mask</span>
+    w = np.exp(s - s.max(-<span class="tk-n">1</span>, keepdims=<span class="tk-k">True</span>))
+    w /= w.sum(-<span class="tk-n">1</span>, keepdims=<span class="tk-k">True</span>)                 <span class="tk-c"># row-wise softmax</span>
+    out = (w @ v).transpose(<span class="tk-n">1</span>, <span class="tk-n">0</span>, <span class="tk-n">2</span>).reshape(T, d)  <span class="tk-c"># concat heads</span>
+    <span class="tk-k">return</span> out @ Wo
+
+<span class="tk-k">def</span> <span class="tk-f">kv_bytes_per_token</span>(layers, n_kv, head_dim, bytes_per=<span class="tk-n">2</span>):
+    <span class="tk-k">return</span> <span class="tk-n">2</span> * layers * n_kv * head_dim * bytes_per  <span class="tk-c"># K and V</span>
+
+rng = np.random.default_rng(<span class="tk-n">0</span>)
+T, d, H, G = <span class="tk-n">6</span>, <span class="tk-n">64</span>, <span class="tk-n">8</span>, <span class="tk-n">2</span>
+x = rng.normal(size=(T, d))
+Wq, Wo = (rng.normal(size=(d, d)) / <span class="tk-n">8</span> <span class="tk-k">for</span> _ <span class="tk-k">in</span> <span class="tk-f">range</span>(<span class="tk-n">2</span>))
+Wk, Wv = (rng.normal(size=(d, G * d // H)) / <span class="tk-n">8</span> <span class="tk-k">for</span> _ <span class="tk-k">in</span> <span class="tk-f">range</span>(<span class="tk-n">2</span>))
+<span class="tk-f">print</span>(gqa_attention(x, Wq, Wk, Wv, Wo, H, G).shape)  <span class="tk-c"># (6, 64)</span>
+
+<span class="tk-k">for</span> name, g <span class="tk-k">in</span> [(<span class="tk-s">"MHA"</span>, <span class="tk-n">64</span>), (<span class="tk-s">"GQA-8"</span>, <span class="tk-n">8</span>), (<span class="tk-s">"MQA"</span>, <span class="tk-n">1</span>)]:
+    <span class="tk-f">print</span>(name, kv_bytes_per_token(<span class="tk-n">80</span>, g, <span class="tk-n">128</span>) // <span class="tk-n">1024</span>, <span class="tk-s">"KiB/token"</span>)
+<span class="tk-c"># MHA 2560, GQA-8 320, MQA 40</span></code></pre>
+  </div>
+
+  <h2 class="stage-label sl-extra" id="watch-out">Failure modes</h2>
+  <div class="pit-list"><ul>
+    <li>Sizing GPUs from weights alone · KV cache × batch × context often exceeds the weights at long context · compute it per model with the formula above</li>
+    <li>Reading "47B MoE" as "47B of compute" or "13B of memory" · compute follows active, memory follows total</li>
+    <li>Trusting the advertised context window · extended RoPE and windowed layers can accept tokens the model barely uses · test retrieval and reasoning at your real depth</li>
+    <li>Expecting GQA to speed up prefill · it cuts KV bytes, not attention FLOPs · long-prompt latency still scales with T²</li>
+    <li>Calling FlashAttention an approximation · it is exact; approximate and sparse attention are different methods with quality trade-offs</li>
+    <li>Off-by-one causal masks in custom code · a leaked future token makes training loss look excellent and generation fail</li>
+  </ul></div>
+
+  <h2 class="stage-label sl-extra" id="remember">Keep in mind</h2>
+  <div class="remember"><ul>
+    <li>The residual stream is the bus; attention mixes positions, the MLP transforms each one.</li>
+    <li>softmax(QKᵀ/√d<sub>k</sub> + causal mask)V, and only K and V are cached.</li>
+    <li>KV bytes per token = 2 × layers × KV heads × head dim × bytes; GQA shrinks the middle factor.</li>
+    <li>RoPE rotates Q and K so scores depend on relative offset; extension rescales those angles.</li>
+    <li>Dense parameters ≈ 12·L·d²; MoE separates total (memory) from active (compute).</li>
+    <li>FlashAttention fixes memory traffic, not the T² arithmetic; sliding windows bound the cache.</li>
+  </ul></div>
+
+    <section class="references" aria-labelledby="primary-sources"><h2 id="primary-sources">Primary sources</h2><ul><li><a href="https://arxiv.org/abs/2305.13245" rel="noreferrer">GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints</a></li><li><a href="https://arxiv.org/abs/2104.09864" rel="noreferrer">RoFormer: Enhanced Transformer with Rotary Position Embedding</a></li><li><a href="https://arxiv.org/abs/2309.00071" rel="noreferrer">YaRN: Efficient Context Window Extension of Large Language Models</a></li><li><a href="https://arxiv.org/abs/2205.14135" rel="noreferrer">FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness</a></li><li><a href="https://arxiv.org/abs/2401.04088" rel="noreferrer">Mixtral of Experts</a></li></ul></section>
+
+    <section class="lab-check" aria-labelledby="try-verify-explain"><h2 id="try-verify-explain">Try, verify, explain</h2><ol><li>Derive the parameter count of one Llama 2 70B block from d = 8192, 64 query heads, 8 KV heads, head dim 128 and SwiGLU width 28,672, then multiply by 80 layers and add two 32,000 × 8,192 embedding matrices; confirm you land near 69B.</li><li>Run <code>gqa_attention.py</code>, change only <code>x[-1]</code>, and verify rows 0–4 of the output are unchanged (causality); then time the function at T = 512, 1,024 and 2,048 with d = 512 and check that time grows faster than 2× per doubling, approaching 4× as the T × T score step takes over.</li><li>Explain why a GQA-8 model and its MHA counterpart have nearly the same prefill FLOPs yet very different decode throughput at batch 32, naming which hardware resource each phase saturates.</li></ol></section>
+
+    <nav class="pager" id="pager"></nav>
+
+    <footer class="footer">
+      learning-project · tracks/ai · press ⌘K or / to search every chapter · diagrams load Mermaid from a CDN when online
+    </footer>
+  </div>
+</main>
+
+<script src="../../js/app.js"></script>
+</body>
+</html>

@@ -11,19 +11,18 @@
 <link rel="stylesheet" href="../../css/base.css">
 <link rel="stylesheet" href="../../css/components.css">
 <link rel="stylesheet" href="../../css/flow.css">
-<link rel="stylesheet" href="../../css/print.css">
 </head>
 <body>
 
 <div id="progress"></div>
 
 <header class="topbar">
-  <button class="tbtn" id="nav-toggle" type="button" aria-label="Toggle navigation">☰</button>
+  <button class="tbtn" id="nav-toggle" type="button" aria-label="Open contents" aria-controls="toc" aria-expanded="false">☰</button>
   <a class="brand" href="../../index.html"><b>ai</b>·field-guide</a>
+  <a class="hub-link" href="../../../../hub/index.html">Learning hub</a>
   <div class="tools">
-    <input id="toc-filter" type="search" placeholder="filter · /" aria-label="Filter topics">
+    <button class="tbtn search-btn" id="search-open" type="button" aria-label="Search the guide"><span>Search</span><kbd>⌘K</kbd></button>
     <button class="tbtn" id="expand-all" type="button">expand</button>
-    <button class="tbtn" id="print-btn" type="button">print</button>
   </div>
 </header>
 
@@ -32,37 +31,44 @@
 <main class="main">
   <div class="content">
     <header class="topic-head">
-      <div class="kicker">Part 1 · Foundations · 01/24</div>
+      <div class="kicker">Part 1 · Model foundations · 05/31</div>
       <h1>Fine-tuning vs RAG vs prompting</h1>
-      <p class="lead">Every capability you add to an AI product has exactly three homes: the words you send, the text you retrieve at query time, or the weights themselves. The most expensive mistakes in this space are capabilities placed in the wrong home.</p>
+      <p class="lead">A capability can live in the instructions you send, evidence retrieved at query time, or model weights, and sometimes in deterministic code or external systems. The most expensive mistakes here are capabilities placed in the wrong home.</p>
+      <p class="chapter-summary"><b>In this chapter</b> Decide which behavior belongs in a prompt, retrieval index or model weights by freshness, consistency, latency and evidence needs.</p>
     </header>
 
-  <div class="stage-label sl-why">Why you need it</div>
+  <h2 class="stage-label sl-why" id="why-you-need-it">Why this layer matters</h2>
   <div class="why">
     <ul>
-      <li><b>Prompt ceiling:</b> some behaviors refuse to stabilize from words alone, brand voice, format edge cases, niche jargon, refusal patterns.</li>
-      <li><b>Prompt bloat tax:</b> teaching style with a 3k-token system prompt means paying that tax on every single call, see <a class="xl" href="../02-tokens-context/tokens-cost.html">tokens and caching</a>.</li>
-      <li><span class="wlabel gotcha">gotcha</span> <b>The classic mistake:</b> fine-tuning to teach <b>facts</b>. Weights are a terrible knowledge store, frozen, expensive to refresh, no citations. Facts belong in <a class="xl" href="#rag-overview">RAG</a>.</li>
+      <li><b>Prompt ceiling:</b> some behaviors never stabilize from words alone: brand voice, format edge cases, niche jargon, refusal patterns.</li>
+      <li><b>Prompt bloat tax:</b> teaching style with a 3k-token system prompt means paying that tax on every call, see <a class="xl" href="../02-tokens-context/tokens-cost.html">tokens and caching</a>.</li>
+      <li><span class="wlabel gotcha">gotcha</span> <b>The classic mistake:</b> fine-tuning as the only store for <b>changing facts</b>. Weights can absorb facts but are harder to refresh, inspect and cite than retrieval. For fresh, attributable facts, use <a class="xl" href="../03-rag-search/rag-overview.html">RAG</a>.</li>
       <li><b>The opposite mistake:</b> scheduling a training run for something a structured output call already solves, see <a class="xl" href="../04-tools-mcp/tool-calling.html">tool calling</a>.</li>
-      <li><b>Modern reset:</b> long context windows plus prompt caching absorbed many old fine-tuning use cases, so the bar for tuning is higher than it used to be. What survives: tuning small models for narrow high-volume tasks as a cost play, plus style and format discipline that prompting cannot hold.</li>
+      <li><b>Modern reset:</b> long context plus prompt caching absorbed many old fine-tuning use cases, raising the bar for tuning. What survives: small models tuned for narrow high-volume tasks as a cost play, and style or format discipline prompting cannot hold.</li>
     </ul>
   </div>
 
-  <div class="stage-label sl-sol">Solutions</div>
-  <p class="lead">Climb the ladder cheapest rung first: prompt it, retrieve it, then train the residual into the weights. Each rung costs roughly 10× the effort of the one before.</p>
+  <h2 class="stage-label sl-sol" id="solutions">Decision model</h2>
+  <p class="lead">Climb the ladder cheapest rung first: prompt it, retrieve it, then train the residual into the weights. Each later rung usually adds data, evaluation and operations work.</p>
 
-  <div class="diagram"><div class="diag-body"><pre class="mermaid">flowchart TD
-  A["new capability"] --> B["prompt +&lt;br/&gt;structured output"]
-  B --> C{"holds on&lt;br/&gt;edge cases?"}
-  C -- yes --> D["ship it"]
-  C -- no --> E["RAG for&lt;br/&gt;fresh facts"]
-  E --> F{"style still&lt;br/&gt;slips?"}
-  F -- yes --> G["LoRA tune&lt;br/&gt;the residual"]
-  </pre></div></div>
+<figure class="diagram"><div class="diag-body"><pre class="mermaid">flowchart TB
+  subgraph R1["Rung 1 · prompt"]
+    direction LR
+    A["New&lt;br/&gt;capability"] --> B["Prompt +&lt;br/&gt;structured output"]
+    B --> C{"Holds on&lt;br/&gt;edge cases?"}
+    C -- yes --> D["Ship it"]
+  end
+  subgraph R2["Rungs 2-3 · RAG, tune"]
+    direction LR
+    E["RAG for&lt;br/&gt;fresh facts"] --> F{"Style still&lt;br/&gt;slips?"}
+    F -- yes --> G["LoRA tune&lt;br/&gt;the residual"]
+  end
+  R1 -- "no" --> R2
+  </pre></div><figcaption>Training is the last exit, not the first: weights only absorb the style residual still slipping after prompts and retrieval, while facts never leave the RAG rung.</figcaption></figure>
 
   <div class="sol-list">
 
-    <div class="sol-item">
+    <div class="sol-item open">
       <button class="sol-head" type="button">
         <span class="sol-no">A</span>
         <span class="sol-name">Prompting <span class="sol-tag best">try first</span></span>
@@ -73,15 +79,15 @@
         <h4>How it works</h4>
         <ul>
           <li>Capability lives in the words you send: system instructions, few-shot examples, output contracts.</li>
-          <li>Changes ship in seconds, no training, and you debug it by reading it.</li>
-          <li>Output shape is not a prompt problem at all: extraction into a schema is solved with <a class="xl" href="../04-tools-mcp/tool-calling.html">structured output</a> plus a few examples.</li>
+          <li>Changes ship in seconds with no training, and you debug by reading.</li>
+          <li><b>Output shape</b> is not a prompt problem: schema extraction is solved with <a class="xl" href="../04-tools-mcp/tool-calling.html">structured output</a> plus a few examples.</li>
         </ul>
         <h4>Trade-offs</h4>
         <ul>
-          <li><b>pro:</b> cheapest and fastest rung to try, iterate in minutes.</li>
-          <li><b>con:</b> token tax per call, a 3k-token style prompt is paid on every request.</li>
+          <li><b>pro:</b> cheapest, fastest rung; iterate in minutes.</li>
+          <li><b>con:</b> token tax per call: a 3k-token style prompt is paid on every request.</li>
           <li><b>con:</b> weakest at consistency across edge cases, and quality drops on huge prompts.</li>
-          <li><b>con:</b> facts that grow or change will overflow it, that is a retrieval problem.</li>
+          <li><b>con:</b> growing or changing facts overflow it; that is a retrieval problem.</li>
         </ul>
       </div></div></div>
     </div>
@@ -96,14 +102,14 @@
       <div class="sol-body"><div class="sol-inner"><div class="sol-content">
         <h4>How it works</h4>
         <ul>
-          <li>Capability lives in the retrieval layer: relevant text is fetched at query time and grounded into the prompt, see <a class="xl" href="#rag-overview">RAG overview</a>.</li>
-          <li>Fresh per document: a doc fix ships in minutes, no retrain, and answers can cite the page.</li>
-          <li>The only home that supports real citations back to source documents.</li>
+          <li>Capability lives in the retrieval layer: relevant text is fetched at query time and grounded into the prompt, see <a class="xl" href="../03-rag-search/rag-overview.html">RAG overview</a>.</li>
+          <li><b>Fresh per document:</b> a doc fix ships in minutes, no retrain, and answers can cite the page.</li>
+          <li><b>Citations:</b> the only home that can point back to source documents.</li>
         </ul>
         <h4>Trade-offs</h4>
         <ul>
           <li><b>pro:</b> the right home for fresh, private, changing facts.</li>
-          <li><b>con:</b> costs an ingestion pipeline to run and debug, plus updates per document.</li>
+          <li><b>con:</b> an ingestion pipeline to run, debug and update per document.</li>
           <li><b>con:</b> awkward under hard latency floors or zero-ops constraints.</li>
         </ul>
       </div></div></div>
@@ -119,49 +125,49 @@
       <div class="sol-body"><div class="sol-inner"><div class="sol-content">
         <h4>How it works</h4>
         <ul>
-          <li><b><button class="term" type="button" data-tip="Supervised fine-tuning, continue training a base model on your own example pairs so its behavior shifts toward them">SFT</button></b> is the family name: a small fourth training stage (after the three that built the base, see <a class="xl" href="llm-internals.html">how LLMs work</a>) run by you, on your examples.</li>
-          <li><b><button class="term" type="button" data-tip="Low-Rank Adaptation, freeze the base model and train tiny low-rank matrices beside chosen layers, well under one percent of the parameters, one GPU is enough">LoRA</button></b> is the default recipe: freeze the base, train adapters. <b><button class="term" type="button" data-tip="LoRA on top of a 4-bit quantized base model, the whole stack fits on one consumer GPU">QLoRA</button></b> shrinks the bill further.</li>
-          <li><b>Data beats everything:</b> hundreds to a few thousand excellent pairs outperform tens of thousands of mediocre ones. Dedupe, balance classes, match the chat template exactly.</li>
-          <li><b>Train:</b> LoRA on a 7B to 70B base. Hours, not months. Hundreds of dollars, not millions.</li>
-          <li><b>Deploy:</b> behind the same chat API. Swap the model name, keep the rest of the stack.</li>
+          <li><b><button class="term" type="button" data-tip="Supervised fine-tuning, continue training a base model on your own example pairs so its behavior shifts toward them">SFT</button></b> is the family name: a small fourth training stage, after the three that built the base (see <a class="xl" href="llm-internals.html">how LLMs work</a>), run by you on your examples.</li>
+          <li><b><button class="term" type="button" data-tip="Low-Rank Adaptation, freeze the base model and train tiny low-rank matrices beside chosen layers, a small fraction of parameters in common setups; memory and hardware needs depend on model, sequence length and batch size">LoRA</button></b> is the default recipe: freeze the base, train adapters. <b><button class="term" type="button" data-tip="LoRA on top of a 4-bit quantized base model, quantization can reduce memory needs; fitting on one GPU depends on model size and workload">QLoRA</button></b> shrinks the bill further.</li>
+          <li><b>Data beats everything:</b> a small, curated, diverse set can beat a larger noisy one; the right volume depends on task coverage. Dedupe, balance classes, match the chat template exactly.</li>
+          <li><b>Train:</b> LoRA adapts an open model; duration and cost depend on model size, dataset, hardware and sequence length, so estimates are workload-specific.</li>
+          <li><b>Deploy:</b> behind the same chat API; swap the model name, keep the stack.</li>
         </ul>
         <h4>Trade-offs</h4>
         <ul>
-          <li><b>pro:</b> style, format discipline and jargon that prompting cannot hold, held as a guarantee on every call.</li>
-          <li><b>pro:</b> at volume, a tuned small model with a short prompt beats a big model dragging a giant prompt on latency and cost. Classification and extraction at high volume are the classic wins.</li>
-          <li><span class="wlabel gotcha">gotcha</span> <b>con:</b> catastrophic forgetting. Tuning on a narrow task erodes general ability. Keep a general eval set and check it after every run, see <a class="xl" href="../08-evals/evals.html">evals</a>.</li>
-          <li><b>con:</b> retrain per base upgrade. Version fine-tunes as artifacts with a retraining trigger.</li>
-          <li><b>con:</b> worst home for facts, arithmetic or citations, anything without an eval set.</li>
+          <li><b>pro:</b> style, format and domain vocabulary become more reliable across calls, though no single output is guaranteed.</li>
+          <li><b>pro:</b> at volume, a tuned small model with a short prompt beats a big model with a giant prompt on latency and cost; high-volume classification and extraction are the classic wins.</li>
+          <li><span class="wlabel gotcha">gotcha</span> <b>con:</b> catastrophic forgetting: narrow tuning can erode general ability. Re-run a general eval set after every run, see <a class="xl" href="../08-evals/evals.html">evals</a>.</li>
+          <li><b>con:</b> retrain per base upgrade; version fine-tunes as artifacts with a retraining trigger.</li>
+          <li><b>con:</b> worst home for facts, arithmetic, citations, or anything without an eval set.</li>
         </ul>
       </div></div></div>
     </div>
 
   </div>
 
-  <div class="stage-label sl-when">When to use · when not</div>
+  <h2 class="stage-label sl-when" id="when-to-use-when-not">Decision boundary</h2>
   <div class="pc">
     <div class="pc-col pros"><h4 class="pc-h">Use when</h4>
       <ul>
-        <li>The base model almost knows the task and words alone close the gap, prompting rung.</li>
-        <li>Facts are fresh, private or changing, and citations are required, RAG rung.</li>
-        <li>Style or format must hold on every edge case at high volume, tune rung.</li>
+        <li>Prompt: the base model almost knows the task and words close the gap.</li>
+        <li>RAG: facts are fresh, private or changing, and citations are required.</li>
+        <li>Tune: style or format must hold on every edge case at high volume.</li>
         <li>A narrow high-volume task where a tuned small model wins on cost and latency.</li>
       </ul>
     </div>
     <div class="pc-col cons"><h4 class="pc-h">Skip when</h4>
       <ul>
         <li>The transform is exact and writable in normal code.</li>
-        <li>You want facts in weights, they stale on contact with the world.</li>
+        <li>You want facts in weights; they go stale on contact with the world.</li>
         <li>There is no eval set to prove the tune beats the base.</li>
         <li>The latency floor is too tight for a retrieval step.</li>
       </ul>
     </div>
   </div>
-  <p class="note">Full pretraining is not on the ladder. It buys new languages or domains at scale for millions of dollars, provider territory, see <a class="xl" href="llm-internals.html">how LLMs work</a>.</p>
+  <p class="note">Full pretraining is not on the ladder: it needs data, compute and operations at a scale few teams have. See <a class="xl" href="llm-internals.html">how LLMs work</a>.</p>
 
-  <div class="stage-label sl-ex">Example</div>
+  <h2 class="stage-label sl-ex" id="example">Worked example</h2>
   <div class="example">
-    <p class="ex-note">A LoRA recipe in a few lines: freeze the base, attach rank-16 adapters beside the attention projections, train on a few thousand pairs, then eval against the base. Below it, one need per rung of the ladder.</p>
+    <p class="ex-note">A LoRA recipe: freeze the base, attach rank-16 adapters beside the attention projections, train on a few thousand pairs, eval against the base. Below it, one need per rung.</p>
     <pre class="code" data-lang="python" data-file="lora_tune.py"><code><span class="tk-k">from</span> peft <span class="tk-k">import</span> LoraConfig, get_peft_model
 <span class="tk-k">from</span> transformers <span class="tk-k">import</span> AutoModelForCausalLM
 
@@ -175,22 +181,22 @@ model = get_peft_model(base, cfg)  <span class="tk-c"># well under 1% of params 
 <span class="tk-c"># next: SFTTrainer on a few thousand pairs, then eval against the base</span></code></pre>
     <ul>
       <li><b>Support tone, tune:</b> a bank tunes a small model on 2k polished replies, cuts its prompt from 3k to 300 tokens and its bill accordingly, see <a class="xl" href="../02-tokens-context/tokens-cost.html">tokens and caching</a>.</li>
-      <li><b>Product docs, RAG:</b> a support bot answers from the current manual. A doc fix ships in minutes, no retrain, and answers cite the page, see <a class="xl" href="#rag-overview">RAG overview</a>.</li>
+      <li><b>Product docs, RAG:</b> a support bot answers from the current manual; a doc fix ships in minutes and answers cite the page, see <a class="xl" href="../03-rag-search/rag-overview.html">RAG overview</a>.</li>
       <li><b>Output JSON shape, prompt:</b> extraction into one schema is solved with <a class="xl" href="../04-tools-mcp/tool-calling.html">structured output</a> plus a few examples, no training needed.</li>
       <li><b>Cost play, tune:</b> a clause classifier fine-tuned onto a small model replaces a frontier model with a giant prompt.</li>
     </ul>
   </div>
 
-  <div class="stage-label sl-extra">Watch out</div>
+  <h2 class="stage-label sl-extra" id="watch-out">Failure modes</h2>
   <div class="pit-list"><ul>
     <li>Fine-tuning for facts · weights are a stale snapshot the day you ship them · prices, policies and news belong in retrieval</li>
     <li>Stale adapters · a new base model means a retrain · version fine-tunes with a retraining trigger</li>
     <li>Eval gap · tuning without a golden set is flying blind · if the tune does not clearly win, the data was the problem</li>
     <li>Alignment drift · safety training weakens when you tune · red-team your own model before shipping, see <a class="xl" href="../07-security/injection.html">prompt injection</a></li>
-    <li>Skipping rungs · paying 10× to train what a prompt already solved · re-check the ladder every quarter, the prompt rung keeps getting stronger</li>
+    <li>Skipping rungs · paying 10× to train what a prompt already solved · re-check the ladder quarterly, the prompt rung keeps getting stronger</li>
   </ul></div>
 
-  <div class="stage-label sl-extra">Remember</div>
+  <h2 class="stage-label sl-extra" id="remember">Keep in mind</h2>
   <div class="remember"><ul>
     <li>Ask where the capability lives: words, retrieval, or weights.</li>
     <li>Climb the ladder in order: prompt, RAG, fine-tune the residual.</li>
@@ -198,13 +204,17 @@ model = get_peft_model(base, cfg)  <span class="tk-c"># well under 1% of params 
     <li>Try long context and prompt caching before tuning for cost.</li>
     <li>Hundreds of good pairs beat tens of thousands of bad ones.</li>
     <li>Eval against the base before swapping, and keep a general eval set for forgetting.</li>
-    <li>You can read a prompt and inspect retrieved chunks, weights only show you metrics. The worst bugs live in the home you cannot see.</li>
+    <li>Prompts and retrieved chunks are readable; weights only show metrics. The worst bugs live in the home you cannot see.</li>
   </ul></div>
   
+    <section class="references" aria-labelledby="primary-sources"><h2 id="primary-sources">Primary sources</h2><ul><li><a href="https://arxiv.org/abs/2005.11401" rel="noreferrer">Retrieval-Augmented Generation</a></li><li><a href="https://arxiv.org/abs/2305.18290" rel="noreferrer">Direct Preference Optimization</a></li></ul></section>
+
+    <section class="lab-check" aria-labelledby="try-verify-explain"><h2 id="try-verify-explain">Try, verify, explain</h2><ol><li>For a changing policy answer that must cite evidence, name which parts belong in retrieval, which belong in the prompt, and what fine-tuning could change.</li><li>Price the prompt tax: at 50k calls a day, compute daily input tokens and cost for a 3k-token style prompt at your model's input rate, with and without a cached-prefix discount, then for a tuned model with a 300-token prompt.</li><li>Explain why fine-tuning this quarter's price list into a model is the wrong home for prices even if the tuned model answers them correctly on launch day.</li></ol></section>
+
     <nav class="pager" id="pager"></nav>
 
     <footer class="footer">
-      learning-project · tracks/ai · print this page from the browser dialog · diagrams load mermaid from CDN once online
+      learning-project · tracks/ai · press ⌘K or / to search every chapter · diagrams load Mermaid from a CDN when online
     </footer>
   </div>
 </main>

@@ -4,113 +4,158 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AI Engineering Field Guide · foundations, RAG, tools, agents, security, evals</title>
-<meta name="description" content="A step-by-step dark field guide to AI engineering: LLM internals, tokens and cost, RAG and search, tool calling, MCP, agents, memory, security, evals, and production systems.">
+<meta name="description" content="A step-by-step field guide to AI engineering: LLM internals, tokens and cost, RAG and search, tool calling, MCP, agents, memory, security, evals, and production systems.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/tokens.css">
 <link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
 <style>
-  .landing { max-width: 980px; margin: 0 auto; padding: 90px 24px 80px; }
-  .hero-title { font-family: var(--serif); font-weight: 500; font-size: clamp(34px, 6vw, 58px); line-height: 1.1; margin: 18px 0 0; color: var(--txt-strong); }
+  .landing { max-width: 1080px; margin: 0 auto; padding: clamp(56px, 9vw, 110px) 24px 80px; }
+  .hero-kicker { font: 700 10.5px var(--mono); letter-spacing: .22em; text-transform: uppercase; color: var(--gold); }
+  .hero-title { font: 500 clamp(36px, 6vw, 64px)/1.06 var(--serif); letter-spacing: -.01em; margin: 18px 0 0; max-width: 16ch; color: var(--txt-strong); }
   .hero-title em { font-style: italic; color: var(--gold); }
-  .hero-sub { color: var(--dim); font-size: 17px; max-width: 640px; margin: 22px 0 0; }
-  .hero-sub em { color: var(--txt); font-style: normal; }
-  .start { display: inline-flex; align-items: center; gap: 10px; margin-top: 34px;
-    font-family: var(--mono); font-size: 12px; letter-spacing: .08em;
-    color: var(--gold); border: 1px solid rgba(211,183,138,.4); border-radius: 999px;
-    padding: 11px 22px; transition: background .2s, border-color .2s; }
-  .start:hover { background: var(--gold-soft); border-color: rgba(211,183,138,.7); text-decoration: none; }
-  .parts { margin-top: 80px; display: flex; flex-direction: column; gap: 44px; }
-  .part-head { display: flex; align-items: baseline; gap: 14px; }
-  .part-no { font-family: var(--mono); font-size: 11px; color: var(--gold); letter-spacing: .2em; }
-  .part-title { font-family: var(--serif); font-size: 22px; font-weight: 500; color: var(--txt-strong); }
-  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1px; background: var(--edge); border: 1px solid var(--edge); border-radius: var(--rad); overflow: hidden; }
-  .card { background: var(--bg); padding: 18px 20px 16px; display: block; color: var(--txt); position: relative; transition: background .15s; }
-  .card:hover { background: var(--panel); text-decoration: none; }
-  .card .no { font-family: var(--mono); font-size: 10px; color: var(--faint); letter-spacing: .12em; }
-  .card .t { display: block; color: var(--txt-strong); font-size: 15px; font-weight: 600; margin-top: 6px; }
-  .card:hover .t { color: var(--gold); }
-  .card .d { display: block; color: var(--dim); font-size: 12.5px; margin-top: 4px; }
-  .landing-foot { margin-top: 70px; padding-top: 20px; border-top: 1px solid var(--edge);
-    color: var(--faint); font-family: var(--mono); font-size: 11px; }
-  .topbar-static { position: static; border-bottom: 1px solid var(--edge); background: none; backdrop-filter: none; }
+  .hero-sub { color: var(--dim); font-size: 17px; line-height: 1.65; max-width: 600px; margin: 24px 0 0; }
+  .hero-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 22px; margin-top: 34px; }
+  .hero-meta span { font: 11px var(--mono); letter-spacing: .08em; color: var(--faint); }
+  .start { display: inline-flex; align-items: center; gap: 10px; font: 500 12px var(--mono); letter-spacing: .06em;
+    color: var(--panel); background: var(--txt-strong); border-radius: 999px; padding: 12px 22px; text-decoration: none; transition: background .2s; }
+  .start:hover { color: var(--panel); background: var(--gold); text-decoration: none; }
+  .parts { margin-top: clamp(64px, 9vw, 110px); }
+  .part { display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 20px clamp(28px, 5vw, 64px); padding: 34px 0 40px; border-top: 1px solid var(--edge-2); }
+  .part-no { font: 700 10.5px var(--mono); letter-spacing: .2em; text-transform: uppercase; color: var(--gold); }
+  .part-title { margin: 8px 0 0; font: 500 26px/1.2 var(--serif); color: var(--txt-strong); }
+  .part-blurb { margin: 10px 0 0; color: var(--dim); font-size: 14px; line-height: 1.6; }
+  .cards { list-style: none; margin: 0; padding: 0; }
+  .cards li { margin: 0; border-bottom: 1px solid var(--edge); }
+  .card { display: grid; grid-template-columns: 3ch minmax(0, 1fr) auto; align-items: baseline; gap: 2px 16px; padding: 15px 4px; color: var(--txt); text-decoration: none; transition: background .15s, padding .15s; }
+  .card:hover { text-decoration: none; background: var(--panel); padding-left: 10px; }
+  .card .no { font: 10.5px var(--mono); color: var(--faint); letter-spacing: .08em; }
+  .card .t { color: var(--txt-strong); font-size: 16px; font-weight: 600; }
+  .card .d { grid-column: 2; color: var(--dim); font-size: 13px; }
+  .card .go { grid-column: 3; grid-row: 1 / span 2; align-self: center; color: var(--faint); transition: color .15s, transform .15s; }
+  .card:hover .t, .card:hover .go { color: var(--gold); }
+  .card:hover .go { transform: translateX(3px); }
+  .landing-foot { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--edge-2); color: var(--faint); font: 11px/1.7 var(--mono); }
+  @media (max-width: 760px) { .part { grid-template-columns: 1fr; padding: 28px 0 32px; } }
+  @media (max-width: 560px) { .topbar .start-link { display: none; } }
 </style>
 </head>
 <body>
 
-<header class="topbar topbar-static">
+<header class="topbar">
   <a class="brand" href="index.html"><b>ai</b>·field-guide</a>
   <div class="tools">
-    <a class="tbtn" href="content/01-foundations/llm-internals.html">start reading</a>
+    <button class="tbtn search-btn" id="search-open" type="button" aria-label="Search the guide"><span>Search</span><kbd>⌘K</kbd></button>
+    <a class="tbtn" href="../../hub/index.html">Learning hub</a>
+    <a class="tbtn start-link" href="content/01-foundations/llm-internals.html">start reading</a>
   </div>
 </header>
 
 <main class="landing">
-  <div class="kicker" style="font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);">A step-by-step learning sheet</div>
-  <h1 class="hero-title">Build technical depth in <em>AI engineering</em>, one page at a time</h1>
-  <p class="hero-sub">How the model thinks, what a token costs, how retrieval actually works,
-    how tools and agents are wired, and what breaks in production.
-    Every page follows the same rhythm: <em>why you need it → the options, explained one by one → when to use which → a real example</em>.</p>
-  <a class="start" href="content/01-foundations/llm-internals.html">start with how LLMs work →</a>
+  <div class="hero-kicker">A step-by-step field guide</div>
+  <h1 class="hero-title">Technical depth in <em>AI engineering</em>, one chapter at a time</h1>
+  <p class="hero-sub">From next-token prediction to production systems. Each chapter explains one layer: why it matters,
+    how the mechanism works, which trade-offs decide the design, a worked example, and a checkpoint to test yourself.</p>
+  <div class="hero-meta">
+    <a class="start" href="content/01-foundations/llm-internals.html">Start with how LLMs work →</a>
+    <span>31 chapters · 6 parts · read in order</span>
+  </div>
 
   <div class="parts">
-    <section>
-      <div class="part-head"><span class="part-no">PART 1</span><span class="part-title">Foundations</span></div>
-      <div class="cards">
-        <a class="card" href="content/01-foundations/llm-internals.html"><span class="no">01</span><span class="t">How LLMs actually work</span><span class="d">prediction, sampling, training, KV cache</span></a>
-        <a class="card" href="content/01-foundations/ml-multimodal.html"><span class="no">02</span><span class="t">ML just enough · multimodal</span><span class="d">loss, overfitting, embeddings, OCR vs vision</span></a>
-        <a class="card" href="content/01-foundations/finetune-decide.html"><span class="no">03</span><span class="t">Fine-tuning vs RAG vs prompting</span><span class="d">where new capability should live</span></a>
-        <a class="card" href="content/02-tokens-context/tokens-cost.html"><span class="no">04</span><span class="t">Tokens, cost, caching</span><span class="d">the bill, cache hits, batch discounts</span></a>
-        <a class="card" href="content/02-tokens-context/context-budget.html"><span class="no">05</span><span class="t">Context budgeting</span><span class="d">the window is a budget sheet</span></a>
+    <section class="part" aria-labelledby="part-1">
+      <div class="part-head">
+        <span class="part-no">Part 1</span>
+        <h2 class="part-title" id="part-1">Model foundations</h2>
+        <p class="part-blurb">What a transformer computes, how it is trained and aligned, and where new capability should live.</p>
       </div>
+      <ol class="cards">
+        <li><a class="card" href="content/01-foundations/llm-internals.html"><span class="no">01</span><span class="t">How LLMs actually work</span><span class="d">prediction, sampling, training, KV cache</span><span class="go" aria-hidden="true">→</span></a></li>
+        <li><a class="card" href="content/01-foundations/transformer-architecture.html"><span class="no">02</span><span class="t">Transformer architecture</span><span class="d">attention math, GQA, RoPE, MoE, FlashAttention</span><span class="go" aria-hidden="true">→</span></a></li>
+        <li><a class="card" href="content/01-foundations/training-alignment.html"><span class="no">03</span><span class="t">Training &amp; alignment</span><span class="d">pretraining, SFT, RLHF, DPO, RLVR, distillation, LoRA</span><span class="go" aria-hidden="true">→</span></a></li>
+        <li><a class="card" href="content/01-foundations/ml-multimodal.html"><span class="no">04</span><span class="t">ML just enough · multimodal</span><span class="d">loss, overfitting, embeddings, OCR vs vision</span><span class="go" aria-hidden="true">→</span></a></li>
+        <li><a class="card" href="content/01-foundations/finetune-decide.html"><span class="no">05</span><span class="t">Fine-tuning vs RAG vs prompting</span><span class="d">where new capability should live</span><span class="go" aria-hidden="true">→</span></a></li>
+      </ol>
     </section>
-    <section>
-      <div class="part-head"><span class="part-no">PART 2</span><span class="part-title">Retrieval</span></div>
-      <div class="cards">
-        <a class="card" href="content/03-rag-search/rag-overview.html"><span class="no">06</span><span class="t">RAG the big picture</span><span class="d">pipeline, ingestion, parsing</span></a>
-        <a class="card" href="content/03-rag-search/chunking.html"><span class="no">07</span><span class="t">Chunking</span><span class="d">methods, max size, overlap, metadata</span></a>
-        <a class="card" href="content/03-rag-search/embeddings.html"><span class="no">08</span><span class="t">Embeddings & vector stores</span><span class="d">dimensions, pgvector, ANN indexes</span></a>
-        <a class="card" href="content/03-rag-search/search-rerank.html"><span class="no">09</span><span class="t">Search & reranking</span><span class="d">BM25, vectors, hybrid fusion, rerankers</span></a>
-        <a class="card" href="content/03-rag-search/rag-variants.html"><span class="no">10</span><span class="t">RAG variants</span><span class="d">vector, graph, agentic</span></a>
+    <section class="part" aria-labelledby="part-2">
+      <div class="part-head">
+        <span class="part-no">Part 2</span>
+        <h2 class="part-title" id="part-2">Inference &amp; context</h2>
+        <p class="part-blurb">How tokens are served, priced, prompted and budgeted, including models that think before answering.</p>
       </div>
+      <ol class="cards">
+        <li><a class="card" href="content/02-tokens-context/inference-serving.html"><span class="no">06</span><span class="t">Inference &amp; serving</span><span class="d">prefill vs decode, KV memory, batching, quantization, speculative decoding</span><span class="go" aria-hidden="true">→</span></a></li>
+        <li><a class="card" href="content/02-tokens-context/tokens-cost.html"><span class="no">07</span><span class="t">Tokens, cost, caching</span><span class="d">the bill, cache hits, batch discounts</span><span class="go" aria-hidden="true">→</span></a></li>
+        <li><a class="card" href="content/02-tokens-context/prompting.html"><span class="no">08</span><span class="t">Prompt engineering</span><span class="d">prompt anatomy, few-shot, structured output, prompts as versioned code</span><span class="go" aria-hidden="true">→</span></a></li>
+        <li><a class="card" href="content/02-tokens-context/reasoning-models.html"><span class="no">09</span><span class="t">Reasoning models</span><span class="d">test-time compute, thinking budgets, when reasoning pays</span><span class="go" aria-hidden="true">→</span></a></li>
+        <li><a class="card" href="content/02-tokens-context/context-budget.html"><span class="no">10</span><span class="t">Context budgeting</span><span class="d">the window is a budget sheet</span><span class="go" aria-hidden="true">→</span></a></li>
+      </ol>
     </section>
-    <section>
-      <div class="part-head"><span class="part-no">PART 3</span><span class="part-title">Tools & agents</span></div>
-      <div class="cards">
-        <a class="card" href="content/04-tools-mcp/tool-calling.html"><span class="no">11</span><span class="t">Tool calling & structured output</span><span class="d">the loop, schemas, DB sync</span></a>
-        <a class="card" href="content/04-tools-mcp/mcp.html"><span class="no">12</span><span class="t">MCP protocol</span><span class="d">why it exists, primitives, transports</span></a>
-        <a class="card" href="content/04-tools-mcp/ag-ui.html"><span class="no">13</span><span class="t">AG-UI generative components</span><span class="d">tool calls rendered as UI</span></a>
-        <a class="card" href="content/05-agents-orchestration/agent-patterns.html"><span class="no">14</span><span class="t">Agent patterns</span><span class="d">single vs multi, planner, handoffs</span></a>
-        <a class="card" href="content/05-agents-orchestration/graphs.html"><span class="no">15</span><span class="t">Orchestration graphs</span><span class="d">nodes, state, checkpoints, HITL</span></a>
-        <a class="card" href="content/05-agents-orchestration/ops.html"><span class="no">16</span><span class="t">Durable ops</span><span class="d">retries, idempotency, DLQ, budgets</span></a>
-        <a class="card" href="content/05-agents-orchestration/ecosystem.html"><span class="no">17</span><span class="t">Ecosystem</span><span class="d">LangChain, LangGraph, Cursor SDK, Goose</span></a>
+    <section class="part" aria-labelledby="part-3">
+      <div class="part-head">
+        <span class="part-no">Part 3</span>
+        <h2 class="part-title" id="part-3">Retrieval</h2>
+        <p class="part-blurb">Getting the right evidence into context: ingest, chunk, embed, search and rerank.</p>
       </div>
+      <ol class="cards">
+        <li><a class="card" href="content/03-rag-search/rag-overview.html"><span class="no">11</span><span class="t">RAG the big picture</span><span class="d">pipeline, ingestion, parsing</span><span class="go" aria-hidden="true">→</span></a></li>
+        <li><a class="card" href="content/03-rag-search/chunking.html"><span class="no">12</span><span class="t">Chunking</span><span class="d">methods, max size, overlap, metadata</span><span class="go" aria-hidden="true">→</span></a></li>
+        <li><a class="card" href="content/03-rag-search/embeddings.html"><span class="no">13</span><span class="t">Embeddings &amp; vector stores</span><span class="d">dimensions, pgvector, ANN indexes</span><span class="go" aria-hidden="true">→</span></a></li>
+        <li><a class="card" href="content/03-rag-search/search-rerank.html"><span class="no">14</span><span class="t">Search &amp; reranking</span><span class="d">BM25, vectors, hybrid fusion, rerankers</span><span class="go" aria-hidden="true">→</span></a></li>
+        <li><a class="card" href="content/03-rag-search/rag-variants.html"><span class="no">15</span><span class="t">RAG variants</span><span class="d">vector, graph, agentic</span><span class="go" aria-hidden="true">→</span></a></li>
+      </ol>
     </section>
-    <section>
-      <div class="part-head"><span class="part-no">PART 4</span><span class="part-title">Memory & safety</span></div>
-      <div class="cards">
-        <a class="card" href="content/06-memory/memory.html"><span class="no">18</span><span class="t">Memory</span><span class="d">short-term, long-term, summarization drift</span></a>
-        <a class="card" href="content/07-security/injection.html"><span class="no">19</span><span class="t">Prompt injection & exfil</span><span class="d">indirect attacks, defense layers</span></a>
-        <a class="card" href="content/07-security/guardrails.html"><span class="no">20</span><span class="t">Guardrails & least privilege</span><span class="d">filters, scoped tools, audit</span></a>
+    <section class="part" aria-labelledby="part-4">
+      <div class="part-head">
+        <span class="part-no">Part 4</span>
+        <h2 class="part-title" id="part-4">Tools &amp; agents</h2>
+        <p class="part-blurb">Letting models act: tool contracts, MCP and A2A, agent loops, graphs, GUI agents and durable execution.</p>
       </div>
+      <ol class="cards">
+        <li><a class="card" href="content/04-tools-mcp/tool-calling.html"><span class="no">16</span><span class="t">Tool calling &amp; structured output</span><span class="d">the loop, schemas, DB sync</span><span class="go" aria-hidden="true">→</span></a></li>
+        <li><a class="card" href="content/04-tools-mcp/mcp.html"><span class="no">17</span><span class="t">MCP protocol</span><span class="d">why it exists, primitives, transports</span><span class="go" aria-hidden="true">→</span></a></li>
+        <li><a class="card" href="content/04-tools-mcp/a2a.html"><span class="no">18</span><span class="t">A2A protocol</span><span class="d">agent cards, tasks, streaming, push notifications, MCP vs A2A</span><span class="go" aria-hidden="true">→</span></a></li>
+        <li><a class="card" href="content/04-tools-mcp/ag-ui.html"><span class="no">19</span><span class="t">AG-UI generative components</span><span class="d">tool calls rendered as UI</span><span class="go" aria-hidden="true">→</span></a></li>
+        <li><a class="card" href="content/05-agents-orchestration/agent-patterns.html"><span class="no">20</span><span class="t">Agent patterns</span><span class="d">single vs multi, planner, handoffs</span><span class="go" aria-hidden="true">→</span></a></li>
+        <li><a class="card" href="content/05-agents-orchestration/graphs.html"><span class="no">21</span><span class="t">Orchestration graphs</span><span class="d">nodes, state, checkpoints, HITL</span><span class="go" aria-hidden="true">→</span></a></li>
+        <li><a class="card" href="content/05-agents-orchestration/computer-use.html"><span class="no">22</span><span class="t">Computer-use &amp; browser agents</span><span class="d">screenshots vs accessibility tree, action loops, sandboxing</span><span class="go" aria-hidden="true">→</span></a></li>
+        <li><a class="card" href="content/05-agents-orchestration/ops.html"><span class="no">23</span><span class="t">Durable ops</span><span class="d">retries, idempotency, DLQ, budgets</span><span class="go" aria-hidden="true">→</span></a></li>
+        <li><a class="card" href="content/05-agents-orchestration/ecosystem.html"><span class="no">24</span><span class="t">Ecosystem</span><span class="d">LangChain, LangGraph, Cursor SDK, Goose</span><span class="go" aria-hidden="true">→</span></a></li>
+      </ol>
     </section>
-    <section>
-      <div class="part-head"><span class="part-no">PART 5</span><span class="part-title">Proof & production</span></div>
-      <div class="cards">
-        <a class="card" href="content/08-evals/evals.html"><span class="no">21</span><span class="t">Evals & observability</span><span class="d">pyramid, golden sets, judges</span></a>
-        <a class="card" href="content/09-systems/architecture.html"><span class="no">22</span><span class="t">System architecture</span><span class="d">the whole box, sync vs async</span></a>
-        <a class="card" href="content/09-systems/aws.html"><span class="no">23</span><span class="t">Systems on AWS</span><span class="d">ingest and query pipelines</span></a>
-        <a class="card" href="content/10-quickref/quickref.html"><span class="no">24</span><span class="t">The 30-second layer</span><span class="d">every topic as a reflex</span></a>
+    <section class="part" aria-labelledby="part-5">
+      <div class="part-head">
+        <span class="part-no">Part 5</span>
+        <h2 class="part-title" id="part-5">Memory &amp; safety</h2>
+        <p class="part-blurb">What persists between turns, and how to contain untrusted input before it causes harm.</p>
       </div>
+      <ol class="cards">
+        <li><a class="card" href="content/06-memory/memory.html"><span class="no">25</span><span class="t">Memory</span><span class="d">short-term, long-term, summarization drift</span><span class="go" aria-hidden="true">→</span></a></li>
+        <li><a class="card" href="content/07-security/injection.html"><span class="no">26</span><span class="t">Prompt injection &amp; exfil</span><span class="d">indirect attacks, defense layers</span><span class="go" aria-hidden="true">→</span></a></li>
+        <li><a class="card" href="content/07-security/guardrails.html"><span class="no">27</span><span class="t">Guardrails &amp; least privilege</span><span class="d">filters, scoped tools, audit</span><span class="go" aria-hidden="true">→</span></a></li>
+      </ol>
+    </section>
+    <section class="part" aria-labelledby="part-6">
+      <div class="part-head">
+        <span class="part-no">Part 6</span>
+        <h2 class="part-title" id="part-6">Proof &amp; production</h2>
+        <p class="part-blurb">Measuring quality and running the whole system with clear boundaries.</p>
+      </div>
+      <ol class="cards">
+        <li><a class="card" href="content/08-evals/evals.html"><span class="no">28</span><span class="t">Evals &amp; observability</span><span class="d">pyramid, golden sets, judges</span><span class="go" aria-hidden="true">→</span></a></li>
+        <li><a class="card" href="content/09-systems/architecture.html"><span class="no">29</span><span class="t">System architecture</span><span class="d">the whole box, sync vs async</span><span class="go" aria-hidden="true">→</span></a></li>
+        <li><a class="card" href="content/09-systems/aws.html"><span class="no">30</span><span class="t">Systems on AWS</span><span class="d">ingest and query pipelines</span><span class="go" aria-hidden="true">→</span></a></li>
+        <li><a class="card" href="content/10-quickref/quickref.html"><span class="no">31</span><span class="t">The 30-second layer</span><span class="d">every topic as a reflex</span><span class="go" aria-hidden="true">→</span></a></li>
+      </ol>
     </section>
   </div>
 
   <footer class="landing-foot">
-    learning-project · tracks/ai · one HTML page per topic, works offline from file:// ·
-    print any page with the browser print dialog · diagrams load mermaid from CDN once online
+    learning-project · tracks/ai · serve the repository root (python3 -m http.server) for diagrams and navigation
   </footer>
 </main>
 
+<script src="js/app.js"></script>
 </body>
 </html>

@@ -11,19 +11,18 @@
 <link rel="stylesheet" href="../../css/base.css">
 <link rel="stylesheet" href="../../css/components.css">
 <link rel="stylesheet" href="../../css/flow.css">
-<link rel="stylesheet" href="../../css/print.css">
 </head>
 <body>
 
 <div id="progress"></div>
 
 <header class="topbar">
-  <button class="tbtn" id="nav-toggle" type="button" aria-label="Toggle navigation">☰</button>
+  <button class="tbtn" id="nav-toggle" type="button" aria-label="Open contents" aria-controls="toc" aria-expanded="false">☰</button>
   <a class="brand" href="../../index.html"><b>ai</b>·field-guide</a>
+  <a class="hub-link" href="../../../../hub/index.html">Learning hub</a>
   <div class="tools">
-    <input id="toc-filter" type="search" placeholder="filter · /" aria-label="Filter topics">
+    <button class="tbtn search-btn" id="search-open" type="button" aria-label="Search the guide"><span>Search</span><kbd>⌘K</kbd></button>
     <button class="tbtn" id="expand-all" type="button">expand</button>
-    <button class="tbtn" id="print-btn" type="button">print</button>
   </div>
 </header>
 
@@ -32,39 +31,41 @@
 <main class="main">
   <div class="content">
     <header class="topic-head">
-      <div class="kicker">Part 2 · Retrieval · 08/24</div>
+      <div class="kicker">Part 3 · Retrieval · 14/31</div>
       <h1>Search and reranking</h1>
-      <p class="lead">Every corpus gets asked two kinds of questions: "cozy winter jacket" and "XR-2500-B". The first needs meaning, the second needs exact characters, and no single search lane serves both. Production retrieval runs both lanes, merges them by rank, then spends a slow careful expert on the finalists only.</p>
+      <p class="lead">Every corpus gets asked two kinds of questions: "cozy winter jacket" and "XR-2500-B". The first needs meaning, the second exact characters, and no single lane serves both. Production retrieval runs both lanes, merges them by rank, then spends a slow expert on the finalists only.</p>
+      <p class="chapter-summary"><b>In this chapter</b> Separate candidate recall from ranking precision and use a trace to decide when lexical, dense, hybrid and cross-encoder stages help.</p>
     </header>
 
-  <div class="stage-label sl-why">Why you need it</div>
+  <h2 class="stage-label sl-why" id="why-you-need-it">Why this layer matters</h2>
   <div class="why">
     <ul>
-      <li><b>Meaning queries:</b> "cozy winter jacket". Exact words fail, paraphrase power wins. Dense vectors from <a class="xl" href="embeddings.html">embeddings</a> own this half.</li>
-      <li><b>Identifier queries:</b> "XR-2500-B", "ERR_CONN_RESET_7", "section 4.2". Vectors are hopeless, no embedding knows which SKU matters, and paraphrase power actively hurts.</li>
+      <li><b>Meaning queries:</b> "cozy winter jacket". Exact words fail, paraphrase wins. Dense vectors from <a class="xl" href="embeddings.html">embeddings</a> own this half.</li>
+      <li><b>Identifier queries:</b> "XR-2500-B", "ERR_CONN_RESET_7", "section 4.2". No embedding knows which SKU matters, and paraphrase power actively hurts.</li>
       <li><b>Single-lane systems fail the half they were not built for, and users cannot tell you in advance which half they are in.</b></li>
     </ul>
   </div>
 
-  <div class="stage-label sl-sol">Solutions</div>
-  <p class="lead">Two cheap lanes, one merge, one slow expert. Search quality in one line: right lane, good merge, honest second opinion.</p>
-  <div class="diagram">
+  <h2 class="stage-label sl-sol" id="solutions">Search pipeline</h2>
+  <p class="lead">Two cheap lanes, one merge, one slow expert: right lane, good merge, honest second opinion.</p>
+  <figure class="diagram">
     <div class="diag-body"><pre class="mermaid">
-flowchart TD
-  Q["user query"] --> K["BM25 lane&lt;br/&gt;keyword ranking"]
-  Q --> V["dense lane&lt;br/&gt;embedding + ANN"]
-  K --> M["RRF merge&lt;br/&gt;fuse by rank"]
-  V --> M
-  M --> R["cross-encoder&lt;br/&gt;reads query + doc"]
-  R --> T["top-5 chunks&lt;br/&gt;with citations"]
-  classDef v fill:#1c1430,stroke:#a78bfa,color:#e6e6f0;
-  classDef m fill:#0d2818,stroke:#4ade80,color:#e6e6f0;
-  class Q,K,V v;
-  class R,T m;
-    </pre></div>
-  </div>
+flowchart TB
+  subgraph S1["Stage 1 · recall wide"]
+    direction LR
+    Q["User query"] --> K["BM25 lane&lt;br/&gt;keyword ranking"]
+    Q --> V["Dense lane&lt;br/&gt;embedding + ANN"]
+    K --> M["RRF merge&lt;br/&gt;fuse by rank"]
+    V --> M
+  end
+  subgraph S2["Stage 2 · rank narrow"]
+    direction LR
+    R["Cross-encoder&lt;br/&gt;query + document"] --> T["Top-5 chunks&lt;br/&gt;with citations"]
+  end
+  S1 -- "top-50 to 100" --> S2
+    </pre></div><figcaption>Both cheap lanes run on every query and merge by rank, so neither score scale dominates; the slow cross-encoder only sees the fused shortlist, which caps its latency.</figcaption></figure>
   <div class="sol-list">
-    <div class="sol-item">
+    <div class="sol-item open">
       <button class="sol-head" type="button">
         <span class="sol-no">A</span>
         <span class="sol-name">Keyword / BM25 <span class="sol-tag fast">cheap lane</span></span>
@@ -74,17 +75,16 @@ flowchart TD
       <div class="sol-body"><div class="sol-inner"><div class="sol-content">
         <h4>How it works</h4>
         <ul>
-          <li><b>Smart word counting:</b> <button class="term" type="button" data-tip="the classic keyword ranking formula, term frequency times inverse document frequency with length normalization, still the exact-match backbone of production search">BM25</button>. <button class="term" type="button" data-tip="inverse document frequency, rare words count more because they discriminate, 'the' is everywhere while 'pgvector' pinpoints">IDF</button> weights rare terms heavily, <button class="term" type="button" data-tip="term frequency, how often the term appears in this document, with diminishing returns per repeat">term frequency</button> rewards but saturates repeats, length normalization keeps big documents from winning just by being big.</li>
-          <li><b>Saturation (k1 ~ 1.2):</b> a document mentioning "refund" ten times is not ten times more relevant. Also kills keyword spam.</li>
-          <li><b>Length normalization (b ~ 0.75):</b> long documents mention everything by accident. Without b they out-score tight answers for sheer size.</li>
-          <li><b>Why it still wins on exact terms:</b> identifiers, IDs, error codes, function names and rare tokens are characters, not meaning. No vector model knows your SKU catalog. BM25 matches them verbatim, ranks deterministically, and explains itself.</li>
-          <li><b>Cost profile:</b> an inverted index, no model calls, sub-millisecond queries. Postgres ships it as tsvector + ts_rank_cd.</li>
-          <li><b>Known weakness:</b> typos and morphology. Add fuzziness or stemming where users type.</li>
+          <li><b>Smart word counting:</b> <button class="term" type="button" data-tip="the classic keyword ranking formula, term frequency times inverse document frequency with length normalization, still the exact-match backbone of production search">BM25</button>. <button class="term" type="button" data-tip="inverse document frequency, rare words count more because they discriminate, 'the' is everywhere while 'pgvector' pinpoints">IDF</button> weights rare terms heavily, <button class="term" type="button" data-tip="term frequency, how often the term appears in this document, with diminishing returns per repeat">term frequency</button> rewards repeats with saturation, length normalization stops big documents winning by size.</li>
+          <li><b>Saturation (k1 ~ 1.2):</b> ten mentions of "refund" are not ten times more relevant. Also blunts keyword spam.</li>
+          <li><b>Length normalization (b ~ 0.75):</b> long documents mention everything by accident; without b they out-score tight answers for sheer size.</li>
+          <li><b>Why it still wins on exact terms:</b> IDs, error codes, function names and rare tokens are characters, not meaning. BM25 matches them verbatim, ranks deterministically and explains itself.</li>
+          <li><b>Cost profile:</b> an inverted index, no model calls, sub-millisecond queries. Postgres full-text search uses tsvector + ts_rank_cd (cover-density ranking), not BM25.</li>
         </ul>
         <h4>Trade-offs</h4>
         <ul>
           <li><b>pro:</b> sub-millisecond, no model calls, deterministic and explainable</li>
-          <li><b>con:</b> paraphrase, synonyms and cross-language all miss, typos wreck it without fuzziness</li>
+          <li><b>con:</b> paraphrase, synonyms and cross-language all miss; typos and morphology need fuzziness or stemming</li>
         </ul>
       </div></div></div>
     </div>
@@ -99,14 +99,14 @@ flowchart TD
       <div class="sol-body"><div class="sol-inner"><div class="sol-content">
         <h4>How it works</h4>
         <ul>
-          <li><b>Strength:</b> synonyms, paraphrase, cross-language, "find similar". "Money-back guarantee" retrieves the refund policy, see <a class="xl" href="embeddings.html">embeddings</a>.</li>
+          <li><b>Strength:</b> "money-back guarantee" retrieves the refund policy, see <a class="xl" href="embeddings.html">embeddings</a>.</li>
           <li><b>Honest blind spots:</b> exact identifiers, negation ("no refund" sits NEAR "refund"), rare entities, out-of-vocabulary codes.</li>
-          <li><b>Learned sparse (<button class="term" type="button" data-tip="a learned sparse retriever that expands each document with weighted related terms, BM25 with learned weights on an inverted index">SPLADE</button>):</b> a model expands each document with implied terms. Best of both lanes, bigger indexes, less explainability.</li>
+          <li><b>Learned sparse (<button class="term" type="button" data-tip="a learned sparse retriever that expands each document with weighted related terms, BM25 with learned weights on an inverted index">SPLADE</button>):</b> a model expands each document with implied terms. Some of both lanes, bigger indexes, less explainability.</li>
         </ul>
         <h4>Trade-offs</h4>
         <ul>
           <li><b>pro:</b> owns the meaning half of traffic, no keyword overlap required</li>
-          <li><b>con:</b> blind on identifiers, negation and rare codes, quality capped by the embedding model</li>
+          <li><b>con:</b> quality capped by the embedding model</li>
         </ul>
       </div></div></div>
     </div>
@@ -122,8 +122,8 @@ flowchart TD
         <h4>How it works</h4>
         <ul>
           <li>Run BM25 AND dense retrieval on every query, then merge the two ranked lists with <button class="term" type="button" data-tip="Reciprocal Rank Fusion, merge ranked lists by score = sum of 1/(k + rank). Rank-based, so incomparable score scales never meet">RRF</button>.</li>
-          <li><span class="wlabel why">why fuse ranks not scores</span> BM25 scores are unbounded sums, cosine lives in [-1, 1]. Averaging them is unit soup. Ranks are universal: score = sum of 1/(60 + rank), where k ~ 60 is folklore that damps top-rank dominance just right.</li>
-          <li><b>Why hybrid is the modern default:</b> users type both "the Q3 refund thing" and "XR-2500-B", the query mix is unknowable in advance, and one weak lane costs you the half of traffic it cannot serve. Two cheap indexes beat one clever one.</li>
+          <li><span class="wlabel why">why fuse ranks not scores</span> BM25 scores are unbounded sums, cosine lives in [-1, 1]; averaging them is unit soup. Ranks are universal: score = sum of 1/(60 + rank), where k ~ 60 is a conventional value that damps top-rank dominance.</li>
+          <li><b>Why hybrid is the default:</b> the query mix is unknowable in advance, and one lane alone loses the half of traffic it cannot serve. Two cheap indexes beat one clever one.</li>
         </ul>
         <h4>Trade-offs</h4>
         <ul>
@@ -143,17 +143,17 @@ flowchart TD
       <div class="sol-body"><div class="sol-inner"><div class="sol-content">
         <h4>How it works</h4>
         <ul>
-          <li>A <button class="term" type="button" data-tip="a reranker that reads query and document together through one model, slower but far more accurate, applied only to the top-k finalists">cross-encoder</button> reads query AND document together through one model, so it sees token-level interactions a bi-encoder (two separate vectors) never can. Far more accurate, and you pay per pair.</li>
-          <li><b>Stage 2, not stage 1:</b> retrieve top-50 or top-100 cheap, rerank narrow to top-5 or top-10. Scoring the whole corpus with a cross-encoder is hopelessly slow.</li>
-          <li><span class="wlabel why">best cheap win</span> the biggest quality-per-effort jump in retrieval. Same index, same first stage, one extra model call over 50 candidates.</li>
-          <li><b>Budget:</b> adds roughly 100 to 300 ms. Batch the candidates, cache popular queries, see <a class="xl" href="../02-tokens-context/tokens-cost.html">caching</a>.</li>
+          <li>A <button class="term" type="button" data-tip="a reranker that reads query and document together through one model, slower but far more accurate, applied only to the top-k finalists">cross-encoder</button> reads query AND document together through one model, so it sees token-level interactions a bi-encoder (two separate vectors) never can. Far more accurate, paid per pair.</li>
+          <li><b>Stage 2, not stage 1:</b> retrieve top-50 to top-100 cheaply, rerank down to top-5 or top-10. Scoring the whole corpus this way is hopelessly slow.</li>
+          <li><span class="wlabel why">best cheap win</span> often the biggest quality-per-effort jump in retrieval: same index, same first stage, one extra model call over 50 candidates.</li>
+          <li><b>Budget:</b> roughly 100 to 300 ms. Batch the candidates, cache popular queries, see <a class="xl" href="../02-tokens-context/tokens-cost.html">caching</a>.</li>
         </ul>
         <h4>The pipeline · recall wide, rank narrow</h4>
         <ul>
-          <li><b>Recall wide:</b> hybrid retrieval pulls the top-100 candidates. Quantity over precision, cheap and fast.</li>
-          <li><b>Rerank narrow:</b> the cross-encoder reorders those candidates and keeps the top-5.</li>
-          <li><b>Stuff context:</b> the survivors go into the prompt, ordered best-first, with source citations attached. Sizing rules live in <a class="xl" href="../02-tokens-context/context-budget.html">context budgeting</a>.</li>
-          <li><b>Query surgery before any search:</b> rewrite typos and abbreviations, decompose multi-part questions, generate 3 query variants and union the hits, try <button class="term" type="button" data-tip="Hypothetical Document Embeddings, write an imaginary answer, embed that and search with it, because answers resemble documents more than questions do">HyDE</button> to close the question-vs-document gap. Each transform is another LLM call, so measure whether it earns its latency.</li>
+          <li><b>Recall wide:</b> hybrid retrieval pulls the top-100 candidates, quantity over precision.</li>
+          <li><b>Rerank narrow:</b> the cross-encoder reorders them and keeps the top-5.</li>
+          <li><b>Stuff context:</b> survivors go into the prompt best-first, with source citations. Sizing rules live in <a class="xl" href="../02-tokens-context/context-budget.html">context budgeting</a>.</li>
+          <li><b>Query surgery before search:</b> fix typos and abbreviations, decompose multi-part questions, union hits from 3 query variants, or try <button class="term" type="button" data-tip="Hypothetical Document Embeddings, write an imaginary answer, embed that and search with it, because answers resemble documents more than questions do">HyDE</button> to close the question-vs-document gap. Each transform is another LLM call that must earn its latency.</li>
         </ul>
         <h4>Trade-offs</h4>
         <ul>
@@ -168,14 +168,14 @@ flowchart TD
     <div class="wcard">
       <h4>measuring retrieval</h4>
       <ul>
-        <li><b><button class="term" type="button" data-tip="the share of all known-relevant documents that appear in the top-k results, the recall metric for the wide stage">recall@k</button>:</b> did the right chunk make it into the candidates at all? Tuning target for the hybrid stage.</li>
-        <li><b><button class="term" type="button" data-tip="mean reciprocal rank, 1 over the position of the first relevant hit, averaged over questions, rewards putting the best chunk first">MRR</button>:</b> where does the first good hit land? Tuning target for the rerank stage.</li>
-        <li><b>Golden questions:</b> 30 to 100 real user questions with known good answers and labeled relevant chunks. Run them on every retrieval change, catch regressions before users do. Wire this into <a class="xl" href="../08-evals/evals.html">evals</a>.</li>
+        <li><b><button class="term" type="button" data-tip="the share of all known-relevant documents that appear in the top-k results, the recall metric for the wide stage">recall@k</button>:</b> did the right chunk make the candidates at all? Target for the hybrid stage.</li>
+        <li><b><button class="term" type="button" data-tip="mean reciprocal rank, 1 over the position of the first relevant hit, averaged over questions, rewards putting the best chunk first">MRR</button>:</b> where does the first good hit land? Target for the rerank stage.</li>
+        <li><b>Golden questions:</b> 30 to 100 real user questions with labeled relevant chunks, run on every retrieval change. Wire them into <a class="xl" href="../08-evals/evals.html">evals</a>.</li>
       </ul>
     </div>
   </div>
 
-  <div class="stage-label sl-when">When to use · when not</div>
+  <h2 class="stage-label sl-when" id="when-to-use-when-not">Decision boundary</h2>
   <div class="pc">
     <div class="pc-col pros"><h4 class="pc-h">Use when</h4><ul>
       <li>Exact identifiers dominate → BM25 lane</li>
@@ -185,18 +185,18 @@ flowchart TD
       <li>Vague, multi-part or mismatched queries → query transforms</li>
     </ul></div>
     <div class="pc-col cons"><h4 class="pc-h">Skip when</h4><ul>
-      <li>Skip BM25-only for paraphrase or cross-language traffic</li>
-      <li>Skip dense-only on identifier-heavy corpora</li>
-      <li>Skip cross-encoder scoring of the full corpus, hopelessly slow</li>
-      <li>Skip query transforms on simple FAQ traffic, just latency</li>
+      <li>BM25-only for paraphrase or cross-language traffic</li>
+      <li>Dense-only on identifier-heavy corpora</li>
+      <li>Cross-encoder scoring of the full corpus</li>
+      <li>Query transforms on simple FAQ traffic, just latency</li>
     </ul></div>
   </div>
   <div class="tbl-wrap">
     <table>
       <thead><tr><th>Lane</th><th class="hu">Use when</th><th class="ha">Avoid when</th><th class="hw">Watch out</th></tr></thead>
       <tbody>
-        <tr><td class="m">BM25 only</td><td class="u">Exact identifiers: SKUs, error codes, names, jargon</td><td class="avoid">Paraphrase, cross-language, "find similar"</td><td class="watch">Typos wreck it, add fuzziness where users type</td></tr>
-        <tr><td class="m">Dense only</td><td class="u">Natural-language questions, semantic similarity</td><td class="avoid">Identifier-heavy corpora</td><td class="watch">Out-of-vocabulary codes are invisible to it</td></tr>
+        <tr><td class="m">BM25 only</td><td class="u">Exact identifiers: SKUs, error codes, names, jargon</td><td class="avoid">Paraphrase, cross-language, "find similar"</td><td class="watch">Typos wreck it without fuzziness</td></tr>
+        <tr><td class="m">Dense only</td><td class="u">Natural-language questions, semantic similarity</td><td class="avoid">Identifier-heavy corpora</td><td class="watch">Blind to out-of-vocabulary codes</td></tr>
         <tr><td class="m">SPLADE</td><td class="u">Learned term expansion inside a keyword index</td><td class="avoid">You need interpretable weights</td><td class="watch">Bigger index, query-side cost</td></tr>
         <tr><td class="m">Hybrid + RRF</td><td class="u">The production default</td><td class="avoid">Single-lane corpora (rare but real)</td><td class="watch">Two indexes to operate, k=60 is a start not law</td></tr>
         <tr><td class="m">+ cross-encoder rerank</td><td class="u">Whenever top-5 precision matters, top-50 only</td><td class="avoid">Full-corpus scoring (hopelessly slow)</td><td class="watch">Adds 100 to 300 ms, cache popular queries</td></tr>
@@ -205,9 +205,9 @@ flowchart TD
     </table>
   </div>
 
-  <div class="stage-label sl-ex">Example</div>
+  <h2 class="stage-label sl-ex" id="example">Worked example</h2>
   <div class="example">
-    <p class="ex-note">RRF in nine lines of python, then the same hybrid pipeline in one Postgres round trip: both lanes, ranks fused by RRF, top-5 out.</p>
+    <p class="ex-note">RRF in a few lines of python, then the same fusion in one Postgres round trip: both lanes, ranks fused, top-5 out.</p>
     <pre class="code" data-lang="python" data-file="rrf_merge.py"><code><span class="tk-k">def</span> <span class="tk-f">rrf</span>(ranked_lists, k=<span class="tk-n">60</span>, top_k=<span class="tk-n">5</span>):
     <span class="tk-s">"""Merge ranked lists without score-scale headaches."""</span>
     scores = {}
@@ -215,72 +215,70 @@ flowchart TD
         <span class="tk-k">for</span> rank, doc_id <span class="tk-k">in</span> <span class="tk-f">enumerate</span>(ranked):   <span class="tk-c"># rank 0 = best</span>
             scores[doc_id] = scores.get(doc_id, <span class="tk-n">0</span>) + <span class="tk-n">1.0</span> / (k + rank + <span class="tk-n">1</span>)
     <span class="tk-k">return</span> <span class="tk-f">sorted</span>(scores, key=scores.get, reverse=<span class="tk-k">True</span>)[:top_k]</code></pre>
-    <pre class="code" data-lang="sql" data-file="hybrid_pgvector.sql"><code><span class="tk-c">-- pgvector hybrid: BM25 lane + ANN lane, fused by RRF, one round trip</span>
-<span class="tk-k">WITH</span> keyword <span class="tk-k">AS</span> (
-  <span class="tk-k">SELECT</span> id, <span class="tk-f">row_number</span>() <span class="tk-k">OVER</span> (<span class="tk-k">ORDER BY</span> <span class="tk-f">ts_rank_cd</span>(tsv, q) <span class="tk-k">DESC</span>) <span class="tk-k">AS</span> <span class="tk-f">rank</span>
-  <span class="tk-k">FROM</span> chunks, <span class="tk-f">websearch_to_tsquery</span>(<span class="tk-s">'english'</span>, <span class="tk-n">$1</span>) q
-  <span class="tk-k">WHERE</span> tsv @@ q                      <span class="tk-c">$3 = tenant_id goes here too</span>
-  <span class="tk-k">LIMIT</span> <span class="tk-n">100</span>
-),
-semantic <span class="tk-k">AS</span> (
-  <span class="tk-k">SELECT</span> id, <span class="tk-f">row_number</span>() <span class="tk-k">OVER</span> (<span class="tk-k">ORDER BY</span> embedding <span class="tk-t">&lt;=&gt;</span> <span class="tk-n">$2</span>) <span class="tk-k">AS</span> <span class="tk-f">rank</span>
-  <span class="tk-k">FROM</span> chunks
-  <span class="tk-k">WHERE</span> tenant_id = <span class="tk-n">$3</span>                  <span class="tk-c">$2 = normalized query embedding</span>
-  <span class="tk-k">LIMIT</span> <span class="tk-n">100</span>
+    <pre class="code" data-lang="sql" data-file="hybrid_pgvector.sql"><code>-- PostgreSQL full-text + pgvector candidates, tenant-filtered before fusion
+WITH keyword_candidates AS (
+  SELECT id, ts_rank_cd(tsv, websearch_to_tsquery('english', $1)) AS score
+  FROM chunks
+  WHERE tenant_id = $3 AND tsv @@ websearch_to_tsquery('english', $1)
+  ORDER BY score DESC LIMIT 100
+), keyword AS (
+  SELECT id, row_number() OVER (ORDER BY score DESC) AS rank FROM keyword_candidates
+), vector_candidates AS (
+  SELECT id, embedding &lt;=&gt; $2::vector AS distance
+  FROM chunks WHERE tenant_id = $3
+  ORDER BY distance LIMIT 100
+), vector AS (
+  SELECT id, row_number() OVER (ORDER BY distance) AS rank FROM vector_candidates
 )
-<span class="tk-k">SELECT</span> id
-<span class="tk-k">FROM</span> (
-  <span class="tk-k">SELECT</span> id, <span class="tk-f">rank</span> <span class="tk-k">FROM</span> keyword
-  <span class="tk-k">UNION ALL</span>
-  <span class="tk-k">SELECT</span> id, <span class="tk-f">rank</span> <span class="tk-k">FROM</span> semantic
-) lanes
-<span class="tk-k">GROUP BY</span> id
-<span class="tk-k">ORDER BY</span> <span class="tk-f">sum</span>(<span class="tk-n">1.0</span> / (<span class="tk-n">60</span> + <span class="tk-f">rank</span>)) <span class="tk-k">DESC</span>   <span class="tk-c">-- RRF, k = 60</span>
-<span class="tk-k">LIMIT</span> <span class="tk-n">5</span>;</code></pre>
+SELECT id, sum(1.0 / (60 + rank)) AS score
+FROM (SELECT id, rank FROM keyword UNION ALL SELECT id, rank FROM vector) hits
+GROUP BY id ORDER BY score DESC LIMIT 5</code></pre>
     <div class="grid2">
       <div class="wcard">
         <h4>e-commerce · both lanes</h4>
         <ul>
           <li>BM25 for SKUs and model numbers, dense for "cozy office chair".</li>
           <li>Rerank the top-50 so the first product row is the right one.</li>
-          <li>One hybrid index pair, no lane guessing per query.</li>
         </ul>
       </div>
       <div class="wcard">
         <h4>enterprise wiki · unknowable mix</h4>
         <ul>
-          <li>Users really do type both "the Q3 refund thing" and "XR-2500-B".</li>
-          <li>Hybrid underneath, golden questions guarding every change.</li>
-          <li>Tenant filter applied inside both lanes, never after.</li>
+          <li>Users type both "the Q3 refund thing" and "XR-2500-B".</li>
+          <li>Hybrid underneath, golden questions guarding every change, tenant filter inside both lanes.</li>
         </ul>
       </div>
     </div>
   </div>
 
-  <div class="stage-label sl-extra">Watch out</div>
+  <h2 class="stage-label sl-extra" id="watch-out">Failure modes</h2>
   <div class="pit-list"><ul>
-    <li><b>Filter-before vs filter-after:</b> pre-filtering can starve the ANN index (fewer candidates than k, or a filter the index cannot push down), post-filtering can shrink a top-100 down to three usable hits. Behavior differs per store, test with your narrowest real filters, prefer indexes that filter during traversal.</li>
-    <li><b>Tenant isolation:</b> one missing tenant_id predicate and another tenant's chunks land in the prompt, a data leak straight into generation. Filter in both lanes, enforce it at the query builder layer, test with a cross-tenant canary query.</li>
-    <li><b>Semantic cache lies:</b> a nearest-neighbor cache hit answers a similar, not identical, question. Scope entries per tenant and per corpus version, set a similarity floor, invalidate on re-index, see <a class="xl" href="../02-tokens-context/tokens-cost.html">caching</a>.</li>
-    <li><b>Reranking too wide:</b> a cross-encoder over 500 candidates buys little accuracy and burns 2 to 3 seconds. Keep stage 1 wide, stage 2 at top-50.</li>
-    <li><b>Unmeasured tuning:</b> tweaking k, ef_search or rerank thresholds without recall@k and MRR on golden questions is vibes. Regressions ship silently.</li>
-    <li><b>Score soup:</b> merging BM25 and cosine scores by weighted sum instead of ranks breaks the moment either model changes scale. Ranks are the stable currency.</li>
+    <li><b>Filter-before vs filter-after:</b> pre-filtering can starve the ANN index (fewer than k candidates, or a filter it cannot push down); post-filtering can shrink top-100 to three hits. Test your narrowest real filters; prefer indexes that filter during traversal.</li>
+    <li><b>Tenant isolation:</b> one missing tenant_id predicate puts another tenant's chunks in the prompt. Filter in both lanes via the query builder, test with a cross-tenant canary.</li>
+    <li><b>Semantic cache lies:</b> a nearest-neighbor hit answers a similar, not identical, question. Scope per tenant and corpus version, set a similarity floor, invalidate on re-index, see <a class="xl" href="../02-tokens-context/tokens-cost.html">caching</a>.</li>
+    <li><b>Reranking too wide:</b> a cross-encoder over 500 candidates buys little accuracy and burns 2 to 3 seconds. Keep stage 2 at top-50.</li>
+    <li><b>Unmeasured tuning:</b> tweaking k, ef_search or rerank thresholds without recall@k and MRR on golden questions ships regressions silently.</li>
+    <li><b>Score soup:</b> a weighted sum of BM25 and cosine scores breaks the moment either model changes scale. Ranks are the stable currency.</li>
   </ul></div>
 
-  <div class="stage-label sl-extra">Remember</div>
+  <h2 class="stage-label sl-extra" id="remember">Keep in mind</h2>
   <div class="remember"><ul>
     <li>Default to hybrid: BM25 + dense on every query, fused with RRF at k ~ 60.</li>
-    <li>Rerank the top-50 with a cross-encoder, feed the top-5 into the <a class="xl" href="../02-tokens-context/context-budget.html">context budget</a>.</li>
-    <li>Keep exact-match traffic on the keyword lane, it is faster and explainable.</li>
-    <li>Apply tenant and permission filters inside every lane, test with canary queries.</li>
+    <li>Rerank the top-50, feed the top-5 into the <a class="xl" href="../02-tokens-context/context-budget.html">context budget</a>.</li>
+    <li>Exact-match traffic belongs on the keyword lane.</li>
+    <li>Tenant and permission filters go inside every lane, tested with canary queries.</li>
     <li>Guard every retrieval change with recall@k, MRR and golden questions in <a class="xl" href="../08-evals/evals.html">evals</a>.</li>
     <li>Cache popular queries only with a similarity floor and per-tenant scope.</li>
   </ul></div>
   
+    <section class="references" aria-labelledby="primary-sources"><h2 id="primary-sources">Primary sources</h2><ul><li><a href="https://www.postgresql.org/docs/current/textsearch-controls.html" rel="noreferrer">PostgreSQL text search controls and ts_rank_cd</a></li><li><a href="https://github.com/pgvector/pgvector" rel="noreferrer">pgvector documentation</a></li><li><a href="https://arxiv.org/abs/2104.08663" rel="noreferrer">BEIR retrieval benchmark</a></li><li><a href="https://arxiv.org/abs/2004.12832" rel="noreferrer">ColBERT late interaction retrieval</a></li></ul></section>
+
+    <section class="lab-check" aria-labelledby="try-verify-explain"><h2 id="try-verify-explain">Try, verify, explain</h2><ol><li>For a query containing an exact product code and a paraphrased symptom, predict which result lexical and dense retrieval each contribute, then choose a reranking cutoff under a latency budget.</li><li>Fuse by hand with k = 60: BM25 returns [A, B, C], dense returns [C, D, A]. Compute each document's RRF score and the final order. Does appearing in both lists beat a single first place?</li><li>Explain why a cross-encoder beats a bi-encoder on accuracy yet cannot be stage 1: what does each compute per query, and how does that cost grow with corpus size?</li></ol></section>
+
     <nav class="pager" id="pager"></nav>
 
     <footer class="footer">
-      learning-project · tracks/ai · print this page from the browser dialog · diagrams load mermaid from CDN once online
+      learning-project · tracks/ai · press ⌘K or / to search every chapter · diagrams load Mermaid from a CDN when online
     </footer>
   </div>
 </main>

@@ -11,19 +11,18 @@
 <link rel="stylesheet" href="../../css/base.css">
 <link rel="stylesheet" href="../../css/components.css">
 <link rel="stylesheet" href="../../css/flow.css">
-<link rel="stylesheet" href="../../css/print.css">
 </head>
 <body>
 
 <div id="progress"></div>
 
 <header class="topbar">
-  <button class="tbtn" id="nav-toggle" type="button" aria-label="Toggle navigation">☰</button>
+  <button class="tbtn" id="nav-toggle" type="button" aria-label="Open contents" aria-controls="toc" aria-expanded="false">☰</button>
   <a class="brand" href="../../index.html"><b>ai</b>·field-guide</a>
+  <a class="hub-link" href="../../../../hub/index.html">Learning hub</a>
   <div class="tools">
-    <input id="toc-filter" type="search" placeholder="filter · /" aria-label="Filter topics">
+    <button class="tbtn search-btn" id="search-open" type="button" aria-label="Search the guide"><span>Search</span><kbd>⌘K</kbd></button>
     <button class="tbtn" id="expand-all" type="button">expand</button>
-    <button class="tbtn" id="print-btn" type="button">print</button>
   </div>
 </header>
 
@@ -32,128 +31,129 @@
 <main class="main">
   <div class="content">
     <header class="topic-head">
-      <div class="kicker">Part 3 · Tools & agents · 15/24</div>
+      <div class="kicker">Part 4 · Tools &amp; agents · 23/31</div>
       <h1>Durable orchestration ops</h1>
       <p class="lead">A graph gives the workflow shape. Ops give it a pulse. This layer decides whether a run dies at minute 17 of 20, or checkpoints, retries, pauses for a human and finishes tomorrow.</p>
+      <p class="chapter-summary"><b>In this chapter</b> Design durable work around idempotency, at-least-once delivery, retry budgets and observable terminal failure.</p>
     </header>
 
   <div class="beat problem">
-    <div class="beat-h"><span class="bt">Problem</span><span class="bh">the demo loop dies on Monday</span></div>
+    <h2 class="beat-h" id="problem-the-demo-loop-dies-on-monday"><span class="bt">Problem</span><span class="bh">the demo loop dies on Monday</span></h2>
     <ul>
       <li><b>Crashes:</b> a 20-minute research run dies at minute 17 (deploy, OOM, spot kill). Plan, tool results and draft lived in RAM. Gone.</li>
-      <li><b>Flaky dependencies:</b> LLM APIs throw 429 and 500. Naive retries make it worse and cost real money.</li>
+      <li><b>Flaky dependencies:</b> LLM APIs throw 429 and 500; naive retries make it worse and cost real money.</li>
       <li><b>Long horizon:</b> batch evals and deep research run minutes to hours. No HTTP request lives that long.</li>
-      <li><b>Humans in the loop:</b> a refund approval needs the run to pause for hours, then continue exactly where it stopped.</li>
-      <li><b>Runaway cost:</b> an agent that keeps searching, each result prompting more searches, is a real phenomenon, see <a class="xl" href="agent-patterns.html">agent patterns</a>.</li>
-      <li><b>The pattern:</b> an agent workflow is long-running, stateful, failure-prone. The exact trifecta request/response code handles worst.</li>
+      <li><b>Humans in the loop:</b> a refund approval must pause for hours, then continue exactly where it stopped.</li>
+      <li><b>Runaway cost:</b> an agent whose every search result prompts more searches is a real phenomenon, see <a class="xl" href="agent-patterns.html">agent patterns</a>.</li>
+      <li><b>The pattern:</b> agent workflows are long-running, stateful and failure-prone: exactly what request/response code handles worst.</li>
     </ul>
   </div>
 
   <div class="beat solution">
-    <div class="beat-h"><span class="bt">Solution</span><span class="bh">treat every run as a durable job</span></div>
+    <h2 class="beat-h" id="solution-treat-every-run-as-a-durable-job"><span class="bt">Solution</span><span class="bh">treat every run as a durable job</span></h2>
     <ul>
-      <li><b>A run is a job, not a request.</b> Persist state after every step, retry only what is safe to retry, park poison work in a DLQ, cap everything with budgets, model approvals as wait states.</li>
-      <li><b>Resume, not restart.</b> A checkpointed run that dies at step 9 of 10 comes back at step 9. The checkpointing model is defined in <a class="xl" href="graphs.html">orchestration graphs</a>, this page is the operations around it.</li>
-      <li><b>Three homes for this logic:</b> an orchestration engine with a checkpointer, a durable-execution platform (Temporal, Step Functions, Inngest), or the oldest one, a queue plus an idempotent worker.</li>
+      <li><b>A run is a job, not a request.</b> Persist state after every step, retry only what is safe, park poison work in a DLQ, cap everything with budgets, model approvals as wait states.</li>
+      <li><b>Resume, not restart.</b> A checkpointed run that dies at step 9 of 10 comes back at step 9. <a class="xl" href="graphs.html">Orchestration graphs</a> defines the checkpoint model; this page covers the operations around it.</li>
+      <li><b>Three homes for this logic:</b> an orchestration engine with a checkpointer, a durable-execution platform (Temporal, Step Functions, Inngest), or a queue plus an idempotent worker.</li>
     </ul>
   </div>
 
   <div class="beat how">
-    <div class="beat-h"><span class="bt">How</span><span class="bh">retries · idempotency · timeouts · DLQ · fan-out · budgets · gates</span></div>
+    <h2 class="beat-h" id="how-retries-idempotency-timeouts-dlq-fan-out-budgets-gates"><span class="bt">How</span><span class="bh">retries · idempotency · timeouts · DLQ · fan-out · budgets · gates</span></h2>
 
     <h3 id="ops--retries-backoff-jitter-classification">retries: backoff, jitter, classification</h3>
     <ul>
-      <li><b>Exponential backoff:</b> wait 1s, 2s, 4s, 8s between attempts. Doubling gives the dependency time to recover.</li>
-      <li><b>Jitter is not optional:</b> add randomness on top (full jitter: sleep a random time between 0 and the backoff). Synchronized retries stampede the API in lockstep, the thundering herd. Jitter spreads them.</li>
-      <li><b>Classify before retrying:</b> retry transient errors (429, 500, 503, timeouts, connection resets). Never retry 400, 401 or 422, you get the same error and pay for the privilege.</li>
-      <li><b>Retry only what is safe:</b> idempotent calls, or calls that provably failed before any side effect. A timeout on a payment POST is ambiguous, the request may have landed. That is a status lookup, not a retry.</li>
-      <li><b>Retry budget:</b> cap retries per dependency per window (a common rule: retries may add at most 10% of traffic). Budget spent, fail fast. Retries are load amplification, worst exactly when the dependency is dying.</li>
+      <li><b>Exponential backoff:</b> wait 1s, 2s, 4s, 8s between attempts so the dependency can recover.</li>
+      <li><b>Jitter is not optional:</b> full jitter sleeps a random time between 0 and the backoff. Without it, synchronized retries hit the API in lockstep: the thundering herd.</li>
+      <li><b>Classify before retrying:</b> retry transient errors (429, 500, 503, timeouts, connection resets). Never retry 400, 401 or 422: same error, paid again.</li>
+      <li><b>Retry only what is safe:</b> idempotent calls, or calls that provably failed before any side effect. A timed-out payment POST may have landed: that calls for a status lookup, not a retry.</li>
+      <li><b>Retry budget:</b> cap retries per dependency per window (a common rule: at most 10% extra traffic), then fail fast. Retries amplify load exactly when the dependency is dying.</li>
     </ul>
 
     <h3 id="ops--idempotency-exactly-once-is-engineered-not-delivered">idempotency: exactly-once is engineered, not delivered</h3>
     <ul>
-      <li><b>Every delivery layer is at-least-once:</b> queues redeliver, clients replay, workers crash after committing. Some step of some run WILL execute twice eventually.</li>
-      <li><b>Idempotency key:</b> a stable name for the effect, sent with the request and stored with the result. Same key seen again: return the stored result, skip the work.</li>
-      <li><b>Dedupe on (run_id, step):</b> consult a checkpoint or effects table before executing a node. Already done, skip. That is the whole trick.</li>
-      <li><b>Why LLM steps break the illusion:</b> a rerun model call returns different tokens, so same-input-same-result is gone. You cannot dedupe the model. You dedupe the effects around it: tool calls keyed by call id (call shapes live in <a class="xl" href="../04-tools-mcp/tool-calling.html">tool calling</a>), writes keyed by step, outputs stored once per attempt.</li>
-      <li><b>Intent log:</b> persist "about to refund case-42" before acting, mark done after. A crash between the two becomes detectable and reconcilable instead of silent.</li>
+      <li><b>Every delivery layer is at-least-once:</b> queues redeliver, clients replay, workers crash after committing. Some step WILL eventually execute twice.</li>
+      <li><b>Idempotency key:</b> a stable name for the effect, sent with the request and stored with the result. Seen again: return the stored result, skip the work.</li>
+      <li><b>Dedupe on (run_id, step):</b> check a checkpoint or effects table before executing a node; already done means skip. That is the whole trick.</li>
+      <li><b>LLM steps break the illusion:</b> a rerun model call returns different tokens, so you cannot dedupe the model. Dedupe the effects around it: tool calls keyed by call id (<a class="xl" href="../04-tools-mcp/tool-calling.html">tool calling</a>), writes keyed by step, outputs stored once per attempt.</li>
+      <li><b>Intent log:</b> persist "about to refund case-42" before acting, mark done after. A crash in between becomes detectable and reconcilable, not silent.</li>
     </ul>
 
     <h3 id="ops--timeouts-per-node-type">timeouts per node type</h3>
     <ul>
-      <li><b>One timeout does not fit all nodes.</b> A 5s cap kills every LLM call. A 1h cap on a refund tool hides hangs forever.</li>
+      <li><b>One timeout does not fit all nodes.</b> 5s kills every LLM call; 1h on a refund tool hides hangs forever.</li>
       <li><b>Starting points:</b> LLM call 30 to 120s (streaming keeps the connection alive), tool 5 to 60s, sub-agent runs in minutes, whole run a hard wall-clock cap.</li>
-      <li><b>Human gate:</b> the timeout is an SLA in hours or days, with escalation, nudge, then lead, then conservative auto-reject. Never auto-approve on timeout.</li>
-      <li><b>Budget the wait:</b> the run wall clock should include gate SLAs, or one stuck approval eats the entire budget by existing.</li>
+      <li><b>Human gate:</b> the timeout is an SLA in hours or days with escalation: nudge, then lead, then conservative auto-reject. Never auto-approve on timeout.</li>
+      <li><b>Budget the wait:</b> include gate SLAs in the run wall clock, or one stuck approval eats the whole budget.</li>
     </ul>
 
     <h3 id="ops--the-dlq-where-poison-messages-go-to-be-understood">the DLQ: where poison messages go to be understood</h3>
     <ul>
-      <li><b>Poison message:</b> fails every delivery attempt. Malformed payload, a schema the model refuses ten times in a row, a tool that 500s deterministically.</li>
-      <li><b>After about 3 failed deliveries, stop.</b> Park it where a human can inspect it. A message looping forever burns money and hides the bug.</li>
+      <li><b>Poison message:</b> fails every delivery: malformed payload, a schema the model refuses ten times, a tool that 500s deterministically.</li>
+      <li><b>After about 3 failed deliveries, stop</b> and park it for a human. A message looping forever burns money and hides the bug.</li>
       <li><b>Alert on depth and on age.</b> A DLQ nobody watches is a landfill.</li>
-      <li><b>Replay tooling is the other half:</b> inspect payload plus trace, fix the cause, replay from the DLQ or the last good checkpoint. Build and test the replay button before you need it at 2am.</li>
-      <li><b>Triage loop:</b> bug in code, bad upstream data, or model-quality issue. Each has a different fix and owner. Tag DLQ entries accordingly.</li>
+      <li><b>Replay tooling is the other half:</b> inspect payload and trace, fix the cause, replay from the DLQ or last good checkpoint. Test the replay button before 2am needs it.</li>
+      <li><b>Triage loop:</b> code bug, bad upstream data or model quality: each has a different fix and owner, so tag DLQ entries.</li>
     </ul>
 
     <h3 id="ops--fan-out-and-fan-in-parallel-branches">fan-out and fan-in: parallel branches</h3>
     <ul>
-      <li><b>Fan-out:</b> one supervisor scatters N tasks, map-reduce style. Node modeling and send-style dispatch live in <a class="xl" href="graphs.html">graphs</a>.</li>
-      <li><b>Barrier semantics:</b> the join waits for all branches (AND-join) or for k of n (quorum). Decide explicitly, the silent default is usually all.</li>
-      <li><b>Partial failure policy, chosen in advance:</b> fail fast (one dead branch kills the run, right for money-moving), quorum (continue with k of n, good for search-and-rank), continue-and-collect (gather successes plus a failures list the model can reason over).</li>
-      <li><b>Reducers make parallel writes safe:</b> per-key merge rules (append, last-write). Two branches writing one key with no reducer is a data race.</li>
-      <li><b>Branch deadlines:</b> one slow branch holds the join while paid context sits idle. Give every branch its own timeout.</li>
+      <li><b>Fan-out:</b> a supervisor scatters N tasks, map-reduce style; node modeling and send-style dispatch live in <a class="xl" href="graphs.html">graphs</a>.</li>
+      <li><b>Barrier semantics:</b> the join waits for all branches (AND-join) or k of n (quorum). Decide explicitly; the silent default is usually all.</li>
+      <li><b>Partial-failure policy, chosen up front:</b> fail fast (one dead branch kills the run, right for moving money), quorum (k of n, good for search-and-rank), or continue-and-collect (successes plus a failures list the model can reason over).</li>
+      <li><b>Reducers make parallel writes safe:</b> per-key merge rules (append, last-write); two branches writing one key without one is a data race.</li>
+      <li><b>Branch deadlines:</b> one slow branch holds the join while paid context idles. Give each branch its own timeout.</li>
     </ul>
 
     <h3 id="ops--budgets-steps-tokens-time-dollars">budgets: steps, tokens, time, dollars</h3>
     <ul>
-      <li><b>Every run gets a budget:</b> max steps, max tokens, max wall-clock, max dollars. Enforce it in the loop, not in hope.</li>
-      <li><b>Check before each step:</b> the cheapest error is "budget exhausted" raised before the API call, not a hard stop after the invoice.</li>
-      <li><b>Circuit breaker:</b> when a dependency's error rate spikes (say half of calls failing in 2 minutes), stop calling it, fail fast or degrade, half-open after a cool-down. Retries without a breaker are a DDoS you run on yourself.</li>
-      <li><b>Per-user concurrency locks:</b> one user should not run five expensive research jobs in parallel. Placement on real infrastructure is covered in <a class="xl" href="../09-systems/aws.html">full systems on AWS</a>.</li>
+      <li><b>Every run gets a budget:</b> max steps, tokens, wall clock and dollars, enforced in the loop, not in hope.</li>
+      <li><b>Check before each step:</b> the cheapest "budget exhausted" is raised before the API call, not after the invoice.</li>
+      <li><b>Circuit breaker:</b> when a dependency's error rate spikes (say half of calls failing over 2 minutes), stop calling it, fail fast or degrade, and half-open after a cool-down. Retries without a breaker are a DDoS on yourself.</li>
+      <li><b>Per-user concurrency locks:</b> one user should not run five expensive research jobs at once. Infrastructure placement: <a class="xl" href="../09-systems/aws.html">full systems on AWS</a>.</li>
     </ul>
 
     <h3 id="ops--durability-checkpoint-per-step-resume-not-restart">durability: checkpoint per step, resume not restart</h3>
     <ul>
-      <li><b>Serialize state after every step,</b> keyed by run or thread id. On crash: reload the last checkpoint, re-execute only the step that was in flight.</li>
-      <li><b>Checkpoint boundaries are the unit of resume.</b> Well-shaped nodes, one clear effect each, are what make resume cheap. Shaping them is the <a class="xl" href="graphs.html">graphs</a> job.</li>
-      <li><b>Versioning gotcha:</b> a run started on graph v1 must finish under v1 semantics. Old checkpoints plus new code is corrupted state. Let in-flight runs drain before swapping.</li>
-      <li><b>Trim state:</b> store big artifacts (documents, raw tool outputs) by reference, or every snapshot bloats and resume slows.</li>
+      <li><b>Serialize state after every step,</b> keyed by run or thread id. On crash, reload the last checkpoint and re-execute only the in-flight step.</li>
+      <li><b>Checkpoint boundaries are the unit of resume.</b> Nodes with one clear effect each make resume cheap; shaping them is the <a class="xl" href="graphs.html">graphs</a> job.</li>
+      <li><b>Versioning gotcha:</b> a run started on graph v1 must finish under v1 semantics; old checkpoints plus new code corrupt state. Drain in-flight runs before swapping.</li>
+      <li><b>Trim state:</b> store big artifacts (documents, raw tool outputs) by reference, or snapshots bloat and resume slows.</li>
     </ul>
 
     <h3 id="ops--human-in-the-loop-as-an-async-node">human-in-the-loop as an async node</h3>
     <ul>
-      <li><b>A gate is a wait state, not a sleep:</b> the run hits the node, persists "awaiting approval", releases the worker. No thread parks for three days.</li>
-      <li><b>Notify with context:</b> email, Slack or a ticket carrying what the decider needs: the action, the amount, evidence links, a deadline.</li>
-      <li><b>Approve, reject or edit:</b> resume injects the verdict (or edited values) as the node's return value. Reject routes to a cleanup or exit path, it never crashes the run.</li>
+      <li><b>A gate is a wait state, not a sleep:</b> the run persists "awaiting approval" and releases the worker. No thread parks for three days.</li>
+      <li><b>Notify with context:</b> email, Slack or a ticket with the action, amount, evidence links and deadline.</li>
+      <li><b>Approve, reject or edit:</b> resume injects the verdict (or edited values) into the paused node. Reject routes to cleanup or exit; it never crashes the run.</li>
       <li><b>Mechanics by engine:</b> LangGraph interrupt() plus Command(resume=...), Step Functions waitForTaskToken, or your own gates table plus a resume API.</li>
       <li><b>Audit trail:</b> who decided, when, what they saw. Regulators and postmortems both ask.</li>
     </ul>
 
-    <div class="diagram">
+    <figure class="diagram">
       <div class="diag-body">
         <pre class="mermaid">
-flowchart LR
+flowchart TB
   Q["queue"] --> W["worker"]
-  W --> ST{"step outcome"}
-  ST -- "ok" --> CK["checkpoint state"]
-  CK --> MX{"more steps?"}
-  MX -- "yes" --> W
-  MX -- "done" --> OK["finalize run"]
-  ST -- "transient error" --> RT{"retries left?"}
-  RT -- "yes" --> BJ["sleep backoff + jitter"] --> Q
-  RT -- "no" --> DLQ["DLQ"]
-  DLQ --> AL["alert + triage + replay"]
-  ST -- "needs approval" --> HG["human gate (wait state)"]
+  W --> ST{{"step outcome"}}
+  ST -- "ok" --> CK{{"checkpoint state,&lt;br/&gt;more steps?"}}
+  CK e1@-->|"yes"| W
+  CK -- "done" --> OK["finalize run"]
+  ST -- "transient error" --> RT{{"retries left?"}}
+  RT -- "yes" --> BJ["sleep backoff&lt;br/&gt;+ jitter"]
+  BJ e2@--> Q
+  RT -- "no" --> DLQ["DLQ: alert,&lt;br/&gt;triage, replay"]
+  ST -- "needs approval" --> HG["human gate&lt;br/&gt;wait state"]
   HG -- "verdict" --> W
+  e1@{ animation: slow }
+  e2@{ animation: slow }
         </pre>
-      </div>
-    </div>
+      </div><figcaption>No failure path re-runs a step in place: retries re-enter through the queue after backoff, verdicts resume the worker, and only exhausted retries leave the loop for the DLQ.</figcaption></figure>
     <p class="note">The worker loop that carries most production agent traffic: dedupe before execute, retry with jitter, DLQ beyond the retry budget, gates as wait states.</p>
   </div>
 
   <div class="beat when">
-    <div class="beat-h"><span class="bt">When</span><span class="bh">mechanism picker</span></div>
+    <h2 class="beat-h" id="when-mechanism-picker"><span class="bt">When</span><span class="bh">mechanism picker</span></h2>
     <div class="tbl-wrap">
       <table>
         <thead><tr><th>Mechanism</th><th class="hu">Use when</th><th class="ha">Avoid when</th><th class="hw">Watch out</th></tr></thead>
@@ -170,7 +170,7 @@ flowchart LR
   </div>
 
   <div class="beat example">
-    <div class="beat-h"><span class="bt">Example</span><span class="bh">one durable step, then a gate resumed from another process</span></div>
+    <h2 class="beat-h" id="example-one-durable-step-then-a-gate-resumed-from-another-process"><span class="bt">Example</span><span class="bh">one durable step, then a gate resumed from another process</span></h2>
     <pre class="code" data-lang="python" data-file="worker.py"><code><span class="tk-k">import</span> time, random
 
 <span class="tk-k">def</span> <span class="tk-f">run_step</span>(run_id, step, fn, store):
@@ -192,10 +192,10 @@ flowchart LR
             <span class="tk-k">if</span> attempt == <span class="tk-n">3</span>:
                 store.to_dlq(key, <span class="tk-f">repr</span>(e))  <span class="tk-c"># poison: park and alert</span>
                 <span class="tk-k">raise</span>
-            time.sleep((<span class="tk-n">2</span> ** attempt) + random.uniform(<span class="tk-n">0</span>, <span class="tk-n">1</span>))</code></pre>
+            time.sleep(random.uniform(<span class="tk-n">0</span>, <span class="tk-n">2</span> ** attempt))  <span class="tk-c"># full jitter</span></code></pre>
     <ul>
       <li><b>Shapes to notice:</b> dedupe before execute, checkpoint before return, DLQ after budget, jitter on every sleep.</li>
-      <li><b>The gate below is two rows and a resume call,</b> not a sleeping thread. Create and notify now, the verdict arrives hours later from any process.</li>
+      <li><b>The gate below is two rows and a resume call,</b> not a sleeping thread: create and notify now; the verdict arrives hours later from any process.</li>
     </ul>
     <pre class="code" data-lang="python" data-file="gate_resume.py"><code><span class="tk-k">def</span> <span class="tk-f">approve_node</span>(state, store):
     gate = store.create_gate(               <span class="tk-c"># wait state, not a sleep</span>
@@ -209,20 +209,20 @@ engine.resume(state[<span class="tk-s">"run_id"</span>], verdict)          <span
   </div>
 
   <div class="beat pitfalls">
-    <div class="beat-h"><span class="bt">Pitfalls</span><span class="bh">storms, doubles, landfills</span></div>
+    <h2 class="beat-h" id="pitfalls-storms-doubles-landfills"><span class="bt">Pitfalls</span><span class="bh">storms, doubles, landfills</span></h2>
     <ul>
-      <li><b>Retry storms on billed APIs:</b> every retry is a full-price call. A 429 storm with unbounded retries is a self-inflicted outage with an invoice. Cap attempts and alert on retry rate.</li>
-      <li><b>Double side effects:</b> crash after the charge but before the checkpoint, and the retry charges again. Put the idempotency key on the payment itself and log intent before acting.</li>
-      <li><b>Visibility timeout shorter than the job:</b> the queue hands the in-flight message to a second worker and you process it concurrently. Long jobs need heartbeat extensions.</li>
-      <li><b>Retrying the ambiguous:</b> a timed-out POST may have landed. Retry after a status lookup, not blindly.</li>
-      <li><b>DLQ as landfill:</b> no alert, no replay tooling, no owner. Six months later nobody knows what is safe to replay.</li>
+      <li><b>Retry storms on billed APIs:</b> every retry is a full-price call; unbounded retries in a 429 storm are a self-inflicted outage with an invoice. Cap attempts, alert on retry rate.</li>
+      <li><b>Double side effects:</b> crash after the charge but before the checkpoint, and the retry charges again. Put the idempotency key on the payment itself and log intent first.</li>
+      <li><b>Visibility timeout shorter than the job:</b> the queue hands the in-flight message to a second worker. Long jobs need heartbeat extensions.</li>
+      <li><b>Retrying the ambiguous:</b> a timed-out POST may have landed. Look up status first.</li>
+      <li><b>DLQ as landfill:</b> no alert, no replay tooling, no owner; months later nobody knows what is safe to replay.</li>
       <li><b>Budgets in hope:</b> caps checked after the call are invoice reports. Check before the call.</li>
-      <li><b>Blocking gates:</b> a thread that sleeps until approval holds a worker, leaks memory and dies on deploy. Gates are rows plus a resume path.</li>
+      <li><b>Blocking gates:</b> a thread sleeping until approval holds a worker, leaks memory and dies on deploy. Gates are rows plus a resume path.</li>
     </ul>
   </div>
 
   <div class="beat checklist">
-    <div class="beat-h"><span class="bt">Checklist</span><span class="bh">seven bullets to remember</span></div>
+    <h2 class="beat-h" id="checklist-seven-bullets-to-remember"><span class="bt">Checklist</span><span class="bh">seven bullets to remember</span></h2>
     <ul>
       <li>Backoff with full jitter on every remote call, hard cap on attempts</li>
       <li>Classify errors first: retry transient only, DLQ the permanent</li>
@@ -234,10 +234,14 @@ engine.resume(state[<span class="tk-s">"run_id"</span>], verdict)          <span
     </ul>
   </div>
   
+    <section class="references" aria-labelledby="primary-sources"><h2 id="primary-sources">Primary sources</h2><ul><li><a href="https://docs.temporal.io/workflow-execution" rel="noreferrer">Temporal workflow execution</a></li><li><a href="https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/" rel="noreferrer">AWS Builders Library: retries and backoff</a></li></ul></section>
+
+    <section class="lab-check" aria-labelledby="try-verify-explain"><h2 id="try-verify-explain">Try, verify, explain</h2><ol><li>A payment request times out after submission. Explain why retrying blindly is unsafe, how an idempotency key and status lookup resolve ambiguity, and when the run should enter a DLQ.</li><li>Work out <code>worker.py</code>’s waiting budget: 4 attempts, 3 sleeps of <code>U(0, 2**attempt)</code>, so 0 to 7 s with a 3.5 s mean. Then simulate 1,000 clients failing at t=0 with plain <code>2**attempt</code> sleeps versus full jitter, and histogram retries per 100 ms.</li><li>Explain why idempotency keys dedupe the effects around an LLM step but not the model call itself, and which record lets you tell “charged but not checkpointed” from “never charged” after a crash.</li></ol></section>
+
     <nav class="pager" id="pager"></nav>
 
     <footer class="footer">
-      learning-project · tracks/ai · print this page from the browser dialog · diagrams load mermaid from CDN once online
+      learning-project · tracks/ai · press ⌘K or / to search every chapter · diagrams load Mermaid from a CDN when online
     </footer>
   </div>
 </main>

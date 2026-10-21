@@ -1,22 +1,23 @@
-/* flow — the per-topic stage system: why → solutions (accordion) → when → example */
+/* Teaching patterns that complement the numbered h2 section headings. */
 
-.stage-label {
-  display: flex; align-items: center; gap: 12px;
-  font-family: var(--mono); font-size: 10px; font-weight: 700;
-  letter-spacing: .22em; text-transform: uppercase;
-  color: var(--gold);
-  margin: var(--r-xl) 0 14px;
-}
-.stage-label:first-child { margin-top: var(--r-lg); }
-.stage-label::after {
-  content: ""; flex: 1; height: 1px;
-  background: linear-gradient(90deg, rgba(211, 183, 138, .35), var(--edge) 40%);
-}
+/* ── beat pages: label + title headings ───────────── */
+.beat-h .bt { font: 700 10.5px/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--stage-accent, var(--gold)); }
+.beat-h .bh { display: block; }
+.beat-h .bh::first-letter { text-transform: uppercase; }
+.beat.problem { --stage-accent: #963e3e; }
+.beat.solution { --stage-accent: #a56d3e; }
+.beat.how { --stage-accent: #315c79; }
+.beat.when { --stage-accent: #57704d; }
+.beat.example { --stage-accent: #735c83; }
+.beat.pitfalls { --stage-accent: #98624d; }
+.beat.checklist { --stage-accent: #57704d; }
+.beat > h3 { margin-top: 40px; }
 
 /* ── why we need it ───────────────────────────────── */
 .why {
+  margin: 12px 0 22px;
   padding: 2px 0 2px 20px;
-  border-left: 2px solid rgba(211, 183, 138, .4);
+  border-left: 2px solid #a9bac2;
 }
 .why ul { margin: 0; }
 .why li { margin: 7px 0; }
@@ -46,11 +47,12 @@
 .sol-item.open .sol-chev { transform: rotate(90deg); color: var(--gold); }
 
 .sol-body {
-  display: grid; grid-template-rows: 0fr;
+  display: grid; grid-template-rows: 1fr;
   transition: grid-template-rows .25s ease;
 }
 .sol-body > .sol-inner { overflow: hidden; min-height: 0; }
-.sol-item.open .sol-body { grid-template-rows: 1fr; }
+.js-enhanced .sol-body { grid-template-rows: 0fr; }
+.js-enhanced .sol-item.open .sol-body { grid-template-rows: 1fr; }
 .sol-content { padding: 4px 4px 20px 30px; }
 .sol-content h4 { margin-top: 14px; }
 .sol-content h4:first-child { margin-top: 0; }
@@ -62,11 +64,11 @@
   border-radius: 4px; padding: 1px 7px; margin-left: 9px; vertical-align: 2px;
   border: 1px solid;
 }
-.sol-tag.best { color: var(--mint); border-color: rgba(127, 214, 164, .3); }
-.sol-tag.fast { color: var(--info); border-color: rgba(157, 184, 217, .3); }
-.sol-tag.cheap { color: var(--mint); border-color: rgba(127, 214, 164, .3); }
-.sol-tag.hard { color: var(--deny); border-color: rgba(229, 142, 142, .3); }
-.sol-tag.advanced { color: var(--gold); border-color: rgba(211, 183, 138, .3); }
+.sol-tag.best { color: var(--mint); border-color: #a1bea8; }
+.sol-tag.fast { color: var(--info); border-color: #a6bac6; }
+.sol-tag.cheap { color: var(--mint); border-color: #a1bea8; }
+.sol-tag.hard { color: var(--deny); border-color: #c9a3a0; }
+.sol-tag.advanced { color: #75421f; border-color: #c9aa8a; }
 
 /* ── when to use / avoid (pros and cons) ──────────── */
 .pc {
@@ -77,8 +79,8 @@
   border: 1px solid var(--edge); border-radius: var(--rad);
   background: var(--panel); padding: 14px 17px 10px;
 }
-.pc-col.pros { border-top: 2px solid rgba(127, 214, 164, .55); }
-.pc-col.cons { border-top: 2px solid rgba(229, 142, 142, .55); }
+.pc-col.pros { border-top: 2px solid #7fa68a; }
+.pc-col.cons { border-top: 2px solid #ba8580; }
 .pc-h {
   font-family: var(--mono); font-size: 10px; font-weight: 700;
   letter-spacing: .16em; text-transform: uppercase;
@@ -93,8 +95,9 @@
 
 /* ── example block ────────────────────────────────── */
 .example {
-  border: 1px solid var(--edge); border-radius: var(--rad);
-  background: var(--panel); padding: 16px 18px;
+  margin: 20px 0;
+  padding: 4px 0 4px 18px;
+  border-left: 2px solid #b4a99a;
 }
 .example .ex-note { margin: 0 0 6px; color: var(--txt); }
 .example .ex-note ul { margin: 4px 0 8px; }
@@ -105,7 +108,17 @@
   padding: 6px 0 6px 20px;
   font-size: 13.5px;
 }
-.pit-list { border-left: 2px solid rgba(229, 142, 142, .4); }
-.remember { border-left: 2px solid rgba(127, 214, 164, .4); }
+.pit-list { border-left: 2px solid #ba8580; }
+.remember { border-left: 2px solid #7fa68a; }
 .pit-list ul, .remember ul { margin: 0; }
 .pit-list li, .remember li { margin: 4px 0; }
+
+/* Five orchestration shapes stay readable as native, responsive lesson markup. */
+.graph-patterns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.graph-pattern { min-width: 0; margin: 0; padding: 12px; border: 1px solid var(--edge); background: var(--panel); }
+.graph-pattern h3 { margin: 0 0 9px; font: 600 12px var(--mono); color: var(--txt-strong); }
+.mini-flow { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 50px; }
+.mini-flow span { padding: 5px 8px; border: 1px solid #a6bac6; border-radius: 5px; background: #e7edf0; color: #18222d; font-size: 12px; line-height: 1.35; }
+.mini-flow b { color: #75421f; font: 600 14px var(--mono); }
+.graph-pattern figcaption { margin-top: 8px; font-size: 12px; }
+@media (max-width: 560px) { .graph-patterns { grid-template-columns: 1fr; } }

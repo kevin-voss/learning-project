@@ -1,45 +1,46 @@
-/* tokens — restrained dark palette: near-black, hairlines, one gold accent */
+/* Warm paper surfaces, ink text, and restrained earth and blue accents. */
 :root {
-  /* surfaces */
-  --bg: #0a0b0d;
-  --bg-soft: #0e1013;
-  --panel: #121419;
-  --panel-2: #171a20;
-  --edge: #1e222a;
-  --edge-2: #2b303b;
+  /* Warm paper surfaces */
+  --bg: #f7f5f0;
+  --bg-soft: #efede7;
+  --panel: #fffefa;
+  --panel-2: #f1efe9;
+  --edge: #dedbd2;
+  --edge-2: #c9c5bb;
 
-  /* text */
-  --txt: #c6ccd6;
-  --txt-strong: #f0f3f7;
-  --dim: #99a2b0;
-  --faint: #5d6673;
+  /* Ink and secondary text */
+  --txt: #343a40;
+  --txt-strong: #18222d;
+  --dim: #636d76;
+  --faint: #656e74;
 
-  /* accents (use sparingly) */
-  --gold: #d3b78a;           /* single primary accent */
-  --gold-soft: rgba(211, 183, 138, .12);
-  --mint: #7fd6a4;           /* pros only */
-  --deny: #e58e8e;           /* cons / warnings only */
-  --info: #9db8d9;           /* links, quiet highlights */
+  /* Accent colors */
+  --gold: #8a572f;
+  --gold-soft: rgba(138, 87, 47, .10);
+  --mint: #356846;
+  --deny: #963e3e;
+  --info: #315c79;
+  --info-hover: #1d425d;
 
-  /* syntax tokens (dark screen values; print.css flips these) */
-  --tk-k: #c9a6e8;
-  --tk-s: #a9d8b4;
-  --tk-f: #8fb8f2;
-  --tk-n: #edb88a;
-  --tk-c: #5d6b7e;
-  --tk-t: #9dc3e8;
-  --tk-a: #d9c08a;
+  /* Syntax colors for the light code surface */
+  --tk-k: #70458a;
+  --tk-s: #28603a;
+  --tk-f: #245582;
+  --tk-n: #8a4d1c;
+  --tk-c: #59666d;
+  --tk-t: #28556d;
+  --tk-a: #765812;
 
-  /* code surfaces */
-  --code-bg: #0c0e12;
-  --code-edge: #1b202a;
+  /* Code surfaces */
+  --code-bg: #eeece6;
+  --code-edge: #d8d4ca;
 
-  /* type */
+  /* Typography */
   --sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --serif: 'Fraunces', Georgia, 'Times New Roman', serif;
   --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
 
-  /* rhythm */
+  /* Spacing and shape */
   --r-xs: 4px;
   --r-sm: 8px;
   --r-md: 16px;
@@ -48,9 +49,8 @@
   --rad: 12px;
   --rad-sm: 8px;
 
-  /* chrome */
+  /* Page chrome */
   --topbar-h: 56px;
   --sidebar-w: 280px;
-  --content-w: 880px;
-  --shadow: 0 24px 60px -30px rgba(0, 0, 0, .85);
+  --shadow: 0 24px 60px -30px rgba(27, 36, 44, .25);
 }

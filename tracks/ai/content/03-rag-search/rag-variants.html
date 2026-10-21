@@ -11,19 +11,18 @@
 <link rel="stylesheet" href="../../css/base.css">
 <link rel="stylesheet" href="../../css/components.css">
 <link rel="stylesheet" href="../../css/flow.css">
-<link rel="stylesheet" href="../../css/print.css">
 </head>
 <body>
 
 <div id="progress"></div>
 
 <header class="topbar">
-  <button class="tbtn" id="nav-toggle" type="button" aria-label="Toggle navigation">☰</button>
+  <button class="tbtn" id="nav-toggle" type="button" aria-label="Open contents" aria-controls="toc" aria-expanded="false">☰</button>
   <a class="brand" href="../../index.html"><b>ai</b>·field-guide</a>
+  <a class="hub-link" href="../../../../hub/index.html">Learning hub</a>
   <div class="tools">
-    <input id="toc-filter" type="search" placeholder="filter · /" aria-label="Filter topics">
+    <button class="tbtn search-btn" id="search-open" type="button" aria-label="Search the guide"><span>Search</span><kbd>⌘K</kbd></button>
     <button class="tbtn" id="expand-all" type="button">expand</button>
-    <button class="tbtn" id="print-btn" type="button">print</button>
   </div>
 </header>
 
@@ -32,26 +31,27 @@
 <main class="main">
   <div class="content">
     <header class="topic-head">
-      <div class="kicker">Part 2 · Retrieval · 07/24</div>
+      <div class="kicker">Part 3 · Retrieval · 15/31</div>
       <h1>RAG variants: vector, graph, agentic</h1>
-      <p class="lead">Plain vector RAG is one hop: question in, similar chunks out. It answers "which passages resemble this query?" and nothing else. Every other variant exists to cover a question shape that hop cannot reach.</p>
+      <p class="lead">Plain vector RAG is one hop: question in, similar chunks out. It answers "which passages resemble this query?" and nothing else. Every other variant covers a question shape that hop cannot reach.</p>
+      <p class="chapter-summary"><b>In this chapter</b> Choose vector, graph, multi-query or agentic retrieval based on query structure, corpus relationships and latency budget.</p>
     </header>
 
-  <div class="stage-label sl-why">Why you need it</div>
+  <h2 class="stage-label sl-why" id="why-you-need-it">Why this layer matters</h2>
   <div class="why">
     <ul>
-      <li><b>Connections:</b> "How are Acme, Beta and Omega related?" The evidence is spread across a dozen documents and no single chunk resembles the question.</li>
-      <li><b>Multi-hop:</b> "Who worked with whom on project X?" is a chain of lookups where each step depends on the previous answer.</li>
+      <li><b>Connections:</b> "How are Acme, Beta and Omega related?" The evidence spans a dozen documents and no single chunk resembles the question.</li>
+      <li><b>Multi-hop:</b> "Who worked with whom on project X?" is a chain of lookups, each depending on the last.</li>
       <li><b>Corpus-wide themes:</b> "What trends run through all 200 reports?" Fetching the top 5 chunks is a category error.</li>
-      <li><b>Blind retry:</b> when the first retrieval misses, the plain pipeline still generates. It cannot notice the miss and search again.</li>
+      <li><b>Blind retry:</b> when the first retrieval misses, the plain pipeline still generates. It cannot notice and search again.</li>
     </ul>
   </div>
 
-  <div class="stage-label sl-sol">Solutions</div>
-  <p class="lead">One corpus can feed several machineries at once. A cheap router, keyword rules, schema match or one classify call, picks per query, and a misroute gives a shallow answer, not a crash. Start from the <a class="xl" href="#rag-overview">RAG big picture</a> baseline.</p>
+  <h2 class="stage-label sl-sol" id="solutions">Retrieval patterns</h2>
+  <p class="lead">One corpus can feed several machineries. A cheap router (keyword rules, schema match or one classify call) picks per query. Start from the <a class="xl" href="rag-overview.html">RAG big picture</a> baseline.</p>
   <div class="sol-list">
 
-    <div class="sol-item">
+    <div class="sol-item open">
       <button class="sol-head" type="button">
         <span class="sol-no">A</span>
         <span class="sol-name">Vector RAG <span class="sol-tag best">default</span></span>
@@ -61,21 +61,21 @@
       <div class="sol-body"><div class="sol-inner"><div class="sol-content">
         <h4>How it works</h4>
         <ul>
-          <li><b>One hop:</b> embed the query, fetch top-k similar chunks, generate. One retrieval round trip, predictable latency and cost.</li>
-          <li><b>Quality is upstream:</b> fancier variants do not save a weak baseline. Wins come from <a class="xl" href="#chunking">chunking</a>, <a class="xl" href="embeddings.html">embeddings</a> and <a class="xl" href="search-rerank.html">hybrid search plus rerankers</a>.</li>
-          <li><b>Limits:</b> no relations, no aggregation, no corpus-level synthesis. Not broken, just one shape.</li>
+          <li><b>One hop:</b> embed the query, fetch top-k similar chunks, generate. Predictable latency and cost.</li>
+          <li><b>Quality is upstream:</b> fancier variants do not save a weak baseline. Wins come from <a class="xl" href="chunking.html">chunking</a>, <a class="xl" href="embeddings.html">embeddings</a> and <a class="xl" href="search-rerank.html">hybrid search plus rerankers</a>.</li>
+          <li><b>Limits:</b> no relations, no aggregation, no corpus-level synthesis.</li>
         </ul>
         <h4>Trade-offs</h4>
         <ul>
-          <li><b>pro:</b> cheapest lane to run, latency you can promise, handles "find docs about X".</li>
+          <li><b>pro:</b> cheapest lane, latency you can promise, handles "find docs about X".</li>
           <li><b>con:</b> relationship, aggregate and corpus-wide questions get confident shallow answers.</li>
         </ul>
         <h4>Lighter alternatives</h4>
         <ul>
-          <li><b>Long-context stuffing:</b> when the corpus fits the window, skip retrieval and paste everything. Fine for small static doc sets, but every call pays for the whole window (see <a class="xl" href="../02-tokens-context/tokens-cost.html">token cost</a>) and needle recall drops as the window grows (see <a class="xl" href="../02-tokens-context/context-budget.html">context budget</a>).</li>
-          <li><b>Parent-child retrieval:</b> small child chunks make matches precise, their big parent chunks go to the model so generation gets full context.</li>
+          <li><b>Long-context stuffing:</b> when a small static corpus fits the window, paste everything. Every call pays for the whole window (see <a class="xl" href="../02-tokens-context/tokens-cost.html">token cost</a>) and needle recall drops as it grows (see <a class="xl" href="../02-tokens-context/context-budget.html">context budget</a>).</li>
+          <li><b>Parent-child retrieval:</b> small child chunks match precisely, their parent chunks go to the model for full context.</li>
           <li><b>Late interaction:</b> the <button class="term" type="button" data-tip="keep a vector per token and score token pairs at query time">late interaction</button> idea (ColBERT) ranks by token-level matches. Sharper than single vectors, heavier storage.</li>
-          <li><b>Siblings:</b> aggregates belong to text-to-SQL, pixels to multimodal retrieval. Different machinery again, same routing idea.</li>
+          <li><b>Siblings:</b> aggregates belong to text-to-SQL, pixels to multimodal retrieval. Same routing idea.</li>
         </ul>
       </div></div></div>
     </div>
@@ -92,23 +92,23 @@
         <ul>
           <li><b>Ingest builds the graph:</b> an LLM extracts entities and relations from every document. Acme, Beta and Omega become nodes, "acquired" and "supplies" become edges.</li>
           <li><b>Questions become traversals:</b> <button class="term" type="button" data-tip="an answer that requires chaining two or more lookups">multi-hop</button> questions like "who worked with whom on X" are a two-edge walk, exactly where similarity search fails.</li>
-          <li><b>Local vs global:</b> local queries walk one entity's neighborhood and feed the walk to the model. Global queries need corpus-level text no single chunk holds.</li>
+          <li><b>Local vs global:</b> local queries walk one entity's neighborhood and feed it to the model. Global queries need corpus-level text no single chunk holds.</li>
         </ul>
         <h4>Community summaries</h4>
         <ul>
           <li>Cluster the graph with <button class="term" type="button" data-tip="an algorithm that groups tightly connected nodes into communities">Leiden</button>, pre-write one summary per community at ingest.</li>
-          <li>Global questions read the summaries instead of fetching every chunk. Never fetch all chunks and hope. <span class="wlabel why">why communities</span></li>
+          <li>Global questions read the summaries instead of fetching every chunk and hoping. <span class="wlabel why">why communities</span></li>
         </ul>
         <h4>Costs, the full bill</h4>
         <ul>
-          <li><b>Upfront:</b> extraction is an LLM call over the whole corpus before the first query lands. Prototype on a slice, measure cost per document, then scale.</li>
-          <li><b>Updates:</b> documents change but the graph does not re-extract itself. Wire re-extraction to a pipeline trigger or answers quietly rot.</li>
-          <li><b>Per query:</b> traversals are more complex than top-k, plus a standing budget for <button class="term" type="button" data-tip="merging duplicate entities such as Acme and Acme Inc into one node">entity resolution</button> and human spot checks.</li>
+          <li><b>Upfront:</b> LLM extraction over the whole corpus before the first query. Prototype on a slice, measure cost per document, then scale.</li>
+          <li><b>Updates:</b> the graph does not re-extract itself. Wire re-extraction to a pipeline trigger or answers quietly rot.</li>
+          <li><b>Per query:</b> traversals cost more than top-k, plus a standing budget for <button class="term" type="button" data-tip="merging duplicate entities such as Acme and Acme Inc into one node">entity resolution</button> and human spot checks.</li>
         </ul>
         <h4>Trade-offs</h4>
         <ul>
-          <li><b>pro:</b> wins when relationships are the product. Compliance lineage, knowledge graphs, org and supply-chain questions.</li>
-          <li><b>con:</b> <span class="wlabel gotcha">gotcha</span> extraction quality caps everything downstream. Garbage edges produce confident wrong traversals.</li>
+          <li><b>pro:</b> wins when relationships are the product: compliance lineage, knowledge graphs, org and supply-chain questions.</li>
+          <li><b>con:</b> <span class="wlabel gotcha">gotcha</span> extraction quality caps everything downstream; garbage edges produce confident wrong traversals.</li>
         </ul>
       </div></div></div>
     </div>
@@ -129,54 +129,53 @@
         </ul>
         <h4>Budgets stop the loop</h4>
         <ul>
-          <li>Max steps, max tokens, wall-clock cap. An unbudgeted loop spins forever, see <a class="xl" href="../05-agents-orchestration/ops.html">durable ops</a>.</li>
-          <li><b>Implementation shape:</b> the retrieve-grade-rewrite cycle maps onto <a class="xl" href="../05-agents-orchestration/graphs.html">orchestration graphs</a>, the steering ideas live under <a class="xl" href="../05-agents-orchestration/agent-patterns.html">agent patterns</a>.</li>
+          <li>Max steps, max tokens, wall-clock cap, or the loop spins forever, see <a class="xl" href="../05-agents-orchestration/ops.html">durable ops</a>.</li>
+          <li><b>Implementation shape:</b> the retrieve-grade-rewrite cycle maps onto <a class="xl" href="../05-agents-orchestration/graphs.html">orchestration graphs</a>; steering ideas live under <a class="xl" href="../05-agents-orchestration/agent-patterns.html">agent patterns</a>.</li>
         </ul>
         <h4>Trade-offs</h4>
         <ul>
-          <li><b>pro:</b> ambiguous multi-step research questions get real answers, no single pass finds the smoking gun.</li>
+          <li><b>pro:</b> ambiguous multi-step research questions get real answers where no single pass finds the evidence.</li>
           <li><b>con:</b> every step is a model call plus retrieval, so latency and cost multiply per round.</li>
         </ul>
-        <p class="warn">FAQ-shaped traffic must not take the agentic lane. A loop answering "how many sick days do I get" costs several times the vector answer for zero quality gain.</p>
+        <p class="warn">Keep FAQ-shaped traffic off the agentic lane: a loop answering "how many sick days do I get" costs several vector answers for zero quality gain.</p>
       </div></div></div>
     </div>
 
   </div>
 
-  <div class="diagram">
+  <figure class="diagram">
     <div class="diag-body"><pre class="mermaid">
-flowchart TD
-  Q["one question"] --> R{"route by<br/>question shape"}
-  R --> V["vector<br/>top-k chunks"]
-  R --> G["graph<br/>multi-hop walk"]
-  R --> A["agentic<br/>retrieve, grade,<br/>rewrite"]
+flowchart LR
+  Q["one question"] --> R{"route by&lt;br/&gt;question shape"}
+  R --> V["vector&lt;br/&gt;top-k chunks"]
+  R --> G["graph&lt;br/&gt;multi-hop walk"]
+  R --> A["agentic&lt;br/&gt;retrieve, grade,&lt;br/&gt;rewrite"]
   V --> ANS["one answer"]
   G --> ANS
   A --> ANS
-  classDef base fill:#141826,stroke:#3d3d5c,color:#e6e6f0;
-  classDef vec fill:#1c1430,stroke:#a78bfa,color:#e6e6f0;
-  classDef gr fill:#0d2818,stroke:#4ade80,color:#e6e6f0;
-  classDef ag fill:#2a1a0d,stroke:#fbbf24,color:#e6e6f0;
+  classDef base fill:#e7edf0,stroke:#557184,color:#18222d;
+  classDef vec fill:#ede7f4,stroke:#735c83,color:#18222d;
+  classDef gr fill:#e7efe7,stroke:#57704d,color:#18222d;
+  classDef ag fill:#f1e8dc,stroke:#a56d3e,color:#18222d;
   class Q,R,ANS base;
   class V vec;
   class G gr;
   class A ag;
-    </pre></div>
-  </div>
+    </pre></div><figcaption>The router is the only decision point and every lane returns one answer, so a misroute fails quietly as a shallow answer, never as an error. Log the route per query.</figcaption></figure>
 
-  <div class="stage-label sl-when">When to use · when not</div>
+  <h2 class="stage-label sl-when" id="when-to-use-when-not">Decision boundary</h2>
   <div class="pc">
     <div class="pc-col pros"><h4 class="pc-h">Use when</h4>
       <ul>
         <li>A real query log shows connection, aggregate or corpus-wide questions the baseline flunks.</li>
         <li>Research-style traffic needs search, read, pivot, search again.</li>
         <li>Relationships are the product: lineage, compliance, knowledge graph.</li>
-        <li>You can price LLM ingest and re-extraction into the budget.</li>
+        <li>You can budget LLM ingest and re-extraction.</li>
       </ul>
     </div>
     <div class="pc-col cons"><h4 class="pc-h">Skip when</h4>
       <ul>
-        <li>Traffic is FAQ-shaped, single passages answer everything, keep the vector lane.</li>
+        <li>Traffic is FAQ-shaped and single passages answer it.</li>
         <li>The budget cannot absorb LLM extraction over the corpus.</li>
         <li>Nobody will maintain graphs or indexes as documents change.</li>
         <li>Latency targets rule out multi-step loops.</li>
@@ -187,8 +186,8 @@ flowchart TD
     <table>
       <thead><tr><th>Variant</th><th class="hu">Use when</th><th class="ha">Avoid when</th><th class="hw">Watch out</th></tr></thead>
       <tbody>
-        <tr><td class="m">Vector RAG</td><td class="u">"Find docs about X". The default shape, most traffic</td><td class="avoid">Relationship, aggregate or corpus-wide questions</td><td class="watch">Quality lives and dies at chunking, hybrid and rerank</td></tr>
-        <tr><td class="m">Graph RAG</td><td class="u">Multi-hop connections, lineage, corpus-wide themes</td><td class="avoid">Simple lookups, or a budget that cannot absorb LLM ingest</td><td class="watch">Extraction noise, graph goes stale as docs change</td></tr>
+        <tr><td class="m">Vector RAG</td><td class="u">"Find docs about X". The default shape, most traffic</td><td class="avoid">Relationship, aggregate or corpus-wide questions</td><td class="watch">Quality is set by chunking, hybrid and rerank</td></tr>
+        <tr><td class="m">Graph RAG</td><td class="u">Multi-hop connections, lineage, corpus-wide themes</td><td class="avoid">Simple lookups, no budget for LLM ingest</td><td class="watch">Extraction noise, graph goes stale as docs change</td></tr>
         <tr><td class="m">Agentic RAG</td><td class="u">Ambiguous, multi-step research questions</td><td class="avoid">FAQ-shaped traffic, pure cost and latency</td><td class="watch">Loops burn tokens without budgets</td></tr>
         <tr><td class="m">Long-context stuffing</td><td class="u">Small static corpus that fits the window</td><td class="avoid">Recurring traffic, per-call cost dominates</td><td class="watch">Needle recall drops as the window grows</td></tr>
         <tr><td class="m">Parent-child</td><td class="u">Precise hits that need broad context</td><td class="avoid">Tiny uniform documents, no hierarchy</td><td class="watch">Index both levels, dedupe parents in the prompt</td></tr>
@@ -196,54 +195,57 @@ flowchart TD
     </table>
   </div>
 
-  <div class="stage-label sl-ex">Example</div>
+  <h2 class="stage-label sl-ex" id="example">Worked example</h2>
   <div class="example">
-    <p class="ex-note">A cheap router picks the lane per question shape. Drug interaction checks ride the graph lane, "is X safe with Y" is a two-node lookup with edge labels instead of anecdotes from papers. Policy Q&amp;A rides the vector lane, one hop over single passages where the lever is chunking discipline. Patent and legal research ride the agentic loop, shipped with a hard step budget and a fallback answer. The first sample routes, the second is the loop it routes to.</p>
+    <p class="ex-note">A cheap router picks the lane per question shape. <b>Drug interactions</b> ride the graph: "is X safe with Y" is a two-node lookup with labeled edges, not anecdotes from papers. <b>Policy Q&amp;A</b> rides the vector lane, where the lever is chunking discipline. <b>Patent and legal research</b> ride the agentic loop, with a hard step budget and a fallback answer. First the router, then the loop it routes to.</p>
     <pre class="code" data-lang="python" data-file="route.py"><code><span class="tk-k">def</span> <span class="tk-f">route</span>(query: <span class="tk-t">str</span>) -> <span class="tk-t">str</span>:
     <span class="tk-k">if</span> <span class="tk-f">asks_connections</span>(query):     <span class="tk-c"># entities, relations, multi-hop</span>
         <span class="tk-k">return</span> <span class="tk-s">"graph_rag"</span>
     <span class="tk-k">if</span> <span class="tk-f">needs_research</span>(query):          <span class="tk-c"># ambiguous, needs a plan</span>
         <span class="tk-k">return</span> <span class="tk-s">"agentic_rag"</span>
     <span class="tk-k">return</span> <span class="tk-s">"vector_rag"</span>                 <span class="tk-c"># the sensible default</span></code></pre>
-    <pre class="code" data-lang="python" data-file="agentic_loop.py"><code>MAX_STEPS = 4  <span class="tk-c"># the budget that stops the loop</span>
-
-<span class="tk-k">for</span> step <span class="tk-k">in</span> <span class="tk-f">range</span>(MAX_STEPS):
-    hits = <span class="tk-f">retrieve</span>(query)
-    grade = <span class="tk-f">grade_hits</span>(query, hits)    <span class="tk-c"># relevant? supported? enough?</span>
-    <span class="tk-k">if</span> grade.enough:
-        <span class="tk-k">return</span> <span class="tk-f">answer</span>(query, hits)
-    query = <span class="tk-f">rewrite</span>(query, grade.gaps)   <span class="tk-c"># refine and go again</span>
-<span class="tk-k">return</span> <span class="tk-f">answer_insufficient</span>(query)</code></pre>
+    <pre class="code" data-lang="python" data-file="agentic_loop.py"><code><span class="tk-k">def</span> <span class="tk-f">agentic_rag</span>(query, max_steps=<span class="tk-n">4</span>):
+    <span class="tk-k">for</span> step <span class="tk-k">in</span> <span class="tk-f">range</span>(max_steps):
+        hits = <span class="tk-f">retrieve</span>(query)
+        grade = <span class="tk-f">grade_hits</span>(query, hits)  <span class="tk-c"># relevant? supported? enough?</span>
+        <span class="tk-k">if</span> grade.enough:
+            <span class="tk-k">return</span> <span class="tk-f">answer</span>(query, hits)
+        query = <span class="tk-f">rewrite</span>(query, grade.gaps)
+    <span class="tk-k">return</span> <span class="tk-f">answer_insufficient</span>(query)</code></pre>
   </div>
 
-  <div class="stage-label sl-extra">Watch out</div>
+  <h2 class="stage-label sl-extra" id="watch-out">Failure modes</h2>
   <div class="pit-list">
     <ul>
-      <li><b>Extraction noise:</b> the LLM invents or misses relations and the graph amplifies confident nonsense · budget entity resolution and human spot checks</li>
-      <li><b>Runaway loops:</b> each iteration is a model call plus retrieval · cap steps, tokens and time, then log the caps you hit</li>
-      <li><b>Cold-start bills:</b> graph RAG pays LLM extraction before the first query lands · prototype on a slice, then scale</li>
+      <li><b>Extraction noise:</b> the LLM invents or misses relations and the graph amplifies them · budget entity resolution and human spot checks</li>
+      <li><b>Runaway loops:</b> each iteration is a model call plus retrieval · cap steps, tokens and time, log the caps you hit</li>
+      <li><b>Cold-start bills:</b> graph RAG pays extraction before the first query · prototype on a slice</li>
       <li><b>Stale machinery:</b> graphs and indexes do not re-extract themselves · wire updates to a pipeline trigger</li>
       <li><b>Router misfires:</b> a research question routed to vector gets a confident shallow answer · log the route per query, misroutes are your best <a class="xl" href="../08-evals/evals.html">evals</a> signal</li>
-      <li><b>Long-context false economy:</b> cheap to build, expensive to keep · usage growth turns stuffing into your largest line item</li>
+      <li><b>Long-context false economy:</b> cheap to build, expensive to keep · usage growth makes stuffing your largest line item</li>
     </ul>
   </div>
 
-  <div class="stage-label sl-extra">Remember</div>
+  <h2 class="stage-label sl-extra" id="remember">Keep in mind</h2>
   <div class="remember">
     <ul>
       <li>Default to vector RAG, justify every departure with a real query log.</li>
       <li>Route by question shape: lookup to vector, connections to graph, research to agentic.</li>
-      <li>Ship every agentic loop with a step, token and time budget before it goes near users.</li>
+      <li>Ship every agentic loop with a step, token and time budget.</li>
       <li>Price graph RAG ingest as an LLM job and schedule re-extraction when the corpus changes.</li>
-      <li>For global questions, pre-build community summaries. Never fetch all chunks and hope.</li>
-      <li>Log which machinery answered each query and revisit the misroutes monthly.</li>
+      <li>For global questions, pre-build community summaries.</li>
+      <li>Log which lane answered each query and review misroutes monthly.</li>
     </ul>
   </div>
   
+    <section class="references" aria-labelledby="primary-sources"><h2 id="primary-sources">Primary sources</h2><ul><li><a href="https://arxiv.org/abs/2005.11401" rel="noreferrer">Retrieval-Augmented Generation</a></li><li><a href="https://arxiv.org/abs/2404.16130" rel="noreferrer">GraphRAG paper</a></li></ul></section>
+
+    <section class="lab-check" aria-labelledby="try-verify-explain"><h2 id="try-verify-explain">Try, verify, explain</h2><ol><li>Choose a retrieval pattern for a question requiring facts connected across three entities; compare graph traversal with vector retrieval and describe a fallback if the graph is incomplete.</li><li>Label 50 real or realistic queries as lookup, connection or research. If a 4-step agentic loop costs about 4 vector answers, compute the average cost per query when everything goes agentic versus when it is routed.</li><li>Explain why graph RAG can answer "what themes run through all 200 reports" while top-k vector retrieval cannot, and what ingest must build for it to work.</li></ol></section>
+
     <nav class="pager" id="pager"></nav>
 
     <footer class="footer">
-      learning-project · tracks/ai · print this page from the browser dialog · diagrams load mermaid from CDN once online
+      learning-project · tracks/ai · press ⌘K or / to search every chapter · diagrams load Mermaid from a CDN when online
     </footer>
   </div>
 </main>

@@ -1,14 +1,20 @@
 # Step 04: Spring Boot, the first web API
 
-> In this step: put ParcelPilot on the web so anyone can create and read parcels with `curl`. You'll learn what HTTP, REST, and JSON are, and write a real Spring Boot controller line by line. ~90–120 minutes.
+> [!PICTURE]
+> Picture the ParcelPilot depot. A customer walks up to the **front desk** with a filled-in form: "please send this parcel to Ava". The clerk reads the form, hands it to the back room, and gives the customer a receipt. The front desk is your **controller**. The form and the receipt are **DTOs**. The customer could be a person, a phone app or `curl`.
+
+<div data-anim="restaurant"></div>
 
 ## The problem right now
 
-Your program only talks to its own terminal via `main`. To be useful, other people and programs (a phone app, a website, `curl`) must create and read parcels **over the network**, without your Java source. The standard way to do that is an HTTP **API**.
+Your program only talks to its own terminal via `main`. To be useful, other programs (a phone app, a website, `curl`) must create and read parcels **over the network**, without your Java source. The standard way to do that is an HTTP **API**.
 
-## What is HTTP? (the foundation)
+## HTTP and REST, in one minute
 
-HTTP is the request/response language of the web. A **client** sends a **request** (a method + a path + optional body), and a **server** sends back a **response** (a status code + optional body).
+You already know these ideas. Here is the short version; the full lessons are linked.
+
+- A **client** sends a **request** (method + path + optional JSON body). The **server** answers with a **response** (status code + optional body). Full lesson: [HTTP requests and responses](../../../computer-science/index.html#http-requests-responses).
+- **REST** names data as **resources** (`/parcels/P-1`) and uses HTTP **methods** as the verbs (`GET` reads, `POST` creates, `PATCH` changes, `DELETE` removes). `GET` is **safe**: it never changes data. Full lesson: [REST and HTTP in Java](../../../java/topics/rest-and-http/index.html).
 
 ```mermaid
 sequenceDiagram
@@ -18,77 +24,25 @@ sequenceDiagram
   S-->>C: 201 Created  body={"id":"P-2","recipient":"Ava","status":"CREATED"}
 ```
 
-A request has four things that matter to us:
-
-- **Method (verb):** what you want to do. `GET` (read), `POST` (create), `PUT`/`PATCH` (change), `DELETE` (remove), and the newer `QUERY` (complex safe reads).
-- **Path:** which resource, e.g. `/parcels/P-1`.
-- **Query parameters:** filters after `?`, e.g. `/parcels?status=CREATED`.
-- **Body:** data you send, usually **JSON**.
-
-> Every method (including the emerging **`QUERY`** method and the "safe"/"idempotent" properties that decide which to use) is explained with examples in [HTTP methods explained](http-methods.md). Read it after this section.
-
-## Key words
-
-| Word | Beginner meaning |
-|---|---|
-| **API** | A defined way for programs to talk to each other. |
-| **REST** | A popular API style: name data as resources (nouns) + use HTTP methods as verbs. |
-| **Resource** | A thing your API exposes, e.g. a parcel at `/parcels/P-1`. |
-| **Endpoint** | One callable method+path, e.g. `GET /parcels/{id}`. |
-| **JSON** | A text format for data: `{"id":"P-1","recipient":"Ava"}`. |
-| **Status code** | A number describing the result: `200`, `201`, `404`, `409`. Tour them all in the [status codes lab](http-status-codes-lab.md). |
-| **Header** | Extra info on a request/response, e.g. `Content-Type: application/json`. |
-| **Spring Boot** | A framework that runs your Java as a web server with minimal setup. |
-| **Controller** | A class whose methods handle incoming HTTP requests. |
-| **Annotation** | A `@Something` label that tells Spring how to treat a class/method. |
-| **DTO** | Data Transfer Object: a small class shaped for the API request/response. |
-| **Dependency injection** | Spring creates your objects and hands them their dependencies (composition, automated). See the [DI walkthrough](dependency-injection-walkthrough.md). |
-
-## What is REST (beginner version)?
-
-**The problem REST solves:** without a shared convention, every API invents its own way to name things and trigger actions (`/getParcel`, `/parcelFetch`, `/doDeliver`...). Clients then have to learn each one. REST is a widely-agreed **style** that makes APIs predictable.
-
-**How REST solves it:** name your data as **resources** (nouns, like `/parcels/P-1`) and use HTTP **methods** as the verbs on them. Anyone who knows HTTP can guess how to read, create, or change a parcel.
+The ParcelPilot endpoints you build in this step and its lab:
 
 | You want to… | Request | Typical response |
 |---|---|---|
 | Create a parcel | `POST /parcels` | `201 Created` + the new parcel |
 | Read one | `GET /parcels/P-1` | `200 OK`, or `404 Not Found` |
-| Search / filter (simple) | `GET /parcels?status=CREATED` | `200 OK` + a list |
-| Search (complex, emerging) | `QUERY /parcels` + JSON body | `200 OK` + a list |
-| Change status | `PATCH /parcels/P-1/status` | `200 OK`, or `409 Conflict` |
-| Replace a parcel | `PUT /parcels/P-1` | `200 OK` / `204` |
-| Delete | `DELETE /parcels/P-1` | `204 No Content` |
+| Filter | `GET /parcels?status=CREATED` | `200 OK` + a list |
+| Change status (lab) | `PATCH /parcels/P-1/status` | `200 OK`, or `409 Conflict` |
 
-Keep `GET` **safe**: reading must never change data.
+## Key words
 
-### More examples (same resource, different verbs)
-
-```bash
-GET    /parcels                 # list all
-GET    /parcels?status=CREATED  # list filtered
-GET    /parcels/P-1             # one parcel
-POST   /parcels                 # create
-PATCH  /parcels/P-1/status      # advance status
-DELETE /parcels/P-1             # remove
-```
-
-Notice the **path stays about the resource** (`/parcels`), and the **method changes the intent**. That consistency is the whole point of REST.
-
-### Why and when to use REST, and its limits
-
-**Why:** predictable, uses plain HTTP, cache-friendly for reads, and works with any client (browser, `curl`, mobile).
-
-**When:** classic create/read/update/delete resources over HTTP, which is exactly ParcelPilot's needs, and most business backends.
-
-| Pros | Cons / when something else fits better |
+| Word | Beginner meaning |
 |---|---|
-| Simple, universal, easy to test with `curl` | Over-fetching/under-fetching data (GraphQL can help) |
-| Cache-friendly reads | Many round-trips for deeply linked data |
-| Clear mapping of verbs to intent | Not ideal for real-time streams (use WebSockets/SSE) |
-| Huge tooling support | Very high-throughput internal calls may prefer gRPC |
-
-Don't add GraphQL, WebSockets, or gRPC in this beginner path. REST is the right first tool. Learn that the alternatives exist and when they'd win.
+| **Endpoint** | One callable method+path, e.g. `GET /parcels/{id}`. |
+| **Spring Boot** | A framework that runs your Java as a web server with minimal setup. |
+| **Controller** | A class whose methods handle incoming HTTP requests (the front desk). |
+| **Annotation** | A `@Something` label that tells Spring how to treat a class or method. |
+| **DTO** | Data Transfer Object: a small class shaped for the API request or response (the form and the receipt). |
+| **Dependency injection** | Spring creates your objects and hands them what they need. See the [DI walkthrough](dependency-injection-walkthrough.md). |
 
 ## Why Spring Boot? Pros and cons
 
@@ -237,7 +191,7 @@ public class ParcelController {
 
 ### 5. (Lab) Add status changes
 
-Do the [REST API lab](rest-api.md) to add `PATCH /parcels/{id}/status`, returning `409 Conflict` on illegal transitions (reusing the rules from step 02).
+Do the [REST API lab](rest-api.md) to add `PATCH /parcels/{id}/status`, returning `409 Conflict` on illegal transitions (reusing the rules from step 02). The lab ends with a predict-then-verify tour of the status codes.
 
 ## Test it
 
@@ -271,10 +225,9 @@ curl -i 'http://localhost:8080/parcels?status=CREATED'
 - [ ] `GET /parcels/{id}` returns `200`+JSON for an existing parcel and `404` for a missing one.
 - [ ] `GET /parcels?status=CREATED` returns only matching parcels.
 - [ ] (Lab) an illegal status change returns `409 Conflict`.
-- [ ] You've predicted and verified the status codes in the [HTTP status codes lab](http-status-codes-lab.md).
+- [ ] You've predicted and verified the status codes in the [REST API lab](rest-api.md#part-2-status-codes-predict-then-verify).
 - [ ] You can point at each annotation in your controller and say what it does (see [annotations guide](annotations-imports.md)).
-- [ ] You can explain "safe" and "idempotent" and say which methods are which (see [HTTP methods](http-methods.md)).
-- [ ] You can say what problem REST solves and name one situation where GraphQL/WebSockets/gRPC would fit better.
+- [ ] You can explain why `GET` must be **safe** (see [REST and HTTP in Java](../../../java/topics/rest-and-http/index.html)).
 
 ## Say it like a developer
 
@@ -285,57 +238,17 @@ curl -i 'http://localhost:8080/parcels?status=CREATED'
 - "I return a `201 Created` **status code** on success and `404 Not Found` when the parcel doesn't exist."
 - "`GET` is **safe**: reading never changes data."
 
-## Quiz: check yourself
+## Check
 
-Answer out loud before opening each toggle.
-
-1. In one sentence, what problem does **REST** solve?
-
-<details><summary>Show answer</summary>
-
-It gives APIs a shared, predictable convention: name data as **resources** (nouns like `/parcels/P-1`) and use HTTP **methods** as the verbs, so any client that knows HTTP can guess how to use the API.
-
-</details>
-
-2. What is the difference between a **resource** and an **endpoint**?
-
-<details><summary>Show answer</summary>
-
-A resource is the *thing* the API exposes (e.g. a parcel at `/parcels/P-1`). An endpoint is one callable method+path combination (e.g. `GET /parcels/{id}`).
-
-</details>
-
-3. What does "`GET` is **safe**" mean?
-
-<details><summary>Show answer</summary>
-
-A safe method only reads and never changes server data. Calling `GET` a hundred times must not create, modify, or delete anything.
-
-</details>
-
-4. What do `@RequestBody`, `@PathVariable`, and `@RequestParam` each grab?
-
-<details><summary>Show answer</summary>
-
-`@RequestBody` converts the incoming JSON body into a Java object. `@PathVariable` grabs a value from the URL path (`/parcels/{id}`). `@RequestParam` grabs a value from the query string (`?status=CREATED`).
-
-</details>
-
-5. Why keep separate `CreateParcelRequest`/`ParcelResponse` **DTOs** instead of exposing the internal `Parcel`?
-
-<details><summary>Show answer</summary>
-
-So the API's shape and the internal domain can evolve independently. You can change internal fields without breaking clients, and you don't accidentally expose internal details.
-
-</details>
-
-6. Which status code fits: creating a parcel succeeded / the parcel doesn't exist / an illegal status change?
-
-<details><summary>Show answer</summary>
-
-`201 Created` for a successful create, `404 Not Found` when the parcel doesn't exist, and `409 Conflict` for an illegal status change.
-
-</details>
+> [!CHECK]
+> 1. Why keep separate `CreateParcelRequest` / `ParcelResponse` DTOs instead of exposing the internal `Parcel`?
+>    <details><summary>Answer</summary>So the API shape and the internal domain can change independently. You can change internal fields without breaking clients, and you do not leak internal details.</details>
+> 2. Which status code fits: create succeeded / the parcel does not exist / an illegal status change?
+>    <details><summary>Answer</summary><code>201 Created</code>, <code>404 Not Found</code>, <code>409 Conflict</code>.</details>
+> 3. What does "`GET` is **safe**" mean?
+>    <details><summary>Answer</summary>A safe method only reads and never changes server data. Calling <code>GET</code> a hundred times must not create, modify, or delete anything.</details>
+> 4. What do `@RequestBody`, `@PathVariable`, and `@RequestParam` each grab?
+>    <details><summary>Answer</summary><code>@RequestBody</code> converts the incoming JSON body into a Java object. <code>@PathVariable</code> grabs a value from the URL path (<code>/parcels/{id}</code>). <code>@RequestParam</code> grabs a value from the query string (<code>?status=CREATED</code>).</details>
 
 ## Reflect (stretch)
 

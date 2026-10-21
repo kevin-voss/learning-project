@@ -1,6 +1,9 @@
 # Testing with Maven: what really happens when you type `mvn test`
 
-In [Step 03](README.md) you ran `mvn test` and saw `Tests run: 2, Failures: 0`. This page opens the hood: where test code lives and why, which build phases run, the plugin that actually executes your tests, and the flags you'll reach for daily.
+> [!PICTURE]
+> The depot runs a fire drill every morning. Nobody watches each door by hand: a checklist runs, and a report says "all doors opened" or "door 3 stuck". `mvn test` is that drill for your code.
+
+In [Step 03](README.md) you ran `mvn test` and saw `Tests run: 2, Failures: 0`. How to write a JUnit test is taught in the Java hub ([testing](../../../java/topics/testing/index.html)). This page opens the hood: where test code lives and why, which build phases run, the plugin that actually executes your tests, and the flags you'll reach for daily.
 
 ## The problem
 
@@ -155,6 +158,6 @@ Rule of thumb: **iterate with the IDE, verify with Maven.** If the IDE says gree
 ## Next
 
 - Something red or broken? [Common build failures](common-build-failures.md) decodes the error messages.
-- Maven Wrapper and dependency tips: [Maven reference](../../references/tooling/maven.md).
+- Maven Wrapper and daily commands: [Common build failures](common-build-failures.md#daily-commands-and-the-maven-wrapper).
 - Your test suite grows beyond unit tests — HTTP-level and database-level testing — in [Step 08](../08-testing/README.md).
 - Back to [Step 03](README.md).

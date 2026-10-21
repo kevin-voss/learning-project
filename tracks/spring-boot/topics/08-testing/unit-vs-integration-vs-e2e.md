@@ -107,7 +107,7 @@ void getParcel_thatDoesNotExist_returns404WithErrorResponse() throws Exception {
 }
 ```
 
-Rule of thumb: mock what is *slow, external, or not yet built* — never mock the very thing the test claims to verify. (Mockito and `@MockBean`, which you'll need once ParcelPilot has a repository, are introduced in the [testing reference](../../references/web-and-api/testing.md).)
+Rule of thumb: mock what is *slow, external, or not yet built* — never mock the very thing the test claims to verify. (Mockito and `@MockBean`, which you'll need once ParcelPilot has a repository, are on the [Spring testing cheat sheet](../../references/web-and-api/testing.md).)
 
 ## Pros and cons of each kind
 
@@ -133,4 +133,4 @@ When in doubt, write the test at the **lowest** level that can actually catch th
 - Back to [Step 08](README.md) to build the MockMvc tests.
 - The [MockMvc lab](mockmvc-lab.md) for the incremental build-up.
 - The [Testcontainers lab](testcontainers-lab.md) — read now, complete after [step 10](../10-persistence/README.md).
-- The [testing reference](../../references/web-and-api/testing.md) for the full deep dive.
+- The [Spring testing cheat sheet](../../references/web-and-api/testing.md) to look things up.

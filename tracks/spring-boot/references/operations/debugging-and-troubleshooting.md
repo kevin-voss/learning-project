@@ -136,7 +136,7 @@ flowchart LR
 4. **Change one thing.** If you change three things and it works, you learned nothing and probably kept two mistakes.
 5. **Verify.** Rerun the *same* command from step 1. If you use Git, `git diff` shows precisely what you changed since it last worked ([git-for-this-course.md](../tooling/git-for-this-course.md)).
 
-**Print/log vs debugger:** adding a `System.out.println` (later, a log line) to see a value is a legitimate, professional technique — fast and good enough for most bugs in this course. A **debugger** (pausing the program and inspecting variables in the IDE) is stronger when the logic is tangled. Step 01 walks you through both on a real bug: [debugging your first program](../../topics/01-java-basics/debugging-your-first-program.md).
+**Print/log vs debugger:** adding a `System.out.println` (later, a log line) to see a value is a legitimate, professional technique — fast and good enough for most bugs in this course. A **debugger** (pausing the program and inspecting variables in the IDE) is stronger when the logic is tangled. The Java hub walks you through both: [Debugging](../../../java/topics/debugging/index.html).
 
 ## When to ask for help
 

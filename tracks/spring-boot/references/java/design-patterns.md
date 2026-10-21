@@ -1,51 +1,30 @@
-# Java design patterns: use names after seeing the problem
+# Patterns in ParcelPilot
 
-Patterns are vocabulary for recurring trade-offs, not folders to create in advance. Each has a useful ParcelPilot-sized example.
+> [!PICTURE]
+> A pattern is a name for a trick that many people found on their own. Like "the fold" in paper planes: once you know the name, you see it everywhere.
 
-## Object creation
+The theory of every pattern lives in one place: the Java hub page [Design patterns](../../../java/topics/design-patterns/index.html). This page is only a map. It shows **where** each pattern turns up while you build ParcelPilot.
 
-**Singleton**: one shared stateless instance, such as a system clock. Avoid global mutable state.
+## The map
 
-**Builder**: construct an object with many optional fields readably.
+| Pattern | In one sentence | Where you meet it in ParcelPilot |
+|---|---|---|
+| Singleton | Exactly one shared object. | The system clock in [Step 02](../../topics/02-oop-and-composition/README.md). Spring beans are singletons from [Step 04](../../topics/04-first-spring-api/README.md) on. |
+| Builder | Build an object with many fields, one readable call at a time. | [Step 02 pattern lab](../../topics/02-oop-and-composition/patterns-lab.md) |
+| Factory | One method decides which object to create. | [Step 02 pattern lab](../../topics/02-oop-and-composition/patterns-lab.md) |
+| Facade | A small front door over a bigger system. | SLF4J in front of Logback, [Step 07](../../topics/07-logging-and-observability-basics/README.md) |
+| Adapter | Translate between the outside world and your code. | Ports and adapters, [Step 11](../../topics/11-monolith/ports-and-adapters.md). The queue sender in [Step 12](../../topics/12-queues/event-driven-lab.md). |
+| Observer | Others react when something happens. | Queue consumers in [Step 12](../../topics/12-queues/event-driven-lab.md) |
+| Command | A request packed into an object. | Messages on the queue in [Step 12](../../topics/12-queues/event-driven-lab.md) |
+| Proxy | A stand-in that adds work, like caching. | The cache in front of the database, [Step 15](../../topics/15-performance-and-safety/README.md) |
+| Strategy | Swap one algorithm for another. | The rate-limit algorithm, [Step 15](../../topics/15-performance-and-safety/README.md) |
 
-```java
-Parcel parcel = Parcel.builder()
-    .id("P-1").recipient("Ava").priority(true).build();
-```
+## The one rule
 
-**Factory method**: centralize a construction decision. `NotificationSenderFactory.forChannel(SMS)` can choose an SMS sender without callers knowing its implementation.
+Use a pattern when it removes a real problem: a long `if` chain, a hard-wired outside service, or code you cannot test. Skip it when it only adds a layer. A `ParcelBuilderFactoryDecorator` that solves nothing is worse than plain code.
 
-## Structural patterns
-
-**Adapter** converts one interface to another. A `SendGridEmailAdapter` can implement the app’s `NotificationSender` interface around a vendor SDK.
-
-**Decorator** adds behavior around another object: `LoggingNotificationSender` delegates to a sender and records the outcome.
-
-**Facade** offers a small entry point over several subsystems: `DeliveryFacade.markDelivered()` can coordinate a parcel update, event recording, and publication.
-
-**Proxy** stands in for another object, often to add lazy loading, caching, authorization, or remote access. A cache proxy can check Redis before calling a parcel repository.
-
-**Composite** lets a group and a single item share an interface. A `NotificationBatch` and a `SingleNotification` can both be `Dispatchable`.
-
-## Behavioral patterns
-
-**Observer**: interested parties react to an event. In-process Spring event listeners are observers. RabbitMQ consumers extend that idea across processes.
-
-**Strategy**: swap an algorithm. A rate limiter can choose fixed-window or token-bucket strategy.
-
-**Command**: package a request as an object, such as `MarkParcelDeliveredCommand`. It supports validation, queues, logging, and retries.
-
-**Iterator**: traverse a collection without exposing its representation. Java’s `for (Parcel parcel : parcels)` uses this pattern already.
-
-```mermaid
-flowchart LR
-  C[MarkDelivered command] --> F[Delivery facade]
-  F --> S[status strategy/rule]
-  F --> O[observer/event publisher]
-  O --> A[adapter to RabbitMQ]
-  A --> D[decorated notification sender]
-```
-
-## Selection rule
-
-Use a pattern when it removes a concrete conditional, hides an external dependency, or makes a behavior independently testable. Reject it when it merely adds indirection. A `ParcelBuilderFactoryDecorator` with no problem is worse than direct code.
+> [!CHECK]
+> 1. Where is the full explanation of each pattern?
+>    <details><summary>Answer</summary>On the Java hub page "Design patterns". This page only shows where they appear in ParcelPilot.</details>
+> 2. In which step does a proxy appear, and what does it do there?
+>    <details><summary>Answer</summary>Step 15. The cache stands in front of the database and answers repeated reads.</details>

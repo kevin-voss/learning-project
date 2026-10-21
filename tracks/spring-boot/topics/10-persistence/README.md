@@ -1,6 +1,7 @@
 # Step 10: Persistence, keep the parcels
 
-> In this step: store parcels in PostgreSQL (running in Docker) so they survive restarts, and protect against two people overwriting each other. ~90–120 minutes.
+> [!PICTURE]
+> Until now the depot kept parcels in the clerk's head: when the lights went out at night, every parcel was forgotten. Now the depot gets a real **warehouse with shelves**. Parcels stay on the shelf when the lights go out and are still there in the morning. The shelf is the database, and the **repository** is the warehouse worker who puts parcels on the shelf and fetches them again.
 
 ## The problem right now
 
@@ -23,15 +24,16 @@ Step 09 proved parcels vanish when the container is replaced, because they live 
 | **Optimistic locking** | Detecting clashing edits with a `version` number. |
 | **`409 Conflict`** | HTTP status meaning "your update clashed with someone else's". |
 
-## Subtopics for this step
+## Read first, then build
 
-This step has more moving parts than earlier ones, so it's split into focused companion pages. Read them in this order:
+Tables, rows, `SELECT`/`INSERT`/`UPDATE` and "relational or NoSQL?" are taught once, in the CS track: [Databases and SQL](../../../computer-science/index.html#database-sql-fundamentals) and [Database design and scaling](../../../computer-science/index.html#database-design-scaling). ParcelPilot uses **PostgreSQL**: parcels have a fixed shape, we want reliable transactions, and it runs in one Docker command.
 
-1. [Databases and SQL basics](sql-and-databases.md): what a relational DB is, core SQL, why PostgreSQL (vs MySQL, SQLite, MongoDB, Redis).
-2. [JPA, entities, and repositories](jpa-and-repositories.md): how Java talks to the DB without hand-written SQL, and the alternatives.
+The Spring side of this step has four short companion pages. Read them in this order:
+
+1. [JPA, entities, and repositories](jpa-and-repositories.md): how Java talks to the database without hand-written SQL.
+2. [Flyway migrations explained](flyway-migrations-explained.md): why the schema is versioned, and the never-edit-history rule.
 3. [Locking explained](locking-explained.md): optimistic vs pessimistic, and why we pick optimistic.
-4. [Flyway migrations explained](flyway-migrations-explained.md): why the schema is versioned, the naming rules, and the never-edit-history rule.
-5. [Indexes: why queries get fast](indexes-intro.md): what an index is and how to see it working with `EXPLAIN`.
+4. [EXPLAIN and the N+1 problem](indexes-intro.md): how to see what a query really does.
 
 ## What "persistence" means, and why a volume matters
 
@@ -63,15 +65,6 @@ sequenceDiagram
   B->>DB: UPDATE P-1 WHERE version=3
   DB-->>B: 0 rows changed -> 409 Conflict
 ```
-
-## Why do it? Pros and cons
-
-**What it brings us:** durable data, real queries, and safety when many users act at once.
-
-**Pros:** survives restarts/deploys, powerful querying, and transactions keep data consistent.
-**Cons:** another service to run and back up, schema changes need migrations, and you must supply connection settings via environment variables.
-
-**Real-world example:** every shop, bank, and tracking system stores records in a database, never in the web server's memory.
 
 ## Build it in ParcelPilot (do this exactly)
 
@@ -174,7 +167,20 @@ public interface ParcelRepository extends JpaRepository<ParcelEntity, String> {
 
 Then update the controller to use the repository instead of the in-memory `Map`.
 
-Follow the [database lab](database-lab.md) for the exact wiring and a `409` conflict test.
+### 6. Turn a lost-update clash into `409`
+
+When `@Version` detects a clash, Spring throws `ObjectOptimisticLockingFailureException`. Add one handler to your `GlobalErrorHandler` from step 06, so the clash gets the same error shape as every other failure:
+
+```java
+@ExceptionHandler(ObjectOptimisticLockingFailureException.class)
+@ResponseStatus(HttpStatus.CONFLICT)
+public ErrorResponse versionClash(ObjectOptimisticLockingFailureException ex, HttpServletRequest request) {
+    return new ErrorResponse("VERSION_CONFLICT", "The parcel was changed by someone else. Reload and retry.",
+            Map.of(), request.getRequestURI());
+}
+```
+
+A real clash needs two writes in the same millisecond, so you cannot easily click one by hand. You will provoke it on purpose in [step 15](../15-performance-and-safety/optimistic-locking-lab.md). Today you prove that the version counter works.
 
 ## Test it
 
@@ -204,14 +210,25 @@ docker rm -f parcelpilot-api
 curl -i http://localhost:8080/parcels/P-1
 ```
 
+Now watch the version counter. Look inside the database, change the status, and look again:
+
+```bash
+docker exec -it parcelpilot-db psql -U parcelpilot -c "SELECT id, status, version FROM parcels;"
+curl -i -X PATCH http://localhost:8080/parcels/P-1/status \
+  -H 'Content-Type: application/json' -d '{"status":"PICKED_UP"}'
+docker exec -it parcelpilot-db psql -U parcelpilot -c "SELECT id, status, version FROM parcels;"
+```
+
+You should see `version` go from `0` to `1`. Every successful update bumps it; an update based on an old version would change zero rows and get your `409`.
+
 ## Acceptance criteria
 
 - [ ] After recreating the **API** container, a previously created parcel is still returned.
 - [ ] PostgreSQL runs in Docker with a named volume, and keeping the volume preserves data across DB container recreation.
 - [ ] DB credentials come from environment variables, not source code.
-- [ ] Two updates based on the same version: one succeeds, the other returns `409`.
+- [ ] A status change bumps `version` in the `parcels` table, and `GlobalErrorHandler` maps `ObjectOptimisticLockingFailureException` to `409`.
 - [ ] You can explain what a volume, a migration, an entity, and optimistic locking are.
-- [ ] You can say why we chose PostgreSQL over a NoSQL store for parcels (see [SQL and databases](sql-and-databases.md)).
+- [ ] You can say why we chose PostgreSQL over a NoSQL store for parcels (see [Database design and scaling](../../../computer-science/index.html#database-design-scaling)).
 - [ ] You can explain what an ORM/JPA does and why we don't hand-write SQL (see [JPA and repositories](jpa-and-repositories.md)).
 
 > **Return to testing:** ParcelPilot now has a real database — go back and complete the [Testcontainers lab](../08-testing/testcontainers-lab.md) from step 08 so your repository is covered by tests against real PostgreSQL.
@@ -226,57 +243,17 @@ curl -i http://localhost:8080/parcels/P-1
 - "`@Version` gives me **optimistic locking**: a clashing update returns `409 Conflict`."
 - "DB credentials come from **environment variables**, never from source code."
 
-## Quiz: check yourself
+## Check
 
-Answer out loud before opening each toggle.
-
-1. Why does putting data in a **volume** matter?
-
-<details><summary>Show answer</summary>
-
-A container is disposable, so replacing it wipes its contents. A volume stores data on disk *outside* the container, so the database keeps the parcels even when the container is recreated.
-
-</details>
-
-2. What does an **entity** (`@Entity`) do?
-
-<details><summary>Show answer</summary>
-
-It maps a Java class to a database table, so each object corresponds to a row. JPA/Hibernate then translates between objects and SQL for you.
-
-</details>
-
-3. What is a **migration**, and why not just create tables by hand?
-
-<details><summary>Show answer</summary>
-
-A migration is a versioned SQL script (via Flyway) that creates/changes tables. It runs the same way on every machine and in CI, so the schema is reproducible and tracked in version control, which hand-creating tables isn't.
-
-</details>
-
-4. Explain **optimistic locking** with the `version` column.
-
-<details><summary>Show answer</summary>
-
-Each row has a `version`. An update only succeeds if the version still matches what you read. Otherwise someone else changed it first, so the update fails and the API returns `409 Conflict`, prompting a reload-and-retry. This prevents silent lost updates.
-
-</details>
-
-5. Why do DB credentials come from **environment variables** instead of being written in the code?
-
-<details><summary>Show answer</summary>
-
-So secrets aren't committed to source control, and the same image can run against different databases (local, test, prod) just by changing the environment.
-
-</details>
-
-6. Why did we choose PostgreSQL (relational/SQL) over a NoSQL store for parcels?
-
-<details><summary>Show answer</summary>
-
-Parcels have a clear, consistent structure and need reliable updates, transactions, and locking, exactly what a relational database is built for. (See [SQL and databases](sql-and-databases.md).)
-
-</details>
+> [!CHECK]
+> 1. Why does putting data in a **volume** matter?
+>    <details><summary>Answer</summary>A container is disposable, so replacing it wipes its contents. A volume stores data on disk <em>outside</em> the container, so the database keeps the parcels even when the container is recreated.</details>
+> 2. What does an **entity** (`@Entity`) do?
+>    <details><summary>Answer</summary>It maps a Java class to a database table, so each object corresponds to a row. JPA/Hibernate then translates between objects and SQL for you.</details>
+> 3. What is a **migration**, and why not just create tables by hand?
+>    <details><summary>Answer</summary>A migration is a versioned SQL script (via Flyway) that creates/changes tables. It runs the same way on every machine and in CI, so the schema is reproducible and tracked in version control, which hand-creating tables isn't.</details>
+> 4. Explain **optimistic locking** with the `version` column.
+>    <details><summary>Answer</summary>Each row has a <code>version</code>. An update only succeeds if the version still matches what you read. Otherwise someone else changed it first, so the update fails and the API returns <code>409 Conflict</code>, prompting a reload-and-retry. This prevents silent lost updates.</details>
 
 ## Reflect (stretch)
 

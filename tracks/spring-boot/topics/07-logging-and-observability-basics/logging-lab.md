@@ -179,6 +179,6 @@ Play reviewer. For each proposed log line, decide **allow or reject** (and why) 
 ## Next
 
 - Back to the step: [Step 07 README](README.md)
-- Concepts in depth: [SLF4J and log levels](slf4j-and-log-levels.md)
-- Full reference: [../../references/tooling/logging.md](../../references/tooling/logging.md)
+- Concepts in depth: [SLF4J, levels and log rules](slf4j-and-log-levels.md)
+- Rules and mistakes: [SLF4J, levels and log rules](slf4j-and-log-levels.md#common-mistakes)
 - Next step: [Step 08: testing](../08-testing/README.md)

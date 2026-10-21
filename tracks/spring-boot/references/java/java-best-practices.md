@@ -118,7 +118,7 @@ int maxRetries = 5;
 
 **Why:** tests are the safety net that makes every later change (Spring, DB, queues) survivable. Testing behavior (not internals) lets you refactor freely as long as behavior holds.
 
-Unit tests on the rules are the start; [Step 08 (testing)](../../topics/08-testing/README.md) grows the suite to cover HTTP behavior (MockMvc) and, later, real database wiring (Testcontainers). The full picture is in the [testing reference](../web-and-api/testing.md).
+Unit tests on the rules are the start; [Step 08 (testing)](../../topics/08-testing/README.md) grows the suite to cover HTTP behavior (MockMvc) and, later, real database wiring (Testcontainers).
 
 ## 11. Program to interfaces at real boundaries
 
@@ -171,6 +171,6 @@ Every one of these shows up concretely somewhere in the ParcelPilot roadmap. Whe
 ## See also
 
 - [General coding concepts](coding-concepts.md): early return, guard clauses, DRY, and other language-agnostic habits
-- [Java and OOP reference](java-and-oop.md)
+- [Classes and objects](../../../java/topics/classes-and-objects/index.html) (Java hub)
 - [Code organization: one file → many → layered](../architecture/code-organization.md)
-- [Design patterns catalog](design-patterns.md)
+- [Patterns in ParcelPilot](design-patterns.md)

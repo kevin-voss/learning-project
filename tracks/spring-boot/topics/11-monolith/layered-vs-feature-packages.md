@@ -71,7 +71,7 @@ In a by-layer layout that's impossible: `service.ParcelService` needs `repositor
 
 ## The course's choice, and why
 
-ParcelPilot packages **by feature**. Not for style points — because the roadmap depends on it: step 11 needs modules with real boundaries (`parcel`, `notification`), and step 13 extracts the `notification` module into its own service. In a by-feature layout that extraction is nearly "move this folder"; in a by-layer layout it's an archaeology project across five folders. The [Code organization](../../references/architecture/code-organization.md) reference walks this as Stage 4 → Stage 5 of the same journey.
+ParcelPilot packages **by feature**. Not for style points — because the roadmap depends on it: step 11 needs modules with real boundaries (`parcel`, `notification`), and step 13 extracts the `notification` module into its own service. In a by-feature layout that extraction is nearly "move this folder"; in a by-layer layout it's an archaeology project across five folders. The [Code organization](../../references/architecture/code-organization.md) reference walks this as Shape 4 → Shape 5 of the same journey.
 
 ## The hybrid reality
 

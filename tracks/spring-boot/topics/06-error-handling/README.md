@@ -1,6 +1,7 @@
 # Step 06: Error handling & HTTP error contracts
 
-> In this step: give every ParcelPilot failure **one predictable JSON shape**. You'll learn how Java exceptions signal problems, and move all error → HTTP status mapping into a single `@RestControllerAdvice` class, so clients can program against your errors instead of guessing. ~60–90 minutes.
+> [!PICTURE]
+> Things go wrong at a depot: a parcel is missing, a stamp is in the wrong order, a form is half empty. A good depot hands out **one standard "sorry slip"** for every problem: a code, a short message, and the details. Customers learn to read one slip, not ten. In ParcelPilot that slip is one JSON error shape, written by one central error handler.
 
 ## The problem right now
 
@@ -17,11 +18,8 @@ Three failures, three shapes (or none). A client that wants to show "why did thi
 | Word | Beginner meaning |
 |---|---|
 | **Exception** | A Java object that signals "something went wrong here", thrown up the call chain until someone handles it. |
-| **`throw`** | The keyword that raises an exception: `throw new IllegalStateException("...")`. |
-| **`try`/`catch`** | The construct that handles an exception instead of letting it crash the current operation. |
-| **Checked exception** | An exception the compiler forces you to declare or catch (e.g. `IOException`). |
-| **Unchecked exception** | An exception the compiler doesn't force you to handle (`RuntimeException` and subclasses). Spring uses these almost everywhere. |
 | **Stack trace** | The list of method calls that led to an exception: a map straight to the bug. |
+| **Unchecked exception** | A `RuntimeException`: the compiler does not force you to catch it. Spring uses these almost everywhere. |
 | **`@RestControllerAdvice`** | A Spring annotation for a class that handles exceptions for **all** controllers and returns JSON. |
 | **`@ExceptionHandler`** | Marks a method as the handler for one exception type. |
 | **Error contract** | The agreed shape of every error response, so clients can rely on it. |
@@ -29,7 +27,7 @@ Three failures, three shapes (or none). A client that wants to show "why did thi
 
 ## What is centralized error handling?
 
-An exception is Java's way of saying "this operation cannot continue" — the domain throws it at the exact spot where a rule breaks, and it travels up the call chain until something handles it. (New to exceptions? Read [Exceptions in Java, from scratch](exceptions-in-java.md) first — `throw`/`try`/`catch`, the hierarchy, and how to read a stack trace.) Until now, ParcelPilot handled these signals wherever they happened to surface: a `catch` here, an `if (parcel == null)` there, a local handler in the controller. Centralized error handling flips that around: controllers and the domain **only throw**, and one dedicated class — a `@RestControllerAdvice` — catches every exception, picks the right HTTP status, and builds the response body. Because a single class builds every error body, every error automatically has the **same shape**.
+An exception is Java's way of saying "this operation cannot continue" — the domain throws it at the exact spot where a rule breaks, and it travels up the call chain until something handles it. (Exceptions themselves are taught in the [Java hub](../../../java/topics/exceptions/index.html). What ParcelPilot adds, its own `ParcelNotFoundException` and why Spring prefers unchecked exceptions, is in [Exceptions in ParcelPilot](exceptions-in-java.md).) Until now, ParcelPilot handled these signals wherever they happened to surface: a `catch` here, an `if (parcel == null)` there, a local handler in the controller. Centralized error handling flips that around: controllers and the domain **only throw**, and one dedicated class — a `@RestControllerAdvice` — catches every exception, picks the right HTTP status, and builds the response body. Because a single class builds every error body, every error automatically has the **same shape**.
 
 ```mermaid
 flowchart LR
@@ -334,7 +332,7 @@ Three different failures, one shape. That's the contract.
 - [ ] A validation failure returns `400` with field errors inside `details`, same shape.
 - [ ] The controller contains **no** `try`/`catch`, no `ResponseEntity.notFound()`, and no local `@ExceptionHandler` anymore.
 - [ ] The catch-all `500` handler returns a generic message — you can explain why it must never include `ex.getMessage()` or a stack trace.
-- [ ] You can explain checked vs unchecked exceptions and why `ParcelNotFoundException` extends `RuntimeException` (see [Exceptions in Java](exceptions-in-java.md)).
+- [ ] You can explain checked vs unchecked exceptions and why `ParcelNotFoundException` extends `RuntimeException` (see [Exceptions in ParcelPilot](exceptions-in-java.md)).
 - [ ] You can say why "always return `200` with an error flag in the body" is an anti-pattern.
 
 ## Say it like a developer
@@ -346,49 +344,17 @@ Three different failures, one shape. That's the contract.
 - "The catch-all handler returns a generic `500`; the stack trace goes to the **logs**, never to the client."
 - "I re-homed the validation handler from the controller into the global advice, so `400`s use the same shape as everything else."
 
-## Quiz: check yourself
+## Check
 
-Answer out loud before opening each toggle.
-
-1. What is the difference between a **checked** and an **unchecked** exception, and which kind does Spring mostly use?
-
-<details><summary>Show answer</summary>
-
-A checked exception must be declared in the method signature or caught — the compiler enforces it. An unchecked exception (`RuntimeException` and its subclasses) needs no declaration and propagates freely. Spring uses mostly unchecked exceptions, so errors can travel from the domain to a central handler without every method in between declaring them.
-
-</details>
-
-2. What does `@RestControllerAdvice` do, in one sentence?
-
-<details><summary>Show answer</summary>
-
-It marks a class whose `@ExceptionHandler` methods handle exceptions thrown by **all** controllers, with return values serialized as JSON — one central place that maps exceptions to HTTP statuses and bodies.
-
-</details>
-
-3. A client sends a well-formed request to change parcel `P-1` from `CREATED` straight to `DELIVERED`. Why is the right status `409` and not `400`?
-
-<details><summary>Show answer</summary>
-
-`400` means the request itself is malformed or invalid. Here the request is fine — it's the parcel's **current state** that conflicts with the requested change. `409 Conflict` says exactly that: valid request, but it conflicts with the resource's state right now.
-
-</details>
-
-4. Why must the catch-all `500` handler return a generic message instead of `ex.getMessage()`?
-
-<details><summary>Show answer</summary>
-
-An unexpected exception's message can leak internals — class names, file paths, query fragments — which helps attackers and confuses clients. The client only needs "something went wrong on our side"; the full detail belongs in the server's logs (step 07).
-
-</details>
-
-5. Why is returning `200 OK` with `{"success": false}` in the body an anti-pattern?
-
-<details><summary>Show answer</summary>
-
-The status code is the part of HTTP that every client, cache, monitor, and retry library already understands. A `200`-that-is-really-an-error makes caches store failures, makes monitoring report a healthy API while requests fail, and forces every client to parse every body to discover what the status line should have said.
-
-</details>
+> [!CHECK]
+> 1. What is the difference between a **checked** and an **unchecked** exception, and which kind does Spring mostly use?
+>    <details><summary>Answer</summary>A checked exception must be declared in the method signature or caught — the compiler enforces it. An unchecked exception (<code>RuntimeException</code> and its subclasses) needs no declaration and propagates freely. Spring uses mostly unchecked exceptions, so errors can travel from the domain to a central handler without every method in between declaring them.</details>
+> 2. What does `@RestControllerAdvice` do, in one sentence?
+>    <details><summary>Answer</summary>It marks a class whose <code>@ExceptionHandler</code> methods handle exceptions thrown by <strong>all</strong> controllers, with return values serialized as JSON — one central place that maps exceptions to HTTP statuses and bodies.</details>
+> 3. A client sends a well-formed request to change parcel `P-1` from `CREATED` straight to `DELIVERED`. Why is the right status `409` and not `400`?
+>    <details><summary>Answer</summary><code>400</code> means the request itself is malformed or invalid. Here the request is fine — it's the parcel's <strong>current state</strong> that conflicts with the requested change. <code>409 Conflict</code> says exactly that: valid request, but it conflicts with the resource's state right now.</details>
+> 4. Why must the catch-all `500` handler return a generic message instead of `ex.getMessage()`?
+>    <details><summary>Answer</summary>An unexpected exception's message can leak internals — class names, file paths, query fragments — which helps attackers and confuses clients. The client only needs "something went wrong on our side"; the full detail belongs in the server's logs (step 07).</details>
 
 ## Reflect
 

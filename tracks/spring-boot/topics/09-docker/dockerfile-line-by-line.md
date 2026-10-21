@@ -178,7 +178,7 @@ You could build everything in one stage and ship the whole Maven+JDK image. Comp
 | Debugging inside the container | full toolbox available | leaner, fewer tools |
 | Good for | learning, quick experiments | anything you ship |
 
-Both are legitimate: single-stage is fine while you're learning what an image even is; multi-stage is the habit worth keeping. The [Docker reference](../../references/tooling/docker.md) has a fuller comparison with a concrete example of each.
+Both are legitimate: single-stage is fine while you're learning what an image even is; multi-stage is the habit worth keeping.
 
 ## Next
 

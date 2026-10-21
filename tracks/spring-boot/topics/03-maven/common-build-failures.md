@@ -1,5 +1,8 @@
 # Common build failures (and how to read them)
 
+> [!PICTURE]
+> When the depot checklist fails, the manager does not read the last page of the report. She looks for the **first** red mark. Everything after it usually went wrong because of that first mistake.
+
 Every beginner hits the same handful of Maven failures. This page shows each one as it looks in your terminal, what actually went wrong, and the fix. Keep it open next to your first builds.
 
 ## The problem
@@ -141,7 +144,7 @@ zsh: command not found: mvn
 
 **Cause:** Maven isn't installed, or it's installed but not on your shell's `PATH`.
 
-**Fix:** install it with `sudo apt install -y maven`, then verify with `mvn -version`. Alternatively, if a project ships the **Maven Wrapper**, run `./mvnw test` instead — the wrapper downloads its own Maven and needs no install (see the [Maven reference](../../references/tooling/maven.md)).
+**Fix:** install it with `sudo apt install -y maven`, then verify with `mvn -version`. Alternatively, if a project ships the **Maven Wrapper**, run `./mvnw test` instead — the wrapper downloads its own Maven and needs no install (see [daily commands](#daily-commands-and-the-maven-wrapper) below).
 
 ## Not-quite-failures: plugin version warnings
 
@@ -170,9 +173,21 @@ zsh: command not found: mvn
 | `command not found: mvn` | Maven not installed / not on PATH | install, or use `./mvnw` |
 | `[WARNING] … version … missing` | unpinned plugin version | ignore now, pin in real projects |
 
+## Daily commands and the Maven Wrapper
+
+```bash
+mvn test            # compile and run the tests
+mvn package         # test, then build target/*.jar
+mvn clean           # delete the generated target/ folder
+mvn clean package   # start from scratch, then build
+```
+
+- **Maven Wrapper:** if a project has a `mvnw` file, run `./mvnw test` instead of `mvn test`. The wrapper downloads the exact Maven version the project wants, so every teammate and CI server builds the same way.
+- **Dependencies:** add one only when your code needs it. With Spring Boot (step 04), the parent POM picks library versions for you, so do not write `<version>` for those.
+- **`target/`** is generated. Never edit it and never commit it.
+
 ## Next
 
 - How the `test` phase, Surefire, and reports work: [Testing with Maven](testing-with-maven.md).
-- Maven Wrapper and dependency habits: [Maven reference](../../references/tooling/maven.md).
 - A general method for debugging anything (read the error, form a hypothesis, test it): [Debugging and troubleshooting](../../references/operations/debugging-and-troubleshooting.md).
 - Back to [Step 03](README.md).

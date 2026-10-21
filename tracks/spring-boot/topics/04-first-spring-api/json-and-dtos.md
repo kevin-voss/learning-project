@@ -150,7 +150,7 @@ For anything that outlives a demo, DTOs win. The cost is one small mapping funct
 ## Next
 
 - Bad input deserves a helpful `400`, not a mysterious `500`: [Step 05](../05-validation-and-inputs/README.md).
-- Which status code means what, hands-on: [HTTP status codes lab](http-status-codes-lab.md).
+- Which status code means what, hands-on: [REST API lab, part 2](rest-api.md).
 - The annotations that trigger all this (`@RequestBody` and friends): [Annotations and imports](annotations-imports.md).
 - HTTP quick reference: [Spring and HTTP](../../references/web-and-api/spring-and-http.md).
 - Back to [Step 04](README.md).

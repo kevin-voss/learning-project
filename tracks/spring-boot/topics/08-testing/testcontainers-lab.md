@@ -184,4 +184,4 @@ To feel the value, break the migration on purpose: rename a column in `V1__creat
 
 - Back to [step 10](../10-persistence/README.md), whose "return to testing" callout sent you here.
 - Back to [Step 08](README.md) to see where these tests sit in the pyramid.
-- [Testing reference](../../references/web-and-api/testing.md) for the full deep dive, including flaky-test causes.
+- [Spring testing cheat sheet](../../references/web-and-api/testing.md), including flaky-test causes.

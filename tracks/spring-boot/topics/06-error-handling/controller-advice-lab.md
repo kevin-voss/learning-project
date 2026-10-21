@@ -4,7 +4,7 @@
 
 You're told ParcelPilot's errors are inconsistent — but "inconsistent" is abstract until you see it. This lab makes you **prove the problem first**, then fix it in small increments, proving each exception→status mapping with `curl` before adding the next. By the end, four different failures return one shape, and you'll have discussed error codes and where handlers should live.
 
-Prerequisites: the concepts from the [step 06 README](README.md) and, if exceptions are still fuzzy, [Exceptions in Java](exceptions-in-java.md).
+Prerequisites: the concepts from the [step 06 README](README.md) and, if exceptions are still fuzzy, [Exceptions in the Java hub](../../../java/topics/exceptions/index.html).
 
 ## Part 1: prove the problem (before touching code)
 
@@ -159,6 +159,6 @@ Default to the global advice — a consistent contract is worth more than per-en
 
 ## Next
 
-- Back to [Step 06](README.md) for the acceptance criteria and quiz.
+- Back to [Step 06](README.md) for the acceptance criteria and the check.
 - Deep dive: [Error handling and HTTP statuses](../../references/web-and-api/error-handling-and-http-statuses.md) — status decision table, RFC 7807, retry-ability.
 - Coming up: [Step 07](../07-logging-and-observability-basics/README.md) puts the details your generic `500` hides into logs you can search.

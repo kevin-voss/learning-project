@@ -1,6 +1,7 @@
 # Step 07: Logging you can actually read
 
-> In this step: make ParcelPilot tell you what it's doing. You'll learn SLF4J and Logback, log levels, parameterized messages, and what must never appear in a log, then add real logging to the controller and the error handler. ~60–75 minutes.
+> [!PICTURE]
+> Every depot keeps a **logbook**. "10:02 parcel P-1 created. 10:05 P-1 picked up. 10:07 P-9 not found." When a customer complains, you open the logbook and read what really happened. Logging is ParcelPilot's logbook: short, timed lines that tell the story of each request.
 
 ## The problem right now
 
@@ -30,123 +31,25 @@ A real backend keeps a permanent, structured record of what it did. That record 
 | **MDC** | Mapped Diagnostic Context: a per-request "sticky note" that gets attached to every log line, e.g. a request ID. |
 | **Correlation / request ID** | A unique ID given to one request so you can find all its log lines. |
 
-## What is logging with SLF4J and Logback?
+## The idea in one minute
 
-**Logging** is your app narrating its own life to standard output: *"18:22:31, INFO, ParcelController: Created parcel P-2."* Unlike `println`, every line carries a timestamp, a severity **level**, and the class that wrote it, and you can dial the detail up or down **without touching code**.
+**Logging** is your app writing its own diary: *"18:22:31, INFO, ParcelController: Created parcel P-2."* Unlike `println`, every line has a time, a **level** and the class that wrote it. You can show more or less detail **without touching code**.
 
-In Java you don't talk to a logging library directly. You talk to **SLF4J**, a *facade*: a small, stable API (`log.info(...)`, `log.error(...)`) that forwards to whichever real implementation is on the classpath. Spring Boot ships **Logback** as that implementation. The win: your code never changes even if the implementation underneath does.
-
-```mermaid
-flowchart LR
-  A["Your code<br/>log.info(&quot;Created parcel {}&quot;, id)"] --> S["SLF4J<br/>(the facade / API)"]
-  S --> L["Logback<br/>(Spring Boot's default implementation)"]
-  S -. "could swap in" .-> O["Log4j2, java.util.logging, ..."]
-  L --> T["Terminal (stdout)"]
-```
-
-The minimal ParcelPilot version — no new dependencies, `spring-boot-starter-web` already includes everything:
+Your code talks to **SLF4J** (the front, a small API). Spring Boot puts **Logback** behind it (the engine that writes the lines). No new dependency is needed.
 
 ```java
-package com.parcelpilot;
+private static final Logger log = LoggerFactory.getLogger(ParcelController.class);
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-public class Example {
-    // one logger per class, named after the class
-    private static final Logger log = LoggerFactory.getLogger(Example.class);
-
-    void createParcel(String id, String recipient) {
-        log.info("Created parcel {} for recipient {}", id, recipient);
-    }
-}
+log.info("Created parcel {} for recipient {}", id, recipient);
 ```
 
-Run it and Logback prints:
+Three rules for this step:
 
-```text
-2026-07-14T18:22:31.512+02:00  INFO 41235 --- [nio-8080-exec-1] com.parcelpilot.Example : Created parcel P-2 for recipient Ava
-```
+1. **INFO** tells the business story (parcel created, status changed). **ERROR** means "a human should look". **DEBUG** is for details you only want while investigating.
+2. Always use `{}` placeholders, never `+`.
+3. Never log passwords, tokens or full personal data. Log the parcel **ID**.
 
-### The five levels, and when to use each
-
-Every log line has exactly one level. Levels are ordered, and you set a *threshold* per package: at `INFO`, everything `INFO` and above is shown, `DEBUG`/`TRACE` are dropped.
-
-| Level | Use it when… | ParcelPilot example |
-|---|---|---|
-| `TRACE` | You need step-by-step internals. Almost never in app code. | "Entering toResponse() with P-2" |
-| `DEBUG` | Useful while developing; noise in normal operation. | "Status filter matched 3 of 12 parcels" |
-| `INFO` | Something businessy happened that you'd want in the record. | "Created parcel P-2", "Parcel P-2 → PICKED_UP" |
-| `WARN` | Something is off but the app handled it and kept going. | "Unknown status filter 'CREATD', returning empty list" |
-| `ERROR` | Something failed that shouldn't have. A human should look. | The catch-all in `GlobalErrorHandler` fired |
-
-Rule of thumb: **INFO tells the story of the business, DEBUG tells the story of the code.** The full decision table with more examples is in [SLF4J and log levels](slf4j-and-log-levels.md).
-
-### Parameterized logging: `{}` beats `+`
-
-Always write messages with `{}` placeholders:
-
-```java
-log.info("Created parcel {} for recipient {}", id, recipient);   // good
-log.info("Created parcel " + id + " for recipient " + recipient); // avoid
-```
-
-Two reasons:
-
-1. **Cost.** With `+`, Java builds the full string *even when the level is disabled* and the line is thrown away. With `{}`, SLF4J only assembles the string if the line will actually be written. This matters most for `DEBUG` lines that are usually off.
-2. **Safety and readability.** It's printf-style: the template stays constant and scannable, the values slot in. No `+ " " +` typos, and log tools can group lines by their template.
-
-### What must NEVER be in a log
-
-Logs get copied, shipped, searched, and kept for months. Treat every log line as something a stranger might read later.
-
-| Never log | Why |
-|---|---|
-| Passwords (even wrong ones) | A log leak becomes an account leak. |
-| Tokens, JWTs, API keys, session IDs | Anyone reading the log can impersonate the user. |
-| Full personal data (addresses, emails, phone numbers) | Privacy laws and basic decency. Log the parcel **ID**, not the recipient's home address. |
-| Full request bodies "just in case" | They contain all of the above sooner or later. |
-
-For ParcelPilot: `recipient` is a name — borderline, fine for a learning project. When ParcelPilot grows real addresses, you'd log `parcelId` only. More in [the logging reference](../../references/tooling/logging.md).
-
-### Correlation IDs (a first look)
-
-When two `curl`s hit the app at the same time, their log lines interleave. A **request ID** — one unique ID per request, stamped on every line that request produces — lets you filter the log down to one request's story. You'll build a small version as this step's stretch goal, and the full multi-service version in [step 14](../14-compose-and-observe/README.md).
-
-## Why do it? Pros and cons
-
-**What it brings us:** when the next 500 happens, the terminal tells you *what* failed, *where*, and *for which request* — without redeploying with print statements.
-
-| Pros | Cons |
-|---|---|
-| Debuggability: the stack trace of every unexpected error is on record | Volume: logs cost disk/attention; chatty logs bury the important lines |
-| An audit trail: "parcel P-2 was created at 18:22, moved to PICKED_UP at 18:40" | Risk: one careless line can leak a password or token into storage |
-| Levels let you dial detail up (DEBUG) or down (WARN) per package, no code change | Unparameterized logging (`+`) silently costs CPU and invites bugs |
-| Logging to stdout is exactly what Docker expects — this pays off in [step 09](../09-docker/README.md) and [step 14](../14-compose-and-observe/README.md) | A log is not a metric: it can't cheaply answer "how many per second?" |
-
-## When to use it (and when not)
-
-**Use INFO** at business moments: parcel created, status changed, request rejected with a 4xx you care about. **Use ERROR** exactly where the last-resort handler catches the unexpected. **Use DEBUG** for the details you'd want mid-investigation but not every day.
-
-**Where to log matters as much as what.** Log at the **boundary** (the controller / error handler, where requests enter and leave) and at **decision points** (a status transition rejected). Do *not* log the same event in every layer — if the controller logs "creating parcel" and the domain logs "creating parcel" and a future repository logs it too, one request becomes three identical lines and the log turns to noise.
-
-**When not:**
-
-- **No INFO inside tight loops.** A line per parcel inside `list()` over 10,000 parcels is 10,000 lines per request. Log the summary ("returned 10000 parcels"), or use DEBUG.
-- **Logs are not metrics.** "How many parcels per minute? What's the p95 latency?" — counting log lines is the wrong tool; that's what metrics are for, and they arrive in [step 14](../14-compose-and-observe/README.md).
-- **Don't log secrets to make debugging easier.** See the never-log table above; there is no exception for "just locally".
-
-## Real-world example
-
-A bank's payment service processes a transfer that fails at 03:12 on a Sunday. Nobody was watching a terminal. On Monday, an engineer greps the logs for the transfer ID, finds one `ERROR` line with a full stack trace pointing to a currency-conversion call that timed out, and the `INFO` lines around it showing exactly which steps completed before the failure. The bug is fixed by lunch — because the app wrote its story down while nobody was looking.
-
-## Common mistakes
-
-- **Passing the exception inside the message:** `log.error("Failed: " + e)` or `log.error("Failed {}", e)` prints only `e.toString()` — **no stack trace**. Pass the exception as the *last argument with no placeholder*: `log.error("Failed on {} {}", method, path, e)`.
-- **String concatenation in log messages** — builds strings even for disabled levels, and loses the constant-template benefit. Use `{}`.
-- **Log-and-rethrow:** catching an exception, logging it, then throwing it again — the caller (or the `GlobalErrorHandler`) logs it *too*, and every error appears twice. Log an exception at exactly **one** place: where it's finally handled.
-- **INFO noise:** logging every getter, every layer, every loop iteration. When everything is INFO, nothing is.
-- **Creating the logger with the wrong class:** copy-pasting `LoggerFactory.getLogger(ParcelController.class)` into `GlobalErrorHandler` makes lines *claim* to come from the controller. The logger's class argument should always be the class it lives in.
+The five levels, the `{}` rules, what never to log, MDC and common mistakes are all on one page: [SLF4J, levels and log rules](slf4j-and-log-levels.md). Read it now or when the build below surprises you.
 
 ## Build it in ParcelPilot
 
@@ -366,49 +269,17 @@ If you see the ERROR line but **no stack trace**, you've hit the gotcha: the exc
 - "We log at the boundary and at decision points, not in every layer, to avoid duplicate noise."
 - "We never log tokens or passwords; the client gets a generic 500 while the details stay in our log."
 
-## Quiz: check yourself
+## Check
 
-Answer out loud before opening each toggle.
-
-1. What is the difference between **SLF4J** and **Logback**?
-
-<details><summary>Show answer</summary>
-
-SLF4J is the **facade** — the stable API your code calls (`log.info(...)`). Logback is the **implementation** behind it that actually formats and writes the lines. Your code only depends on SLF4J, so the implementation could be swapped (e.g. for Log4j2) without changing a line of your code.
-
-</details>
-
-2. Why is `log.info("Created parcel {}", id)` better than `log.info("Created parcel " + id)`?
-
-<details><summary>Show answer</summary>
-
-With `+`, the full string is built even when the level is disabled and the line is discarded — wasted work. With `{}`, SLF4J only assembles the string if the line will actually be written. The template also stays constant, which is easier to read and lets tools group lines.
-
-</details>
-
-3. You write `log.error("Failed: {}", e)`. What do you get, and what should you write instead?
-
-<details><summary>Show answer</summary>
-
-You get one line containing `e.toString()` — **no stack trace**, because `e` was consumed by the placeholder as a plain value. Pass the exception as the last argument with **no** placeholder: `log.error("Failed on {} {}", method, path, e)` — then SLF4J prints the message *and* the full stack trace.
-
-</details>
-
-4. A request comes in with an unknown status filter; the app returns an empty list and keeps working. A request hits a bug and the catch-all handler fires. Which level fits each, and why?
-
-<details><summary>Show answer</summary>
-
-The unknown filter is a **WARN**: something is off, but the app handled it and kept going. The catch-all firing is an **ERROR**: something failed that shouldn't have, and a human should investigate.
-
-</details>
-
-5. Name three things that must never be written to a log, and say what a request ID is for.
-
-<details><summary>Show answer</summary>
-
-Never log passwords, tokens/JWTs/API keys, or full personal data (like a recipient's home address) — logs get stored, shipped, and read widely, so a log leak becomes a credential or privacy leak. A request ID is a unique ID stamped on every log line one request produces, so you can filter interleaved logs down to a single request's story.
-
-</details>
+> [!CHECK]
+> 1. What is the difference between **SLF4J** and **Logback**?
+>    <details><summary>Answer</summary>SLF4J is the <strong>facade</strong> — the stable API your code calls (<code>log.info(...)</code>). Logback is the <strong>implementation</strong> behind it that actually formats and writes the lines. Your code only depends on SLF4J, so the implementation could be swapped (e.g. for Log4j2) without changing a line of your code.</details>
+> 2. Why is `log.info("Created parcel {}", id)` better than `log.info("Created parcel " + id)`?
+>    <details><summary>Answer</summary>With <code>+</code>, the full string is built even when the level is disabled and the line is discarded — wasted work. With <code>{}</code>, SLF4J only assembles the string if the line will actually be written. The template also stays constant, which is easier to read and lets tools group lines.</details>
+> 3. You write `log.error("Failed: {}", e)`. What do you get, and what should you write instead?
+>    <details><summary>Answer</summary>You get one line containing <code>e.toString()</code> — <strong>no stack trace</strong>, because <code>e</code> was consumed by the placeholder as a plain value. Pass the exception as the last argument with <strong>no</strong> placeholder: <code>log.error("Failed on {} {}", method, path, e)</code> — then SLF4J prints the message <em>and</em> the full stack trace.</details>
+> 4. A request comes in with an unknown status filter; the app returns an empty list and keeps working. A request hits a bug and the catch-all handler fires. Which level fits each, and why?
+>    <details><summary>Answer</summary>The unknown filter is a <strong>WARN</strong>: something is off, but the app handled it and kept going. The catch-all firing is an <strong>ERROR</strong>: something failed that shouldn't have, and a human should investigate.</details>
 
 ## Reflect
 

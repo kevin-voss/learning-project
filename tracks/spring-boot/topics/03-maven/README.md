@@ -1,6 +1,9 @@
 # Step 03: Maven for a repeatable, tested build
 
-> In this step: turn your loose `.java` files into a real project that builds and tests with **one command**, and write your first automated tests. ~60–90 minutes.
+> [!PICTURE]
+> Every morning the depot manager opens one binder: the **checklist**. It says which tools to fetch, which shelves to fill, and which test parcels to send through. Anyone who follows the binder gets the same depot. Maven is that binder for your code: `pom.xml` is the checklist, and `mvn test` runs it.
+
+You met Maven and JUnit in the Java stages ([build tools](../../../java/topics/build-tools/index.html), [testing](../../../java/topics/testing/index.html)). Here you set them up for ParcelPilot.
 
 ## The problem right now
 
@@ -27,8 +30,6 @@ You need **one command** that compiles, runs tests, and packages the app, the sa
 | **JUnit** | The most common Java testing library. |
 | **Assertion** | A check inside a test, e.g. "the status must equal DELIVERED". |
 | **CI** | Continuous Integration: a server that runs your build + tests automatically. |
-
-> Maven isn't the only build tool. For a short comparison of Maven vs Gradle vs Ant vs plain `javac`, and exactly why this course starts with Maven, read [Build tools compared](build-tools-compared.md).
 
 ## What Maven does (and why it feels magical at first)
 
@@ -62,7 +63,7 @@ applications/parcelpilot/
             └── ParcelTrackerTest.java
 ```
 
-> **Package note:** the `com/parcelpilot/` folders match a line `package com.parcelpilot;` you add at the top of each `.java` file. A **package** is just a namespace/folder that groups related classes. New to packages and imports? Read [Packages, imports, and project structure](packages-imports-structure.md): it explains the `package` line, when you need `import`, and why folders must match. For the bigger arc (how ParcelPilot moves from loose files to packages and, later, layers) see [Code organization: from one file to a layered app](../../references/architecture/code-organization.md).
+> **Package note:** the `com/parcelpilot/` folders match a line `package com.parcelpilot;` you add at the top of each `.java` file. A **package** is just a namespace/folder that groups related classes. The folders under `java/` must match the `package` line exactly, or compilation fails. Packages and imports are explained in [syntax fundamentals](../../../java/topics/syntax-fundamentals/index.html). For the bigger arc (how ParcelPilot moves from loose files to packages and, later, layers) see [Code organization: from one file to a layered app](../../references/architecture/code-organization.md).
 
 ## Why do it? Pros and cons
 
@@ -176,8 +177,7 @@ mvn package     # builds target/parcelpilot-0.1.0.jar
 - [ ] A test uses a fixed/fake clock to make timestamps predictable.
 - [ ] `mvn package` produces a JAR.
 - [ ] You can explain what `pom.xml`, a dependency, an assertion, and a JAR are.
-- [ ] You can explain what a `package` line does and when you need an `import` (see [packages guide](packages-imports-structure.md)).
-- [ ] You can name one alternative build tool and why we chose Maven (see [build tools compared](build-tools-compared.md)).
+- [ ] You can explain what a `package` line does and when you need an `import`.
 
 ## Say it like a developer
 
@@ -187,61 +187,21 @@ mvn package     # builds target/parcelpilot-0.1.0.jar
 - "The test **asserts** that the status equals `DELIVERED`."
 - "I follow Maven's **conventions** (code in `src/main/java`, tests in `src/test/java`), so it just works."
 
-## Quiz: check yourself
+## Check
 
-Answer out loud before opening each toggle.
-
-1. What is a `pom.xml` and what do you put in it?
-
-<details><summary>Show answer</summary>
-
-Maven's project file. It declares the Java version, the project's coordinates (groupId/artifactId/version), and the dependencies (libraries) your project needs, plus build settings.
-
-</details>
-
-2. What is a **dependency**, and how does it get onto your machine?
-
-<details><summary>Show answer</summary>
-
-A dependency is an external library your project uses (e.g. JUnit). You declare it in `pom.xml` and Maven downloads it automatically, so you never hand-download JAR files.
-
-</details>
-
-3. What is the difference between `mvn test` and `mvn package`?
-
-<details><summary>Show answer</summary>
-
-`mvn test` compiles the code and runs the tests. `mvn package` does that *and* bundles the result into a runnable JAR (the artifact) in `target/`.
-
-</details>
-
-4. Why must your `.java` files live in `src/main/java` and tests in `src/test/java`?
-
-<details><summary>Show answer</summary>
-
-Those are Maven's **conventions**. Following the expected folder layout means Maven finds and builds everything with almost no configuration.
-
-</details>
-
-5. What is an **assertion** in a test, and what happens if it's false?
-
-<details><summary>Show answer</summary>
-
-An assertion is a check inside a test, e.g. `assertEquals(DELIVERED, parcel.status())`. If it's false, the test **fails** (turns red), telling you the code no longer behaves as expected.
-
-</details>
-
-6. Name one alternative to Maven and one reason this course chose Maven.
-
-<details><summary>Show answer</summary>
-
-Alternatives include Gradle, Ant, and Bazel. This course chose Maven because its XML config is explicit and beginner-friendly, it's the most widely documented, and its conventions mean very little setup. (See [Build tools compared](build-tools-compared.md).)
-
-</details>
+> [!CHECK]
+> 1. What is a `pom.xml` and what do you put in it?
+>    <details><summary>Answer</summary>Maven's project file. It declares the Java version, the project's coordinates (groupId/artifactId/version), and the dependencies (libraries) your project needs, plus build settings.</details>
+> 2. What is a **dependency**, and how does it get onto your machine?
+>    <details><summary>Answer</summary>A dependency is an external library your project uses (e.g. JUnit). You declare it in <code>pom.xml</code> and Maven downloads it automatically, so you never hand-download JAR files.</details>
+> 3. What is the difference between `mvn test` and `mvn package`?
+>    <details><summary>Answer</summary><code>mvn test</code> compiles the code and runs the tests. <code>mvn package</code> does that <em>and</em> bundles the result into a runnable JAR (the artifact) in <code>target/</code>.</details>
+> 4. Why must your `.java` files live in `src/main/java` and tests in `src/test/java`?
+>    <details><summary>Answer</summary>Those are Maven's <strong>conventions</strong>. Following the expected folder layout means Maven finds and builds everything with almost no configuration.</details>
 
 ## Reflect (stretch)
 
-You now change code, run `mvn test`, and instantly know if you broke something. That safety net is what makes every later step (Spring, database, queues) survivable. See the [Maven reference](../../references/tooling/maven.md) for the Maven Wrapper (`./mvnw`) and dependency tips.
+You now change code, run `mvn test`, and instantly know if you broke something. That safety net is what makes every later step (Spring, database, queues) survivable. Maven Wrapper (`./mvnw`) and daily commands: see [Common build failures](common-build-failures.md#daily-commands-and-the-maven-wrapper).
 
 ## Tests you'll grow later
 

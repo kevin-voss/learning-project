@@ -1,194 +1,99 @@
-# Step 00: Your tools (no code yet)
+# Step 00: your tools
 
-> In this step: prove you can start a tiny program, ask it for a page, and stop it. ~20 minutes. Zero code.
+> [!PICTURE]
+> Before a parcel depot opens, the manager walks round once. Lights on? Doors open? She rings the bell at the front desk and waits: does somebody answer? Today you do the same with your computer. You start a tiny server, ring its bell with `curl`, get an answer, and switch it off again.
 
-## The problem right now
+## The idea
 
-You have an empty `applications/` folder and, maybe, zero programming experience. Before writing code, you need to be comfortable with the few tools you will use in later steps. If these feel like magic, everything after will feel like magic too.
+ParcelPilot will be a **server**: a program that waits for requests and sends back responses. You will test it the same way every step: **terminal 1 runs the server, terminal 2 sends a request.** Today you practise that loop with a ready-made server, so no code yet.
 
-## Key words
+You already know the pieces from earlier stages. If one feels shaky, go back to its home:
 
-| Word | Beginner meaning |
+| Idea | Where it is taught |
 |---|---|
-| **Terminal** | A text window where you type commands instead of clicking buttons. |
-| **Command** | One instruction you type and run. |
-| **Java** | The language you start writing in step 01. |
-| **JDK** | The Java toolbox your computer needs so it can build and run Java code. |
-| **Maven** | A helper you meet in step 03. It builds the project and runs checks for you. |
-| **Server** | A program that waits for requests and sends back responses. |
-| **`curl`** | A small terminal tool that sends a request and prints the response. |
-| **`jq`** | An optional helper that makes JSON easier to read in the terminal. |
-| **Client** | Anything that sends a request to a server (here: `curl`). |
-| **HTTP** | The language clients and servers use to talk over a network. |
-| **Request / Response** | You ask (request), and the server answers (response). |
-| **Port** | A numbered "door" on a computer, e.g. `8080`, so traffic reaches the right program. |
-| **Image** | A frozen, ready-to-run package of a program (like an app installer). |
-| **Container** | A running copy of an image, isolated from the rest of your machine. |
-| **Docker** | The tool that downloads images and runs them as containers. |
+| Terminal, `cd`, `ls`, `Ctrl+C` | [Linux terminal](../../../computer-science/index.html#linux-terminal-os) |
+| Request, response, status code, port | [HTTP requests and responses](../../../computer-science/index.html#http-requests-responses) |
+| Image, container, why Docker | [Docker and containers](../../../computer-science/index.html#docker-containers) |
+| Maven | [Build tools](../../../java/topics/build-tools/index.html) |
 
-## What is HTTP (in one picture)?
+## First: check your tools
 
-When you open a website, your browser sends an HTTP **request** ("give me this page") and the server sends an HTTP **response** (the page + a status code like `200 OK`). `curl` does the same thing as a browser, but in the terminal so you can see the raw result.
+Run each command. Each one should print a version.
 
-```mermaid
-sequenceDiagram
-    participant C as curl (client)
-    participant S as nginx (server, in a container)
-    C->>S: GET / (request)
-    S-->>C: HTTP 200 OK + HTML (response)
+```bash
+java -version      # Java 21 or newer
+mvn -version       # Maven
+docker --version   # Docker
+curl --version     # curl
 ```
 
-## Why use Docker at all?
-
-**The problem it solves:** software normally needs installation, correct versions, and matching settings. That breaks with "works on my machine" surprises. Docker packages a program + everything it needs into an **image**, so it runs the same anywhere.
-
-**Pros:** same behavior on every machine, nothing permanently installed, and easy to throw away and retry.
-**Cons:** an extra tool to learn, images take disk space, and a running container disappears (including any data inside it) unless you plan for that. That last fact matters a lot later when ParcelPilot starts saving parcels.
-
-**Real-world example:** a company runs the exact same database image on a laptop, in tests, and in production. No one has to install the database by hand three times.
+`jq --version` is optional. It prints JSON nicely.
 
 ## If your tools are not installed yet
 
-This course targets **Ubuntu** or a similar Linux system. If one of the checks below says `command not found`, install the tools with:
+| Missing | Install guide |
+|---|---|
+| Git, an editor | [Get set up](../../../../sheets/setup/README.md) |
+| Java 21 | [Java: getting started](../../../java/topics/getting-started/index.html) |
+| Maven | [Build tools](../../../java/topics/build-tools/index.html) (Ubuntu: `sudo apt install -y maven`) |
+| Docker | [Docker and containers](../../../computer-science/index.html#docker-containers) |
 
-```bash
-sudo apt update
-sudo apt install -y curl jq openjdk-21-jdk maven docker.io docker-compose-v2
-
-# Start Docker now and each time the computer starts.
-sudo systemctl enable --now docker
-
-# Let your user run Docker commands.
-sudo usermod -aG docker "$USER"
-```
-
-After the last command, log out and back in. If you want to stay in this terminal, run:
-
-```bash
-newgrp docker
-```
-
-If `openjdk-21-jdk` is not found, install Temurin 21 from [adoptium.net](https://adoptium.net) or use [SDKMAN](https://sdkman.io):
-
-```bash
-sdk install java 21-tem
-```
-
-## First: check your tools are installed
-
-Run each command. Each should print a version (exact numbers may differ). If one says "command not found", install that tool before continuing.
-
-```bash
-java -version      # need Java (JDK) 21+
-mvn -version       # need Maven            -> sudo apt install -y maven
-docker --version   # need Docker Engine    -> sudo apt install -y docker.io docker-compose-v2
-curl --version     # need curl             -> preinstalled on Ubuntu
-```
-
-Optional but handy: `jq --version` (formats JSON nicely in the terminal).
-
-Docker also needs to be running and usable by your user:
-
-```bash
-docker info
-docker compose version
-systemctl is-enabled docker
-systemctl is-active docker
-```
-
-If `docker info` says `permission denied`, log out and back in, or run `newgrp docker`.
-If it says it cannot connect to Docker, run `sudo systemctl start docker`.
+> [!WARN]
+> `docker info` says `permission denied`? Your user is not in the `docker` group yet. Run `sudo usermod -aG docker "$USER"`, then log out and back in (or run `newgrp docker`). If it says it cannot connect, start Docker: `sudo systemctl start docker`.
 
 ## Build it in ParcelPilot
 
-Nothing to build yet. Just operate the tools.
+Nothing to build yet. You only drive the tools. How to open two terminals side by side: [the two-terminal workflow](editor-and-terminal.md).
 
-1. Start a throwaway web server (Docker downloads `nginx` the first time):
+1. **Terminal 1:** start a throwaway web server.
 
-```bash
-docker run --rm -p 8080:80 nginx:alpine
-```
+   ```bash
+   docker run --rm -p 8080:80 nginx:alpine
+   ```
 
-`-p 8080:80` connects your machine's port `8080` to port `80` inside the container. `--rm` deletes the container when it stops.
+   `-p 8080:80` connects port `8080` on your computer to port `80` in the container. `--rm` deletes the container when it stops.
 
-2. Open a **second** terminal and call it:
+2. **Terminal 2:** ring the bell.
 
-```bash
-curl -i http://localhost:8080
-```
+   ```bash
+   curl -i http://localhost:8080
+   ```
 
-3. Go back to the first terminal and press `Ctrl+C` to stop the server. Run `curl` again and watch it fail. The server is gone.
+3. Back in terminal 1, press `Ctrl+C`. Run the `curl` again.
 
 ## Test it
 
-Run the `curl` command while the container is up.
+> [!TRY]
+> 1. Run `curl -i http://localhost:8080` while the container runs.
+> 2. Stop the container with `Ctrl+C` and run the same `curl` again.
+>
+> You should see: first `HTTP/1.1 200 OK` and some HTML. After stopping: `Failed to connect`. The answer only exists while the server runs.
 
 ## Acceptance criteria
 
-- [ ] `java -version`, `mvn -version`, `docker --version`, and `curl --version` all print a version.
-- [ ] `docker run ...` starts and stays running in terminal 1.
-- [ ] `curl -i http://localhost:8080` prints a first line containing `HTTP/1.1 200`.
-- [ ] After `Ctrl+C`, `curl` fails to connect (proving the response only exists while the container runs).
-- [ ] You can explain, in one sentence, the difference between an **image** and a **container**.
+- [ ] `java -version`, `mvn -version`, `docker --version` and `curl --version` all print a version.
+- [ ] `curl -i http://localhost:8080` prints a first line with `200`.
+- [ ] After `Ctrl+C`, `curl` cannot connect.
+- [ ] You can say the difference between an **image** and a **container** in one sentence.
 
 ## Say it like a developer
 
-Practice phrasing these the way engineers do:
+- "I sent a **GET request** to `localhost:8080` and got a **200 OK response**."
+- "`curl` is the **client**, nginx is the **server**."
+- "I **mapped** host port `8080` to container port `80`."
 
-- "I sent a **GET request** to `localhost:8080` and got back a **200 OK response**."
-- "Docker pulled the **image** and ran it as a **container**."
-- "I **mapped** host port `8080` to the container's port `80` with `-p 8080:80`."
-- "`curl` is the **client**, and nginx is the **server**."
-- "When I stopped the container, the server was gone. The response only exists **while the container runs**."
+## Check
 
-## Quiz: check yourself
+> [!CHECK]
+> 1. In `curl -i http://localhost:8080`, who is the client and who is the server?
+>    <details><summary>Answer</summary><code>curl</code> is the client: it sends the request. nginx inside the container is the server: it sends the response.</details>
+> 2. What does `-p 8080:80` do?
+>    <details><summary>Answer</summary>It connects port 8080 on your computer to port 80 inside the container. Requests to <code>localhost:8080</code> reach the program listening on 80.</details>
+> 3. Why did `curl` fail after `Ctrl+C`?
+>    <details><summary>Answer</summary>The container stopped, so nothing listens on port 8080 any more. No server, no answer.</details>
 
-Answer out loud before opening each toggle.
-
-1. What is the difference between an **image** and a **container**?
-
-<details><summary>Show answer</summary>
-
-An image is the **frozen, ready-to-run package** on disk (like an app installer). A container is **one running copy** of that image. You can start many containers from the same image.
-
-</details>
-
-2. In `curl -i http://localhost:8080`, who is the **client** and who is the **server**?
-
-<details><summary>Show answer</summary>
-
-`curl` is the client (it sends the request). The program inside the container (nginx) is the server (it sends back the response).
-
-</details>
-
-3. What does the `-p 8080:80` flag do?
-
-<details><summary>Show answer</summary>
-
-It maps port `8080` on your machine to port `80` inside the container, so traffic you send to `localhost:8080` reaches the program listening on `80` in the container.
-
-</details>
-
-4. What problem does Docker solve?
-
-<details><summary>Show answer</summary>
-
-The "works on my machine" problem. Docker packages a program plus everything it needs into an image, so it runs the same way on any machine that has Docker, with no manual install of matching versions and settings.
-
-</details>
-
-5. Why did `curl` fail after you pressed `Ctrl+C`?
-
-<details><summary>Show answer</summary>
-
-`Ctrl+C` stopped the container, so the server no longer exists. A response only exists while something is running and listening on that port.
-
-</details>
-
-## Reflect
-
-You never installed nginx on your computer. Docker fetched an image and ran it. Notice that when the container stops, *everything* about it is gone. Hold that thought for the later step where ParcelPilot starts saving parcels.
+Keep one fact in mind: when a container stops, everything inside it is gone. That matters in step 10, when ParcelPilot starts saving parcels.
 
 ## Next
 
-[Step 01](../01-java-basics/README.md): write your first Java so ParcelPilot can describe a single parcel.
+[Step 01](../01-java-basics/README.md): describe one parcel in Java.

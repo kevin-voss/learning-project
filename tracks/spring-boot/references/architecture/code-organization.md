@@ -6,16 +6,16 @@ One of the most confusing things for beginners is *how much structure* a project
 
 ```mermaid
 flowchart LR
-  A["Stage 1<br/>one file"] --> B["Stage 2<br/>a few files, one package"]
-  B --> C["Stage 3<br/>packages + imports"]
-  C --> D["Stage 4<br/>layers: controller/service/repo"]
-  D --> E["Stage 5<br/>package-by-feature (modular)"]
-  E --> F["Stage 6<br/>separate services"]
+  A["Shape 1<br/>one file"] --> B["Shape 2<br/>a few files, one package"]
+  B --> C["Shape 3<br/>packages + imports"]
+  C --> D["Shape 4<br/>layers: controller/service/repo"]
+  D --> E["Shape 5<br/>package-by-feature (modular)"]
+  E --> F["Shape 6<br/>separate services"]
 ```
 
 ---
 
-## Stage 1: Everything in one file (Step 01)
+## Shape 1: Everything in one file (Step 01)
 
 When you're learning or prototyping, one file is *correct*. No packages, no build tool, no folders.
 
@@ -37,9 +37,9 @@ class Parcel {                 // a second class in the same file (allowed, not 
 ```
 
 **Why it's fine here:** there is one concept and no reuse. Structure would add friction with zero benefit.
-**What forces the next stage:** more than one *public* class (Java requires one public class per file, named after the file), and classes you want to reuse.
+**What forces the next shape:** more than one *public* class (Java requires one public class per file, named after the file), and classes you want to reuse.
 
-## Stage 2: A few files, still one folder (Step 01 → 02)
+## Shape 2: A few files, still one folder (Step 01 → 02)
 
 Give each class its own file. This is what Step 01 and 02 do: `Parcel.java`, `Status.java`, `Clock.java`, `ParcelTracker.java`, `Main.java`, all loose in `applications/parcelpilot/`.
 
@@ -62,11 +62,11 @@ java Main
 ```
 
 **Why:** one class per file is a best practice (easy to find, smaller diffs). But a pile of loose files doesn't scale, and you're still compiling by hand.
-**What forces the next stage:** you want automated builds/tests, external libraries, and a way to group classes as they multiply.
+**What forces the next shape:** you want automated builds/tests, external libraries, and a way to group classes as they multiply.
 
-## Stage 3: Packages and imports (Step 03)
+## Shape 3: Packages and imports (Step 03)
 
-Now you adopt Maven's standard layout and give files a **package**. A package is a namespace that groups related classes and prevents name clashes. See [Packages, imports, and structure](../../topics/03-maven/packages-imports-structure.md).
+Now you adopt Maven's standard layout and give files a **package**. A package is a namespace that groups related classes and prevents name clashes. Packages and imports are taught in [Java syntax fundamentals](../../../java/topics/syntax-fundamentals/index.html).
 
 ```text
 applications/parcelpilot/
@@ -93,9 +93,9 @@ public record TrackingEvent(String parcelId, Status newStatus, Instant when) {}
 **When you need an `import`:** to use a class from a *different* package. You never import classes in the same package, nor `java.lang` classes (`String`, `System`, `Integer`) which are always available.
 
 **Why:** packages organize a growing codebase and avoid clashes (your `Status` vs a library's `Status`). Maven's layout lets one command build, test, and package everything.
-**What forces the next stage:** the app now talks HTTP and a database, so it has clearly different *kinds* of code (web handling vs business rules vs storage) mixed together.
+**What forces the next shape:** the app now talks HTTP and a database, so it has clearly different *kinds* of code (web handling vs business rules vs storage) mixed together.
 
-## Stage 4: Layers: controller, service, repository (Step 04 → 10)
+## Shape 4: Layers: controller, service, repository (Step 04 → 10)
 
 When the app does HTTP + rules + persistence, separate those responsibilities so each has one job. This is the classic three-layer shape.
 
@@ -137,9 +137,9 @@ class ParcelService {
 
 > **Don't over-do it early.** In Step 04 it's fine that one controller class holds the data and endpoints. You split into layers in Step 10/11 *once there's something to separate*. Layering an app that does almost nothing is just ceremony.
 
-**What forces the next stage:** several features (parcel, notification) each spanning all three layers, tangled together.
+**What forces the next shape:** several features (parcel, notification) each spanning all three layers, tangled together.
 
-## Stage 5: Package by feature (modular monolith, Step 11)
+## Shape 5: Package by feature (modular monolith, Step 11)
 
 Instead of top-level `controllers/`, `services/`, `repositories/` folders (which scatter one feature across three places), group by **feature**. Each feature has its own layers inside.
 
@@ -157,10 +157,10 @@ com/parcelpilot/
 
 The parcel module talks to notifications through a **small interface** (`Notifier`), not by reaching into its internals.
 
-**Why:** a change to "parcels" touches one folder. Features stay cohesive and loosely coupled, which is exactly what makes the next stage cheap. See [Step 11](../../topics/11-monolith/README.md).
-**What forces the next stage:** a feature needs to deploy, scale, or fail **independently**.
+**Why:** a change to "parcels" touches one folder. Features stay cohesive and loosely coupled, which is exactly what makes the next shape cheap. See [Step 11](../../topics/11-monolith/README.md).
+**What forces the next shape:** a feature needs to deploy, scale, or fail **independently**.
 
-## Stage 6: Separate services (Step 13+)
+## Shape 6: Separate services (Step 13+)
 
 Only now, with a proven boundary, do you split a module into its own deployable service with its own database, communicating over a broker.
 
@@ -175,7 +175,7 @@ applications/parcelpilot-services/
 
 ---
 
-## How to know which stage you need
+## How to know which shape you need
 
 Ask: **"What is the smallest structure that keeps this codebase understandable and changeable right now?"**
 
@@ -186,11 +186,11 @@ Ask: **"What is the smallest structure that keeps this codebase understandable a
 - Multiple features → **package by feature**.
 - A feature must scale/deploy alone → **separate service**.
 
-Moving up a stage too early adds cost with no benefit. Moving up too late makes change painful. ParcelPilot moves up exactly when a step reveals the need, and that timing *is* the lesson.
+Moving up a shape too early adds cost with no benefit. Moving up too late makes change painful. ParcelPilot moves up exactly when a step reveals the need, and that timing *is* the lesson.
 
 ## See also
 
 - [Java best practices (and why)](../java/java-best-practices.md)
-- [Packages, imports, and structure](../../topics/03-maven/packages-imports-structure.md)
+- [Packages and imports](../../../java/topics/syntax-fundamentals/index.html) (Java hub)
 - [Monolith and microservices](monolith-and-microservices.md)
 - [PROJECT-STORY.md](../../PROJECT-STORY.md): the same journey from the product's point of view

@@ -1,6 +1,9 @@
 # Composition vs inheritance
 
-This is one of the most important beginner decisions in OOP. Both let you reuse code, but they connect objects very differently.
+> [!PICTURE]
+> A delivery van **has an** engine. You can swap a petrol engine for an electric one and it is still the same van. A van **is a** vehicle, and that never changes. "Has-a" is composition. "Is-a" is inheritance.
+
+Both let you reuse code, but they connect objects very differently. Inheritance itself is taught in the Java hub ([classes and objects](../../../java/topics/classes-and-objects/index.html), [interfaces](../../../java/topics/interfaces/index.html)); "favour composition" is also a theme of [design patterns](../../../java/topics/design-patterns/index.html). This page is the ParcelPilot decision.
 
 ## The two relationships
 

@@ -91,7 +91,7 @@ The status code also answers a question you'll care about from step 12 on: **is 
 | 502, 503, 504 | **Yes, with backoff** | "Temporarily unavailable" is the definition; wait, then retry |
 | 429 | Yes, **after waiting** | You were told to slow down (rate limiting, step 15) |
 
-Retrying safely also depends on the method being **idempotent** (see [HTTP methods](../../topics/04-first-spring-api/http-methods.md)) — retrying a `POST` can create duplicates. This becomes central in [step 12 (queues)](../../topics/12-queues/README.md), where a message consumer *automatically* retries failed work and must know which failures are worth retrying.
+Retrying safely also depends on the method being **idempotent** (see [HTTP requests and responses](../../../computer-science/index.html#http-requests-responses)) — retrying a `POST` can create duplicates. This becomes central in [step 12 (queues)](../../topics/12-queues/README.md), where a message consumer *automatically* retries failed work and must know which failures are worth retrying.
 
 ## ParcelPilot tie-ins at a glance
 
@@ -108,8 +108,8 @@ Retrying safely also depends on the method being **idempotent** (see [HTTP metho
 ## See also
 
 - [Step 06: Error handling & HTTP error contracts](../../topics/06-error-handling/README.md) — build it
-- [Exceptions in Java, from scratch](../../topics/06-error-handling/exceptions-in-java.md) — the language mechanics
+- [Exceptions](../../../java/topics/exceptions/index.html) (Java hub) — the language mechanics
 - [Controller advice lab](../../topics/06-error-handling/controller-advice-lab.md) — prove every mapping with `curl`
 - [Validation and API contracts](validation-and-api-contracts.md) — the 400s *before* the domain is reached
-- [Logging](../tooling/logging.md) — where the details the client never sees must go
+- [SLF4J and log levels](../../topics/07-logging-and-observability-basics/slf4j-and-log-levels.md) — where the details the client never sees must go
 - [Spring and HTTP](spring-and-http.md) — methods, statuses, and controller basics

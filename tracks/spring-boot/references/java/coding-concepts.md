@@ -175,4 +175,4 @@ Before a tricky edit, first *refactor* so the change becomes simple, then do it.
 
 - [Java best practices (and why)](java-best-practices.md)
 - [Code organization](../architecture/code-organization.md)
-- [Java and OOP](java-and-oop.md)
+- [Classes and objects](../../../java/topics/classes-and-objects/index.html) (Java hub)

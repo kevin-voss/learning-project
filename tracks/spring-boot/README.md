@@ -1,44 +1,43 @@
-# Spring Boot System Design: Build One Product, One Step at a Time
+# Spring Boot: build ParcelPilot, one step at a time
 
-**Start after** [LEARNING_PATH](../../docs/LEARNING_PATH.md) Gates A–D and the [server-layers sheet](../../sheets/java/server-layers.md). The [Java hub](../java/index.html) is the canonical language path. This course builds services (Layer F).
+> [!PICTURE]
+> Picture a small parcel depot. A **front desk** takes parcels in. A **sorting room** decides where each one goes. A **shelf** keeps them safe overnight. A **logbook** says what happened. In this course you build that depot as a Java program called **ParcelPilot**, one room at a time.
 
-This course teaches you how a small backend grows into a real system.
+## Before you start
 
-You build one product: **ParcelPilot**, a tiny parcel-tracking service. At first it is only a small program that can describe one parcel. Step by step, it learns more: how to remember parcels, how to answer another program, how to survive mistakes, and how to grow when the work becomes bigger.
+Start here after the **Java stages** and the **Data and servers** stage of the path. You should already be able to:
 
-You do **not** need to understand all the words on day one. The course is written so each step teaches the next word right before you use it.
+- write and test Java classes with Maven ([Java hub](../java/index.html)),
+- point at controller, service and repository ([how a Java server is structured](../../sheets/java/server-layers.md)),
+- write a simple SQL query and run Postgres in Docker ([Databases and SQL](../computer-science/index.html#database-sql-fundamentals), [Docker](../computer-science/index.html#docker-containers)).
 
-Start here:
+This is a **build course**. It does not teach Java again. When a step uses an idea from earlier, it links back to the page that teaches it.
 
-1. Read [PROJECT-STORY.md](PROJECT-STORY.md) for the big picture.
-2. Open [GUIDE.md](GUIDE.md) and follow it from the top.
-3. Do one numbered topic at a time. Do not read the references first.
+## What you build
 
-The rule for students is simple: **read the step, build the small change, prove it works, then move on.**
+**ParcelPilot** is a small parcel-tracking service. In step 01 it is one class that prints one parcel. By step 10 it is a web API with validation, error messages, logs, tests, Docker and a PostgreSQL database. Steps 11 to 16 (the "ParcelPilot at scale" stage) add modules, queues, a second service, caching and login.
+
+## How to use it
+
+1. Read [PROJECT-STORY.md](PROJECT-STORY.md) once: the big picture.
+2. Open [GUIDE.md](GUIDE.md): the map of all steps and how each step works.
+3. Do one numbered step at a time. Read the step, build the small change, prove it works, then move on.
+
+The `references/` folder is a library, not homework. A step links to a reference when you need it.
 
 ## What is in this folder?
 
 ```text
 tracks/spring-boot/
-├── GUIDE.md          # The path to follow, in order
-├── PROJECT-STORY.md  # The simple story of what ParcelPilot becomes
-├── applications/     # Empty at first; your code will grow here
-├── topics/           # The numbered lessons
-└── references/       # Extra explanations for when a lesson links to them
+├── GUIDE.md          # the map: every step in order, and how a step works
+├── PROJECT-STORY.md  # what ParcelPilot becomes
+├── applications/     # empty at first; your code grows here
+├── topics/           # the numbered steps 00–16
+└── references/       # look-up pages that the steps link to
 ```
 
-## How to learn from it
+## Keep the product small
 
-Each numbered topic has the same rhythm:
+Do not add screens, payments, cloud hosting or extra features unless a step asks for them. Each step adds one thing, and only when the current version has a clear problem to fix.
 
-1. It shows the problem in the current project.
-2. It teaches the new idea in plain language.
-3. It asks you to build one small change.
-4. It gives you a way to check that the change worked.
-5. It ends with questions so you can explain the idea in your own words.
-
-If you see a word you do not know yet, do not panic. The lesson that needs the word will define it. The [glossary](references/java/glossary.md) is there when you want to look something up, not as homework before you start.
-
-## Product scope
-
-Keep ParcelPilot small while learning the core path. Do not add screens, payments, cloud hosting, or extra features unless a topic asks for them. The course adds complexity only when the current version has a clear problem to fix.
+**Next:** [PROJECT-STORY.md](PROJECT-STORY.md), then [Step 00](topics/00-start-here/README.md).

@@ -1,6 +1,6 @@
 # Pattern lab: Builder and Factory
 
-Two patterns you'll actually use in ParcelPilot, each explained the same way: **problem → solution → high-level → code → pros/cons → when to use**.
+Two patterns you'll actually use in ParcelPilot, each explained the same way: **problem → solution → high-level → code → pros/cons → when to use**. The general theory is in the Java hub: [design patterns](../../../java/topics/design-patterns/index.html). This lab is the hands-on part.
 
 ---
 
@@ -217,7 +217,7 @@ NotificationSender sender = new ConsoleSender();
 
 The factory adds a class, a level of indirection, and an implication ("something interesting happens during creation!") that is a lie. Every reader pays a small toll checking what `create()` really does; the answer is `new`. This is **YAGNI** — *You Aren't Gonna Need It*: don't build machinery for a future that hasn't asked for it. If a second sender arrives (it does, in step 12), introducing a factory *then* is a five-minute, low-risk refactor — the compiler shows you every call site. You lose essentially nothing by waiting, and you avoid carrying dead weight if the future never comes.
 
-> The same honesty applies to interfaces themselves: see the "just in case" discussion in [interfaces and abstractions](interfaces-and-abstractions.md).
+> The same honesty applies to interfaces themselves: see the Java hub page on [interfaces](../../../java/topics/interfaces/index.html).
 
 ## Decision checklist
 
@@ -246,4 +246,4 @@ Otherwise: just call `new`. It's not a design failure — it's the simplest thin
 
 ## Where the other patterns live
 
-Adapter, decorator, facade, proxy, composite, observer, strategy, command, and iterator each appear in the step where they solve a real ParcelPilot problem. The full catalog with examples is in [Design patterns](../../references/java/design-patterns.md).
+Adapter, decorator, facade, proxy, composite, observer, strategy, command, and iterator each appear in the step where they solve a real ParcelPilot problem. The theory for every pattern is in the Java hub: [design patterns](../../../java/topics/design-patterns/index.html). Where each one shows up in ParcelPilot: [patterns in ParcelPilot](../../references/java/design-patterns.md).

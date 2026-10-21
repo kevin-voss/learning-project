@@ -1,6 +1,9 @@
-# SLF4J and log levels, in depth
+# SLF4J, levels and log rules
 
-Companion to [Step 07](README.md). The README shows *what to add*; this page explains *how the pieces work*: the facade pattern, the anatomy of a log line, each level with ParcelPilot examples, and how to control levels from configuration.
+> [!PICTURE]
+> The depot logbook has rules. Every entry gets a time and a colour: green for normal work, yellow for "odd but handled", red for "call the manager". Nobody writes a customer's door code in the logbook. This page is that rule book.
+
+Companion to [Step 07](README.md). The README shows *what to add*; this page explains *how the pieces work* and the rules to follow.
 
 ## The problem
 
@@ -148,12 +151,55 @@ private static final Logger log = LoggerFactory.getLogger(ParcelController.class
 
 The classic bug: copy-pasting the field into a new class and forgetting to change `ParcelController.class` to the new class. Everything works, but the log *lies about where lines come from*. Check the class argument whenever you paste this line.
 
-## Try it in ParcelPilot
+## What must NEVER be in a log
 
-The [logging lab](logging-lab.md) turns each section above into an exercise: comparing `+` vs `{}` output, flipping `logging.level` to DEBUG and watching Spring's own internals appear, and stamping request IDs on concurrent requests.
+Logs are kept longer, copied further and read by more people than any database table, with none of its access control. Treat every line as something a stranger might read later.
 
-## Next
+| Never log | What happens if it leaks |
+|---|---|
+| Passwords (even wrong ones) | Account takeover: a typo is a near-miss of the real password. |
+| Tokens, JWTs, API keys, session cookies, `Authorization` headers | Anyone with the log can pretend to be the caller. |
+| Full personal data (addresses, emails, phone numbers) | A privacy breach; under GDPR, personal data in logs is regulated data. |
+| Full request bodies "just in case" | They contain all of the above sooner or later. |
 
-- Back to the step: [Step 07 README](README.md)
-- Practice: [Logging lab](logging-lab.md)
-- Deeper reference (structured logs, MDC, retention, anti-patterns): [../../references/tooling/logging.md](../../references/tooling/logging.md)
+Safe habit: log **identifiers** (`parcelId`) and look up the details in the database when needed. `recipient` is a name: fine for a learning project, but once ParcelPilot has real addresses, log only the ID.
+
+## Where to log, and where not
+
+- Log at the **boundary** (controller, error handler) and at **decision points** (a rejected transition). Do not log the same event in every layer: one request would become three identical lines.
+- No INFO inside loops. Log the summary ("returned 10000 parcels"), or use DEBUG.
+- **Logs are not metrics.** "How many per minute? How slow?" is a job for metrics (step 14), not for counting log lines.
+- Log to **standard output**, not to files. Docker captures stdout for free (`docker logs` in [step 09](../09-docker/README.md), `docker compose logs` in [step 14](../14-compose-and-observe/README.md)). Spring Boot already does this.
+
+## MDC: a request ID on every line
+
+A busy server mixes lines from many requests. The **MDC** (Mapped Diagnostic Context) is a per-thread sticky note that Logback attaches to every line. Put a request ID in it when a request starts, print it with `%X{requestId}` in the log pattern, and `grep` for one ID shows one request's whole story. The README's stretch step builds this filter. Always `MDC.remove(...)` in a `finally` block, because threads are reused. Across several services the same idea becomes a **correlation ID** ([step 14](../14-compose-and-observe/correlation-ids.md)).
+
+## Structured (JSON) logs, later
+
+Lines like the ones above are for humans. When logs are collected by a central tool, machines read them, and machines prefer JSON:
+
+```json
+{"level":"INFO","logger":"com.parcelpilot.ParcelController","message":"Created parcel","parcelId":"P-7","requestId":"b4f2a91c"}
+```
+
+Now `parcelId` is a field you can query exactly. Spring Boot 3.4+ switches with one property (`logging.structured.format.console=ecs`). Stay with readable lines while you develop locally; switch only when a tool benefits.
+
+## Common mistakes
+
+- **The exception inside the message:** `log.error("Failed: " + e)` or `log.error("Failed {}", e)` prints no stack trace. Pass the exception last, with no `{}`.
+- **Log-and-rethrow:** catch, log, throw again. The `GlobalErrorHandler` logs it too, and every failure shows up twice. Log an exception in exactly **one** place: where it is finally handled.
+- **Swallowing with a log line:** `catch (Exception e) { log.warn("oops"); }` and carry on. No stack trace, and the app may continue broken.
+- **INFO noise:** every getter, every layer, every loop. When everything is INFO, nothing is.
+- **The wrong logger class:** a copy-pasted `getLogger(ParcelController.class)` inside `GlobalErrorHandler` makes lines lie about where they come from.
+- **Secrets "only while debugging":** temporary lines reach production. There is no local-only exception.
+
+> [!CHECK]
+> 1. Your code logs at DEBUG but nothing shows up. Where do you look first?
+>    <details><summary>Answer</summary>In <code>application.properties</code>. The default threshold is INFO, so DEBUG lines are dropped until you set <code>logging.level.com.parcelpilot=DEBUG</code>.</details>
+> 2. Why log `parcelId` and not the recipient's address?
+>    <details><summary>Answer</summary>Logs are copied and kept for a long time without access control. An ID is harmless; an address is personal data that can leak.</details>
+> 3. Why must the request-ID filter call `MDC.remove(...)` in `finally`?
+>    <details><summary>Answer</summary>Server threads are reused. Without cleanup, the next request on the same thread would carry the old request ID.</details>
+
+**Next:** back to [Step 07](README.md), then the [logging lab](logging-lab.md).

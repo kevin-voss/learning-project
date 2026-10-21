@@ -1,6 +1,7 @@
 # Step 09: Docker, ship the API as one unit
 
-> In this step: package ParcelPilot into a portable image that runs on any machine with Docker, using a full Dockerfile you'll understand line by line. ~60–90 minutes.
+> [!PICTURE]
+> Imagine you could pack the **whole depot** (desk, shelves, rules, tools) into one **shipping container**. Put the container on any ship or truck, open the doors, and the depot works the same everywhere. A Docker image is that container for ParcelPilot.
 
 ## The problem right now
 
@@ -21,9 +22,9 @@ ParcelPilot has grown up since step 04: it validates input, returns clean errors
 | **`EXPOSE` / `-p`** | Declares / maps the port the app listens on. |
 | **Tag** | A name + version for an image, e.g. `parcelpilot-api:09`. |
 
-## What is an image vs a container?
+## Image and container, in one line
 
-An **image** is like an app installer frozen on disk: it contains your compiled app plus everything it needs to run. A **container** is one running copy of that image. You can start, stop, and delete containers freely, and the image stays put.
+You met Docker in [Docker and containers](../../../computer-science/index.html#docker-containers): an **image** is the frozen package on disk, a **container** is one running copy of it. This step is about building **your own** image for a Java app.
 
 ```mermaid
 flowchart LR
@@ -44,14 +45,9 @@ flowchart LR
   R --> C[API container]
 ```
 
-## Why do it? Pros and cons
+## What it costs
 
-**What it brings us:** identical runs anywhere with Docker, no manual Java install, easy to start/stop/replace, and the foundation for Compose and microservices later.
-
-**Pros:** portable, reproducible, and isolates the app from your machine.
-**Cons:** images use disk, there's an extra build step, and importantly, **data inside a container is lost when it's replaced**, the exact problem step 10 solves.
-
-**Real-world example:** teams build an image once in CI and run that *same* image in test and production, so "it worked in the pipeline" means "it works in prod".
+Images use disk and add a build step. Most important: **data inside a container is lost when the container is replaced**. Step 10 fixes exactly that.
 
 ## Build it in ParcelPilot (do this exactly)
 
@@ -133,49 +129,17 @@ If anything misbehaves — build fails, container exits instantly, port conflict
 - "`EXPOSE 8080` documents the port, and `-p 8080:8080` maps it to my machine."
 - "The container is **disposable**: data inside it is gone when it's replaced."
 
-## Quiz: check yourself
+## Check
 
-Answer out loud before opening each toggle.
-
-1. What is the difference between an **image** and a **container**?
-
-<details><summary>Show answer</summary>
-
-An image is the frozen, built package on disk. A container is a running instance of that image. One image can run as many containers.
-
-</details>
-
-2. Why use a **multi-stage** build instead of one stage?
-
-<details><summary>Show answer</summary>
-
-Building needs Maven and a full JDK (large), while running only needs a JRE (small). Multi-stage builds in the big image and copies just the resulting JAR into a small runtime image, which is leaner and safer.
-
-</details>
-
-3. Why do we `COPY pom.xml` and download dependencies **before** copying `src`?
-
-<details><summary>Show answer</summary>
-
-Docker caches layers. Dependencies rarely change, so putting them in their own earlier layer means editing your source code doesn't force Docker to re-download every library, so rebuilds are much faster.
-
-</details>
-
-4. What does `ENTRYPOINT ["java", "-jar", "app.jar"]` do?
-
-<details><summary>Show answer</summary>
-
-It's the command that runs when the container starts: here, launching the app by running the packaged JAR.
-
-</details>
-
-5. Why did the parcel disappear after you replaced the container?
-
-<details><summary>Show answer</summary>
-
-The parcel lived in the app's in-memory `Map` inside the container. A container is disposable, so replacing it wipes everything inside. Durable data must live outside the container (a database with a volume, covered in step 10).
-
-</details>
+> [!CHECK]
+> 1. What is the difference between an **image** and a **container**?
+>    <details><summary>Answer</summary>An image is the frozen, built package on disk. A container is a running instance of that image. One image can run as many containers.</details>
+> 2. Why use a **multi-stage** build instead of one stage?
+>    <details><summary>Answer</summary>Building needs Maven and a full JDK (large), while running only needs a JRE (small). Multi-stage builds in the big image and copies just the resulting JAR into a small runtime image, which is leaner and safer.</details>
+> 3. Why do we `COPY pom.xml` and download dependencies **before** copying `src`?
+>    <details><summary>Answer</summary>Docker caches layers. Dependencies rarely change, so putting them in their own earlier layer means editing your source code doesn't force Docker to re-download every library, so rebuilds are much faster.</details>
+> 4. What does `ENTRYPOINT ["java", "-jar", "app.jar"]` do?
+>    <details><summary>Answer</summary>It's the command that runs when the container starts: here, launching the app by running the packaged JAR.</details>
 
 ## Reflect (stretch)
 

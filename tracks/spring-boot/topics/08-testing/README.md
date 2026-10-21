@@ -1,6 +1,7 @@
 # Step 08: Testing beyond `mvn test`
 
-> In this step: stop proving your API works by re-running six `curl` commands by hand. You'll learn the test pyramid, write HTTP-level tests with MockMvc that check the exact status codes and JSON your API promises, and learn when (not) to load the whole app in a test. ~90–120 minutes.
+> [!PICTURE]
+> Every morning, before the doors open, the depot sends a **practice parcel** through every station: front desk, rules, error slip. If the practice parcel comes out wrong, you know before a real customer does. Automated tests are those practice parcels, and `mvn test` sends them through in seconds.
 
 ## The problem right now
 
@@ -55,29 +56,12 @@ That is your `curl -i http://localhost:8080/parcels/does-not-exist` check, made 
 
 > The three kinds of tests, a full comparison table, and the "ice cream cone" anti-pattern are in the companion page [Unit vs integration vs E2E](unit-vs-integration-vs-e2e.md). Read it after this section.
 
-## JUnit recap, and how to structure a test
+## Two habits for readable tests
 
-You already know the mechanics from [step 03](../03-maven/README.md): a method with `@Test` runs automatically under `mvn test`, and **assertions** (`assertEquals`, `assertThrows`) decide pass or fail. Two habits turn those mechanics into tests people can actually read:
+`@Test`, assertions and `mvn test` are taught in the Java hub ([Testing](../../../java/topics/testing/index.html)) and you used them in [step 03](../03-maven/README.md). Two habits make tests readable:
 
-**1. Given-When-Then.** Every good test has three parts: *given* a starting situation, *when* one action happens, *then* specific things must be true. You don't need comments for it, but the order should be visible:
-
-```java
-@Test
-void deliver_afterPickup_setsStatusToDelivered() {
-    // given
-    ParcelTracker tracker = new ParcelTracker(new FixedClock());
-    Parcel parcel = new Parcel("P-1", "Ava");
-    tracker.pickUp(parcel);
-
-    // when
-    tracker.deliver(parcel);
-
-    // then
-    assertEquals(Status.DELIVERED, parcel.status());
-}
-```
-
-**2. Names that state the rule.** A test name should say *what is being done*, *under what condition*, and *what must happen*: `createParcel_withBlankRecipient_returns400`. When that test fails in six months, the name alone tells you which promise broke. If you prefer full sentences, `@DisplayName("POST /parcels with a blank recipient returns 400")` does the same job.
+1. **Given-When-Then.** *Given* a starting situation, *when* one action happens, *then* check the result. Keep that order visible.
+2. **Names that state the rule:** `createParcel_withBlankRecipient_returns400`. When it fails in six months, the name tells you which promise broke.
 
 ## MockMvc and `@WebMvcTest`: testing HTTP without a server
 
@@ -90,7 +74,7 @@ void deliver_afterPickup_setsStatusToDelivered() {
 - **Loaded:** the named controller, every `@RestControllerAdvice` (your `GlobalErrorHandler`), validation, JSON converters, MockMvc itself.
 - **Not loaded:** `@Service` and `@Repository` beans, database configuration, anything unrelated to HTTP.
 
-That's why slice tests start in a second or two instead of loading the whole app. In ParcelPilot today this works out especially simply: the controller still holds its `ConcurrentHashMap` itself, so there is nothing else to provide. From step 10 on, when a repository exists, a `@WebMvcTest` will need a `@MockBean` for it — see the [testing reference](../../references/web-and-api/testing.md).
+That's why slice tests start in a second or two instead of loading the whole app. In ParcelPilot today this works out especially simply: the controller still holds its `ConcurrentHashMap` itself, so there is nothing else to provide. From step 10 on, when a repository exists, a `@WebMvcTest` will need a `@MockBean` for it — see the [Spring testing cheat sheet](../../references/web-and-api/testing.md).
 
 **And `@SpringBootTest`?** It loads the *entire* application context — every bean, every configuration. Use it sparingly: it's the right tool when you genuinely need everything wired together (a handful of whole-app smoke tests), but it is many times slower per class, and if most tests use it, `mvn test` crawls. Rule of thumb: slice by default, `@SpringBootTest` only when the slice can't express what you're testing.
 
@@ -121,10 +105,6 @@ That's why slice tests start in a second or two instead of loading the whole app
 **Don't test the framework.** No test should verify that Spring can parse JSON or that `@GetMapping` routes a GET. Test *your* rules and *your* contract, not Spring's.
 
 **Don't duplicate every curl as an E2E test.** Once MockMvc covers the contract, a full-app E2E check of the same case adds minutes of runtime and almost no new information. Keep E2E for a couple of critical whole-system flows.
-
-## Real-world example
-
-A bank's "transfer money" API has hundreds of unit tests on the money-arithmetic rules (fast, run on every save), a few dozen integration tests asserting that a transfer to a closed account returns exactly `422` with a machine-readable error code (client apps depend on that shape), and a *handful* of end-to-end tests that run one real transfer through the deployed system before each release. When a developer accidentally changes the error JSON, the integration tests fail within seconds — long before a partner's app breaks in production.
 
 ## Common mistakes
 
@@ -270,49 +250,17 @@ Now prove the safety net is real. In `GlobalErrorHandler`, temporarily change th
 - "I avoid `@SpringBootTest` unless I really need the whole context — it's slow."
 - "That failure was a **regression**: the suite caught it before anyone ran `curl`."
 
-## Quiz: check yourself
+## Check
 
-Answer out loud before opening each toggle.
-
-1. In one sentence, what does the **test pyramid** recommend, and why that shape?
-
-<details><summary>Show answer</summary>
-
-Write many fast unit tests, some integration tests, and only a few end-to-end tests — because tests get slower and more brittle as they cover more of the system, and a suite dominated by slow tests stops being run.
-
-</details>
-
-2. What does `@WebMvcTest(ParcelController.class)` load, and what does it deliberately leave out?
-
-<details><summary>Show answer</summary>
-
-It loads the web slice: the named controller, `@RestControllerAdvice` classes like `GlobalErrorHandler`, validation, and JSON conversion. It leaves out `@Service`/`@Repository` beans and database configuration, which is why it starts fast.
-
-</details>
-
-3. Why isn't `status().isNotFound()` alone a good enough assertion for the 404 test?
-
-<details><summary>Show answer</summary>
-
-Because clients also depend on the response **body** — the `ErrorResponse` fields (`code`, `message`, `details`, `path`). If the JSON shape changes, clients break even though the status is still 404, so the test must pin the body with `jsonPath` too.
-
-</details>
-
-4. Why use `@SpringBootTest` sparingly?
-
-<details><summary>Show answer</summary>
-
-It starts the entire application context — every bean and configuration — so each test class is many times slower than a slice test. Use it only when the test genuinely needs everything wired together, otherwise the suite becomes so slow people stop running it.
-
-</details>
-
-5. Why can't the Testcontainers lab be completed at this step?
-
-<details><summary>Show answer</summary>
-
-Testcontainers starts a real PostgreSQL in Docker for repository tests, but ParcelPilot has no database or repository yet — parcels live in an in-memory map. PostgreSQL and `ParcelRepository` arrive in step 10, so the lab is read now and completed after step 10.
-
-</details>
+> [!CHECK]
+> 1. In one sentence, what does the **test pyramid** recommend, and why that shape?
+>    <details><summary>Answer</summary>Write many fast unit tests, some integration tests, and only a few end-to-end tests — because tests get slower and more brittle as they cover more of the system, and a suite dominated by slow tests stops being run.</details>
+> 2. What does `@WebMvcTest(ParcelController.class)` load, and what does it deliberately leave out?
+>    <details><summary>Answer</summary>It loads the web slice: the named controller, <code>@RestControllerAdvice</code> classes like <code>GlobalErrorHandler</code>, validation, and JSON conversion. It leaves out <code>@Service</code>/<code>@Repository</code> beans and database configuration, which is why it starts fast.</details>
+> 3. Why isn't `status().isNotFound()` alone a good enough assertion for the 404 test?
+>    <details><summary>Answer</summary>Because clients also depend on the response <strong>body</strong> — the <code>ErrorResponse</code> fields (<code>code</code>, <code>message</code>, <code>details</code>, <code>path</code>). If the JSON shape changes, clients break even though the status is still 404, so the test must pin the body with <code>jsonPath</code> too.</details>
+> 4. Why use `@SpringBootTest` sparingly?
+>    <details><summary>Answer</summary>It starts the entire application context — every bean and configuration — so each test class is many times slower than a slice test. Use it only when the test genuinely needs everything wired together, otherwise the suite becomes so slow people stop running it.</details>
 
 ## Reflect (stretch)
 

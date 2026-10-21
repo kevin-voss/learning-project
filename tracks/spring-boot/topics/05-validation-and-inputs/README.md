@@ -1,6 +1,7 @@
 # Step 05: Validation and trustworthy inputs
 
-> In this step: stop bad requests at the front door. You'll learn Bean Validation (`@NotBlank`, `@Size`, `@Pattern`, `@Valid`) and make ParcelPilot answer garbage input with a clear `400 Bad Request` instead of a broken parcel or a confusing `500`. ~60–90 minutes.
+> [!PICTURE]
+> At the depot front desk, the clerk reads every form **before** taking the parcel. No address? The form goes straight back with a note: "please fill in the recipient". Nothing broken ever reaches the sorting room. That check at the desk is **validation**, and the note is a `400 Bad Request` that names the missing field.
 
 ## The problem right now
 
@@ -282,49 +283,17 @@ Content-Type: application/json
 - "I added an `@ExceptionHandler` for `MethodArgumentNotValidException` in the controller — it's local for now, and moves to a central place in the next step."
 - "I never hang validation on a persistence entity; entities model storage, DTOs model the **API contract**."
 
-## Quiz: check yourself
+## Check
 
-Answer out loud before opening each toggle.
-
-1. What happens, step by step, when a request with a blank `recipient` hits `POST /parcels` now?
-
-<details><summary>Show answer</summary>
-
-Spring converts the JSON into a `CreateParcelRequest`, then (because of `@Valid`) runs the constraints. `@NotBlank` on `recipient` fails, so Spring throws `MethodArgumentNotValidException` **before the controller method runs**. The `@ExceptionHandler` turns it into a `400` with `{"recipient":"recipient must not be blank"}`.
-
-</details>
-
-2. Why keep the checks in the `Parcel` constructor if the DTO already validates?
-
-<details><summary>Show answer</summary>
-
-The DTO only guards the HTTP boundary. The constructor guards *every* way a `Parcel` can be created — tests, other code paths, and later message consumers. Boundary validation checks the request's shape; the domain guarantees no invalid `Parcel` ever exists.
-
-</details>
-
-3. Your constraints compile but bad requests still get through. Name the two most likely causes.
-
-<details><summary>Show answer</summary>
-
-Either `@Valid` is missing on the `@RequestBody` parameter (nothing triggers the checks), or `spring-boot-starter-validation` is missing from `pom.xml` (no validator on the classpath — annotations are silently ignored).
-
-</details>
-
-4. What is the difference between `@NotNull` and `@NotBlank` for a `String` field?
-
-<details><summary>Show answer</summary>
-
-`@NotNull` only rejects `null` — it accepts `""` and `"   "`. `@NotBlank` rejects `null`, the empty string, *and* whitespace-only strings. For required text fields, `@NotBlank` is usually the right choice.
-
-</details>
-
-5. Why is `400` the right status for a blank recipient, and not `500`?
-
-<details><summary>Show answer</summary>
-
-`400 Bad Request` means "the client sent a malformed request — fix it and retry". `500 Internal Server Error` means "the server broke". A blank recipient is the client's mistake, so the client should be told what to fix. A `500` blames the wrong side and gives no actionable information.
-
-</details>
+> [!CHECK]
+> 1. What happens, step by step, when a request with a blank `recipient` hits `POST /parcels` now?
+>    <details><summary>Answer</summary>Spring converts the JSON into a <code>CreateParcelRequest</code>, then (because of <code>@Valid</code>) runs the constraints. <code>@NotBlank</code> on <code>recipient</code> fails, so Spring throws <code>MethodArgumentNotValidException</code> <strong>before the controller method runs</strong>. The <code>@ExceptionHandler</code> turns it into a <code>400</code> with <code>{"recipient":"recipient must not be blank"}</code>.</details>
+> 2. Why keep the checks in the `Parcel` constructor if the DTO already validates?
+>    <details><summary>Answer</summary>The DTO only guards the HTTP boundary. The constructor guards <em>every</em> way a <code>Parcel</code> can be created — tests, other code paths, and later message consumers. Boundary validation checks the request's shape; the domain guarantees no invalid <code>Parcel</code> ever exists.</details>
+> 3. Your constraints compile but bad requests still get through. Name the two most likely causes.
+>    <details><summary>Answer</summary>Either <code>@Valid</code> is missing on the <code>@RequestBody</code> parameter (nothing triggers the checks), or <code>spring-boot-starter-validation</code> is missing from <code>pom.xml</code> (no validator on the classpath — annotations are silently ignored).</details>
+> 4. What is the difference between `@NotNull` and `@NotBlank` for a `String` field?
+>    <details><summary>Answer</summary><code>@NotNull</code> only rejects <code>null</code> — it accepts <code>""</code> and <code>"   "</code>. <code>@NotBlank</code> rejects <code>null</code>, the empty string, <em>and</em> whitespace-only strings. For required text fields, <code>@NotBlank</code> is usually the right choice.</details>
 
 ## Reflect
 

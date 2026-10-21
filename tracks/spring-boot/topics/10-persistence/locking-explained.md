@@ -45,7 +45,7 @@ public class ParcelEntity {
 }
 ```
 
-If a conflict happens, JPA throws `OptimisticLockException`. Map that to HTTP `409` in your controller.
+If a conflict happens, Spring throws `ObjectOptimisticLockingFailureException`. Map it to HTTP `409` in your `GlobalErrorHandler` ([README, build step 6](README.md#6-turn-a-lost-update-clash-into-409)).
 
 ### Pessimistic locking
 
@@ -85,7 +85,7 @@ Optimistic = editing a shared doc and getting "someone else changed this, please
 
 ## Proof (do this in the step)
 
-Create `P-1`, then send two updates both based on version 3. One succeeds, and the other must return `409`.
+In step 10 you watch `version` go up with every update (README, Test it). In [step 15](../15-performance-and-safety/optimistic-locking-lab.md) you send two updates based on the same version on purpose: one succeeds, the other gets `409`.
 
 ## Back to the step
 

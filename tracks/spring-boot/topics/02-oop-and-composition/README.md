@@ -1,6 +1,9 @@
 # Step 02: OOP rules, composition, and first patterns
 
-> In this step: stop parcels from entering impossible states, record when things happen, and meet four ideas by name: encapsulation, composition, singleton, builder, and factory. ~90 minutes.
+> [!PICTURE]
+> In the depot, a parcel follows a fixed route: it **arrives**, a driver **picks it up**, then it is **delivered**. Nobody delivers a parcel that is still on the shelf. A clock on the wall stamps the time of every move. Today the parcel learns these rules, and the tracker gets its clock.
+
+Java you use here (taught in the Java stages): [classes and objects](../../../java/topics/classes-and-objects/index.html), [interfaces](../../../java/topics/interfaces/index.html), [enums](../../../java/topics/enums/index.html) and [exceptions](../../../java/topics/exceptions/index.html). The pattern names come from [design patterns](../../../java/topics/design-patterns/index.html). This page only shows how ParcelPilot uses them.
 
 ## The problem right now
 
@@ -83,6 +86,7 @@ public class Parcel {
     }
 
     public String id() { return id; }
+    public String recipient() { return recipient; }
     public Status status() { return status; }
 }
 ```
@@ -174,7 +178,7 @@ public final class SystemClock implements Clock {
 - **Builder**, for readable creation with optional fields: `Parcel.builder().id("P-1").recipient("Ava").priority(true).build()` instead of a long confusing constructor.
 - **Factory**, a method that picks the right object: `NotificationSenderFactory.forChannel(SMS)` returns an SMS sender without callers knowing the concrete class.
 
-Do the [builder and factory lab](patterns-lab.md) to add these.
+Do the [builder and factory lab](patterns-lab.md) to add these. The full catalog of patterns lives in the Java hub: [design patterns](../../../java/topics/design-patterns/index.html).
 
 ### Pros and cons of the patterns
 
@@ -242,57 +246,17 @@ Expected: final status `DELIVERED` and two `TrackingEvent` lines. Then, to see a
 - "`SystemClock` is a **singleton**: there's exactly one shared instance."
 - "I built the parcel with a **builder** and picked a sender with a **factory**."
 
-## Quiz: check yourself
+## Check
 
-Answer out loud before opening each toggle.
-
-1. What does **encapsulation** mean, and how does `Parcel` use it?
-
-<details><summary>Show answer</summary>
-
-Encapsulation means keeping data `private` and only allowing changes through methods that enforce rules. `Parcel` keeps `status` private and only changes it via `markPickedUp()`/`markDelivered()`, which reject illegal transitions.
-
-</details>
-
-2. Why use an **enum** for `Status` instead of a `String`?
-
-<details><summary>Show answer</summary>
-
-An enum is a fixed set of allowed values, so typos like `"DELIVRED"` are impossible: the code won't compile. A `String` could hold any nonsense value.
-
-</details>
-
-3. What is the difference between **composition** ("has-a") and **inheritance** ("is-a")? Which does `ParcelTracker` use for its clock?
-
-<details><summary>Show answer</summary>
-
-Composition means an object *has* a helper given from outside. Inheritance means an object *is a* special kind of another. `ParcelTracker` **has-a** `Clock` (composition), so it is not a kind of clock.
-
-</details>
-
-4. Why is passing the `Clock` into the constructor (instead of calling `SystemClock.instance()` inside) so useful?
-
-<details><summary>Show answer</summary>
-
-Because a test can pass a `FixedClock` that returns a known time, making timestamps predictable. Injected dependencies make code easier to test and change.
-
-</details>
-
-5. What makes `SystemClock` a **singleton**, and when should you avoid singletons?
-
-<details><summary>Show answer</summary>
-
-A private constructor (nobody else can `new` it) plus one shared instance handed out by `instance()`. Avoid singletons for anything holding changing data. That creates hidden global state that breaks tests.
-
-</details>
-
-6. When is a **builder** worth it, and when is it overkill?
-
-<details><summary>Show answer</summary>
-
-Worth it when an object has many fields (especially optional ones), so creation stays readable and validation happens at `build()`. Overkill for an object with just two simple required fields.
-
-</details>
+> [!CHECK]
+> 1. What does **encapsulation** mean, and how does `Parcel` use it?
+>    <details><summary>Answer</summary>Encapsulation means keeping data <code>private</code> and only allowing changes through methods that enforce rules. <code>Parcel</code> keeps <code>status</code> private and only changes it via <code>markPickedUp()</code>/<code>markDelivered()</code>, which reject illegal transitions.</details>
+> 2. Why use an **enum** for `Status` instead of a `String`?
+>    <details><summary>Answer</summary>An enum is a fixed set of allowed values, so typos like <code>"DELIVRED"</code> are impossible: the code won't compile. A <code>String</code> could hold any nonsense value.</details>
+> 3. What is the difference between **composition** ("has-a") and **inheritance** ("is-a")? Which does `ParcelTracker` use for its clock?
+>    <details><summary>Answer</summary>Composition means an object <em>has</em> a helper given from outside. Inheritance means an object <em>is a</em> special kind of another. <code>ParcelTracker</code> <strong>has-a</strong> <code>Clock</code> (composition), so it is not a kind of clock.</details>
+> 4. Why is passing the `Clock` into the constructor (instead of calling `SystemClock.instance()` inside) so useful?
+>    <details><summary>Answer</summary>Because a test can pass a <code>FixedClock</code> that returns a known time, making timestamps predictable. Injected dependencies make code easier to test and change.</details>
 
 ## Reflect (stretch)
 

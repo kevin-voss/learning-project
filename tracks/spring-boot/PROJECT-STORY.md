@@ -1,6 +1,9 @@
 # The ParcelPilot project story
 
-You do not build sixteen unrelated demo apps. You evolve the same product and keep seeing why the next concept is needed.
+> [!PICTURE]
+> A depot does not start big. On day one it is one person with one parcel and a label card. When parcels pile up, it gets a front desk. When the desk gets busy, a sorting room. Later a shelf, a logbook, a second building for notifications. ParcelPilot grows the same way.
+
+You do not build sixteen unrelated demo apps. You grow the same product and keep seeing why the next idea is needed. The steps are listed in [GUIDE.md](GUIDE.md).
 
 ```mermaid
 flowchart LR

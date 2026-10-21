@@ -130,4 +130,4 @@ Hibernate can generate schema changes itself: set `spring.jpa.hibernate.ddl-auto
 
 ## Back to the step
 
-Return to [Step 10](README.md) and create `V1__create_parcels.sql`. When you later add an index in [Indexes: why queries get fast](indexes-intro.md), that will be your first `V2`.
+Return to [Step 10](README.md) and create `V1__create_parcels.sql`. When you later add an index in [EXPLAIN and the N+1 problem](indexes-intro.md), that will be your first `V2`.

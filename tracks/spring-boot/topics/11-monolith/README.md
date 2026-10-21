@@ -1,6 +1,7 @@
 # Step 11: The modular monolith
 
-> In this step: organize the code into clean feature modules while keeping ONE deployable app. ~75 minutes.
+> [!PICTURE]
+> The depot has grown. Everything happens in one big hall, and people bump into each other. So you build **rooms with doors**: the front desk, the sorting room (the service with the rules), and the notification room that sends "your parcel is here" messages. It is still **one building**, but each room has one job, and rooms talk only through their doors.
 
 ## The problem right now
 
@@ -22,9 +23,9 @@ ParcelPilot now does HTTP, parcel rules, storage, and (soon) notifications, ofte
 
 ## What is a modular monolith (and why not microservices yet)?
 
-Think of one building with well-labeled rooms. You still live in one house (one deploy, no network between rooms), but each room has a clear purpose, so you can later move a room into its own building if needed.
+One building with well-labelled rooms: one deploy, no network between rooms, but each room has a clear purpose, so you can later move a room into its own building if needed. The beginner explanation of monolith vs microservices, with pros and cons, is in [Monoliths and microservices](../../references/architecture/monolith-and-microservices.md). Read it first.
 
-Organize **by feature**, not by generic layers (this is Stage 5 in [Code organization](../../references/architecture/code-organization.md), and it applies the [package-by-feature best practice](../../references/java/java-best-practices.md#12-organize-by-feature-not-by-layer) — the full side-by-side comparison of both layouts is in [Layered vs feature packages](layered-vs-feature-packages.md)):
+Organize **by feature**, not by generic layers (this is Shape 5 in [Code organization](../../references/architecture/code-organization.md), and it applies the [package-by-feature best practice](../../references/java/java-best-practices.md#12-organize-by-feature-not-by-layer) — the full side-by-side comparison of both layouts is in [Layered vs feature packages](layered-vs-feature-packages.md)):
 
 ```text
 parcel/
@@ -141,49 +142,17 @@ curl -i http://localhost:8080/parcels/P-1
 - "Each module has high **cohesion**: everything in it is about one job."
 - "The `Notifier` implementation is **injected**, so the parcel use case never knows *how* notifications are sent."
 
-## Quiz: check yourself
+## Check
 
-Answer out loud before opening each toggle.
-
-1. What is a **modular monolith**, and why choose it before microservices?
-
-<details><summary>Show answer</summary>
-
-One app, deployed as a single unit, but split into clear internal modules with boundaries. It gives you clean structure without the network complexity of microservices, and it makes a *real* future split easy once a genuine boundary appears.
-
-</details>
-
-2. Why organize **by feature** (`parcel`, `notification`) instead of by layer (`controllers`, `services`, `repositories`)?
-
-<details><summary>Show answer</summary>
-
-Feature packages keep everything about one capability together (high cohesion) and make a feature easy to understand, test, or later extract. Layer folders scatter one feature across many places.
-
-</details>
-
-3. What are **coupling** and **cohesion**, and which do you want more/less of?
-
-<details><summary>Show answer</summary>
-
-Coupling is how tightly parts depend on each other: you want **less**. Cohesion is how focused a module is on one job: you want **more**.
-
-</details>
-
-4. Why does the parcel module depend on a `Notifier` **interface** rather than the concrete `LoggingNotifier`?
-
-<details><summary>Show answer</summary>
-
-So the parcel module doesn't depend on notification internals. You can swap the implementation (log, email, queue) without touching parcel code, and later extract notifications into its own service with minimal changes.
-
-</details>
-
-5. This step adds **no new features**. So what's the point?
-
-<details><summary>Show answer</summary>
-
-It reorganizes existing code into clean boundaries. That structure is what makes every later step (queues, splitting services) a small change instead of a rewrite. The endpoints and behavior stay identical.
-
-</details>
+> [!CHECK]
+> 1. What is a **modular monolith**, and why choose it before microservices?
+>    <details><summary>Answer</summary>One app, deployed as a single unit, but split into clear internal modules with boundaries. It gives you clean structure without the network complexity of microservices, and it makes a <em>real</em> future split easy once a genuine boundary appears.</details>
+> 2. Why organize **by feature** (`parcel`, `notification`) instead of by layer (`controllers`, `services`, `repositories`)?
+>    <details><summary>Answer</summary>Feature packages keep everything about one capability together (high cohesion) and make a feature easy to understand, test, or later extract. Layer folders scatter one feature across many places.</details>
+> 3. What are **coupling** and **cohesion**, and which do you want more/less of?
+>    <details><summary>Answer</summary>Coupling is how tightly parts depend on each other: you want <strong>less</strong>. Cohesion is how focused a module is on one job: you want <strong>more</strong>.</details>
+> 4. Why does the parcel module depend on a `Notifier` **interface** rather than the concrete `LoggingNotifier`?
+>    <details><summary>Answer</summary>So the parcel module doesn't depend on notification internals. You can swap the implementation (log, email, queue) without touching parcel code, and later extract notifications into its own service with minimal changes.</details>
 
 ## Reflect (stretch)
 

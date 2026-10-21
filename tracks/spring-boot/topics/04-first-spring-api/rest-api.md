@@ -1,97 +1,127 @@
-# REST API lab: resources, commands, and queries
+# REST API lab: change a status, then read the status codes
 
-## Problem
+> [!PICTURE]
+> A delivery driver scans a parcel at the depot door: "picked up!". The front desk checks the rule card. If the parcel is still `CREATED`, the stamp goes on. If someone tries to stamp `DELIVERED` first, the clerk says "no, that clashes with what we know". That "no" is `409 Conflict`.
 
-A client needs to create, find, update, and search parcels without knowing Java internals. HTTP gives a shared request/response language, and REST-style paths give it predictable resource names.
+The theory lives elsewhere. HTTP: [requests and responses](../../../computer-science/index.html#http-requests-responses). REST, methods, safe and idempotent: [REST and HTTP in Java](../../../java/topics/rest-and-http/index.html). This lab is hands-on only.
 
-## Resource design
+## Part 1: add `PATCH /parcels/{id}/status`
 
-Use nouns in paths and HTTP methods for intent:
+A scanner sends `{"status":"PICKED_UP"}`. The parcel decides if that move is legal (the rules from step 02).
 
-| Intent | Request | Expected response |
-|---|---|---|
-| Create | `POST /parcels` | `201 Created` and the new parcel |
-| Read one | `GET /parcels/P-1` | `200 OK` or `404 Not Found` |
-| List/query | `GET /parcels?status=DELIVERED&recipient=Ava` | `200 OK` and a list |
-| Replace | `PUT /parcels/P-1` | `200 OK` or `204 No Content` |
-| Change one field/action | `PATCH /parcels/P-1/status` | `200 OK` |
-| Delete | `DELETE /parcels/P-1` | `204 No Content` |
-
-Two different "query" ideas, don't mix them up: **query parameters** are the `?status=...` part of a `GET`, used for simple filters. The **`QUERY` method** is a separate, newer HTTP method for complex safe reads that carry criteria in a body (see [HTTP methods explained](http-methods.md)). For these exercises, use `GET` with query parameters. Keep `GET` safe: it must not change a parcel.
-
-## Real-world example
-
-An operator dashboard calls `GET /parcels?status=CREATED` to show work waiting for pickup. A delivery scanner calls `PATCH /parcels/P-1/status` with `{"status":"PICKED_UP"}`. The API returns `409 Conflict` if the current status makes that transition illegal.
-
-```mermaid
-sequenceDiagram
-  participant O as Operator
-  participant API as Parcel API
-  participant DB as Parcel database
-  O->>API: GET /parcels?status=CREATED
-  API->>DB: query created parcels
-  DB-->>API: matching rows
-  API-->>O: 200 JSON array
-```
-
-## Example Spring shape
+**1. Teach `Parcel` one entry point for a status change:**
 
 ```java
-@GetMapping("/parcels")
-List<ParcelResponse> list(
-    @RequestParam(required = false) String status,
-    @RequestParam(required = false) String recipient) {
-  return parcelApplication.find(status, recipient);
+public void changeStatus(Status target) {
+    switch (target) {
+        case PICKED_UP -> markPickedUp();
+        case DELIVERED -> markDelivered();
+        default -> throw new IllegalStateException("cannot move to " + target);
+    }
 }
 ```
 
-Validate input at the boundary, return response DTOs instead of persistence entities, and keep lifecycle rules in the domain/application code.
+**2. Add a request DTO** in `ChangeStatusRequest.java`:
 
-## Pros and limits
-
-REST is simple, cache-friendly for reads, and works well with `curl`. It is not ideal for every interaction: a long-running operation may need `202 Accepted` plus status polling, and an event stream may be a better fit for real-time updates. Do not add GraphQL, WebSockets, or gRPC in this beginner path until a concrete need appears.
-
-## Try it
-
-```bash
-curl -i 'http://localhost:8080/parcels?status=CREATED'
-curl -i -X PATCH http://localhost:8080/parcels/P-1/status \
-  -H 'Content-Type: application/json' \
-  -d '{"status":"PICKED_UP"}'
+```java
+public record ChangeStatusRequest(Status status) {}
 ```
 
-## Idempotency and safety, applied to this lab
+**3. Add the endpoint to `ParcelController`:**
 
-The definitions of "safe" and "idempotent" live in [HTTP methods explained](http-methods.md); here's what they mean for the two endpoints you just exercised.
-
-**Why this PATCH is NOT idempotent.** Suppose parcel `P-1` is `CREATED` and a delivery scanner sends `PATCH /parcels/P-1/status` with `{"status":"PICKED_UP"}`. It succeeds (`200`). The scanner's network hiccups, it never sees the response, and it retries the *same* request. Second time around, `P-1` is already `PICKED_UP`, `PICKED_UP → PICKED_UP` is not a legal transition, and the API answers `409 Conflict`. Same request, different outcome — that's non-idempotence in the flesh. This isn't a bug to fix today; it's a property to *know about*, because networks retry whether you planned for it or not. (Real systems tame this with idempotency keys or by making the transition rule tolerate repeats — ideas that return with queues in [Step 12](../12-queues/README.md), where redelivery makes repeats routine.)
-
-**Why GET must stay safe.** It's tempting to sneak a side effect into a read — say, `GET /parcels/P-1` also stamps a "last viewed" field or logs a tracking event into the parcel's history. Don't. The operator dashboard polls that endpoint every few seconds, browsers prefetch, proxies cache and revalidate — none of them believe a `GET` changes anything, because the HTTP contract says it doesn't. One "harmless" side effect and your parcel history fills with phantom events nobody caused. If viewing a parcel should be recorded, that's a change, so it gets its own `POST` (e.g. `POST /parcels/P-1/views`) — and the `GET` stays a pure read.
-
-## REST vs RPC
-
-There's an older, still-common alternative style worth recognizing: **RPC** (Remote Procedure Call), where the API exposes *actions* instead of *resources*. An RPC-flavored ParcelPilot would look like:
-
-```bash
-POST /advanceParcelStatus
-Content-Type: application/json
-
-{"parcelId": "P-1", "newStatus": "PICKED_UP"}
+```java
+@PatchMapping("/{id}/status")
+public ResponseEntity<?> changeStatus(@PathVariable String id,
+                                      @RequestBody ChangeStatusRequest req) {
+    Parcel parcel = store.get(id);
+    if (parcel == null) {
+        return ResponseEntity.notFound().build();                        // 404
+    }
+    try {
+        parcel.changeStatus(req.status());
+    } catch (IllegalStateException e) {
+        return ResponseEntity.status(409).body(Map.of("error", e.getMessage())); // 409
+    }
+    return ResponseEntity.ok(toResponse(parcel));                         // 200
+}
 ```
 
-One method (`POST`), verb-shaped paths (`/advanceParcelStatus`, `/getParcel`, `/createParcel`), everything in the body. It works — plenty of production APIs look like this — but you lose what REST's uniformity buys.
+The `try`/`catch` inside the controller is a little messy. That is on purpose: step 06 moves it into one central error handler.
 
-| | REST (resources + methods) | RPC (named actions) |
+> [!TRY]
+> 1. Restart the app and create `P-1` (see the README's Test it section).
+> 2. Run:
+>    ```bash
+>    curl -i -X PATCH http://localhost:8080/parcels/P-1/status \
+>      -H 'Content-Type: application/json' -d '{"status":"PICKED_UP"}'
+>    ```
+> 3. Run the same command again.
+>
+> You should see: `200` the first time, `409` the second time. Same request, different result: this `PATCH` is **not idempotent**. Networks retry, so remember this for step 12 (queues).
+
+> [!WARN]
+> Never sneak a change into a `GET` (for example a "last viewed" stamp). Dashboards poll, browsers prefetch, proxies cache: they all trust that `GET` changes nothing. If viewing must be recorded, give it its own `POST`.
+
+## Part 2: status codes, predict then verify
+
+The status code lets a machine react **without reading the body**. The first digit is the family: `2xx` it worked, `4xx` **your** request is wrong, `5xx` **my** server broke.
+
+| Code | Meaning | In ParcelPilot |
 |---|---|---|
-| **Pros** | Uniform: knowing `/parcels` exists tells you how to read, create, and change one; safe `GET`s are cacheable; discoverable and guessable | Explicit action names; sometimes clearer for operations that aren't naturally create/read/update/delete (`/recalculateRoute`, `/mergeDuplicates`) |
-| **Cons** | Some real actions fit awkwardly into resource grammar | Every endpoint is its own convention to learn; everything is `POST`, so caches and retries can't help; easy to grow a junk drawer of verbs |
+| `200 OK` | Worked, has a body | `GET /parcels/P-1`, a good `PATCH` |
+| `201 Created` | A new thing exists | `POST /parcels` |
+| `204 No Content` | Worked, no body | a future `DELETE` |
+| `400 Bad Request` | The request is malformed | broken JSON; blank fields after step 05 |
+| `401` / `403` | Who are you? / Not allowed | login in step 16 |
+| `404 Not Found` | No such resource | `GET /parcels/nope` |
+| `409 Conflict` | Clashes with the current state | illegal status move |
+| `415 Unsupported Media Type` | Wrong body format | `POST` without `Content-Type: application/json` |
+| `429 Too Many Requests` | Slow down | rate limiting in step 15 |
+| `500 Internal Server Error` | The server broke | a blank recipient today (steps 05–06 clean it up) |
+| `503 Service Unavailable` | Temporarily down | a split-out service in step 13 |
 
-(gRPC is a modern, high-performance RPC framework you'll hear about for internal service-to-service calls; one sentence is all it needs here.)
+Create one parcel first:
 
-**The guidance: resources first.** Model your API as resources and reach for `GET`/`POST`/`PATCH`/`DELETE` — that covers nearly everything ParcelPilot will ever need. But when an operation truly isn't CRUD on any resource, a well-named action endpoint (`POST /parcels/P-1/recalculate-route`) is honest and fine. Purity contests over "is this RESTful enough" are less useful than an API that's consistent and predictable.
+```bash
+curl -i -X POST http://localhost:8080/parcels \
+  -H 'Content-Type: application/json' -d '{"id":"P-1","recipient":"Ava"}'
+```
 
-## Next
+**Before** you run each command, write your prediction in the middle column. Predicting first is the whole exercise.
 
-- Which status code to return when, hands-on: [HTTP status codes lab](http-status-codes-lab.md).
-- Method-by-method reference: [HTTP methods explained](http-methods.md).
-- Back to [Step 04](README.md).
+| Request | Your prediction | Observed |
+|---|---|---|
+| `GET /parcels/P-1` | | |
+| `GET /parcels/nope` | | |
+| `POST /parcels` without `Content-Type` | | |
+| `POST /parcels` with broken JSON | | |
+| `PATCH` `P-1` straight to `DELIVERED` | | |
+
+```bash
+curl -i http://localhost:8080/parcels/P-1                       # expect 200
+curl -i http://localhost:8080/parcels/nope                      # expect 404
+curl -i -X POST http://localhost:8080/parcels \
+  -d '{"id":"P-2","recipient":"Ben"}'                           # expect 415
+curl -i -X POST http://localhost:8080/parcels \
+  -H 'Content-Type: application/json' -d '{"id":"P-3","recipient":'   # expect 400
+curl -i -X PATCH http://localhost:8080/parcels/P-1/status \
+  -H 'Content-Type: application/json' -d '{"status":"DELIVERED"}'      # expect 409
+```
+
+Two things to notice:
+
+- `415` and `400` come back **before your controller runs**. Spring rejected the request for you.
+- The error bodies all look different (or are empty). Step 06 gives every error one shape.
+
+> [!NOTE]
+> **REST vs RPC.** Some APIs expose actions instead of resources: `POST /advanceParcelStatus`. That works, but every endpoint becomes its own rule to learn, and caches cannot help. Model resources first. When an action truly is not a create/read/update/delete, an honest action path like `POST /parcels/P-1/recalculate-route` is fine.
+
+> [!CHECK]
+> 1. You send the same `PATCH ... PICKED_UP` twice. Why is the second answer `409`?
+>    <details><summary>Answer</summary>After the first call the parcel is already <code>PICKED_UP</code>. Picking it up again is not a legal move, so the domain throws and the controller answers <code>409 Conflict</code>. The <code>PATCH</code> is not idempotent.</details>
+> 2. Which side is to blame for a `4xx`, and which for a `5xx`?
+>    <details><summary>Answer</summary><code>4xx</code>: the client sent a wrong request and should fix it. <code>5xx</code>: the server broke; the request may be fine.</details>
+> 3. Why does `POST` without `Content-Type` return `415` and never reach your code?
+>    <details><summary>Answer</summary>Spring's web layer checks the body format before calling the controller. Without the JSON header it cannot turn the body into a <code>CreateParcelRequest</code>, so it refuses the request itself.</details>
+
+**Next:** back to [Step 04](README.md) and tick the acceptance criteria.

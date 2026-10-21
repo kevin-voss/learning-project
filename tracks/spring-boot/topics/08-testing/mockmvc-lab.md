@@ -173,7 +173,7 @@ Then break something on purpose: change the 404 `code` string in `GlobalErrorHan
 
 | Symptom | Likely cause | Fix |
 |---|---|---|
-| `ApplicationContext failure` / context fails to load | `@WebMvcTest` names a class that isn't a `@RestController`, or (from step 10 on) the controller needs a bean the slice doesn't provide | Check the class in `@WebMvcTest(...)`; once a repository exists, provide it with `@MockBean` (see [reference](../../references/web-and-api/testing.md)) |
+| `ApplicationContext failure` / context fails to load | `@WebMvcTest` names a class that isn't a `@RestController`, or (from step 10 on) the controller needs a bean the slice doesn't provide | Check the class in `@WebMvcTest(...)`; once a repository exists, provide it with `@MockBean` (see the [cheat sheet](../../references/web-and-api/testing.md)) |
 | `No value at JSON path "$.code"` | Your `ErrorResponse` field is named differently, or the body is empty | Print the real body with `.andDo(print())` and adjust the path to your actual shape |
 | `expected:<…> but was:<…>` on a jsonPath | The test's expected string doesn't match your handler's actual value | Decide which one is the contract; fix the other |
 | Got `415` instead of `400` | Missing `.contentType(MediaType.APPLICATION_JSON)` | Add the content type to the request |
@@ -199,4 +199,4 @@ Default to the slice. Reach for `@SpringBootTest` only when the thing you're ver
 - Back to [Step 08](README.md) for acceptance criteria and the quiz.
 - [Unit vs integration vs E2E](unit-vs-integration-vs-e2e.md) for where these tests sit in the pyramid.
 - [Testcontainers lab](testcontainers-lab.md) — read now, complete after [step 10](../10-persistence/README.md).
-- [Testing reference](../../references/web-and-api/testing.md) for `@MockBean`, parameterized tests, and flaky-test causes.
+- [Spring testing cheat sheet](../../references/web-and-api/testing.md) for `@MockBean`, parameterized tests and flaky-test causes.

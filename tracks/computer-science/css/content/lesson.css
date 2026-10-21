@@ -234,7 +234,7 @@
     margin: -18px 0 28px;
     padding: 12px;
     position: sticky;
-    top: 0;
+    top: var(--lp-header-h, 0px);
     z-index: 20;
   }
   .section-subnav span {
@@ -274,7 +274,7 @@
     margin: -18px 0 20px;
     padding: 12px;
     position: sticky;
-    top: 0;
+    top: var(--lp-header-h, 0px);
     z-index: 21;
   }
   .lesson-subnav span {

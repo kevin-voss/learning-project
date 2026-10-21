@@ -9,6 +9,7 @@ import { copyFileSync, existsSync, mkdirSync, readdirSync, rmSync, writeFileSync
 import { basename, dirname, extname, join, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { pathSteps, writeCatalog } from './catalog.mjs'
+import { HEADER } from './header.mjs'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const OUT = join(ROOT, 'dist/site')
@@ -42,6 +43,21 @@ const THEME_HEAD = [THEME_INIT, ...['tokens.css', 'components.css', 'anim/anim.c
 const THEME_BODY = ['/hub/theme/anim/scenes.js', '/hub/theme/anim/player.js', '/hub/progress.js']
   .map((src) => `<script src="${src}" defer></script>`).join('\n  ')
 
+// "Home › sheets › javascript › dom.md": every folder that has a page is a link.
+function crumbs(file) {
+  const parts = file.split('/')
+  const links = parts.slice(0, -1).map((name, i) => {
+    const dir = parts.slice(0, i + 1).join('/')
+    const page = ['index.html', 'README.md'].some((entry) => existsSync(join(ROOT, dir, entry)))
+    return page && !(basename(file) === 'README.md' && i === parts.length - 2)
+      ? `<a href="/${dir}/">${escape(name)}</a>`
+      : `<span>${escape(name)}</span>`
+  })
+  const here = basename(file) === 'README.md' ? parts.at(-2) : parts.at(-1)
+  if (basename(file) === 'README.md') links.pop()
+  return `<nav class="lp-crumbs" aria-label="You are here"><a href="/hub/">Home</a> › ${[...links, `<span aria-current="page">${escape(here)}</span>`].join(' › ')}</nav>`
+}
+
 function shell(title, file, body) {
   return `<!DOCTYPE html>
 <html lang="en">
@@ -52,7 +68,8 @@ function shell(title, file, body) {
   ${THEME_HEAD}
 </head>
 <body class="lp-page">
-  <nav class="lp-topnav"><a href="/hub/">← Path</a><span class="lp-crumb">${escape(file)}</span><button type="button" class="lp-theme-toggle" data-theme-toggle aria-label="Switch light or dark">◐</button></nav>
+  ${HEADER}
+  ${crumbs(file)}
   <main class="lp-sheet">
 ${body}
   </main>
@@ -81,12 +98,13 @@ function codePage(source, file) {
     <pre><code class="language-${language}">${escape(source)}</code></pre>`)
 }
 
-// Every page outside the hub gets the theme and the progress script: it shows
-// which path step the page is and lets the student tick it (see hub/progress.js).
+// Every page outside the hub gets the theme, the site header and the progress
+// script: it shows which path step the page is and lets the student tick it
+// (see hub/progress.js).
 function withTheme(html) {
   if (!html.includes('</body>')) return html
   const head = html.includes('</head>') ? html.replace('</head>', `  ${THEME_HEAD}\n</head>`) : html
-  return head.replace('</body>', `${THEME_BODY}\n</body>`)
+  return head.replace(/<body[^>]*>/, (body) => `${body}\n  ${HEADER}`).replace('</body>', `${THEME_BODY}\n</body>`)
 }
 
 // Source files next to a README are listed under it, so meine-loesung/ and musterloesung/

@@ -11,19 +11,19 @@
   <link rel="stylesheet" href="landing.css">
 </head>
 <body class="lp-page">
-  <header class="site-header">
-    <div class="container nav">
-      <a class="brand" href="#top"><span class="brand-mark">LP</span><span>Learning Project</span></a>
-      <nav class="nav-links" aria-label="Primary">
-        <a href="#path">The path</a>
-        <a href="#tasks">My tasks</a>
-        <a href="#lookup">Look it up</a>
-        <a href="#help">Help</a>
-      </nav>
-      <span class="progress-pill" id="progress-pill" hidden></span>
-      <button type="button" class="lp-theme-toggle" data-theme-toggle aria-label="Switch light or dark">◐</button>
-    </div>
+  <!-- header:start -->
+  <header class="lp-global">
+    <a class="lp-global-brand" href="/hub/" aria-label="Learning Project: back to the start page"><span class="lp-global-mark">LP</span><span class="lp-global-name">Learning Project</span><span class="lp-global-home">Home</span></a>
+    <nav class="lp-global-nav" aria-label="Site">
+      <a href="/hub/#path">The path</a>
+      <a href="/hub/#tasks">My tasks</a>
+      <a href="/hub/#lookup">Look it up</a>
+    </nav>
+    <span class="lp-global-progress" data-progress-pill hidden></span>
+    <a class="lp-global-continue" data-continue href="/hub/#path">Start →</a>
+    <button type="button" class="lp-theme-toggle" data-theme-toggle aria-label="Switch light or dark">◐</button>
   </header>
+  <!-- header:end -->
 
   <main id="top">
     <section class="hero">

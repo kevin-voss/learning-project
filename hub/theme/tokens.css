@@ -60,6 +60,10 @@
   --lp-radius-sm: 8px;
   --lp-shadow: 0 1px 2px rgba(31, 41, 51, 0.06), 0 6px 20px rgba(31, 41, 51, 0.07);
   --lp-speed: 240ms;
+
+  /* The site header (hub/scripts/header.mjs). Tracks offset their own
+     sticky and fixed parts by this height. */
+  --lp-header-h: 56px;
 }
 
 @media (prefers-color-scheme: dark) {

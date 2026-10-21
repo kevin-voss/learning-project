@@ -2,7 +2,8 @@
 // On the landing page: ticks, stage and level counts, the "next step" card, student picker.
 // On every other page of the site: a small bar that says which step this is,
 // with "I did this" (steps come from /hub/path.json, written by build-site.mjs).
-// On every page: the light/dark toggle ([data-theme-toggle]).
+// On every page: the site header's "Continue" button and progress ([data-continue],
+// [data-progress-pill], see hub/scripts/header.mjs) and the light/dark toggle ([data-theme-toggle]).
 (function () {
   const KEY = 'learning-project:done'
   const STUDENT_KEY = 'learning-project:student'
@@ -27,6 +28,20 @@
 
   const done = new Set(load(KEY, []))
   const persist = () => save(KEY, [...done])
+
+  // The site header: progress in percent and a button to the next unfinished step.
+  function header(count, total, next) {
+    for (const pill of document.querySelectorAll('[data-progress-pill]')) {
+      pill.textContent = `${Math.round((count / total) * 100)}%`
+      pill.title = `${count} of ${total} steps done`
+      pill.hidden = count === 0
+    }
+    for (const button of document.querySelectorAll('[data-continue]')) {
+      button.textContent = !next ? 'All done ✓' : count === 0 ? 'Start →' : `Step ${next.n} →`
+      button.title = next ? `Continue with step ${next.n}: ${next.title}` : 'You finished the path'
+      button.href = next ? next.href : '/hub/#path'
+    }
+  }
 
   // Light or dark: the reader's choice wins, otherwise the system decides.
   function theme() {
@@ -79,9 +94,6 @@
       document.getElementById('progress-bar').style.width = `${percent}%`
       document.getElementById('progress-text').textContent = `${count} of ${main.length} steps done`
       document.getElementById('hero-progress').hidden = count === 0
-      const pill = document.getElementById('progress-pill')
-      pill.textContent = `${percent}%`
-      pill.hidden = count === 0
 
       const text = (id, value) => { document.getElementById(id).textContent = value }
       if (!current) {
@@ -92,6 +104,7 @@
         text('next-time', '')
         continueButton.textContent = 'See the extras →'
         continueButton.href = '#path'
+        header(count, main.length, null)
         return
       }
       const link = current.querySelector('.step-title a')
@@ -109,6 +122,7 @@
       text('next-time', current.dataset.time ?? '')
       continueButton.textContent = `${count === 0 ? 'Start' : 'Continue with'} step ${number} →`
       continueButton.href = link ? link.getAttribute('href') : `#${current.id}`
+      header(count, main.length, { n: number, title, href: continueButton.href })
     }
 
     for (const row of rows) {
@@ -199,7 +213,12 @@
   } else if (location.protocol.startsWith('http')) {
     fetch('/hub/path.json')
       .then((response) => (response.ok ? response.json() : Promise.reject(new Error(response.statusText))))
-      .then(stepBar)
+      .then((steps) => {
+        const main = steps.filter((step) => step.n)
+        const next = main.find((step) => !done.has(step.id))
+        header(main.filter((step) => done.has(step.id)).length, main.length, next && { n: next.n, title: next.title, href: next.url || `/hub/#${next.id}` })
+        stepBar(steps)
+      })
       .catch(() => {})
   }
 })()

@@ -9,7 +9,7 @@
 /* Header */
 .site-header {
   position: sticky;
-  top: 0;
+  top: var(--lp-header-h, 0px);
   z-index: 50;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);

@@ -179,7 +179,7 @@
 /* Toast */
 .toast {
   position: fixed;
-  top: 76px;
+  top: calc(var(--lp-header-h, 0px) + 76px);
   left: 50%;
   transform: translateX(-50%) translateY(-160px);
   background: var(--card-2);

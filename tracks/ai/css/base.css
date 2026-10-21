@@ -1,6 +1,6 @@
 /* Shared page frame and typography for the AI engineering field guide. */
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; scroll-padding-top: calc(var(--topbar-h) + 20px); }
+html { scroll-behavior: smooth; scroll-padding-top: calc(var(--lp-header-h, 0px) + var(--topbar-h) + 20px); }
 body {
   margin: 0; background: var(--bg); color: var(--txt); font-family: var(--sans);
   font-size: 16px; line-height: 1.7; -webkit-font-smoothing: antialiased;
@@ -16,8 +16,8 @@ code { font-size: .86em; color: var(--code-txt); background: var(--code-bg); bor
 pre code { background: none; border: 0; padding: 0; color: inherit; font-size: inherit; white-space: inherit; }
 h1, h2, h3, h4 { color: var(--txt-strong); line-height: 1.25; }
 h1 { font: 700 clamp(32px, 4.6vw, 48px)/1.1 var(--serif); letter-spacing: -.01em; margin: 0; }
-h2 { font-size: clamp(20px, 2.5vw, 26px); font-weight: 600; margin: var(--r-xl) 0 var(--r-sm); scroll-margin-top: calc(var(--topbar-h) + 18px); }
-h3 { font-size: 17px; font-weight: 600; margin: var(--r-lg) 0 var(--r-sm); scroll-margin-top: calc(var(--topbar-h) + 18px); }
+h2 { font-size: clamp(20px, 2.5vw, 26px); font-weight: 600; margin: var(--r-xl) 0 var(--r-sm); scroll-margin-top: calc(var(--lp-header-h, 0px) + var(--topbar-h) + 18px); }
+h3 { font-size: 17px; font-weight: 600; margin: var(--r-lg) 0 var(--r-sm); scroll-margin-top: calc(var(--lp-header-h, 0px) + var(--topbar-h) + 18px); }
 h4 { font: 600 11px/1.4 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--dim); margin: var(--r-md) 0 var(--r-xs); }
 p { margin: 0 0 var(--r-sm); }
 .content p, .content li, .content blockquote { max-width: 74ch; }
@@ -26,9 +26,9 @@ li { margin: 7px 0; }
 li > ul { margin: 4px 0 2px; }
 b, strong { color: var(--txt-strong); font-weight: 650; }
 
-#progress { position: fixed; inset: 0 auto auto 0; height: 3px; width: 0; z-index: 120; background: var(--gold); }
+#progress { position: fixed; inset: var(--lp-header-h, 0px) auto auto 0; height: 3px; width: 0; z-index: 120; background: var(--gold); }
 .topbar {
-  position: sticky; top: 0; z-index: 110; height: var(--topbar-h); display: flex; align-items: center;
+  position: sticky; top: var(--lp-header-h, 0px); z-index: 110; height: var(--topbar-h); display: flex; align-items: center;
   gap: 12px; padding: 0 18px; background: color-mix(in srgb, var(--bg) 94%, transparent); backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--edge); box-shadow: none;
 }
@@ -41,10 +41,8 @@ b, strong { color: var(--txt-strong); font-weight: 650; }
 .tbtn { display: inline-flex; align-items: center; justify-content: center; font: 500 11px var(--mono); color: var(--txt); background: transparent; border: 1px solid var(--edge-2); border-radius: 999px; padding: 6px 13px; cursor: pointer; white-space: nowrap; text-decoration: none; transition: background .15s, color .15s, border-color .15s; }
 .tbtn:hover { color: var(--txt-strong); background: var(--panel); border-color: var(--edge-3); text-decoration: none; }
 .tbtn.on { color: var(--gold-ink); border-color: var(--gold); background: var(--gold-soft); }
-.topbar .lp-theme-toggle { flex: none; width: 32px; height: 32px; padding: 0; border: 1px solid var(--edge-2); border-radius: 999px; background: transparent; color: var(--txt); font-size: 15px; line-height: 1; cursor: pointer; }
-.topbar .lp-theme-toggle:hover { background: var(--panel); }
 
-.sidebar { position: fixed; z-index: 100; top: var(--topbar-h); bottom: 0; left: 0; width: var(--sidebar-w); overflow-y: auto; overscroll-behavior: contain; padding: 20px 15px 48px; border-right: 1px solid var(--edge); background: var(--bg-soft); scrollbar-width: thin; transition: transform .22s ease; }
+.sidebar { position: fixed; z-index: 100; top: calc(var(--lp-header-h, 0px) + var(--topbar-h)); bottom: 0; left: 0; width: var(--sidebar-w); overflow-y: auto; overscroll-behavior: contain; padding: 20px 15px 48px; border-right: 1px solid var(--edge); background: var(--bg-soft); scrollbar-width: thin; transition: transform .22s ease; }
 .nav-part { margin: 20px 8px 6px; font: 700 9.5px var(--mono); letter-spacing: .18em; text-transform: uppercase; color: var(--dim); }
 .nav-part:first-child { margin-top: 0; }
 .nav-sec { display: block; position: relative; }
@@ -105,7 +103,7 @@ body.nav-collapsed .sidebar { transform: translateX(-100%); visibility: hidden; 
   .main { margin-left: 0; padding-left: 28px; padding-right: 28px; }
   .sidebar { z-index: 150; transform: translateX(-100%); visibility: hidden; box-shadow: var(--shadow); }
   body.nav-open .sidebar { transform: none; visibility: visible; }
-  body.nav-open::after { content: ""; position: fixed; inset: var(--topbar-h) 0 0; z-index: 140; background: var(--overlay); }
+  body.nav-open::after { content: ""; position: fixed; inset: calc(var(--lp-header-h, 0px) + var(--topbar-h)) 0 0; z-index: 140; background: var(--overlay); }
   .toc-close { display: inline-flex; }
 }
 @media (max-width: 560px) {

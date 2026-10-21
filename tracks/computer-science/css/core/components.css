@@ -165,7 +165,7 @@
   .menu-toggle {
     display: none;
     position: fixed;
-    top: 16px; left: 16px;
+    top: calc(var(--lp-header-h, 0px) + 12px); left: 16px;
     z-index: 200;
     background: var(--card);
     border: 1px solid var(--border);
@@ -181,7 +181,7 @@
 /* Toast */
   .toast-container {
     position: fixed;
-    top: 20px;
+    top: calc(var(--lp-header-h, 0px) + 20px);
     right: 20px;
     z-index: 1000;
     display: flex;

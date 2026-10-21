@@ -2,6 +2,86 @@
    page of any track without changing that page's own layout.
    Uses the tokens from tokens.css. Reference: hub/theme/README.md */
 
+/* ---------- Site header (every page, hub/scripts/header.mjs) ---------- */
+
+.lp-global {
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: var(--lp-s3);
+  width: 100%;
+  height: var(--lp-header-h);
+  padding: 0 max(var(--lp-s4), calc((100% - 1080px) / 2));
+  background: color-mix(in srgb, var(--lp-bg) 90%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--lp-line);
+  color: var(--lp-text);
+  font: 700 15px / 1 var(--lp-font);
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.lp-global * { box-sizing: border-box; }
+.lp-global a { text-decoration: none; }
+
+.lp-global-brand { display: flex; align-items: center; gap: var(--lp-s2); color: var(--lp-text); white-space: nowrap; }
+.lp-global-brand:hover .lp-global-name, .lp-global-brand:hover .lp-global-home { color: var(--lp-accent); }
+
+.lp-global-mark {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: var(--lp-accent);
+  color: var(--lp-on-accent);
+  font-size: 13px;
+}
+
+.lp-global-home { display: none; }
+.lp-global-nav { display: flex; gap: var(--lp-s4); margin-left: auto; }
+.lp-global-nav a { color: var(--lp-text-muted); }
+.lp-global-nav a:hover { color: var(--lp-text); }
+
+.lp-global-progress {
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--lp-try-bg);
+  color: var(--lp-do);
+  font-size: 13px;
+}
+
+.lp-global-continue {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 var(--lp-s4);
+  border-radius: 999px;
+  background: var(--lp-accent);
+  color: var(--lp-on-accent) !important;
+  white-space: nowrap;
+}
+
+.lp-global-continue:hover { filter: brightness(1.08); }
+.lp-global .lp-theme-toggle { flex: none; }
+
+@media (max-width: 820px) {
+  .lp-global-nav { display: none; }
+  .lp-global-progress { margin-left: auto; }
+  .lp-global-progress[hidden] + .lp-global-continue { margin-left: auto; }
+}
+
+@media (max-width: 480px) {
+  .lp-global-name { display: none; }
+  .lp-global-home { display: inline; }
+  .lp-global-progress { display: none; }
+  .lp-global-continue { margin-left: auto; }
+}
+
 /* ---------- Generated pages (sheets, project pages, code pages) ---------- */
 
 .lp-page {
@@ -12,27 +92,26 @@
   -webkit-font-smoothing: antialiased;
 }
 
-.lp-topnav {
-  position: sticky;
-  top: 0;
-  z-index: 20;
+.lp-crumbs {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: var(--lp-s3);
-  padding: var(--lp-s3) var(--lp-s4);
-  background: color-mix(in srgb, var(--lp-bg) 88%, transparent);
-  backdrop-filter: blur(8px);
-  border-bottom: 1px solid var(--lp-line);
-  font-size: 15px;
+  gap: 2px 6px;
+  max-width: var(--lp-measure);
+  margin: 0 auto;
+  padding: var(--lp-s4) var(--lp-s4) 0;
+  color: var(--lp-text-muted);
+  font: 400 14px / 1.4 var(--lp-font);
 }
 
-.lp-topnav a { color: var(--lp-text); font-weight: 700; text-decoration: none; }
-.lp-topnav .lp-crumb { color: var(--lp-text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; flex: 1; }
+.lp-crumbs a { color: var(--lp-text-muted); text-decoration: none; }
+.lp-crumbs a:hover { color: var(--lp-accent); text-decoration: underline; }
+.lp-crumbs span[aria-current] { color: var(--lp-text); font-weight: 700; }
 
 .lp-sheet {
   max-width: var(--lp-measure);
   margin: 0 auto;
-  padding: var(--lp-s6) var(--lp-s4) 120px;
+  padding: var(--lp-s5) var(--lp-s4) 120px;
 }
 
 .lp-sheet h1 { font-size: clamp(30px, 5vw, 40px); line-height: 1.15; margin: 0 0 var(--lp-s5); letter-spacing: -0.01em; }
@@ -246,4 +325,4 @@
   .lp-bar .lp-step { display: none; }
 }
 
-@media print { .lp-bar, .lp-topnav { display: none; } }
+@media print { .lp-bar, .lp-global { display: none; } }

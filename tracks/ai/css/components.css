@@ -75,14 +75,14 @@ pre.mermaid[src-fallback] { height: auto; color: var(--dim); padding: 12px 0; }
 .diag-controls .tbtn { border-radius: 6px; padding: 5px 10px; }
 .diag-status { color: var(--dim); font-size: 13px; margin: 4px 0 8px; }
 .diagram figcaption { max-width: 74ch; margin-top: 12px; color: var(--dim); font-size: 13px; line-height: 1.55; }
-.diagram-expanded { position: fixed; z-index: 200; inset: 14px; width: auto; max-width: calc(100vw - 28px); max-height: calc(100dvh - 28px); display: flex; flex-direction: column; margin: 0; padding: 14px; overflow: hidden; background: var(--bg); box-shadow: var(--shadow); }
+.diagram-expanded { position: fixed; z-index: 600; inset: 14px; width: auto; max-width: calc(100vw - 28px); max-height: calc(100dvh - 28px); display: flex; flex-direction: column; margin: 0; padding: 14px; overflow: hidden; background: var(--bg); box-shadow: var(--shadow); }
 .diagram-expanded .diag-body { flex: 1 1 auto; min-height: 0; }
 .diagram-expanded pre.mermaid { flex: 0 0 auto; }
-.diagram-overlay { position: fixed; z-index: 210; inset: 0; display: grid; place-items: center; background: var(--overlay); }
+.diagram-overlay { position: fixed; z-index: 610; inset: 0; display: grid; place-items: center; background: var(--overlay); }
 body.dialog-open { overflow: hidden; }
 @media (max-width: 560px) { .diagram-expanded { inset: 6px; max-width: calc(100vw - 12px); max-height: calc(100dvh - 12px); padding: 8px; } .diag-controls { justify-content: flex-start; } .tbl-wrap { margin-left: -2px; margin-right: -2px; } }
 
-.chapter-summary, .key-idea, .lab-check, .references { scroll-margin-top: calc(var(--topbar-h) + 18px); }
+.chapter-summary, .key-idea, .lab-check, .references { scroll-margin-top: calc(var(--lp-header-h, 0px) + var(--topbar-h) + 18px); }
 .lab-check, .references { margin: clamp(28px, 4vw, 46px) 0; padding-top: 16px; border-top: 1px solid var(--edge); }
 .lab-check { padding: 18px 20px; border-top: 0; border-left: 3px solid var(--mint); background: var(--try-bg); }
 .lab-check h2, .references h2 { margin: 0 0 12px; font: 700 19px var(--serif); }

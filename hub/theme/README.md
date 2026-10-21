@@ -5,10 +5,16 @@ Every page uses these files. The build (`hub/scripts/build-site.mjs`) adds them 
 | File | What it holds |
 |------|---------------|
 | `tokens.css` | Colours, fonts, spacing, radius, shadow. Light first, dark mode from the system or the toggle. All names start with `--lp-`. |
-| `components.css` | Boxes, code blocks, buttons, step tags, the step bar, and the layout of generated pages. Class selectors only, so it is safe on every page. |
+| `components.css` | The site header, boxes, code blocks, buttons, step tags, the step bar, and the layout of generated pages. Class selectors only, so it is safe on every page. |
 | `anim/player.js` | The animation player: finds `<div data-anim="name">` and plays the scene. |
 | `anim/scenes.js` | The scenes themselves. |
 | `anim/anim.css` | Styles for the animations. |
+
+## The site header
+
+Every page starts with the same header (`hub/scripts/header.mjs`): **Learning Project** (back to the start page), *The path*, *My tasks*, *Look it up*, your progress, a **Continue** button to your next unfinished step, and the light/dark toggle. The build adds it to every page; the landing page gets it from `catalog.mjs`. Generated pages also show a breadcrumb (*Home › sheets › javascript › dom.md*).
+
+It is `--lp-header-h` (56 px) tall and sticks to the top. A track that pins its own bars, sidebars or toasts to the top offsets them by `var(--lp-header-h, 0px)`, so nothing hides behind it.
 
 ## Tokens
 

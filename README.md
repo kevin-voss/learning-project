@@ -60,6 +60,7 @@ The landing page shows the **next step** first, then **The path** (levels → st
 | `hub/progress.js` | Ticks, the next-step card, the step bar on every page (saved in `localStorage`), the light/dark toggle |
 | `hub/sheet.js` | Renders Markdown pages: `> [!PICTURE]` / `[!TRY]` / `[!CHECK]` boxes, code colours, heading anchors |
 | `hub/theme/` | Tokens, components and the step-by-step animations (`<div data-anim="…">`) |
+| `hub/scripts/header.mjs` | The one site header on every page: home, path, tasks, look it up, progress, **Continue**, light/dark |
 | `hub/scripts/check-path.mjs` | Fails on a duplicate id, a retired id, or a step that links to a missing page |
 | `hub/scripts/catalog.mjs` | Writes path, students and catalog into `hub/index.html`; fails if a step links to a missing file |
 | `hub/scripts/build-site.mjs` | Builds `dist/site`: every `.md` as a page, code pages for `.java` files, `hub/path.json` for the step bar |

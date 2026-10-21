@@ -1,4 +1,5 @@
 // Writes the generated parts of hub/index.html:
+//   header    the site header from header.mjs (the same one every page gets)
 //   path      the learning path from hub/path.mjs (checked: every link must exist)
 //   students  every student and task found under students/
 //   catalog   "look it up": every course, sheet, project, practice set and doc on disk
@@ -11,6 +12,7 @@ import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from '
 import { basename, dirname, join, relative, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { LEVELS, STAGES } from '../path.mjs'
+import { HEADER } from './header.mjs'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const HUB = join(ROOT, 'hub')
@@ -301,7 +303,7 @@ function renderLibrary() {
         ${grid(cards)}`).join('\n        ')
 }
 
-const REGIONS = { path: renderPath, students: renderStudents, catalog: renderLibrary }
+const REGIONS = { header: () => HEADER, path: renderPath, students: renderStudents, catalog: renderLibrary }
 
 // Fills every <!-- name:start --> … <!-- name:end --> region of hub/index.html.
 export function writeCatalog() {

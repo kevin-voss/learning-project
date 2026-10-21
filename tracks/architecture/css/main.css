@@ -6,13 +6,10 @@ a { color: inherit; }
 .dot-grid { background-image: radial-gradient(color-mix(in srgb, var(--sd-text) 9%, transparent) 1px, transparent 1px); background-size: 24px 24px; }
 
 /* ── Top bar ── */
-.sd-topbar { position: sticky; top: 0; z-index: 60; display: flex; align-items: center; gap: 12px; padding: 10px 16px; background: color-mix(in srgb, var(--sd-bg) 88%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--sd-line); font-size: .875rem; }
-.sd-topbar-link { font-weight: 700; text-decoration: none; }
-.sd-topbar-link:hover { color: var(--sd-accent); }
+.sd-topbar { position: sticky; top: var(--lp-header-h, 0px); z-index: 60; display: flex; align-items: center; gap: 12px; padding: 10px 16px; background: color-mix(in srgb, var(--sd-bg) 88%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--sd-line); font-size: .875rem; }
 .sd-prog { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border: 1px solid var(--sd-line); border-radius: 999px; background: var(--sd-surface); color: var(--sd-muted); font-size: .75rem; white-space: nowrap; }
 .sd-prog .sd-icon-sm { color: var(--sd-accent); }
 .sd-prog.done { border-color: var(--sd-good); color: var(--sd-good); }
-.sd-topbar .lp-theme-toggle { width: 36px; height: 36px; flex: none; border: 1px solid var(--sd-line); border-radius: 999px; background: var(--sd-surface); color: var(--sd-text); font-size: 16px; line-height: 1; }
 
 /* ── Hero ── */
 .hero { position: relative; min-height: 70vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 48px 24px 88px; overflow: hidden; }

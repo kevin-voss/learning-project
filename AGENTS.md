@@ -10,7 +10,7 @@ A monorepo of **drills**, **tracks**, **projects** (sheet → small build), and 
 
 | Area | Path | Stack / notes |
 |------|------|----------------|
-| Hub | `hub/` | Static landing; `build-site.mjs` builds the Vercel site (`vercel.json`) |
+| Hub | `hub/` | Landing page. `hub/scripts/`: `catalog.mjs` (generated catalog), `build-site.mjs` (Vercel site), `check-links.mjs` · run `make site` |
 | Drills | `drills/javascript/` | Bun tests via root `Makefile` |
 | Java hub | `tracks/java/` | Static HTML/CSS/JS |
 | CS roadmap | `tracks/computer-science/` | Static + demos (`verify-demos.mjs`) |
@@ -34,3 +34,4 @@ A monorepo of **drills**, **tracks**, **projects** (sheet → small build), and 
 - **Max 5 files** per directory (split into subfolders when adding content).
 - **~400 lines** soft cap per file; split when practical.
 - Do not commit `programs/code-for-cleaning/solutions/` or secrets (`.env`).
+- Everything in the buckets is public on the website, student tasks and solutions included. Run `make site` after adding or moving content: it refreshes the landing catalog and fails on broken links.

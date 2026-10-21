@@ -1,6 +1,7 @@
 // Creates a new task folder for one student from students/_template/.
-// Also creates the student and subject folders if they are new, and adds a
-// line to every index page (students/README.md, student, subject).
+// Also creates the student and subject folders if they are new, adds a line to
+// every index page (students/README.md, student, subject) and refreshes the
+// Students section of the landing page (hub/index.html).
 //
 // Run from anywhere:
 //   node students/scripts/new-task.mjs --student becky --subject computer-science \
@@ -9,6 +10,7 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
 import { dirname, join, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { writeCatalog } from '../../hub/scripts/catalog.mjs'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const TEMPLATE = join(ROOT, '_template')
@@ -141,6 +143,8 @@ addToIndex(
   `| ${number} | [${title}](${folder}/README.md) | todo |`,
   ['| # | Task | Status |', '|---|------|--------|'],
 )
+
+writeCatalog()
 
 console.log(`Created ${relative(process.cwd(), taskDir)}/`)
 if (newStudent) console.log(`  new student: ${values.STUDENT_NAME}`)

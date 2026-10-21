@@ -2,7 +2,7 @@
 
 One order. One home per topic. **Read a short sheet → build a small related project → next step.**
 
-Open the visual index anytime: [`hub/index.html`](../hub/index.html).
+Open the landing page anytime: [`hub/index.html`](../hub/index.html). It lists this roadmap plus every track, sheet, project, drill and student task.
 
 ---
 
@@ -233,4 +233,5 @@ Detail checklist: [`projects/docs/roadmap.md`](../projects/docs/roadmap.md).
 
 - Max **5 files** per directory (subfolders OK).
 - Soft cap **~400 lines** per source/lesson file.
-- Root = meta only (`README`, `AGENTS`, `Makefile`, `.gitignore`) — content lives in buckets.
+- Root = meta only (`README`, `AGENTS`, `Makefile`, `vercel.json`, `.gitignore`) — content lives in buckets.
+- New folders show up on the landing page by themselves after `make site`.

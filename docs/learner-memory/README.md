@@ -20,7 +20,7 @@ Static tracks, drills, and Cursor tutoring share one **learner profile**: what y
 ## Quick start (developers)
 
 - **Static mini-sites:** copy or import [`lib/browser.js`](./lib/browser.js) (same storage key and API).
-- **Cursor:** skill [`.cursor/skills/learner-memory/SKILL.md`](../../.cursor/skills/learner-memory/SKILL.md) — update personal `learner-profile.json` after sessions.
+- **Cursor:** skill `.cursor/skills/learner-memory/SKILL.md` (in your clone; hidden folders are not on the website) — update personal `learner-profile.json` after sessions.
 - **Export for backup:** `node docs/learner-memory/scripts/export-merge.mjs` (merge event log into profile file).
 
 ## Storage keys

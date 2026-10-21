@@ -11,12 +11,13 @@
     <div class="container nav">
       <div class="brand"><div class="brand-mark">LP</div><span>Learning Project</span></div>
       <nav class="nav-links" aria-label="Primary">
-        <a href="../docs/LEARNING_PATH.md">Path</a>
-        <a href="../tracks/computer-science/index.html">CS</a>
-        <a href="../tracks/java/index.html">Java</a>
-        <a href="../projects/README.md">Projects</a>
-        <a href="../tracks/spring-boot/README.md">Spring</a>
-        <a href="../tracks/architecture/index.html">Architecture</a>
+        <a href="#roadmap">Roadmap</a>
+        <a href="#tracks">Tracks</a>
+        <a href="#sheets">Sheets</a>
+        <a href="#projects">Projects</a>
+        <a href="#practice">Practice</a>
+        <a href="#students">Students</a>
+        <a href="#local">Work locally</a>
       </nav>
     </div>
   </header>
@@ -29,9 +30,9 @@
           <h1>Learning Project</h1>
           <p>Computer science from the ground up, then HTML/CSS/JS, then <strong>Java in depth</strong>. Small projects only. Read a sheet, build something tiny, move on.</p>
           <div class="quick-actions">
-            <a class="button primary" href="#spine">Start the spine</a>
-            <a class="button secondary" href="../docs/LEARNING_PATH.md">Full learning path</a>
-            <a class="button secondary" href="../projects/docs/roadmap.md">Project roadmap</a>
+            <a class="button primary" href="#roadmap">Start the roadmap</a>
+            <a class="button secondary" href="#students">Find your tasks</a>
+            <a class="button secondary" href="#local">Clone and work locally</a>
           </div>
         </div>
 
@@ -44,14 +45,14 @@
       </div>
     </section>
 
-    <section class="section" id="spine">
+    <section class="section" id="roadmap">
       <div class="container">
         <div class="section-head">
           <div>
             <div class="eyebrow">Do in order</div>
-            <h2>The spine</h2>
+            <h2>Roadmap</h2>
           </div>
-          <p>Each step: read the sheet, build the project, pass the checkpoint, move on. Order follows <a href="../docs/LEARNING_PATH.md">LEARNING_PATH</a>.</p>
+          <p>Each step: read the sheet, build the project, pass the checkpoint, move on. Full detail with gates: <a href="../docs/LEARNING_PATH.md">learning path</a> · <a href="../projects/docs/roadmap.md">project checklists</a>.</p>
         </div>
 
         <ol class="spine">
@@ -181,27 +182,280 @@
       </div>
     </section>
 
-    <section class="section">
+    <!-- catalog:start -->
+    <section class="section" id="tracks">
       <div class="container">
         <div class="section-head">
           <div>
-            <div class="eyebrow">Never the main spine</div>
-            <h2>Side paths</h2>
+            <div class="eyebrow">Deep courses</div>
+            <h2>Tracks</h2>
           </div>
-          <p>Extra practice and reference. Open any time.</p>
+          <p>One canonical home per subject. Sheets and projects link here instead of repeating it.</p>
+        </div>
+        <div class="card-grid">
+          <article class="card cs">
+            <div class="card-path">tracks/computer-science/</div>
+            <h3><a href="../tracks/computer-science/index.html">Computer science</a></h3>
+            <p>52 interactive lessons: memory, data structures, algorithms, Linux, networks, Git and Docker intros.</p>
+            
+          </article>
+          <article class="card java">
+            <div class="card-path">tracks/java/</div>
+            <h3><a href="../tracks/java/index.html">Java hub</a></h3>
+            <p>The main language path. One topic per page, from setup to design patterns.</p>
+            <details><summary>Show 21 pages</summary><ul class="tree"><li><a href="../tracks/java/topics/arrays/index.html">Arrays</a></li><li><a href="../tracks/java/topics/build-tools/index.html">Maven &amp; Gradle Basics</a></li><li><a href="../tracks/java/topics/classes-and-objects/index.html">Classes &amp; Objects</a></li><li><a href="../tracks/java/topics/collections/index.html">Collections</a></li><li><a href="../tracks/java/topics/control-flow/index.html">Control Flow</a></li><li><a href="../tracks/java/topics/debugging/index.html">Debugging</a></li><li><a href="../tracks/java/topics/design-patterns/index.html">Design Patterns Roadmap</a></li><li><a href="../tracks/java/topics/exceptions/index.html">Exceptions</a></li><li><a href="../tracks/java/topics/getting-started/index.html">Getting Started on Ubuntu</a></li><li><a href="../tracks/java/topics/git-basics/index.html">Git Basics</a></li><li><a href="../tracks/java/topics/io-basics/index.html">I/O Basics</a></li><li><a href="../tracks/java/topics/jvm-memory/index.html">JVM &amp; Memory</a></li><li><a href="../tracks/java/topics/methods/index.html">Methods</a></li><li><a href="../tracks/java/topics/operators/index.html">Operators</a></li><li><a href="../tracks/java/topics/practice-projects/index.html">Practice Projects</a></li><li><a href="../tracks/java/topics/rest-and-http/index.html">REST &amp; HTTP Methods</a></li><li><a href="../tracks/java/topics/strings/index.html">Strings &amp; Text</a></li><li><a href="../tracks/java/topics/syntax-fundamentals/index.html">Syntax Fundamentals</a></li><li><a href="../tracks/java/topics/testing/index.html">Testing</a></li><li><a href="../tracks/java/topics/types-and-variables/index.html">Types &amp; Variables</a></li><li><a href="../tracks/java/topics/uml-diagrams/index.html">UML Diagrams</a></li></ul></details>
+          </article>
+          <article class="card java">
+            <div class="card-path">tracks/spring-boot/</div>
+            <h3><a href="../tracks/spring-boot/README.md">Spring Boot · ParcelPilot</a></h3>
+            <p>Build one backend product step by step, from a first API to queues, services and JWT. Layer F.</p>
+            <details><summary>Show 99 pages</summary><ul class="tree"><li><a href="../tracks/spring-boot/GUIDE.md">ParcelPilot roadmap</a></li><li><a href="../tracks/spring-boot/PROJECT-STORY.md">The ParcelPilot project story</a></li><li><span>References</span><ul class="tree"><li><span>Architecture</span><ul class="tree"><li><a href="../tracks/spring-boot/references/architecture/code-organization.md">Code organization: from one file to a layered app</a></li><li><a href="../tracks/spring-boot/references/architecture/databases-caching-and-locking.md">Databases, caching, hashing, and locking</a></li><li><a href="../tracks/spring-boot/references/architecture/messaging-and-queues.md">Messaging and queues</a></li><li><a href="../tracks/spring-boot/references/architecture/monolith-and-microservices.md">Monoliths and microservices</a></li><li><a href="../tracks/spring-boot/references/architecture/scaling-and-architecture.md">System design &amp; scaling: the big picture</a></li></ul></li><li><span>Java</span><ul class="tree"><li><a href="../tracks/spring-boot/references/java/coding-concepts.md">General coding concepts (that apply in any language)</a></li><li><a href="../tracks/spring-boot/references/java/design-patterns.md">Java design patterns: use names after seeing the problem</a></li><li><a href="../tracks/spring-boot/references/java/glossary.md">Glossary</a></li><li><a href="../tracks/spring-boot/references/java/java-and-oop.md">Java, OOP, composition, and singleton</a></li><li><a href="../tracks/spring-boot/references/java/java-best-practices.md">Java best practices (and why)</a></li></ul></li><li><span>Operations</span><ul class="tree"><li><a href="../tracks/spring-boot/references/operations/debugging-and-troubleshooting.md">Debugging and troubleshooting</a></li><li><a href="../tracks/spring-boot/references/operations/production-thinking.md">Production thinking</a></li><li><a href="../tracks/spring-boot/references/operations/when-things-break.md">When things break</a></li></ul></li><li><span>Tooling</span><ul class="tree"><li><a href="../tracks/spring-boot/references/tooling/configuration.md">Configuration</a></li><li><a href="../tracks/spring-boot/references/tooling/docker.md">Docker</a></li><li><a href="../tracks/spring-boot/references/tooling/git-for-this-course.md">Git for this course</a></li><li><a href="../tracks/spring-boot/references/tooling/logging.md">Logging</a></li><li><a href="../tracks/spring-boot/references/tooling/maven.md">Maven</a></li></ul></li><li><span>Web and api</span><ul class="tree"><li><a href="../tracks/spring-boot/references/web-and-api/authentication.md">Password authentication and JWT</a></li><li><a href="../tracks/spring-boot/references/web-and-api/error-handling-and-http-statuses.md">Error handling and HTTP statuses</a></li><li><a href="../tracks/spring-boot/references/web-and-api/spring-and-http.md">Spring Boot and HTTP</a></li><li><a href="../tracks/spring-boot/references/web-and-api/testing.md">Testing</a></li><li><a href="../tracks/spring-boot/references/web-and-api/validation-and-api-contracts.md">Validation and API contracts</a></li></ul></li></ul></li><li><a href="../tracks/spring-boot/topics/README.md">How to use a topic</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/00-start-here/README.md">Step 00: Your tools (no code yet)</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/00-start-here/editor-and-terminal.md">Editor and terminal setup</a></li></ul></li><li><a href="../tracks/spring-boot/topics/01-java-basics/README.md">Step 01: describe one parcel in Java</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/01-java-basics/collections-basics.md">Collections basics: List, Map, Set</a></li><li><a href="../tracks/spring-boot/topics/01-java-basics/data-types.md">Java data types in detail</a></li><li><a href="../tracks/spring-boot/topics/01-java-basics/debugging-your-first-program.md">Debugging your first program</a></li><li><a href="../tracks/spring-boot/topics/01-java-basics/exceptions-intro.md">Exceptions: first contact</a></li><li><a href="../tracks/spring-boot/topics/01-java-basics/how-java-works.md">How Java works (the flow)</a></li><li><a href="../tracks/spring-boot/topics/01-java-basics/java-syntax-basics.md">Java syntax basics (your very first Java)</a></li></ul></li><li><a href="../tracks/spring-boot/topics/02-oop-and-composition/README.md">Step 02: OOP rules, composition, and first patterns</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/02-oop-and-composition/composition-vs-inheritance.md">Composition vs inheritance</a></li><li><a href="../tracks/spring-boot/topics/02-oop-and-composition/enums-explained.md">Enums explained</a></li><li><a href="../tracks/spring-boot/topics/02-oop-and-composition/interfaces-and-abstractions.md">Interfaces and abstractions</a></li><li><a href="../tracks/spring-boot/topics/02-oop-and-composition/patterns-lab.md">Pattern lab: Builder and Factory</a></li></ul></li><li><a href="../tracks/spring-boot/topics/03-maven/README.md">Step 03: Maven for a repeatable, tested build</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/03-maven/build-tools-compared.md">Build tools compared: why Maven (for now)</a></li><li><a href="../tracks/spring-boot/topics/03-maven/common-build-failures.md">Common build failures (and how to read them)</a></li><li><a href="../tracks/spring-boot/topics/03-maven/packages-imports-structure.md">Packages, imports, and project structure</a></li><li><a href="../tracks/spring-boot/topics/03-maven/testing-with-maven.md">Testing with Maven: what really happens when you type mvn test</a></li></ul></li><li><a href="../tracks/spring-boot/topics/04-first-spring-api/README.md">Step 04: Spring Boot, the first web API</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/04-first-spring-api/annotations-imports.md">Annotations and imports in Spring Boot</a></li><li><a href="../tracks/spring-boot/topics/04-first-spring-api/dependency-injection-walkthrough.md">Dependency injection walkthrough: who creates your objects?</a></li><li><a href="../tracks/spring-boot/topics/04-first-spring-api/http-methods.md">HTTP methods explained (GET, POST, PUT, PATCH, DELETE, QUERY)</a></li><li><a href="../tracks/spring-boot/topics/04-first-spring-api/http-status-codes-lab.md">HTTP status codes lab: say what actually happened</a></li><li><a href="../tracks/spring-boot/topics/04-first-spring-api/json-and-dtos.md">JSON and DTOs: how objects become text (and back)</a></li><li><a href="../tracks/spring-boot/topics/04-first-spring-api/rest-api.md">REST API lab: resources, commands, and queries</a></li></ul></li><li><a href="../tracks/spring-boot/topics/05-validation-and-inputs/README.md">Step 05: Validation and trustworthy inputs</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/05-validation-and-inputs/bean-validation-explained.md">Bean Validation explained: annotations, the validator, and the request lifecycle</a></li><li><a href="../tracks/spring-boot/topics/05-validation-and-inputs/validation-lab.md">Validation lab: break it, then guard it</a></li></ul></li><li><a href="../tracks/spring-boot/topics/06-error-handling/README.md">Step 06: Error handling &amp; HTTP error contracts</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/06-error-handling/controller-advice-lab.md">Controller advice lab: one error shape, proven with curl</a></li><li><a href="../tracks/spring-boot/topics/06-error-handling/exceptions-in-java.md">Exceptions in Java, from scratch</a></li></ul></li><li><a href="../tracks/spring-boot/topics/07-logging-and-observability-basics/README.md">Step 07: Logging you can actually read</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/07-logging-and-observability-basics/logging-lab.md">Logging lab: from silent 500 to a story you can read</a></li><li><a href="../tracks/spring-boot/topics/07-logging-and-observability-basics/slf4j-and-log-levels.md">SLF4J and log levels, in depth</a></li></ul></li><li><a href="../tracks/spring-boot/topics/08-testing/README.md">Step 08: Testing beyond mvn test</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/08-testing/mockmvc-lab.md">Lab: MockMvc, your curl checklist as code</a></li><li><a href="../tracks/spring-boot/topics/08-testing/testcontainers-lab.md">Lab: Testcontainers, a real PostgreSQL for your tests</a></li><li><a href="../tracks/spring-boot/topics/08-testing/unit-vs-integration-vs-e2e.md">Unit vs integration vs end-to-end tests</a></li></ul></li><li><a href="../tracks/spring-boot/topics/09-docker/README.md">Step 09: Docker, ship the API as one unit</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/09-docker/dockerfile-line-by-line.md">The Dockerfile, line by line</a></li><li><a href="../tracks/spring-boot/topics/09-docker/troubleshooting-docker.md">Troubleshooting Docker</a></li></ul></li><li><a href="../tracks/spring-boot/topics/10-persistence/README.md">Step 10: Persistence, keep the parcels</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/10-persistence/database-lab.md">Database lab: PostgreSQL, migrations, and concurrent updates</a></li><li><a href="../tracks/spring-boot/topics/10-persistence/flyway-migrations-explained.md">Flyway migrations explained</a></li><li><a href="../tracks/spring-boot/topics/10-persistence/indexes-intro.md">Indexes: why queries get fast</a></li><li><a href="../tracks/spring-boot/topics/10-persistence/jpa-and-repositories.md">JPA, entities, and repositories</a></li><li><a href="../tracks/spring-boot/topics/10-persistence/locking-explained.md">Locking explained (optimistic vs pessimistic)</a></li><li><a href="../tracks/spring-boot/topics/10-persistence/sql-and-databases.md">Databases and SQL basics</a></li></ul></li><li><a href="../tracks/spring-boot/topics/11-monolith/README.md">Step 11: The modular monolith</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/11-monolith/layered-vs-feature-packages.md">Layered vs feature packages: where does this file go?</a></li><li><a href="../tracks/spring-boot/topics/11-monolith/module-boundaries-lab.md">Module boundaries lab: draw lines you can enforce</a></li><li><a href="../tracks/spring-boot/topics/11-monolith/ports-and-adapters.md">Ports and adapters (hexagonal architecture)</a></li></ul></li><li><a href="../tracks/spring-boot/topics/12-queues/README.md">Step 12: Queues, do slow work later</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/12-queues/event-driven-lab.md">Event-driven lab: observer, command, adapter, and idempotency</a></li><li><a href="../tracks/spring-boot/topics/12-queues/idempotency-lab.md">Idempotency lab: surviving duplicate messages</a></li><li><a href="../tracks/spring-boot/topics/12-queues/retries-and-dead-letters.md">Retries and dead letters: when a message keeps failing</a></li><li><a href="../tracks/spring-boot/topics/12-queues/what-is-a-queue.md">What is a queue, really?</a></li></ul></li><li><a href="../tracks/spring-boot/topics/13-split-services/README.md">Step 13: Extract the notification microservice</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/13-split-services/git-tag-checkpoint.md">Git tag checkpoint: save the monolith before you break it</a></li><li><a href="../tracks/spring-boot/topics/13-split-services/network-failure-lab.md">Network failure lab: partial failure is the default now</a></li><li><a href="../tracks/spring-boot/topics/13-split-services/service-contracts.md">Service contracts: the agreement that no compiler checks</a></li></ul></li><li><a href="../tracks/spring-boot/topics/14-compose-and-observe/README.md">Step 14: Docker Compose &amp; observing the system</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/14-compose-and-observe/correlation-ids.md">Correlation IDs: one thread of identity across two services</a></li><li><a href="../tracks/spring-boot/topics/14-compose-and-observe/metrics-intro.md">Metrics intro: from stories to numbers</a></li><li><a href="../tracks/spring-boot/topics/14-compose-and-observe/reading-logs-across-services.md">Reading logs across services</a></li></ul></li><li><a href="../tracks/spring-boot/topics/15-performance-and-safety/README.md">Step 15: Caching, locking, and rate limiting</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/15-performance-and-safety/cache-invalidation-lab.md">Cache invalidation lab: the parcel that wouldn't update</a></li><li><a href="../tracks/spring-boot/topics/15-performance-and-safety/optimistic-locking-lab.md">Optimistic locking lab: when two operators race</a></li><li><a href="../tracks/spring-boot/topics/15-performance-and-safety/rate-limiting.md">Rate limiting lab</a></li></ul></li><li><a href="../tracks/spring-boot/topics/16-jwt-authentication/README.md">Step 16: Password login &amp; JWT protection</a><ul class="tree"><li><a href="../tracks/spring-boot/topics/16-jwt-authentication/authz-vs-authn-lab.md">Authn vs authz lab: who you are vs what you may do</a></li><li><a href="../tracks/spring-boot/topics/16-jwt-authentication/security-troubleshooting.md">Security troubleshooting: symptom → cause → fix</a></li></ul></li></ul></li></ul></details>
+          </article>
+          <article class="card systems">
+            <div class="card-path">tracks/architecture/</div>
+            <h3><a href="../tracks/architecture/index.html">Architecture &amp; system design</a></h3>
+            <p>Load balancing, caches, layers, data and messaging trade-offs, with diagrams.</p>
+            
+          </article>
+          <article class="card systems">
+            <div class="card-path">tracks/ai/</div>
+            <h3><a href="../tracks/ai/index.html">AI engineering field guide</a></h3>
+            <p>31 chapters: LLM internals, tokens, RAG, tools and MCP, agents, memory, security, evals.</p>
+            <details><summary>Show 31 pages</summary><ul class="tree"><li><span>01 foundations</span><ul class="tree"><li><a href="../tracks/ai/content/01-foundations/finetune-decide.html">Fine-tuning vs RAG vs prompting</a></li><li><a href="../tracks/ai/content/01-foundations/llm-internals.html">How LLMs actually work</a></li><li><a href="../tracks/ai/content/01-foundations/ml-multimodal.html">ML just enough · multimodal, vision, OCR</a></li><li><a href="../tracks/ai/content/01-foundations/training-alignment.html">Training &amp; alignment pipeline</a></li><li><a href="../tracks/ai/content/01-foundations/transformer-architecture.html">Transformer architecture</a></li></ul></li><li><span>02 tokens context</span><ul class="tree"><li><a href="../tracks/ai/content/02-tokens-context/context-budget.html">Context engineering and budgeting</a></li><li><a href="../tracks/ai/content/02-tokens-context/inference-serving.html">Inference &amp; serving</a></li><li><a href="../tracks/ai/content/02-tokens-context/prompting.html">Prompt engineering</a></li><li><a href="../tracks/ai/content/02-tokens-context/reasoning-models.html">Reasoning models &amp; test-time compute</a></li><li><a href="../tracks/ai/content/02-tokens-context/tokens-cost.html">Tokens, cost and caching</a></li></ul></li><li><span>03 rag search</span><ul class="tree"><li><a href="../tracks/ai/content/03-rag-search/chunking.html">Chunking</a></li><li><a href="../tracks/ai/content/03-rag-search/embeddings.html">Embeddings and vector stores</a></li><li><a href="../tracks/ai/content/03-rag-search/rag-overview.html">RAG the big picture</a></li><li><a href="../tracks/ai/content/03-rag-search/rag-variants.html">RAG variants: vector, graph, agentic</a></li><li><a href="../tracks/ai/content/03-rag-search/search-rerank.html">Search and reranking</a></li></ul></li><li><span>04 tools mcp</span><ul class="tree"><li><a href="../tracks/ai/content/04-tools-mcp/a2a.html">A2A · Agent2Agent protocol</a></li><li><a href="../tracks/ai/content/04-tools-mcp/ag-ui.html">AG-UI · agent-to-frontend events</a></li><li><a href="../tracks/ai/content/04-tools-mcp/mcp.html">MCP · Model Context Protocol</a></li><li><a href="../tracks/ai/content/04-tools-mcp/tool-calling.html">Tool calling &amp; structured output</a></li></ul></li><li><span>05 agents orchestration</span><ul class="tree"><li><a href="../tracks/ai/content/05-agents-orchestration/agent-patterns.html">Agent patterns</a></li><li><a href="../tracks/ai/content/05-agents-orchestration/computer-use.html">Computer-use &amp; browser agents</a></li><li><a href="../tracks/ai/content/05-agents-orchestration/ecosystem.html">The ecosystem</a></li><li><a href="../tracks/ai/content/05-agents-orchestration/graphs.html">Orchestration graphs</a></li><li><a href="../tracks/ai/content/05-agents-orchestration/ops.html">Durable orchestration ops</a></li></ul></li><li><span>06 memory</span><ul class="tree"><li><a href="../tracks/ai/content/06-memory/memory.html">Memory: short-term, long-term, summaries</a></li></ul></li><li><span>07 security</span><ul class="tree"><li><a href="../tracks/ai/content/07-security/guardrails.html">Guardrails &amp; least privilege</a></li><li><a href="../tracks/ai/content/07-security/injection.html">Prompt injection &amp; data exfil</a></li></ul></li><li><span>08 evals</span><ul class="tree"><li><a href="../tracks/ai/content/08-evals/evals.html">Evals &amp; observability</a></li></ul></li><li><span>09 systems</span><ul class="tree"><li><a href="../tracks/ai/content/09-systems/architecture.html">The AI system architecture</a></li><li><a href="../tracks/ai/content/09-systems/aws.html">Full systems on AWS</a></li></ul></li><li><span>10 quickref</span><ul class="tree"><li><a href="../tracks/ai/content/10-quickref/quickref.html">The 30-second layer</a></li></ul></li></ul></details>
+          </article>
+          <article class="card certs">
+            <div class="card-path">tracks/certifications/aws-genai-pro/</div>
+            <h3><a href="../tracks/certifications/aws-genai-pro/index.html">AWS GenAI Pro (AIP-C01)</a></h3>
+            <p>Exam prep app: 28 chapters, question bank and mock exams.</p>
+            <details><summary>Show 2 pages</summary><ul class="tree"><li><a href="../tracks/certifications/aws-genai-pro/data/data.html">Data</a></li><li><a href="../tracks/certifications/aws-genai-pro/data/exam-guide.md">AIP-C01 official outline (condensed)</a></li></ul></details>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="sheets">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Read in 5–20 minutes</div>
+            <h2>Sheets</h2>
+          </div>
+          <p>Short topic pages you read right before a project. <a href="../projects/docs/README.md">Sheet library</a> · <a href="../projects/docs/roadmap.md">Project roadmap</a>.</p>
+        </div>
+        <div class="card-grid">
+          <article class="card cs">
+            <div class="card-path">projects/docs/setup/</div>
+            <h3><a href="../projects/docs/setup/README.md">Setup</a></h3>
+            <p>Install tools when the roadmap says — not all at once.</p>
+            <details><summary>Show 1 page</summary><ul class="tree"><li><a href="../projects/docs/setup/getting-started.md">Getting Started</a></li></ul></details>
+          </article>
+          <article class="card cs">
+            <div class="card-path">projects/docs/git/</div>
+            <h3><a href="../projects/docs/git/README.md">Git — apply sheet</a></h3>
+            <p>Git saves snapshots of your project so you can undo mistakes, push backups to GitHub, and show employers real history. Use it on every project…</p>
+            
+          </article>
+          <article class="card js">
+            <div class="card-path">projects/docs/html/</div>
+            <h3><a href="../projects/docs/html/README.md">HTML — sheet (read before project 00)</a></h3>
+            <p>HTML is the skeleton of a page. CSS is paint. JavaScript is muscles. Today only the skeleton.</p>
+            
+          </article>
+          <article class="card js">
+            <div class="card-path">projects/docs/css/</div>
+            <h3><a href="../projects/docs/css/README.md">CSS — sheet (style project 00)</a></h3>
+            <p>CSS paints the dollhouse: colors, space, size. Same HTML, nicer look.</p>
+            
+          </article>
+          <article class="card js">
+            <div class="card-path">projects/docs/javascript/</div>
+            <h3><a href="../projects/docs/javascript/README.md">JavaScript — topic index</a></h3>
+            <p>You already know arrays, functions, and loops from drills. New syntax appears per web project. Read only the section for where you are.</p>
+            <details><summary>Show 1 page</summary><ul class="tree"><li><a href="../projects/docs/javascript/by-project.md">JavaScript by project</a></li></ul></details>
+          </article>
+          <article class="card java">
+            <div class="card-path">projects/docs/java/</div>
+            <h3><a href="../projects/docs/java/README.md">Java — foundation sheet</a></h3>
+            <p>Layers A–C in one page: files, packages, types, collections, Maven, plus the server picture for Layer D.</p>
+            <details><summary>Show 1 page</summary><ul class="tree"><li><a href="../projects/docs/java/server-layers.md">How a Java server is structured</a></li></ul></details>
+          </article>
+          <article class="card systems">
+            <div class="card-path">projects/docs/docker/</div>
+            <h3><a href="../projects/docs/docker/README.md">Docker — apply sheet</a></h3>
+            <p>Docker packages your app so it runs the same on your machine and elsewhere. Use this for Project 2 (static portfolio site).</p>
+            
+          </article>
+          <article class="card js">
+            <div class="card-path">projects/docs/nodejs/</div>
+            <h3><a href="../projects/docs/nodejs/README.md">Node.js</a></h3>
+            <p>Node.js runs JavaScript on your computer — outside the browser.</p>
+            
+          </article>
+          <article class="card js">
+            <div class="card-path">projects/docs/npm/</div>
+            <h3><a href="../projects/docs/npm/README.md">npm (Node Package Manager)</a></h3>
+            <p>npm is the app store and package manager for Node.js projects.</p>
+            
+          </article>
+          <article class="card js">
+            <div class="card-path">projects/docs/react/</div>
+            <h3><a href="../projects/docs/react/README.md">React</a></h3>
+            <p>A JavaScript library for building user interfaces with components — reusable pieces of UI.</p>
+            
+          </article>
+          <article class="card js">
+            <div class="card-path">projects/docs/typescript/</div>
+            <h3><a href="../projects/docs/typescript/README.md">TypeScript</a></h3>
+            <p>Projects 00–04 use plain JavaScript on purpose. TypeScript is a side deepen, not the Java spine.</p>
+            
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="projects">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Build in hours, not weeks</div>
+            <h2>Projects</h2>
+          </div>
+          <p>Small builds in roadmap order. Each has a step-by-step guide and help pages. <a href="../projects/README.md">Projects overview</a>.</p>
+        </div>
+        <div class="card-grid">
+          <article class="card projects">
+            <div class="card-path">projects/00-static-page/</div>
+            <h3><a href="../projects/00-static-page/README.md">Project 00: Static About-Me Page</a></h3>
+            <p>Your first real web page - no JavaScript yet.</p>
+            <details><summary>Show 2 pages</summary><ul class="tree"><li><a href="../projects/00-static-page/docs/step-by-step.md">Step-by-Step - Static About-Me Page</a></li><li><a href="../projects/00-static-page/docs/structure.md">Project Structure — Static About-Me Page</a></li></ul></details>
+          </article>
+          <article class="card projects">
+            <div class="card-path">projects/01-weather-dashboard/</div>
+            <h3><a href="../projects/01-weather-dashboard/README.md">Project 1: Weather Dashboard</a></h3>
+            <p>Your first app that talks to the internet.</p>
+            <details><summary>Show 7 pages</summary><ul class="tree"><li><a href="../projects/01-weather-dashboard/docs/code-reference.md">Code Reference — Weather Dashboard</a></li><li><a href="../projects/01-weather-dashboard/docs/concepts.md">Concepts — Weather Dashboard</a></li><li><span>Help</span><ul class="tree"><li><a href="../projects/01-weather-dashboard/docs/help/faq.md">FAQ — Weather Dashboard</a></li><li><a href="../projects/01-weather-dashboard/docs/help/glossary.md">Glossary — Weather Dashboard</a></li><li><a href="../projects/01-weather-dashboard/docs/help/troubleshooting.md">Troubleshooting — Weather Dashboard</a></li></ul></li><li><a href="../projects/01-weather-dashboard/docs/step-by-step.md">Step-by-Step - Weather Dashboard</a></li><li><a href="../projects/01-weather-dashboard/docs/structure.md">Project Structure — Weather Dashboard</a></li></ul></details>
+          </article>
+          <article class="card projects">
+            <div class="card-path">projects/05-java-weather-cli/</div>
+            <h3><a href="../projects/05-java-weather-cli/README.md">Project 05: Java Weather CLI</a></h3>
+            <p>Same weather idea as the browser dashboard - but in the terminal with Java.</p>
+            <details><summary>Show 2 pages</summary><ul class="tree"><li><a href="../projects/05-java-weather-cli/docs/step-by-step.md">Step-by-Step - Java Weather CLI</a></li><li><a href="../projects/05-java-weather-cli/docs/structure.md">Project Structure — Java Weather CLI</a></li></ul></details>
+          </article>
+          <article class="card projects">
+            <div class="card-path">projects/02-docker-portfolio/</div>
+            <h3><a href="../projects/02-docker-portfolio/README.md">Project 2: Dockerized Portfolio</a></h3>
+            <p>Containers, Nginx, and shipping a static site the same way on any machine.</p>
+            <details><summary>Show 8 pages</summary><ul class="tree"><li><a href="../projects/02-docker-portfolio/docs/code-reference.md">Code Reference — Docker Portfolio</a></li><li><a href="../projects/02-docker-portfolio/docs/concepts.md">Concepts — Docker Portfolio</a></li><li><span>Help</span><ul class="tree"><li><a href="../projects/02-docker-portfolio/docs/help/faq.md">FAQ — Docker Portfolio</a></li><li><a href="../projects/02-docker-portfolio/docs/help/glossary.md">Glossary — Docker Portfolio</a></li><li><a href="../projects/02-docker-portfolio/docs/help/terminal-cheatsheet.md">Terminal Cheat Sheet — Docker Project</a></li><li><a href="../projects/02-docker-portfolio/docs/help/troubleshooting.md">Troubleshooting — Docker Portfolio</a></li></ul></li><li><a href="../projects/02-docker-portfolio/docs/step-by-step.md">Step-by-Step — Docker Portfolio</a></li><li><a href="../projects/02-docker-portfolio/docs/structure.md">Project Structure — Docker Portfolio</a></li></ul></details>
+          </article>
+          <article class="card projects">
+            <div class="card-path">projects/03-cli-tool/</div>
+            <h3><a href="../projects/03-cli-tool/README.md">Project 3: CLI Tool</a></h3>
+            <p>Optional Node.js practice - command-line weather, not on the main Java spine.</p>
+            <details><summary>Show 8 pages</summary><ul class="tree"><li><a href="../projects/03-cli-tool/docs/code-reference.md">Code Reference — CLI Tool</a></li><li><a href="../projects/03-cli-tool/docs/concepts.md">Concepts — CLI Tool</a></li><li><span>Help</span><ul class="tree"><li><a href="../projects/03-cli-tool/docs/help/faq.md">FAQ — CLI Tool</a></li><li><a href="../projects/03-cli-tool/docs/help/glossary.md">Glossary — CLI Tool</a></li><li><a href="../projects/03-cli-tool/docs/help/troubleshooting.md">Troubleshooting — CLI Tool</a></li></ul></li><li><span>Options</span><ul class="tree"><li><a href="../projects/03-cli-tool/docs/options/weather-cli.md">Weather CLI Option</a></li></ul></li><li><a href="../projects/03-cli-tool/docs/step-by-step.md">Step-by-Step — CLI Tool</a></li><li><a href="../projects/03-cli-tool/docs/structure.md">Project Structure — CLI Tool</a></li></ul></details>
+          </article>
+          <article class="card projects">
+            <div class="card-path">projects/04-react-todo-app/</div>
+            <h3><a href="../projects/04-react-todo-app/README.md">Project 4: React Todo App</a></h3>
+            <p>Optional React practice - not on the main Java spine.</p>
+            <details><summary>Show 8 pages</summary><ul class="tree"><li><a href="../projects/04-react-todo-app/docs/code-reference.md">Code Reference — React Todo App</a></li><li><a href="../projects/04-react-todo-app/docs/component-guide.md">Component Guide — React Todo App</a></li><li><a href="../projects/04-react-todo-app/docs/concepts.md">Concepts — React Todo App</a></li><li><span>Help</span><ul class="tree"><li><a href="../projects/04-react-todo-app/docs/help/faq.md">FAQ — React Todo App</a></li><li><a href="../projects/04-react-todo-app/docs/help/glossary.md">Glossary — React Todo App</a></li><li><a href="../projects/04-react-todo-app/docs/help/troubleshooting.md">Troubleshooting — React Todo App</a></li></ul></li><li><a href="../projects/04-react-todo-app/docs/step-by-step.md">Step-by-Step — React Todo App</a></li><li><a href="../projects/04-react-todo-app/docs/structure.md">Project Structure — React Todo App</a></li></ul></details>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="practice">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Repetition</div>
+            <h2>Practice</h2>
+          </div>
+          <p>Drills and task programs to run locally after you clone the repo.</p>
+        </div>
+        <div class="card-grid">
+          <article class="card js">
+            <div class="card-path">drills/javascript/</div>
+            <h3><a href="../drills/javascript/README.md">JavaScript drills</a></h3>
+            <p>Eight topics with ten tested tasks each. Run them with make test.</p>
+            <details><summary>Show 9 pages</summary><ul class="tree"><li><a href="../drills/javascript/arrays/README.md">Thema: Arrays (Listen)</a></li><li><a href="../drills/javascript/conditionals/README.md">Thema: Verzweigungen (if / else)</a></li><li><a href="../drills/javascript/functions/README.md">Thema: Funktionen</a></li><li><a href="../drills/javascript/loops/README.md">Thema: Schleifen (for, while)</a></li><li><a href="../drills/javascript/math/README.md">Thema: Mathe mit Math</a></li><li><a href="../drills/javascript/objects/README.md">Thema: Objekte</a></li><li><a href="../drills/javascript/strings/README.md">Thema: Text (Strings)</a></li><li><a href="../drills/javascript/tic-tac-toe.md">Build Tic Tac Toe: JavaScript Logic Practice</a></li><li><a href="../drills/javascript/variables/README.md">Thema: Variablen (let, const)</a></li></ul></details>
+          </article>
+          <article class="card java">
+            <div class="card-path">programs/code-for-cleaning/</div>
+            <h3><a href="../programs/code-for-cleaning/README.md">Code for Cleaning</a></h3>
+            <p>Real-life Java tasks in rounds: passwords, budgets, calendars, a small server check.</p>
+            <details><summary>Show 13 pages</summary><ul class="tree"><li><a href="../programs/code-for-cleaning/categories.md">Categories</a></li><li><a href="../programs/code-for-cleaning/getting-started.md">Getting started</a></li><li><a href="../programs/code-for-cleaning/progress.md">Progress</a></li><li><a href="../programs/code-for-cleaning/round-01/README.md">Round 1 — 28 Sep 2026 through 11 Oct 2026, 12:00</a><ul class="tree"><li><a href="../programs/code-for-cleaning/round-01/01-password-generator.md">Task 1 — Password generator</a></li><li><a href="../programs/code-for-cleaning/round-01/02-shopping-list.md">Task 2 — Shopping list</a></li><li><a href="../programs/code-for-cleaning/round-01/03-cleaning-schedule.md">Task 3 — Cleaning schedule</a></li><li><a href="../programs/code-for-cleaning/round-01/04-shared-expenses.md">Task 4 — Shared expenses</a></li><li><a href="../programs/code-for-cleaning/round-01/05-calendar-conflicts.md">Task 5 — Calendar conflicts</a></li><li><a href="../programs/code-for-cleaning/round-01/06-server-healthcheck.md">Task 6 — Server healthcheck</a></li><li><a href="../programs/code-for-cleaning/round-01/07-household-budget.md">Task 7 — Household budget</a></li><li><a href="../programs/code-for-cleaning/round-01/08-calculator.md">Task 8 — Calculator</a></li></ul></li><li><a href="../programs/code-for-cleaning/rules.md">Rules</a></li></ul></details>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="students">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Personal tasks</div>
+            <h2>Students</h2>
+          </div>
+          <p>Every student has a folder with one box per task: read me, task, starter, solution. Everyone can see every task. <a href="../students/README.md">How tasks work</a>.</p>
+        </div>
+        <div class="card-grid">
+          <article class="card student">
+            <div class="card-path">students/becky/</div>
+            <h3><a href="../students/becky/README.md">Becky</a></h3>
+            <h4><a href="../students/becky/computer-science/README.md">Computer Science</a></h4>
+            <ul class="task-list"><li><span class="task-num">04</span><a class="task-title" href="../students/becky/computer-science/04-branches/README.md">Branches (Verzweigungen)</a><span class="status todo">todo</span><span class="task-links"><a href="../students/becky/computer-science/04-branches/TASK.md">Task</a><a href="../students/becky/computer-science/04-branches/starter/README.md">Starter</a><a href="../students/becky/computer-science/04-branches/solution/README.md">Solution</a></span></li></ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="docs">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Reference</div>
+            <h2>Docs</h2>
+          </div>
+          <p>The roadmap in full and the long-term learner profile.</p>
+        </div>
+        <div class="card-grid">
+          <article class="card cs">
+            <div class="card-path">docs/LEARNING_PATH.md</div>
+            <h3><a href="../docs/LEARNING_PATH.md">Learning path</a></h3>
+            <p>The one ordered roadmap with phases, gates and the project map.</p>
+          </article>
+          <article class="card cs">
+            <div class="card-path">docs/learner-memory/</div>
+            <h3><a href="../docs/learner-memory/README.md">Learner memory</a></h3>
+            <p>The long-term learner profile: schema, events and integrations.</p>
+            <details><summary>Show 3 pages</summary><ul class="tree"><li><a href="../docs/learner-memory/events.md">Event catalog (v1)</a></li><li><a href="../docs/learner-memory/integrations.md">Integrations by surface</a></li><li><a href="../docs/learner-memory/schema-v1.md">Learner profile schema (v1)</a></li></ul></details>
+          </article>
+        </div>
+      </div>
+    </section>
+    <!-- catalog:end -->
+
+    <section class="section" id="local">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Same content, on your computer</div>
+            <h2>Work locally</h2>
+          </div>
+          <p>This website shows everything in the repository. To do the work, clone it and open your own folder.</p>
         </div>
         <div class="workflow">
-          <div class="workflow-step"><strong>AI field guide</strong><span><a href="../tracks/ai/index.html">tracks/ai</a>: RAG, agents, MCP, evals.</span></div>
-          <div class="workflow-step"><strong>Code for Cleaning</strong><span><a href="../programs/code-for-cleaning/README.md">programs/code-for-cleaning</a>: extra Java practice.</span></div>
-          <div class="workflow-step"><strong>AWS GenAI Pro</strong><span><a href="../tracks/certifications/aws-genai-pro/index.html">tracks/certifications</a>: exam prep only.</span></div>
-          <div class="workflow-step"><strong>Learner memory</strong><span><a href="../docs/learner-memory/README.md">docs/learner-memory</a>: long-term learner profile.</span></div>
+          <div class="workflow-step"><strong>1 · Clone</strong><span><code>git clone &lt;repo-url&gt;</code>, then <code>cd learning-project</code>. Every sheet here is a <code>.md</code> file in the same path.</span></div>
+          <div class="workflow-step"><strong>2 · Find your task</strong><span>Open <code>students/&lt;your-name&gt;/</code>. Read <code>README.md</code>, then <code>TASK.md</code>.</span></div>
+          <div class="workflow-step"><strong>3 · Build</strong><span>Write code only in <code>starter/</code>. Drills: <code>make test</code>. Projects: follow <code>docs/step-by-step.md</code>.</span></div>
+          <div class="workflow-step"><strong>4 · Check</strong><span>Done? Compare with <code>solution/</code> and set the status in your subject <code>README.md</code> to <code>done</code>.</span></div>
         </div>
       </div>
     </section>
   </main>
 
   <footer class="site-footer">
-    <div class="container">Start at <a href="../docs/LEARNING_PATH.md">docs/LEARNING_PATH.md</a> · this page is <code>hub/index.html</code></div>
+    <div class="container">Start at <a href="../docs/LEARNING_PATH.md">docs/LEARNING_PATH.md</a> · this page is <code>hub/index.html</code>; the catalog part is generated by <code>hub/scripts/catalog.mjs</code></div>
   </footer>
 </body>
 </html>

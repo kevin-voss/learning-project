@@ -74,7 +74,7 @@
     line-height: 1.7;
   }
   .concept-mini-example {
-    background: rgba(0,0,0,0.18);
+    background: color-mix(in srgb, var(--fg) 5%, transparent);
     border-left: 3px solid var(--blue);
     border-radius: 8px;
     color: var(--fg2);
@@ -130,7 +130,7 @@
   .info-card:hover {
     border-color: var(--accent);
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    box-shadow: var(--shadow);
   }
 
   .info-card-icon {
@@ -170,7 +170,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 10px 16px;
-    background: rgba(255,255,255,0.02);
+    background: color-mix(in srgb, var(--fg) 2%, transparent);
     border-bottom: 1px solid var(--border);
   }
   .code-lang {
@@ -179,7 +179,7 @@
     color: var(--accent);
     text-transform: uppercase;
     letter-spacing: 1px;
-    font-family: 'JetBrains Mono', monospace;
+    font-family: var(--mono);
   }
   .copy-btn {
     background: var(--card);
@@ -189,7 +189,7 @@
     border-radius: 6px;
     font-size: 11px;
     cursor: pointer;
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--font);
     transition: all 0.2s;
     display: flex; align-items: center; gap: 5px;
   }
@@ -199,20 +199,20 @@
     padding: 20px;
     overflow-x: auto;
     max-width: 100%;
-    font-family: 'JetBrains Mono', monospace;
+    font-family: var(--mono);
     font-size: 13px;
     line-height: 1.8;
-    color: var(--fg2);
+    color: var(--code-text);
     white-space: pre;
   }
 
-  .code-body .kw { color: #f0b429; }
-  .code-body .fn { color: #4cc9f0; }
-  .code-body .str { color: #27c484; }
-  .code-body .num { color: #f45d5d; }
-  .code-body .cm { color: #5e6e63; font-style: italic; }
-  .code-body .op { color: #9baa9f; }
-  .code-body .cls { color: #e8ede9; font-weight: 600; }
+  .code-body .kw { color: var(--code-keyword); }
+  .code-body .fn { color: var(--code-title); }
+  .code-body .str { color: var(--code-string); }
+  .code-body .num { color: var(--code-number); }
+  .code-body .cm { color: var(--code-comment); font-style: italic; }
+  .code-body .op { color: var(--code-text); }
+  .code-body .cls { color: var(--code-title); font-weight: 600; }
 
   /* Pros/Cons */
   .pros-cons {
@@ -229,11 +229,11 @@
   }
   .pc-pros {
     background: var(--green-dim);
-    border-color: rgba(39,196,132,0.2);
+    border-color: color-mix(in srgb, var(--green) 20%, transparent);
   }
   .pc-cons {
     background: var(--red-dim);
-    border-color: rgba(244,93,93,0.2);
+    border-color: color-mix(in srgb, var(--red) 20%, transparent);
   }
 
   .pc-title {
@@ -272,7 +272,7 @@
   }
   .keyword-chip {
     background: var(--accent-dim);
-    border: 1px solid rgba(240, 180, 41, 0.25);
+    border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
     border-radius: 999px;
     color: var(--fg2);
     font-size: 12px;

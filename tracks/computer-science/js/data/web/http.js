@@ -19,6 +19,7 @@ DS.curriculum.push({
       id: 'request-anatomy',
       label: 'The picture',
       title: 'An order slip and a receipt',
+      anim: 'request',
       analogy: 'At the restaurant, the waiter writes your order on a slip. The slip says what you want (the method), which dish (the URL), some notes like "no onions" (the headers) and maybe a long wish list (the body). The kitchen sends back a receipt with a short result like "OK" or "sold out" (the status) plus the food.',
       whatIsIt: 'HTTP is the language browsers and servers use. The browser sends a request: a method, a URL, headers and sometimes a body. The server sends a response: a status code, headers and usually a body. Every page and every app button uses this.',
       codeTitle: 'One request, one response',

@@ -52,7 +52,7 @@ DS.demos['linked-list'] = function (container) {
           }).join('')}
           <div class="ll-null">null</div>
         </div>`
-      : UI.emptyStage('fa-link', 'Empty linked list', 'head = null. Prepend adds a node in O(1): only the head pointer changes.');
+      : UI.emptyStage('fa-link', 'Empty linked list', 'head = null. Prepend is fast: only the head pointer changes.');
 
     const stats = [
       UI.statChip('Nodes', nodes.length),
@@ -87,7 +87,7 @@ DS.demos['linked-list'] = function (container) {
     nodes.unshift({ value: Number(val) });
     selectedIdx = 0;
     render();
-    DS.showMsg('llMsg', `New HEAD at ${nodeAddr(0)}: old head becomes second node: O(1)`, 'success-msg');
+    DS.showMsg('llMsg', `New HEAD at ${nodeAddr(0)}: old head becomes second node: fast`, 'success-msg');
   };
   window.llAppend = () => {
     const val = document.getElementById('llInput').value;
@@ -95,7 +95,7 @@ DS.demos['linked-list'] = function (container) {
     nodes.push({ value: Number(val) });
     selectedIdx = nodes.length - 1;
     render();
-    DS.showMsg('llMsg', `Walked entire chain to find tail: appended at ${nodeAddr(nodes.length - 1)}: O(n)`, 'info');
+    DS.showMsg('llMsg', `Walked entire chain to find tail: appended at ${nodeAddr(nodes.length - 1)}: slow when the list is long`, 'info');
   };
   window.llDelete = () => {
     const val = document.getElementById('llInput').value;
@@ -105,7 +105,7 @@ DS.demos['linked-list'] = function (container) {
     nodes.splice(idx, 1);
     selectedIdx = null;
     render();
-    DS.showMsg('llMsg', `Rewired pointer past node ${idx}: freed ~16 bytes: O(n) search`, 'info');
+    DS.showMsg('llMsg', `Rewired pointer past node ${idx}: freed ~16 bytes. Finding it first is slow when the list is long`, 'info');
   };
   window.llReset = () => {
     nodes = INITIAL_NODES.map(node => ({ ...node }));

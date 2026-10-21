@@ -7,9 +7,9 @@
 }
 
 .check-list li {
-  background: var(--card);
+  background: var(--amber-dim);
   border: 1px solid var(--border);
-  border-left: 3px solid var(--blue);
+  border-left: 6px solid var(--amber);
   border-radius: 10px;
   color: var(--fg);
   line-height: 1.6;
@@ -17,7 +17,7 @@
 }
 
 .check-list li::before {
-  color: var(--blue);
+  color: var(--amber);
   content: counter(check) '. ';
   counter-increment: check;
   font-weight: 700;
@@ -51,3 +51,17 @@
   color: var(--green);
   font-weight: 600;
 }
+
+/* Sidebar title with the site theme toggle (button styled by hub/theme/components.css) */
+.sidebar-title-row {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+}
+
+/* Animation from the site player (hub/theme/anim); the player styles the inside */
+.anim-block {
+  margin-bottom: 24px;
+}
+

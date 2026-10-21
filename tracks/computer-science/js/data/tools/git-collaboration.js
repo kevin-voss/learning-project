@@ -6,6 +6,7 @@ DS.curriculum.push(
     id: 'git-collaboration',
     category: 'Start Here',
     title: 'Git and Collaboration',
+    anim: 'album',
     icon: 'fa-code-branch',
     subtitle: 'Git helps developers save changes, compare versions, and work together without overwriting each other.',
     analogy: 'Git is like a shared notebook with unlimited save points. Each commit is a labeled snapshot. A branch is a safe page for trying an idea.',

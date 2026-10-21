@@ -13,12 +13,13 @@ tracks/computer-science/
 │   └── verify-demos.mjs  # Smoke test: demos, lesson ids, folder and file size rules
 ├── css/
 │   ├── main.css          # @imports everything below, in cascade order
-│   ├── core/             # tokens, base, layout, components, responsive
+│   ├── core/             # tokens (bridge to hub/theme --lp-* tokens), base, layout, components, responsive
 │   ├── content/          # lesson page, blocks, "Try it" and "Check" boxes
 │   └── demos/            # demo shell + one folder per demo group
 └── js/
     ├── ns.js, app.js, globals.js
     ├── app/              # state, nav, navigation (hash routing), content, content-blocks, glossary/
+    ├── utils/            # messages, theme (light/dark: Mermaid colours, canvas redraw)
     ├── data/             # one folder per topic: tools, structures, web, memory, ...
     │   └── aliases.js    # old lesson ids -> new home (merged or removed lessons)
     └── demos/            # ui.js, playground.js, init.js + structures/, algorithms/, systems/, web-infra/
@@ -33,6 +34,8 @@ tracks/computer-science/
 - **`relatedIds`**: optional array of lesson `id` strings; renders a Related Lessons block with navigation.
 - **`keywords`**: optional array of glossary term strings; renders chips under the lesson subtitle.
 - **Subpages**: use `subPages` with `id` slugs for hash URLs (`#lesson-id/sub-slug`).
+- **Theme**: no hex colours in track CSS/JS. Use the track variables in `css/core/tokens.css`; they come from `hub/theme/tokens.css`, so light and dark both work.
+- **Animations**: `anim: 'shelf'` on a lesson or sub-lesson adds `<div data-anim="shelf">` after the picture (scenes in `hub/theme/anim/`).
 - **Glossary**: add beginner terms to `js/app/glossary/terms-*.js`.
 - **Progress**: `localStorage` keys `dsCompleted` (completion) and `dsLastVisited` (resume + hash sync).
 - **Hash routing**: `#arrays`, `#http-requests-responses/request-anatomy` — shareable deep links.

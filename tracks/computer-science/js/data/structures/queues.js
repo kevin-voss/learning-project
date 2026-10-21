@@ -58,6 +58,7 @@ System.out.println(line);           // [Ben, Cleo]`,
       id: 'where-you-meet-it',
       label: 'Where you meet it',
       title: 'Where you meet queues',
+      anim: 'conveyor',
       demoType: null,
       whatIsIt: 'Queues appear whenever work must wait its turn. Servers keep incoming jobs in a queue. Big systems even send messages between programs through a queue, so a slow program can catch up later.',
       whenToUse: [

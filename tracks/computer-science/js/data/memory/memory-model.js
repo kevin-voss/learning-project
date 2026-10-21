@@ -16,6 +16,7 @@ DS.curriculum.push({
       id: 'picture',
       label: 'The picture',
       title: 'A kitchen full of numbered shelf spots',
+      anim: 'memory',
       analogy: 'Think of a big kitchen. Every spot on every shelf has a number. While you cook, you put things on spots and take them off again. When you go home, the kitchen is cleaned out. That kitchen is RAM, the working memory of your computer.',
       whatIsIt: 'RAM is where a running program keeps its data. It is a very long row of tiny spots. Each spot holds one byte (8 bits, each bit a 0 or a 1). Each spot has a number, its memory address. A Java int takes 4 spots. When the program ends, its RAM is given back.',
       demoTitle: 'Look into memory',

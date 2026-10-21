@@ -3,11 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Core CS and Web Foundations: From Zero to Hero</title>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <title>Computer Science Lessons</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="css/main.css">
-  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
 </head>
 <body>
 
@@ -20,7 +19,10 @@
 <div class="app">
   <nav class="sidebar" id="sidebar">
     <div class="sidebar-header">
-      <h2>CS Roadmap</h2>
+      <div class="sidebar-title-row">
+        <h2>CS Roadmap</h2>
+        <button type="button" class="lp-theme-toggle" data-theme-toggle aria-label="Switch light or dark">◐</button>
+      </div>
       <p>Picture-first lessons. The sidebar follows the learning path.</p>
     </div>
     <div class="progress-section">
@@ -43,6 +45,7 @@
 <script src="js/ns.js"></script>
 <script src="js/app/state.js"></script>
 <script src="js/utils/messages.js"></script>
+<script src="js/utils/theme.js"></script>
 <script src="js/app/glossary/terms-a.js"></script>
 <script src="js/app/glossary/terms-b.js"></script>
 <!-- Lessons. The order here is the order in the sidebar (it follows hub/path.mjs). -->

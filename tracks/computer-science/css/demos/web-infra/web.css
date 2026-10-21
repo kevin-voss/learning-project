@@ -20,7 +20,7 @@
   border-radius: 999px;
   color: var(--accent);
   display: flex;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--mono);
   font-weight: 800;
   height: 30px;
   justify-content: center;
@@ -40,7 +40,7 @@
 
 .web-demo-card.is-active {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(240,180,41,0.12);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 12%, transparent);
   transform: translateY(-1px);
 }
 
@@ -76,7 +76,7 @@
 }
 
 .http-message.response.client {
-  border-left-color: #e07a5f;
+  border-left-color: var(--amber);
 }
 
 .http-message.response.server {
@@ -99,7 +99,7 @@
   border: 1px solid var(--border);
   border-radius: 8px;
   color: var(--fg2);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--mono);
   font-size: 11px;
   line-height: 1.55;
   margin: 0;
@@ -117,7 +117,7 @@
 
 .http-toggle {
   align-items: center;
-  background: rgba(255,255,255,0.03);
+  background: color-mix(in srgb, var(--fg) 3%, transparent);
   border: 1px solid var(--border);
   border-radius: 999px;
   color: var(--fg2);

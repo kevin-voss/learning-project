@@ -60,7 +60,7 @@
 }
 
 .linux-guided-step:hover {
-  border-color: rgba(240, 180, 41, 0.35);
+  border-color: color-mix(in srgb, var(--accent) 35%, transparent);
   transform: translateY(-1px);
 }
 
@@ -70,7 +70,7 @@
   border-radius: 999px;
   color: var(--accent);
   display: flex;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--mono);
   font-size: 12px;
   font-weight: 800;
   height: 26px;
@@ -80,7 +80,7 @@
 
 .linux-guided-step strong {
   color: var(--fg);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--mono);
   font-size: 12px;
 }
 
@@ -94,8 +94,8 @@
 
 .linux-guided-step.is-active {
   background: var(--accent-dim);
-  border-color: rgba(240, 180, 41, 0.55);
-  box-shadow: 0 0 0 3px rgba(240, 180, 41, 0.08);
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 8%, transparent);
 }
 
 .linux-guided-actions {
@@ -112,15 +112,15 @@
 }
 
 .linux-guided-terminal {
-  background: #070b09;
-  border: 1px solid rgba(76, 201, 240, 0.22);
+  background: var(--code-bg);
+  border: 1px solid color-mix(in srgb, var(--blue) 22%, transparent);
   border-radius: var(--radius);
   overflow: hidden;
 }
 
 .linux-guided-terminal-body {
   color: var(--fg2);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--mono);
   font-size: 12px;
   line-height: 1.65;
   min-height: 92px;
@@ -157,7 +157,7 @@
 
 .linux-guided-explanation ul {
   color: var(--fg2);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--mono);
   font-size: 12px;
   line-height: 1.55;
   margin: 0;

@@ -35,7 +35,7 @@ DS.demos['hash-table'] = function (container) {
       ['Entries stored', String(entries.length)],
       ['Est. memory', `~${totalBytes} bytes`, 'Key + value strings + pointers'],
       ['Hash function', 'charCode × 31 mod 8', 'Maps any key → bucket index'],
-      ['Lookup', 'O(1) average', 'Jump to bucket, scan chain'],
+      ['Lookup', 'fast', 'Jump to bucket, scan its short chain'],
       lastBucket !== null ? ['Last bucket', `[${lastBucket}]`, hashSteps(Object.keys(data).find(k => hashFn(k) === lastBucket) || '')] : ['Tip', 'Set or Get a key to see its hash path'],
     ];
   };
@@ -71,7 +71,7 @@ DS.demos['hash-table'] = function (container) {
       UI.statChip('Buckets', bucketCount),
       UI.statChip('Load', `${Object.keys(data).length}/${bucketCount}`, 'Entries per bucket array'),
       UI.statChip('Collisions', buckets.filter(b => b.length > 1).length, 'Buckets with 2+ entries'),
-      UI.statChip('Avg lookup', 'O(1)', 'With a good hash + few collisions'),
+      UI.statChip('Lookup', 'fast', 'With a good hash and few collisions'),
     ].join('');
 
     UI.mount(container, {
@@ -100,7 +100,7 @@ DS.demos['hash-table'] = function (container) {
     lastBucket = hashFn(key);
     data[key] = val;
     render();
-    DS.showMsg('htMsg', `Stored "${key}:${val}" in bucket [${lastBucket}] · ~${entryBytes(key, val)} B: O(1) avg`, 'success-msg');
+    DS.showMsg('htMsg', `Stored "${key}:${val}" in bucket [${lastBucket}] · ~${entryBytes(key, val)} B: fast`, 'success-msg');
   };
   window.htGet = () => {
     const key = document.getElementById('htKey').value.trim();
@@ -108,7 +108,7 @@ DS.demos['hash-table'] = function (container) {
     lastBucket = hashFn(key);
     render();
     if (data[key] !== undefined) {
-      DS.showMsg('htMsg', `Found "${key}: ${data[key]}" in bucket [${lastBucket}]: O(1) avg`, 'success-msg');
+      DS.showMsg('htMsg', `Found "${key}: ${data[key]}" in bucket [${lastBucket}]: fast`, 'success-msg');
     } else {
       DS.showMsg('htMsg', `Key "${key}" not in bucket [${lastBucket}]`, 'error');
     }
@@ -120,7 +120,7 @@ DS.demos['hash-table'] = function (container) {
     if (data[key] !== undefined) {
       delete data[key];
       render();
-      DS.showMsg('htMsg', `Deleted "${key}" from bucket [${lastBucket}]: O(1) avg`, 'info');
+      DS.showMsg('htMsg', `Deleted "${key}" from bucket [${lastBucket}]: fast`, 'info');
     } else {
       render();
       DS.showMsg('htMsg', `Key "${key}" not found`, 'error');

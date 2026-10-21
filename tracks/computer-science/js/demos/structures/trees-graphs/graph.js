@@ -78,6 +78,16 @@ DS.demos.graph = function (container) {
     const w = rect.width;
     const h = rect.height;
     ctx.clearRect(0, 0, w, h);
+    // Colours come from the site theme at draw time, so light and dark both read well.
+    const css = getComputedStyle(document.documentElement);
+    const c = (name, fallback) => css.getPropertyValue(name).trim() || fallback;
+    const hot = c('--lp-check', '#b7791f');
+    const pick = c('--lp-accent', '#2f6fde');
+    const line = c('--lp-line', '#e4dfd3');
+    const surface = c('--lp-surface', '#ffffff');
+    const text = c('--lp-text', '#1f2933');
+    const muted = c('--lp-text-muted', '#5f6b7a');
+    const mono = c('--lp-mono', 'monospace');
 
     edges.forEach(([from, to]) => {
       const a = nodes.find(n => n.id === from);
@@ -87,7 +97,7 @@ DS.demos.graph = function (container) {
       ctx.beginPath();
       ctx.moveTo(a.x * w, a.y * h);
       ctx.lineTo(b.x * w, b.y * h);
-      ctx.strokeStyle = lit ? '#f0b429' : '#2a3330';
+      ctx.strokeStyle = lit ? hot : line;
       ctx.lineWidth = lit ? 3 : 1.5;
       ctx.stroke();
     });
@@ -97,18 +107,24 @@ DS.demos.graph = function (container) {
       const sel = selectedNode === n.id;
       ctx.beginPath();
       ctx.arc(n.x * w, n.y * h, sel ? 26 : 22, 0, Math.PI * 2);
-      ctx.fillStyle = lit ? 'rgba(240,180,41,0.25)' : sel ? 'rgba(76,201,240,0.15)' : '#1c2120';
+      ctx.fillStyle = surface;
       ctx.fill();
-      ctx.strokeStyle = lit ? '#f0b429' : sel ? '#4cc9f0' : '#2a3330';
+      if (lit || sel) {
+        ctx.globalAlpha = 0.22;              // a light tint of the highlight colour
+        ctx.fillStyle = lit ? hot : pick;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      }
+      ctx.strokeStyle = lit ? hot : sel ? pick : muted;
       ctx.lineWidth = lit || sel ? 3 : 2;
       ctx.stroke();
-      ctx.fillStyle = lit ? '#f0b429' : '#e8ede9';
-      ctx.font = 'bold 14px JetBrains Mono, monospace';
+      ctx.fillStyle = lit ? hot : text;
+      ctx.font = `bold 14px ${mono}`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText(n.id, n.x * w, n.y * h);
-      ctx.font = '9px JetBrains Mono, monospace';
-      ctx.fillStyle = '#5e6e63';
+      ctx.font = `9px ${mono}`;
+      ctx.fillStyle = muted;
       ctx.fillText(`d${degree(n.id)}`, n.x * w, n.y * h + 18);
     });
   };
@@ -197,8 +213,8 @@ DS.demos.graph = function (container) {
         <div class="graph-stage">
           <div id="graphCanvasWrap"></div>
           <div class="graph-legend">
-            <span><i class="fas fa-circle" style="color:var(--blue)"></i> Selected vertex</span>
-            <span><i class="fas fa-circle" style="color:var(--accent)"></i> Visited in traversal</span>
+            <span><i class="fas fa-circle" style="color:var(--accent)"></i> Selected vertex</span>
+            <span><i class="fas fa-circle" style="color:var(--amber)"></i> Visited in traversal</span>
             <span><code>d3</code> = degree (3 edges)</span>
           </div>
           <div class="graph-adj"><strong>Adjacency list:</strong><br>${adjListHtml()}</div>

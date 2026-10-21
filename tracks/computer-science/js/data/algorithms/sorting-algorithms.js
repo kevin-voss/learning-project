@@ -5,6 +5,7 @@ DS.curriculum.push({
   id: 'sorting-algorithms',
   category: 'Java 3: Smart Code',
   title: 'Sorting Algorithms',
+  anim: 'sort',
   icon: 'fa-arrow-down-wide-short',
   subtitle: 'Sorting puts values into order so later work becomes easier.',
   analogy: 'Sorting is like organizing books by height before looking for one. The organizing takes work, but after the books are ordered, finding and comparing things becomes easier.',

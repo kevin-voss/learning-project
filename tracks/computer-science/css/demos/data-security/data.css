@@ -8,7 +8,7 @@
   border: 1px solid var(--border);
   border-radius: var(--radius);
   color: var(--fg2);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--mono);
   font-size: 13px;
   line-height: 1.7;
   margin: 0;
@@ -18,8 +18,8 @@
 }
 
 .sql-db-action {
-  background: rgba(76, 201, 240, 0.08);
-  border: 1px solid rgba(76, 201, 240, 0.25);
+  background: color-mix(in srgb, var(--blue) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--blue) 25%, transparent);
   border-radius: var(--radius);
   color: var(--fg2);
   display: grid;
@@ -49,7 +49,7 @@
 .sql-result-table td {
   border: 1px solid var(--border);
   color: var(--fg2);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--mono);
   font-size: 12px;
   padding: 10px 12px;
   text-align: left;
@@ -144,7 +144,7 @@
   border-radius: 8px;
   color: var(--fg2);
   display: block;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--mono);
   line-height: 1.6;
   min-height: 44px;
   overflow-wrap: anywhere;
@@ -160,7 +160,7 @@
 
 .encryption-step {
   align-items: center;
-  background: rgba(255,255,255,0.03);
+  background: color-mix(in srgb, var(--fg) 3%, transparent);
   border: 1px solid var(--border);
   border-radius: 12px;
   color: var(--muted);
@@ -174,7 +174,7 @@
 
 .encryption-step span {
   align-items: center;
-  background: rgba(255,255,255,0.08);
+  background: color-mix(in srgb, var(--fg) 8%, transparent);
   border-radius: 999px;
   color: var(--fg);
   display: inline-flex;
@@ -193,19 +193,19 @@
 }
 
 .encryption-step.active {
-  background: rgba(99, 102, 241, 0.14);
+  background: color-mix(in srgb, var(--purple) 14%, transparent);
   border-color: var(--accent);
   color: var(--fg);
 }
 
 .encryption-step.active span {
   background: var(--accent);
-  color: white;
+  color: var(--on-accent);
 }
 
 .encryption-step-detail {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(14, 165, 233, 0.06));
-  border: 1px solid rgba(99, 102, 241, 0.35);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--purple) 12%, transparent), color-mix(in srgb, var(--blue) 6%, transparent));
+  border: 1px solid color-mix(in srgb, var(--purple) 35%, transparent);
   border-radius: var(--radius);
   display: grid;
   gap: 8px;
@@ -250,7 +250,7 @@
   border: 1px solid var(--border);
   border-radius: 8px;
   color: var(--fg2);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--mono);
   line-height: 1.6;
   overflow-wrap: anywhere;
   padding: 10px;
@@ -289,7 +289,7 @@
 }
 
 .key-pair-panel div {
-  background: rgba(255,255,255,0.03);
+  background: color-mix(in srgb, var(--fg) 3%, transparent);
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 12px;

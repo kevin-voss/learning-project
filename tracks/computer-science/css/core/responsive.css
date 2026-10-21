@@ -4,7 +4,7 @@
     .sidebar.open { transform: translateX(0); }
     .main { margin-left: 0; }
     .menu-toggle { display: flex; }
-    .content-area { padding: 60px 20px 60px; }
+    .content-area { padding: 60px 20px 120px; }
     .info-grid, .pros-cons, .complexity-guide-grid { grid-template-columns: 1fr; }
     .ds-title { font-size: 28px; }
     .demo-body { grid-template-columns: 1fr; }
@@ -20,7 +20,7 @@
   .queue-slot:hover,
   .tree-node-card:hover,
   .set-member:hover {
-    box-shadow: 0 0 20px rgba(240,180,41,0.15);
+    box-shadow: 0 0 20px color-mix(in srgb, var(--accent) 15%, transparent);
   }
 
   /* Subtle float animation for decorative elements */

@@ -195,6 +195,7 @@ DS.resolveLessonView = function (lesson) {
       subPageTitle: subPage?.title || subPage?.label || null,
       demoScenario: subPage?.demoScenario || subPage?.demoExample || null,
       analogy: pick('analogy'),
+      anim: pick('anim'),
       realWorldExample: pick('realWorldExample'),
       resourceLinks: pick('resourceLinks'),
       whatIsIt: pick('whatIsIt', 'body'),
@@ -299,9 +300,9 @@ DS.renderMermaidDiagram = function (diagram) {
   if (!diagram) return '';
   return `
     <div class="block" id="diagram">
-      <h3 class="block-title"><i class="fas fa-chart-diagram"></i> Mermaid Diagram</h3>
+      <h3 class="block-title"><i class="fas fa-chart-diagram"></i> Diagram</h3>
       <div class="mermaid-wrap">
-        <pre class="mermaid">${DS.escHtml(diagram)}</pre>
+        <pre class="mermaid" data-src="${DS.escHtml(diagram)}">${DS.escHtml(diagram)}</pre>
       </div>
     </div>`;
 };
@@ -345,21 +346,4 @@ DS.renderCheck = function (items = []) {
     </div>`;
 };
 
-DS.renderMermaid = function () {
-  if (!window.mermaid) return;
-  window.mermaid.initialize({
-    startOnLoad: false,
-    theme: 'dark',
-    securityLevel: 'loose',
-    themeVariables: {
-      background: '#0d120f',
-      primaryColor: '#17231d',
-      primaryTextColor: '#e8ede9',
-      primaryBorderColor: '#f0b429',
-      lineColor: '#4cc9f0',
-      secondaryColor: '#111a15',
-      tertiaryColor: '#0f1712',
-    },
-  });
-  window.mermaid.run({ querySelector: '.mermaid' });
-};
+// DS.renderMermaid lives in js/utils/theme.js (it follows the light/dark theme).

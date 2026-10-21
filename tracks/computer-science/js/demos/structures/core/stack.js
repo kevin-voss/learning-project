@@ -24,7 +24,7 @@ DS.demos.stack = function (container) {
       ['SP address', frameAddr(stack.length - 1)],
       ['Frame size', `~${FRAME_BYTES} bytes`, `${info.chars} chars · ${info.bytes} B string data`],
       ['Depth', `${stack.length} frame(s)`, `~${stack.length * FRAME_BYTES} bytes total`],
-      ['Push/Pop', 'O(1)', 'Only the top pointer moves'],
+      ['Push/Pop', 'fast', 'Only the top pointer moves'],
     ];
   };
 
@@ -58,7 +58,7 @@ DS.demos.stack = function (container) {
 
     UI.mount(container, {
       title: 'Stack: last in, first out (LIFO)',
-      hint: 'Like a stack of plates: you add and remove only from the top. The stack pointer (SP) tracks the top frame. Push grows the stack; Pop shrinks it: both O(1).',
+      hint: 'Like a stack of plates: you add and remove only from the top. The stack pointer (SP) tracks the top frame. Push grows the stack, Pop shrinks it. Both are fast.',
       stage,
       inspector: UI.inspector('Top of stack', inspectorRows()),
       stats,
@@ -77,13 +77,13 @@ DS.demos.stack = function (container) {
     counter++;
     stack.push({ label: `Plate ${String.fromCharCode(64 + counter)}`, added: counter });
     render();
-    DS.showMsg('stkMsg', `Pushed frame at ${frameAddr(stack.length - 1)}: SP moved up: O(1)`, 'success-msg');
+    DS.showMsg('stkMsg', `Pushed frame at ${frameAddr(stack.length - 1)}: SP moved up: fast`, 'success-msg');
   };
   window.stkPop = () => {
     if (!stack.length) return DS.showMsg('stkMsg', 'Stack underflow: nothing to pop!', 'error');
     const val = stack.pop();
     render();
-    DS.showMsg('stkMsg', `Popped "${val.label}": SP moved down: O(1)`, 'info');
+    DS.showMsg('stkMsg', `Popped "${val.label}": SP moved down: fast`, 'info');
   };
   window.stkPeek = () => {
     if (!stack.length) return DS.showMsg('stkMsg', 'Stack is empty!', 'error');

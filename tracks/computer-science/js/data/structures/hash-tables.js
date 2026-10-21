@@ -15,6 +15,7 @@ DS.curriculum.push({
       id: 'picture',
       label: 'The picture',
       title: 'Letters in numbered post boxes',
+      anim: 'postoffice',
       analogy: 'A post office has a wall of numbered boxes. The clerk has a rule that turns a name into a box number. "Maya" always gives box 7. To put a letter in, the clerk uses the rule and drops it in box 7. To find Maya\'s letter later, the clerk uses the same rule and looks only in box 7. No searching through every box.',
       whatIsIt: 'A hash table stores pairs: a key and a value, like "Maya" and her phone number. A hash function turns the key into a box number, called a bucket. Same key, same bucket, every time. That is how Java\'s HashMap finds a value without looking at all the others.',
       demoTitle: 'Sort keys into buckets',

@@ -17,6 +17,7 @@ DS.curriculum.push({
       id: 'picture',
       label: 'The picture',
       title: 'Plates and a storage room',
+      anim: 'memory',
       analogy: 'In the kitchen, every job gets a plate on a pile. The plate holds the small things for that job. When the job is done, the top plate goes away. Big things, like a box of toys, go into the storage room. On the plate there is only a label with a string that leads to the box.',
       whatIsIt: 'Java uses two parts of memory. The stack is the pile of plates: every method call gets one plate (a frame) with its local variables. When the method ends, its plate is removed. The heap is the storage room: every object made with new lives there. A local variable like Parcel p is on the plate. The Parcel object is in the heap.',
       demoTitle: 'Stack, heap and the cleaner',

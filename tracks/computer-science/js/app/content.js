@@ -32,6 +32,9 @@ DS.renderContent = function () {
         <p class="analogy-text">${DS.explainTerms(view.analogy)}</p>
       </div>` : ''}
 
+      <!-- Animation from the site theme player (hub/theme/anim): it starts when the div appears -->
+      ${view.anim ? `<div class="block anim-block" id="animation"><div data-anim="${DS.escHtml(view.anim)}"></div></div>` : ''}
+
       <!-- Real World Example -->
       ${view.realWorldExample ? `
       <div class="example-card" id="real-world">

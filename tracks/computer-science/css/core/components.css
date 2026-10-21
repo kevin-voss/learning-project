@@ -1,7 +1,7 @@
 /* Time complexity table */
   .complexity-guide {
-    background: linear-gradient(135deg, rgba(76,201,240,0.08), rgba(76,201,240,0.02));
-    border: 1px solid rgba(76,201,240,0.2);
+    background: linear-gradient(135deg, color-mix(in srgb, var(--blue) 8%, transparent), color-mix(in srgb, var(--blue) 2%, transparent));
+    border: 1px solid color-mix(in srgb, var(--blue) 20%, transparent);
     border-radius: var(--radius);
     padding: 18px;
     margin-bottom: 16px;
@@ -18,7 +18,7 @@
     gap: 10px;
   }
   .complexity-guide-card {
-    background: rgba(0,0,0,0.18);
+    background: color-mix(in srgb, var(--fg) 5%, transparent);
     border: 1px solid var(--border);
     border-radius: 10px;
     padding: 12px;
@@ -26,7 +26,7 @@
   .complexity-guide-card strong {
     color: var(--accent);
     display: block;
-    font-family: 'JetBrains Mono', monospace;
+    font-family: var(--mono);
     font-size: 16px;
     margin-bottom: 4px;
   }
@@ -70,14 +70,14 @@
     font-size: 14px;
     color: var(--fg2);
     border-bottom: 1px solid var(--border);
-    font-family: 'JetBrains Mono', monospace;
+    font-family: var(--mono);
   }
   .complexity-table tr:last-child td { border-bottom: none; }
   .complexity-table tr:hover td { background: var(--accent-dim); }
-  .complexity-table .op-name { font-family: 'Space Grotesk', sans-serif; color: var(--fg); font-weight: 500; }
+  .complexity-table .op-name { font-family: var(--font); color: var(--fg); font-weight: 500; }
   .complexity-table .complexity-meaning {
     color: var(--fg2);
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--font);
     line-height: 1.5;
     min-width: 220px;
   }
@@ -126,7 +126,7 @@
     color: var(--green);
     padding: 12px 28px;
     border-radius: 8px;
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--font);
     font-size: 14px;
     font-weight: 700;
     cursor: pointer;
@@ -152,7 +152,7 @@
     color: var(--fg2);
     padding: 12px 24px;
     border-radius: 8px;
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--font);
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
@@ -196,8 +196,8 @@
     animation: toastIn 0.3s ease, toastOut 0.3s ease 2.7s forwards;
     max-width: 320px;
   }
-  .toast-success { background: var(--green-dim); color: var(--green); border: 1px solid rgba(39,196,132,0.3); }
-  .toast-info { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(76,201,240,0.3); }
+  .toast-success { background: var(--green-dim); color: var(--green); border: 1px solid color-mix(in srgb, var(--green) 30%, transparent); }
+  .toast-info { background: var(--blue-dim); color: var(--blue); border: 1px solid color-mix(in srgb, var(--blue) 30%, transparent); }
 
   @keyframes toastIn { from { opacity:0; transform: translateX(30px); } to { opacity:1; transform: translateX(0); } }
   @keyframes toastOut { from { opacity:1; } to { opacity:0; transform: translateY(-10px); } }

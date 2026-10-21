@@ -6,7 +6,7 @@
 }
 
 .hash-formula {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--mono);
   font-size: 11px;
   color: var(--fg2);
   padding: 10px 14px;
@@ -39,7 +39,7 @@
   justify-content: center;
   font-size: 11px;
   color: var(--muted);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--mono);
   flex-shrink: 0;
 }
 
@@ -63,10 +63,10 @@
 
 .hash-entry {
   background: var(--accent-dim);
-  border: 1px solid rgba(240,180,41,0.35);
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
   border-radius: 8px;
   padding: 6px 10px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--mono);
   font-size: 11px;
 }
 
@@ -117,7 +117,7 @@
 .tree-node-card:hover { transform: scale(1.08); }
 
 .tree-node-val {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--mono);
   font-size: 16px;
   font-weight: 700;
   color: var(--green);
@@ -171,7 +171,7 @@
 }
 
 .graph-adj {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--mono);
   font-size: 10px;
   color: var(--fg2);
   line-height: 1.6;
@@ -200,7 +200,7 @@
 }
 
 .set-member-val {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--mono);
   font-size: 14px;
   font-weight: 700;
   color: var(--accent);
@@ -208,7 +208,7 @@
 }
 
 .set-member-meta {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--mono);
   font-size: 9px;
   color: var(--muted);
   margin-top: 4px;

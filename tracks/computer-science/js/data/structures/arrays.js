@@ -15,6 +15,7 @@ DS.curriculum.push({
       id: 'picture',
       label: 'The picture',
       title: 'A shelf with numbered boxes',
+      anim: 'shelf',
       analogy: 'Think of a long shelf with boxes in a row. Every box has a number on it: 0, 1, 2, 3. You want box 2? You walk straight to box 2. You do not open box 0 and box 1 first.',
       whatIsIt: 'An array is a list of values in a row. Each value sits at a number called its index. The first index is 0, not 1. You read a value with its index: fruits[0].',
       demoTitle: 'Play with the shelf',

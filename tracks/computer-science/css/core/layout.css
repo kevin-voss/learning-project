@@ -133,8 +133,8 @@
     font-weight: 600;
   }
   .nav-badge.done {
-    background: rgba(39,196,132,0.15);
-    color: #27c484;
+    background: color-mix(in srgb, var(--green) 15%, transparent);
+    color: var(--green);
   }
 
   .nav-sublist {
@@ -157,12 +157,12 @@
   }
 
   .nav-subitem:hover {
-    background: rgba(255,255,255,0.03);
+    background: color-mix(in srgb, var(--fg) 3%, transparent);
     color: var(--fg2);
   }
 
   .nav-subitem.active {
-    background: rgba(76,201,240,0.1);
+    background: color-mix(in srgb, var(--blue) 10%, transparent);
     color: var(--blue);
   }
 
@@ -176,7 +176,7 @@
 
   .nav-subitem.active .nav-subdot {
     background: var(--blue);
-    box-shadow: 0 0 0 3px rgba(76,201,240,0.12);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--blue) 12%, transparent);
   }
 
   .nav-subtext {
@@ -198,6 +198,6 @@
     width: 100%;
     max-width: 100%;
     margin: 0;
-    padding: 40px 48px 80px;
+    padding: 40px 48px 120px; /* room for the site step bar */
     box-sizing: border-box;
   }

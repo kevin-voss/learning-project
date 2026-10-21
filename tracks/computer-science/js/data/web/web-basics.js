@@ -50,6 +50,7 @@ DS.curriculum.push(
         id: 'picture',
         label: 'The picture',
         title: 'A restaurant',
+        anim: 'request',
         analogy: 'You sit in a restaurant. You are the client: you ask for food. The kitchen is the server: it makes the food. The waiter is the network: he carries your order to the kitchen and brings the plate back. You never walk into the kitchen yourself.',
         whatIsIt: 'A client is the program that asks. Most of the time it is your browser. A server is a program on another computer that answers. The question is called a request. The answer is called a response. One kitchen can cook for many guests at once.',
         realWorldExample: {

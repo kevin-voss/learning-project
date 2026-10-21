@@ -1,22 +1,49 @@
+/* Theme bridge: the track keeps its own variable names, but every value comes from the
+   site theme (hub/theme/tokens.css, added to the page by the site build). Light first,
+   dark through the theme. The second value of each var() is the light fallback for
+   opening index.html without the build. */
 :root {
-    --bg: #0d0f0e;
-    --bg2: #141816;
-    --bg3: #1a1e1c;
-    --card: #1c2120;
-    --card-hover: #222928;
-    --border: #2a3330;
-    --fg: #e8ede9;
-    --fg2: #9baa9f;
-    --muted: #5e6e63;
-    --accent: #f0b429;
-    --accent2: #e09100;
-    --accent-dim: rgba(240,180,41,0.12);
-    --green: #27c484;
-    --green-dim: rgba(39,196,132,0.12);
-    --red: #f45d5d;
-    --red-dim: rgba(244,93,93,0.12);
-    --blue: #4cc9f0;
-    --blue-dim: rgba(76,201,240,0.12);
-    --code-bg: #111413;
-    --radius: 10px;
-  }
+  --bg: var(--lp-bg, #faf8f3);
+  --bg2: var(--lp-surface-2, #f3efe6);
+  --bg3: color-mix(in srgb, var(--lp-surface-2, #f3efe6) 70%, var(--lp-line, #e4dfd3));
+  --card: var(--lp-surface, #ffffff);
+  --card-hover: var(--lp-surface-2, #f3efe6);
+  --border: var(--lp-line, #e4dfd3);
+  --fg: var(--lp-text, #1f2933);
+  --fg2: color-mix(in srgb, var(--lp-text, #1f2933) 72%, var(--lp-text-muted, #5f6b7a));
+  --muted: var(--lp-text-muted, #5f6b7a);
+
+  /* Main colour: links, active items, main buttons */
+  --accent: var(--lp-accent, #2f6fde);
+  --accent2: color-mix(in srgb, var(--lp-accent, #2f6fde) 80%, var(--lp-text, #1f2933));
+  --accent-dim: var(--lp-accent-soft, #e6eefc);
+  --on-accent: var(--lp-on-accent, #ffffff);
+
+  /* Meaning colours: do/success, warn/error, read/info, check/amber */
+  --green: var(--lp-do, #1f9d55);
+  --green-dim: var(--lp-try-bg, #e9f7ef);
+  --red: var(--lp-warn, #c0392b);
+  --red-dim: var(--lp-warn-bg, #fdecec);
+  --blue: var(--lp-read, #2f6fde);
+  --blue-dim: var(--lp-note-bg, #eaf1fd);
+  --amber: var(--lp-check, #b7791f);
+  --amber-dim: var(--lp-check-bg, #fdf3e1);
+  --purple: var(--lp-code-title, #6f42c1);
+  --picture-bg: var(--lp-picture-bg, #fff6d9);
+  --picture-line: var(--lp-picture-line, #f0c75e);
+
+  /* Code and the practice terminal */
+  --code-bg: var(--lp-code-bg, #f4f1ea);
+  --code-text: var(--lp-code-text, #24292f);
+  --code-keyword: var(--lp-code-keyword, #b8326e);
+  --code-string: var(--lp-code-string, #1a7f37);
+  --code-number: var(--lp-code-number, #0b5cad);
+  --code-comment: var(--lp-code-comment, #7c8591);
+  --code-title: var(--lp-code-title, #6f42c1);
+
+  /* Type, shape, depth */
+  --font: var(--lp-font, system-ui, -apple-system, 'Segoe UI', sans-serif);
+  --mono: var(--lp-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  --radius: var(--lp-radius, 12px);
+  --shadow: var(--lp-shadow, 0 1px 2px rgba(31, 41, 51, 0.06), 0 6px 20px rgba(31, 41, 51, 0.07));
+}

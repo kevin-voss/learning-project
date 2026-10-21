@@ -1,10 +1,13 @@
 # Authn vs authz lab: who you are vs what you may do
 
-Hands-on companion to [Step 16](README.md). Do it once login works and `PATCH` requires a token — this lab adds the *second* half of security.
+Hands-on companion to [Step 16](README.md). Do it once the build works. The README already wired roles in; this lab makes you *see* the two halves of security separately, and break them on purpose.
+
+> [!PICTURE]
+> At the depot, the gate guard checks **who** you are and gives you a badge. Inside, each door has its own sign: "staff only". The badge says who you are; the sign decides whether that person may enter. A visitor with a perfect badge still cannot open a "staff only" door.
 
 ## The problem
 
-ParcelPilot can now say **who** you are: no token, no `PATCH`. But look closely at what you built — *any* logged-in user can perform *any* protected action. If you seeded a second user tomorrow (a customer who should only *read* their parcels), they could mark parcels delivered all day. Knowing who someone is says nothing about what they may do. Those are two different questions, and the second one is still unanswered.
+Imagine the step-16 rules said `.anyRequest().authenticated()` and nothing more: no token, no `PATCH`. That answers **who** you are. But then *any* logged-in user could perform *any* protected action: `ava`, a customer who should only *read* her parcels, could mark parcels delivered all day. Knowing who someone is says nothing about what they may do. Those are two different questions.
 
 ## The two questions (hammer this in)
 
@@ -41,47 +44,29 @@ Rule of thumb: **401 = fix your token. 403 = fix your permissions.**
 | **Claim** | A fact inside the JWT — here, the role travels as a claim. |
 | **`hasRole` / `hasAuthority`** | Spring's checks: `hasRole("OPERATOR")` matches authority `ROLE_OPERATOR`; `hasAuthority("ROLE_OPERATOR")` matches it literally. |
 
-## Build it
+## Where the role lives in your code
 
-### 1. Put the role into the token at login
+Three places, all from the step-16 README. Follow the word `OPERATOR` through them:
 
-Your login code already sets the subject claim; the README seeded the operator **with a role** — now make the token carry it. Wherever you build the JWT:
+1. **The database** (`V4__create_operators.sql`): the row for `operator` has `role = 'OPERATOR'`, the row for `ava` has `role = 'CUSTOMER'`.
+2. **The token** (`TokenService.issue`): `.claim("role", role)`, with the role read from that row by `AuthController`. Never from the login request: anything the client sends outside the signature is the client grading their own homework.
+3. **The check** (`SecurityConfig`): `rolesFromTheRoleClaim()` turns the claim `"role": "OPERATOR"` into the authority `ROLE_OPERATOR` (`setAuthoritiesClaimName("role")` + `setAuthorityPrefix("ROLE_")`), and `.hasRole("OPERATOR")` on the `PATCH` rule checks exactly that authority.
 
-```java
-String token = Jwts.builder()
-        .subject(user.username())
-        .claim("role", user.role())        // e.g. "OPERATOR" — from the seeded user
-        .issuedAt(now)
-        .expiration(expiry)
-        .signWith(key)
-        .compact();
+```mermaid
+flowchart LR
+  DB["operators row<br/>role = OPERATOR"] --> T["JWT claim<br/>role: OPERATOR"]
+  T --> A["authority<br/>ROLE_OPERATOR"]
+  A --> R["rule<br/>hasRole(OPERATOR)"]
 ```
 
-(Adapt to your JWT library's builder — the point is one `role` claim sourced from the stored user, never from the login request.)
+## Break it on purpose
 
-### 2. Turn the claim into an authority when verifying
-
-Where your filter/converter validates the token and builds the `Authentication`, map the claim to a Spring authority **with the `ROLE_` prefix**:
-
-```java
-String role = claims.get("role", String.class);
-var authorities = List.of(new SimpleGrantedAuthority("ROLE_" + role));
-var authentication = new UsernamePasswordAuthenticationToken(claims.getSubject(), null, authorities);
-```
-
-### 3. Protect the operator action with a role check
-
-In the `SecurityFilterChain`, tighten the `PATCH` rule from "any authenticated user" to "operators only":
-
-```java
-http.authorizeHttpRequests(auth -> auth
-        .requestMatchers("/auth/login").permitAll()
-        .requestMatchers(HttpMethod.GET, "/parcels/**").permitAll()   // your step-16 decision
-        .requestMatchers(HttpMethod.PATCH, "/parcels/*/status").hasRole("OPERATOR")
-        .anyRequest().authenticated());
-```
-
-`hasRole("OPERATOR")` checks for the authority `ROLE_OPERATOR` — which is exactly what step 2 produced. To *see* a `403`, seed a second user without the role (e.g. username `ava`, role `CUSTOMER`) — one extra row in your seed data.
+> [!TRY]
+> 1. In `SecurityConfig`, change `authorities.setAuthorityPrefix("ROLE_")` to `setAuthorityPrefix("")`. Restart and repeat proof step 3 below with the operator token.
+> 2. You get `403`, although the token says `OPERATOR`. The authority is now `OPERATOR`, and `hasRole("OPERATOR")` looks for `ROLE_OPERATOR`.
+> 3. Put the prefix back. `200` again.
+>
+> You should now be able to explain every `403` with a valid token by following the four boxes above.
 
 ## Proof: the three-status ladder
 
@@ -112,9 +97,9 @@ curl -s -o /dev/null -w "%{http_code}\n" -X PATCH http://localhost:8080/parcels/
 # 200
 ```
 
-Same endpoint, same request body — three outcomes, decided entirely by *who* is asking and *what they may do*.
+Same endpoint, same request body — three outcomes, decided entirely by *who* is asking and *what they may do*. `AuthFlowTest` in the [solution](solution/parcel-service/src/test/java/com/parcelpilot/AuthFlowTest.java) checks the same ladder on every `mvn test`.
 
-**One honest note on the response bodies:** these `401`/`403`s are produced by Spring Security's filters, which run *before* your controllers — so the step-06 `GlobalErrorHandler` never sees them, and the bodies are Spring's defaults (often empty), **not** your `ErrorResponse` shape. Wiring security failures into the shared error contract is possible (custom `AuthenticationEntryPoint` and `AccessDeniedHandler`) but is beyond this step; for now, know that the *status code* is the reliable part of the contract here.
+**One honest note on the response bodies:** these `401`/`403`s are produced by Spring Security's filters, which run *before* your controllers — so the step-06 `GlobalErrorHandler` never sees them, and the bodies are empty: the reason is in the `WWW-Authenticate` response header (`curl -i` shows it), **not** in your `ErrorResponse` shape. Only the `401` from a wrong password has your shape (`BAD_CREDENTIALS`), because `AuthController` writes it. Wiring security failures into the shared error contract is possible (custom `AuthenticationEntryPoint` and `AccessDeniedHandler`) but is beyond this step; for now, know that the *status code* is the reliable part of the contract here.
 
 ## Common mistakes
 
@@ -131,6 +116,16 @@ Same endpoint, same request body — three outcomes, decided entirely by *who* i
 | Simple to reason about: decode the token, see exactly what it grants | Fat permission lists bloat a token that rides on *every* request |
 
 The staleness trade-off is the JWT revocation problem from the README's cons, wearing authorization clothes. Short expiry keeps the window small — exactly why ParcelPilot's tokens are short-lived.
+
+## Check yourself
+
+> [!CHECK]
+> 1. `ava` logs in successfully and gets `403` on `PATCH`. Which question failed: authentication or authorization?
+>    <details><summary>Answer</summary>Authorization. Authentication worked (her token is valid, the server knows it is ava); her role <code>CUSTOMER</code> may not change parcels.</details>
+> 2. Why does `hasRole("ROLE_OPERATOR")` never match?
+>    <details><summary>Answer</summary><code>hasRole</code> adds the prefix itself and looks for <code>ROLE_ROLE_OPERATOR</code>. Use <code>hasRole("OPERATOR")</code>, or <code>hasAuthority("ROLE_OPERATOR")</code>.</details>
+> 3. You remove `operator`'s role in the database. Does their current token stop working?
+>    <details><summary>Answer</summary>No, not until it expires (15 minutes). The role is inside the signed token. That is the price of stateless tokens, and why they are short-lived.</details>
 
 ## Next
 

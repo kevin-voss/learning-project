@@ -10,7 +10,7 @@ Imagine this innocent refactor: someone renames the `parcelId` field in the `Par
 {"eventId":"e-91","parcelID":"P-7","occurredAt":"2026-07-14T18:22:31Z"}
 ```
 
-notification-service, deployed last week, still reads `parcelId`. It finds `null`, and depending on how it's written, it either crashes on every message or "sends" notifications for parcel `null`. **No compiler caught this.** Inside the monolith, renaming a field broke the build within seconds — the compiler was your contract checker. Across two independently built services, the only thing connecting them is bytes in a message, and bytes don't complain. They just stop meaning what the other side thinks they mean.
+notification-service, deployed last week, still reads `parcelId`. It finds `null`, and depending on how it's written, it either crashes on every message or "sends" notifications for parcel `null`. **No compiler caught this.** Inside the monolith, renaming a field broke the build within seconds — the compiler was your contract checker. Across two independently built services, the only thing connecting them is bytes in a message, and bytes don't complain. They stop meaning what the other side thinks they mean.
 
 ## Key words
 
@@ -35,15 +35,16 @@ The `ParcelDelivered` event from [step 12](../12-queues/README.md) *is* a contra
 
 | Field | Type | Required | Meaning |
 |---|---|---|---|
-| `eventId` | string | yes | Unique per event. The consumer uses it for idempotency (skip already-handled IDs). |
+| `eventId` | string (UUID) | yes | Unique per event. The consumer uses it for idempotency (skip already-handled IDs). |
 | `parcelId` | string | yes | The parcel that was delivered. The consumer's only link back to the business fact. |
+| `recipient` | string | yes | Who gets the notification. Sent along so the consumer never needs the parcel database. |
 | `occurredAt` | string (ISO-8601, UTC) | yes | When the delivery was recorded. |
 
 ```json
-{"eventId":"e-42","parcelId":"P-7","occurredAt":"2026-07-14T16:22:31Z"}
+{"eventId":"0b6f6c2e-6f4e-4d8a-9a51-3f1b2b7c9e10","parcelId":"P-7","recipient":"Ava","occurredAt":"2026-07-14T16:22:31Z"}
 ```
 
-If your event has extra fields, add rows — the exercise is writing down *your* actual contract, not copying this one.
+Transport details belong to the contract too: the queue is `parcel-delivered`, the body is JSON (`content_type: application/json`), and from step 14 an optional `correlationId` **header** travels next to the body.
 
 ## Producer and consumer obligations
 
@@ -58,7 +59,7 @@ If your event has extra fields, add rows — the exercise is writing down *your*
 
 **Additive changes are safe.** Adding a new *optional* field breaks nobody — old consumers ignore it. This only works if consumers are written to tolerate unknown fields (Jackson's default with `@JsonIgnoreProperties(ignoreUnknown = true)`, or configuring the mapper not to fail on unknown properties).
 
-**Renames and removals break.** The consumer looks for a name that no longer exists. You can't deploy both services in the same instant, and messages already sitting in the queue have the *old* shape — so "just change both sides" doesn't work. The safe route is **expand–migrate–contract**:
+**Renames and removals break.** The consumer looks for a name that no longer exists. You can't deploy both services in the same instant, and messages already sitting in the queue have the *old* shape — so "change both sides at once" doesn't work. The safe route is **expand–migrate–contract**:
 
 - **Expand:** the producer sends *both* the old and the new field (`parcelId` and `parcelID`, same value).
 - **Migrate:** deploy the consumer to read the new field. Wait until every old-format message in the queue is drained.
@@ -68,9 +69,11 @@ Three deploys instead of one, and no window in which anyone misunderstands anyon
 
 ## Testing and versioning (a look ahead)
 
-**Consumer-driven contract tests** exist for exactly this problem: the consumer writes down what it needs from the message ("there is a string field `parcelId`"), and that expectation runs as a test *in the producer's build* — so the rename above would fail parcel-service's build, restoring what the monolith's compiler used to do. Tools like Pact automate this; the idea matters more than the tooling today. In one sentence: **schema registries** (common with Kafka) go further and have the broker infrastructure itself validate every message against a registered schema.
+**You already have a small version of this.** Step 13 gave each side a `@JsonTest`: parcel-service checks that it *writes* `eventId`, `parcelId`, `recipient` and `occurredAt`; notification-service checks that it can *read* that JSON, even with an extra unknown field. Rename `parcelId` in one service and its test turns red.
 
-**Versioning:** when a change is too big to expand-migrate-contract, publish it as a new event version — `parcel.delivered.v2` in the routing key, or a `"version": 2` field — and let consumers opt in. Keep it that simple for now.
+**Consumer-driven contract tests** take the idea further: the consumer writes down what it needs from the message ("there is a string field `parcelId`"), and that expectation runs as a test *in the producer's build* — so the rename above would fail parcel-service's build, restoring what the monolith's compiler used to do. Tools like Pact automate this; the idea matters more than the tooling today. In one sentence: **schema registries** (common with Kafka) go further and have the broker infrastructure itself validate every message against a registered schema.
+
+**Versioning:** when a change is too big to expand-migrate-contract, publish it as a new event version — a new queue such as `parcel-delivered.v2`, or a `"version": 2` field — and let consumers opt in. Keep it that simple for now.
 
 ## Strict vs loose contracts
 

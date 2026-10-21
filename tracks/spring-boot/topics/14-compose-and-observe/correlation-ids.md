@@ -1,6 +1,9 @@
 # Correlation IDs: one thread of identity across two services
 
-Companion to [Step 14](README.md). Builds directly on the step-07 stretch goal — the `RequestIdFilter` from the [logging lab](../07-logging-and-observability-basics/logging-lab.md). If you skipped it then, build it now first.
+Companion to [Step 14](README.md). You built the code in sub-step 3 of the README; this page explains why it looks that way. It grows out of the step-07 `RequestIdFilter` from the [logging lab](../07-logging-and-observability-basics/logging-lab.md).
+
+> [!PICTURE]
+> A customer hands in a parcel and gets a **ticket number**. The clerk writes the number on every form she fills in. When the parcel moves to the branch office, the number goes along on a sticker. Later, anyone can find every form about that parcel by searching for one number.
 
 ## The problem
 
@@ -34,58 +37,21 @@ sequenceDiagram
   N-->>N: process + log — every line shows [req-42]
 ```
 
-## Producer side: attach the ID when publishing
+## Where the three pieces live
 
-Wherever parcel-service publishes with `RabbitTemplate`, copy the current MDC value into a message header. A `MessagePostProcessor` lets you set headers without changing the event payload:
+| Piece | Where (from README sub-step 3) | What it does |
+|---|---|---|
+| Make the id | `RequestIdFilter` in parcel-service, `@Order(Ordered.HIGHEST_PRECEDENCE)` | Reads `X-Request-Id` or makes one up, puts it into the MDC as `requestId`, echoes it in the response |
+| Carry the id | `RabbitNotifier` in parcel-service | Copies `MDC.get("requestId")` into the message header `correlationId` with a `MessagePostProcessor` |
+| Restore the id | `ParcelDeliveredListener` in notification-service | Reads `@Header("correlationId")`, puts it into **its own** MDC, removes it in `finally` |
 
-```java
-import org.slf4j.MDC;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+Both services print `[%X{requestId}]` in `logging.pattern.console`, so the restored id appears on every line.
 
-public void publishDelivered(ParcelDelivered event) {
-    String correlationId = MDC.get("requestId");   // set by the step-07 filter
-    rabbitTemplate.convertAndSend(exchange, routingKey, event, message -> {
-        message.getMessageProperties().setHeader("correlationId", correlationId);
-        return message;
-    });
-    log.info("Published ParcelDelivered for {} (eventId {})", event.parcelId(), event.eventId());
-}
-```
-
-(Adapt names to your publisher — the two lines that matter are `MDC.get` and `setHeader`.)
-
-## Consumer side: read the header, fill the MDC
-
-In notification-service's listener, pull the header and put it into **this** service's MDC before doing anything — and clean it up after, exactly like the step-07 filter did:
-
-```java
-import org.slf4j.MDC;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.messaging.handler.annotation.Header;
-
-@RabbitListener(queues = "parcel.delivered")
-public void onParcelDelivered(ParcelDelivered event,
-                              @Header(name = "correlationId", required = false) String correlationId) {
-    MDC.put("requestId", correlationId != null ? correlationId : "no-correlation-id");
-    try {
-        log.info("Received ParcelDelivered for {} (eventId {})", event.parcelId(), event.eventId());
-        // ... idempotency check + send notification ...
-        log.info("notification sent for {}", event.parcelId());
-    } finally {
-        MDC.remove("requestId");   // listener threads are reused — always clean up
-    }
-}
-```
-
-Both services also need the step-07 console pattern so the MDC value actually prints:
-
-```properties
-logging.pattern.console=%d{HH:mm:ss.SSS} %-5level [%X{requestId}] %logger{36} : %msg%n
-```
+The names are an informal contract between the two codebases: the header is called `correlationId`, the MDC key is `requestId`. Rename one side only and the thread of identity breaks without any error. The unit test `RabbitNotifierTest` guards the producer half.
 
 ## Proof: one curl, one grep, the whole story
 
-Rebuild and restart (`docker compose up --build`), then send **one** request with a recognizable ID:
+Rebuild and restart (`docker compose up --build -d`), then send **one** request with a recognizable ID:
 
 ```bash
 curl -s -X PATCH http://localhost:8080/parcels/P-7/status \
@@ -98,17 +64,17 @@ docker compose logs | grep req-42
 Expected — every line of the operation, from both services, in order:
 
 ```text
-parcel-service        | 18:52:03.114  INFO [req-42] com.parcelpilot.parcel.ParcelController : Parcel P-7 status changed to DELIVERED
-parcel-service        | 18:52:03.131  INFO [req-42] com.parcelpilot.parcel.ParcelEventPublisher : Published ParcelDelivered for P-7 (eventId e-57)
-notification-service  | 18:52:03.209  INFO [req-42] com.parcelpilot.notification.DeliveredEventConsumer : Received ParcelDelivered for P-7 (eventId e-57)
-notification-service  | 18:52:03.215  INFO [req-42] com.parcelpilot.notification.DeliveredEventConsumer : notification sent for P-7
+parcel-service-1        | 18:52:03.114 INFO  [req-42] c.p.parcel.internal.RabbitNotifier : Published ParcelDelivered for P-7 (eventId 5f0c…)
+parcel-service-1        | 18:52:03.131 INFO  [req-42] c.p.parcel.internal.ParcelController : Parcel P-7 status changed to DELIVERED
+notification-service-1  | 18:52:03.209 INFO  [req-42] c.p.n.ParcelDeliveredListener : Received ParcelDelivered for P-7 (eventId 5f0c…)
+notification-service-1  | 18:52:03.215 INFO  [req-42] c.p.n.ParcelDeliveredListener : notification sent for P-7 to Ava
 ```
 
 That grep works even when ten other requests are interleaving, even for log lines that never mention a parcel ID. One ID, one operation, full story.
 
 ## Distributed tracing, in one paragraph
 
-What you built by hand is the seed of **distributed tracing**. Grown-up systems use OpenTelemetry (and backends like Jaeger, Zipkin, or Tempo): every operation gets a **trace ID** (your correlation ID, standardized), each unit of work within it gets a **span** with timing, and libraries propagate the IDs automatically through HTTP headers and message headers — no hand-written filters. The result is a visual timeline per request across every service. Don't implement it here; just recognize that when you meet "traces" later, you already understand the core idea.
+What you built by hand is the seed of **distributed tracing**. Grown-up systems use OpenTelemetry (and backends like Jaeger, Zipkin, or Tempo): every operation gets a **trace ID** (your correlation ID, standardized), each unit of work within it gets a **span** with timing, and libraries propagate the IDs automatically through HTTP headers and message headers — no hand-written filters. The result is a visual timeline per request across every service. Don't implement it here; only recognize that when you meet "traces" later, you already understand the core idea.
 
 ## Why do it? Pros and cons
 
@@ -117,6 +83,14 @@ What you built by hand is the seed of **distributed tracing**. Grown-up systems 
 | One grep reconstructs any operation across all services | Discipline required at **every** boundary — one publish or one consumer that forgets, and the thread of identity snaps |
 | Works for lines with no business ID in them (errors, infrastructure) | Header names and MDC keys must match across codebases (an informal contract) |
 | Clients can quote the `X-Request-Id` from a failed response in a bug report — instantly findable | MDC cleanup mistakes on reused threads stamp the *wrong* ID on later work |
+
+## Check yourself
+
+> [!CHECK]
+> 1. Why can't the MDC of parcel-service be read by notification-service?
+>    <details><summary>Answer</summary>The MDC lives in one thread of one JVM. notification-service is another program on another machine (container). Only what is inside the message crosses the broker, so the id must ride in the message.</details>
+> 2. A request has no `X-Request-Id` header. What id do its log lines get?
+>    <details><summary>Answer</summary>The filter makes one up (the first 8 characters of a random UUID) and sends it back in the <code>X-Request-Id</code> response header, so the caller can quote it in a bug report.</details>
 
 ## Next
 

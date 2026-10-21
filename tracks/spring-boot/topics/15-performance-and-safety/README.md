@@ -1,157 +1,329 @@
-# Step 15: Caching, locking, and rate limiting
+# Step 15: Caching, version checks and rate limiting
 
-> In this step: keep the API fast and safe under load with a cache, a lock, and a rate limit. ~90 minutes. See the [rate-limiting lab](rate-limiting.md).
+> [!PICTURE]
+> Three small things at the depot counter. A **sticky note**: the clerk writes "P-1 is PICKED_UP" on a note, so she does not walk to the warehouse for every customer who asks; when the parcel moves, she tears the note off. A **version number on the parcel label**: every change writes a new number, and a form that brings an old number is sent back. And a **door guard** who lets each visitor in only twenty times a minute.
 
 ## The problem right now
 
-The full system works, so realistic pressure appears: the same parcel is read over and over (hitting the DB every time), two operators update the same parcel at once, and a buggy or abusive client floods an endpoint. These are **three different problems** with three different fixes.
+The system works, so real pressure arrives. Three different problems need three different tools:
+
+| Problem | Tool | Answer when it bites |
+|---|---|---|
+| The same parcel is read again and again, and every read hits PostgreSQL | **Cache** in Redis | (faster `200`) |
+| Two operators change the same parcel; the second silently overwrites the first | **Version check** (optimistic locking) | `409 Conflict` |
+| A broken scanner sends hundreds of requests per second | **Rate limit** | `429 Too Many Requests` |
 
 ## Key words
 
 | Word | Beginner meaning |
 |---|---|
-| **Cache** | A fast, temporary copy of data to avoid repeating slow work. |
-| **Redis** | A very fast in-memory data store often used as a cache. |
-| **Cache-aside** | Pattern: check cache first, and on a miss read the DB and fill the cache. |
-| **TTL** | Time To Live: how long a cached value stays before expiring. |
-| **Cache invalidation** | Removing/updating stale cache entries after data changes. |
-| **Hashing** | Turning input into a fixed-size, one-way fingerprint (used for keys, integrity, passwords). |
-| **Locking** | Preventing conflicting simultaneous changes to the same data. |
-| **Rate limiting** | Capping how many requests a client may make in a time window. |
-| **`429 Too Many Requests`** | The HTTP status for "you've hit the rate limit". |
-| **Proxy (pattern)** | A stand-in object that adds behavior (like caching) around another. |
+| **Cache** | A fast, temporary copy of an answer, so slow work is not repeated. |
+| **Redis** | A very fast in-memory store, often used as a cache. |
+| **Cache-aside** | Look in the cache first; on a **miss**, read the database and write the answer into the cache. |
+| **TTL** | Time to live: how long a cache entry may stay. |
+| **Invalidation (evict)** | Throwing a cache entry away because the data changed. |
+| **Optimistic locking** | Every change bumps a `version`; a change based on an old version is refused. |
+| **Rate limiting** | Capping how many requests one client may send per time window. |
 
-## The three tools, in plain language
-
-- **Cache** = a sticky note with the answer. Reading `GET /parcels/P-1` a thousand times shouldn't hit the database a thousand times. Store the answer in Redis with a **TTL**, and **invalidate** it when the parcel changes. The database stays the source of truth.
-- **Locking** = "who edits wins, safely." Use the `version` from step 10 (optimistic locking) so a clashing update returns `409` instead of silently overwriting.
-- **Rate limiting** = "a bouncer at the door." If a client sends too many requests, reject extras with `429` and a `Retry-After` hint, protecting capacity for everyone.
+Theory homes: caching patterns and their trade-offs in the [architecture track](../../../architecture/index.html); locking in [Locking explained](../10-persistence/locking-explained.md) (step 10).
 
 ```mermaid
 flowchart LR
-  C[curl] --> L[rate-limit filter: 429 if over limit]
-  L --> A[Parcel API]
-  A --> R[(Redis cache: fast reads)]
-  A --> P[(PostgreSQL: source of truth + version lock)]
+  C[curl] --> L[RateLimitFilter: 429 if over the limit]
+  L --> A[ParcelController]
+  A --> S[ParcelService]
+  S -->|@Cacheable read| R[(Redis: sticky notes + counters)]
+  S -->|on a miss, and every write| P[(PostgreSQL: the truth + version)]
 ```
 
-## Where hashing fits
+## Build it in parcel-service (do this exactly)
 
-**Hashing** is one-way: you can't reverse it. It's used for cache/keys, data-integrity checks, and, crucially, **password storage** in the next step. Note the difference: **encryption** is reversible with a key, **hashing** is not, and **encoding** (Base64) is neither and provides no security.
+All changes are in `applications/parcelpilot-services/parcel-service`, plus one new service in `compose.yaml`. The full files are in [solution/](solution/README.md).
 
-## Why do it? Pros and cons
+### 1. Add Redis to Compose
 
-| Tool | Pros | Cons / cautions |
-|---|---|---|
-| Cache | big speed-up, less DB load | stale data risk, invalidation is tricky, extra dependency |
-| Locking | prevents lost updates | conflicts need retry handling, pessimistic locks reduce concurrency |
-| Rate limiting | protects availability, stops abuse | wrong limits block real users, needs shared counter across replicas |
+In `compose.yaml`, add a service and tell parcel-service where it is:
 
-**Real-world example:** a product page caches the item details (fast reads), uses row versioning so two admins don't overwrite each other, and rate-limits login attempts to slow attackers.
+```yaml
+  redis:
+    image: redis:7-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+```
 
-## Build it in ParcelPilot
+Under `parcel-service:`, add `REDIS_HOST: redis` to `environment:` and `redis: {condition: service_healthy}` to `depends_on:` (see the [solution compose.yaml](solution/compose.yaml)).
 
-In `applications/parcelpilot-services/` (add Redis to `compose.yaml`):
+### 2. Dependencies and settings
 
-1. **Cache-aside**: cache `GET /parcels/{id}` in Redis with a short TTL, then **invalidate** the key when the parcel is updated. Feel the staleness bug first in the [cache invalidation lab](cache-invalidation-lab.md).
-2. **Optimistic locking**: ensure updates use the parcel `version` and return `409` on conflict — stage the race in the [optimistic locking lab](optimistic-locking-lab.md).
-3. **Rate limiting**: limit an expensive endpoint per client/IP, and return `429` + `Retry-After`. Use a tiny limit locally so it's easy to trigger. Follow the [rate-limiting lab](rate-limiting.md).
+`pom.xml`:
 
-Spring makes cache-aside almost declarative. Add `spring-boot-starter-data-redis` + `spring-boot-starter-cache`, enable caching, then annotate the read and the update:
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-redis</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-cache</artifactId>
+</dependency>
+```
+
+`application.properties`:
+
+```properties
+spring.data.redis.host=${REDIS_HOST:localhost}
+spring.data.redis.port=6379
+parcelpilot.rate-limit.per-minute=${RATE_LIMIT_PER_MINUTE:20}
+```
+
+### 3. The sticky notes: a `parcels` cache
+
+Create `parcel/internal/ParcelCacheConfig.java`:
 
 ```java
-@Cacheable(value = "parcels", key = "#id")   // check cache first; on miss, run method and store result
-public ParcelResponse getParcel(String id) {
-    return toResponse(repository.findById(id).orElseThrow());
-}
+package com.parcelpilot.parcel.internal;
 
-@CacheEvict(value = "parcels", key = "#id")  // remove stale cache entry after a change
-public void updateStatus(String id, Status newStatus) {
-    // ... load, apply rule, save (optimistic lock handles conflicts) ...
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.boot.autoconfigure.cache.RedisCacheManagerBuilderCustomizer;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializationContext.SerializationPair;
+
+import java.time.Duration;
+
+@Configuration
+@EnableCaching
+public class ParcelCacheConfig {
+
+    /** JSON values in Redis, and every sticky note is thrown away after 10 minutes. */
+    @Bean
+    RedisCacheManagerBuilderCustomizer parcelsCache(ObjectMapper objectMapper) {
+        var json = new Jackson2JsonRedisSerializer<>(objectMapper, ParcelResponse.class);
+        return builder -> builder.withCacheConfiguration("parcels",
+                RedisCacheConfiguration.defaultCacheConfig()
+                        .entryTtl(Duration.ofMinutes(10))
+                        .serializeValuesWith(SerializationPair.fromSerializer(json)));
+    }
 }
 ```
 
-The cache is a **proxy** in front of the database read. The rate limiter can pick its algorithm via a **strategy** (see [design patterns](../../references/java/design-patterns.md)).
+JSON (instead of Java's binary format) lets you read a cached parcel with `redis-cli`. The TTL is a safety net: even a forgotten eviction heals after 10 minutes.
+
+### 4. The version number on the label
+
+The client must **see** the version and **send it back**. Add it to the two records in `parcel/internal/`:
+
+```java
+public record ParcelResponse(String id, String recipient, String status, long version) {}
+```
+
+```java
+public record UpdateStatusRequest(
+        @NotBlank(message = "status must not be blank")
+        @Pattern(regexp = "CREATED|PICKED_UP|DELIVERED",
+                 message = "status must be one of CREATED, PICKED_UP, DELIVERED")
+        String status,
+        Long version          // optional: the version the client last saw
+) {}
+```
+
+In `ParcelController`, pass it on: `service.changeStatus(id, Status.valueOf(request.status()), request.version())`.
+
+### 5. Cache and version check in `ParcelService`
+
+Three changes: `@Cacheable` on the read, `@CacheEvict` on the write, and the version check.
+
+```java
+// The sticky note: look in the "parcels" cache first; only on a miss run this method.
+@Cacheable(value = "parcels", key = "#id")
+@Transactional(readOnly = true)
+public ParcelResponse get(String id) {
+    return toResponse(load(id));
+}
+
+// The parcel changes, so tear off its sticky note. The next read gets fresh data.
+@CacheEvict(value = "parcels", key = "#id")
+@Transactional
+public ParcelResponse changeStatus(String id, Status target, Long expectedVersion) {
+    ParcelEntity parcel = load(id);
+
+    // The client says "I saw version 3". If the label now says 4, someone was faster.
+    if (expectedVersion != null && expectedVersion != parcel.version()) {
+        throw new ObjectOptimisticLockingFailureException(ParcelEntity.class, id);
+    }
+    switch (target) {
+        case PICKED_UP -> parcel.markPickedUp();
+        case DELIVERED -> parcel.markDelivered();
+        case CREATED -> throw new IllegalStateException("a parcel cannot go back to CREATED");
+    }
+    // flush now: if another request saved first, @Version makes this throw HERE
+    ParcelEntity saved = repository.saveAndFlush(parcel);
+    // ... publish ParcelDelivered as in step 12, then:
+    return toResponse(saved);
+}
+```
+
+`toResponse` now also passes `parcel.version()`. `ObjectOptimisticLockingFailureException` comes from `org.springframework.orm`. You do not need a new error handler: step 10 already maps it to `409` with the code `VERSION_CONFLICT`. Two guards now work together:
+
+- the **explicit check** catches a client that read the parcel long ago (a stale screen);
+- `@Version` catches two requests that read at the same moment and both pass the check; the second `saveAndFlush` updates 0 rows and throws.
+
+> [!WARN]
+> `@Cacheable` and `@CacheEvict` only work when the call comes **from outside** the class (through Spring's proxy). If a method of `ParcelService` calls `this.get(id)`, the cache is skipped. Call the repository inside the class, as `changeStatus` does with `load(id)`.
+
+### 6. The door guard: a rate-limit filter
+
+Create `ratelimit/RateLimitFilter.java`:
+
+```java
+package com.parcelpilot.ratelimit;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.parcelpilot.ErrorResponse;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.http.MediaType;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import java.io.IOException;
+import java.time.Clock;
+import java.time.Duration;
+import java.util.Map;
+
+/** Fixed window: each IP may send limitPerMinute requests per minute. Counters live in Redis. */
+public class RateLimitFilter extends OncePerRequestFilter {
+
+    private final StringRedisTemplate redis;
+    private final ObjectMapper objectMapper;
+    private final int limitPerMinute;
+    private final Clock clock;
+
+    public RateLimitFilter(StringRedisTemplate redis, ObjectMapper objectMapper, int limitPerMinute, Clock clock) {
+        this.redis = redis;
+        this.objectMapper = objectMapper;
+        this.limitPerMinute = limitPerMinute;
+        this.clock = clock;
+    }
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+                                    FilterChain chain) throws ServletException, IOException {
+        long nowSeconds = clock.instant().getEpochSecond();
+        String key = "rate:" + request.getRemoteAddr() + ":" + (nowSeconds / 60);
+
+        Long count = redis.opsForValue().increment(key);      // +1, atomic in Redis
+        if (count != null && count == 1) {
+            redis.expire(key, Duration.ofSeconds(60));         // old windows clean themselves up
+        }
+        if (count != null && count > limitPerMinute) {
+            long retryAfter = 60 - (nowSeconds % 60);          // seconds until the next window
+            response.setStatus(429);
+            response.setHeader("Retry-After", String.valueOf(retryAfter));
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            objectMapper.writeValue(response.getOutputStream(), new ErrorResponse("RATE_LIMITED",
+                    "Too many requests. Try again in " + retryAfter + " seconds.", Map.of(), request.getRequestURI()));
+            return;                                            // the controller never runs
+        }
+        chain.doFilter(request, response);
+    }
+}
+```
+
+`java.time.Clock` (not your own step-02 `Clock`) makes the time testable. Register the filter for `/parcels` only, right after `RequestIdFilter`, in `ratelimit/RateLimitConfig.java`:
+
+```java
+@Configuration
+public class RateLimitConfig {
+
+    @Bean
+    FilterRegistrationBean<RateLimitFilter> rateLimitFilter(StringRedisTemplate redis, ObjectMapper objectMapper,
+            @Value("${parcelpilot.rate-limit.per-minute}") int limitPerMinute) {
+        var registration = new FilterRegistrationBean<>(
+                new RateLimitFilter(redis, objectMapper, limitPerMinute, Clock.systemUTC()));
+        registration.addUrlPatterns("/parcels", "/parcels/*");
+        registration.setOrder(Ordered.HIGHEST_PRECEDENCE + 1);
+        return registration;
+    }
+}
+```
+
+Why a `@Bean` and not `@Component` on the filter: your step-08 `@WebMvcTest` loads every `@Component` filter, and this one needs Redis. A bean in a `@Configuration` class stays out of that slice. Why Redis and not a `Map`: with two copies of parcel-service, each `Map` would count only half the requests. Algorithms and limits: [rate-limiting lab](rate-limiting.md).
+
+### 7. Tests
+
+Add Redis to `TestcontainersConfiguration`:
+
+```java
+@Bean
+@ServiceConnection(name = "redis")
+GenericContainer<?> redis() {
+    return new GenericContainer<>("redis:7-alpine").withExposedPorts(6379);
+}
+```
+
+Then two test classes from the solution:
+
+- [ParcelCacheAndLockTest](solution/parcel-service/src/test/java/com/parcelpilot/ParcelCacheAndLockTest.java) (MockMvc, real containers): a read fills the cache, a change empties it, and a `PATCH` with an old `version` gets `409 VERSION_CONFLICT`.
+- [RateLimitFilterTest](solution/parcel-service/src/test/java/com/parcelpilot/RateLimitFilterTest.java) (plain unit test, Redis faked with Mockito): request 20 passes, request 21 gets `429` and `Retry-After: 18`.
+
+Your step-13 `ParcelEventsTest` calls `changeStatus(id, status)`; add the third argument `null`.
 
 ## Test it
 
-```bash
-# cache: same read twice; logs show miss then hit
-curl -s http://localhost:8080/parcels/P-1 >/dev/null
-curl -s http://localhost:8080/parcels/P-1 >/dev/null
+> [!TRY]
+> 1. `mvn test` in parcel-service, then `docker compose up --build -d`.
+> 2. Create `P-15` and read it twice: `curl -s http://localhost:8080/parcels/P-15`. The answer shows `"version":0`.
+> 3. Look at the sticky note: `docker compose exec redis redis-cli GET parcels::P-15`
+> 4. Change it **with** the version you saw:
+>    ```bash
+>    curl -s -X PATCH http://localhost:8080/parcels/P-15/status \
+>      -H 'Content-Type: application/json' -d '{"status":"PICKED_UP","version":0}'
+>    ```
+>    Run step 3 again: the note is gone (`(nil)`). Read the parcel: `PICKED_UP`, `"version":1`.
+> 5. Send a change with the **old** version: `-d '{"status":"DELIVERED","version":0}'`
+> 6. Hammer the door: `for i in $(seq 1 25); do curl -s -o /dev/null -w "%{http_code} " http://localhost:8080/parcels/P-15; done`
+>
+> You should see the JSON parcel in step 3, `409` with `"code":"VERSION_CONFLICT"` in step 5, and in step 6 a row of `200`s that turns into `429`s. `curl -si http://localhost:8080/parcels/P-15 | grep Retry-After` tells you how long to wait.
 
-# locking: two updates on the same version -> one 409
+## Go deeper (labs)
 
-# rate limit: exceed the small limit -> 429
-for i in $(seq 1 10); do curl -s -o /dev/null -w "%{http_code}\n" \
-  http://localhost:8080/parcels/P-1; done
-```
+- [Cache invalidation lab](cache-invalidation-lab.md): feel the stale-data bug before you fix it.
+- [Optimistic locking lab](optimistic-locking-lab.md): race two operators and handle the `409` like a client.
+- [Rate limiting lab](rate-limiting.md): fixed window vs token bucket, and what a good `429` says.
 
-## Acceptance criteria
+## Done when
 
-- [ ] A repeated `GET /parcels/{id}` is served from cache (observable miss → hit in logs/metrics).
-- [ ] Updating a parcel invalidates its cache so the next read is fresh.
-- [ ] Two updates on the same version: one succeeds, the other returns `409`.
-- [ ] Exceeding the limit returns `429` with `Retry-After`. After waiting, requests succeed again.
-- [ ] You can explain the difference between hashing, encryption, and encoding.
+- [ ] A second `GET /parcels/{id}` is served from Redis (`redis-cli GET parcels::<id>` shows it).
+- [ ] A status change removes the entry, so the next read is fresh.
+- [ ] A `PATCH` with an old `version` returns `409` with `VERSION_CONFLICT`.
+- [ ] More than 20 requests in a minute return `429` with `Retry-After`; after waiting, `200` again.
+- [ ] `mvn test` is green, including `ParcelCacheAndLockTest` and `RateLimitFilterTest`.
 
-## Say it like a developer
+## Check yourself
 
-- "Repeated reads are served from the **cache** (Redis) instead of hitting the DB every time."
-- "I use **cache-aside**: check the cache, and on a **miss** read the DB and fill it, with a **TTL**."
-- "When a parcel changes I **invalidate** its cache entry so the next read is fresh."
-- "Clashing writes are caught by **optimistic locking**: the loser gets a `409`."
-- "An abusive client gets **rate limited**: extra requests return `429` with `Retry-After`."
-- "**Hashing** is one-way. **Encryption** is reversible with a key. **Encoding** (Base64) is neither and gives no security."
+> [!CHECK]
+> 1. Describe cache-aside in order.
+>    <details><summary>Answer</summary>Look in the cache. On a hit, return it. On a miss, read the database, write the answer into the cache (with a TTL), return it. On a change, evict the entry.</details>
+> 2. Why do we need **both** the explicit version check and `@Version`?
+>    <details><summary>Answer</summary>The explicit check catches a client whose screen is old (it sends version 0 while the database has 1). <code>@Version</code> catches two requests that read the same version at the same moment: both pass the check, but the second save updates 0 rows and fails.</details>
+> 3. Why are the rate-limit counters in Redis and not in a `Map` inside the app?
+>    <details><summary>Answer</summary>With several copies of parcel-service, each <code>Map</code> would only see its own share of the requests. Redis is shared, so the limit counts all requests of a client.</details>
+> 4. Which status codes go with "your version is old" and "you are too fast"?
+>    <details><summary>Answer</summary><code>409 Conflict</code> for the old version; <code>429 Too Many Requests</code>, with <code>Retry-After</code>, for the rate limit.</details>
 
-## Quiz: check yourself
+## Reflect
 
-Answer out loud before opening each toggle.
-
-1. Describe the **cache-aside** pattern in order.
-
-<details><summary>Show answer</summary>
-
-Check the cache first. On a **hit**, return the cached value. On a **miss**, read the database, store the result in the cache (with a TTL), then return it.
-
-</details>
-
-2. What is **cache invalidation**, and why is it necessary?
-
-<details><summary>Show answer</summary>
-
-Removing or updating a stale cache entry after the underlying data changes. Without it, readers would keep getting the old cached value even though the database changed. The database stays the source of truth.
-
-</details>
-
-3. Which of the three tools solves which problem: repeated identical reads / two people editing the same parcel / a client flooding an endpoint?
-
-<details><summary>Show answer</summary>
-
-Repeated reads → **cache**. Two people editing the same parcel → **optimistic locking** (`409`). Flooding → **rate limiting** (`429`).
-
-</details>
-
-4. What status codes go with a lost-update conflict and with hitting the rate limit?
-
-<details><summary>Show answer</summary>
-
-`409 Conflict` for the clashing update. `429 Too Many Requests` (usually with a `Retry-After` header) for the rate limit.
-
-</details>
-
-5. What's the difference between **hashing**, **encryption**, and **encoding**?
-
-<details><summary>Show answer</summary>
-
-Hashing is one-way (can't be reversed), used for passwords, integrity, and keys. Encryption is reversible with a key, used to protect data you need to read back. Encoding (like Base64) just reshapes data and provides **no** security.
-
-</details>
-
-## Reflect (stretch)
-
-Everything so far is open to anyone who can reach the port. Real operations must be restricted to authenticated operators. That's the final step, and it uses the hashing idea you just met.
+The API is fast and fair now, but anyone who can reach the port can still change any parcel. The last step adds logins.
 
 ## Next
 
-[Step 16](../16-jwt-authentication/README.md): add password login and JWT-protected actions.
+[Step 16](../16-jwt-authentication/README.md): password login and JWT-protected actions.

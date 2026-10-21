@@ -1,138 +1,111 @@
 # Idempotency lab: surviving duplicate messages
 
-## Problem
+Companion to [Step 12](README.md). Do it after the build works.
 
-Your notification worker receives `ParcelDelivered`, sends the notification… and crashes *before* acknowledging the message. From RabbitMQ's point of view the message was never handled — an unacked message from a dead consumer goes back on the queue. The worker restarts, receives the **same event again**, and sends a **second notification** for the same delivery. Ava gets two "your parcel arrived!" texts; with a payment instead of a text, this bug has a dollar amount.
+> [!PICTURE]
+> The worker at the end of the belt keeps a **list of parcel labels he has already handled**. When a parcel with a label from his list comes along again, he puts it aside without a second delivery. The list is the `notifications` table. The label is the `eventId`.
 
-The broker isn't broken. Redelivery-on-doubt is the deal you signed: RabbitMQ promises **at-least-once** delivery, and "at least" means duplicates are your job to survive.
+## The problem
+
+Your listener receives `ParcelDelivered`, sends the notification… and the app crashes **before** it acknowledges the message. For RabbitMQ the message was never handled, so it goes back on the queue. After the restart the listener receives the **same event again** and would send a **second** notification. Ava gets two "your parcel arrived!" texts. With a payment instead of a text, this bug costs money.
+
+RabbitMQ is not broken. It promises **at-least-once** delivery, and "at least" means duplicates are your job.
 
 ## Key words
 
 | Word | Beginner meaning |
 |---|---|
-| **Idempotent** | Doing the operation twice has the same result as doing it once. |
-| **At-most-once** | Deliver once or never: no duplicates possible, but a message can be **lost** (ack before processing). |
-| **At-least-once** | Deliver until acknowledged: nothing is lost, but **duplicates happen** (ack after processing). The default deal, and what step 12 uses. |
-| **Exactly-once** | The dream: every message processed once, no loss, no duplicates. Across a real distributed system (broker + your DB + an email provider) it is effectively **a lie in practice** — you build at-least-once + idempotency and get the same *effect*. |
-| **Dedup(lication)** | Detecting "I've already handled this one" and skipping the repeat. |
+| **Idempotent** | Doing it twice has the same result as doing it once. The general idea (also for HTTP methods) is in the [CS lesson on HTTP](../../../computer-science/index.html#http-requests-responses). |
+| **At-most-once** | Ack before the work: no duplicates, but a crash can **lose** a message. |
+| **At-least-once** | Ack after the work: nothing is lost, but **duplicates happen**. RabbitMQ's default, and what ParcelPilot uses. |
+| **Exactly-once** | The dream. Across a broker, your database and an email provider you cannot really have it. You build at-least-once plus idempotency and get the same *effect*. |
+| **Dedup(lication)** | Spotting "I handled this one already" and skipping it. |
 
-Why can't the broker just… not duplicate? Because it can't tell the difference between "worker crashed before doing the work" and "worker did the work, then crashed before telling me." When in doubt it must redeliver (or messages get lost — at-most-once). The only component that *can* tell the difference is your consumer, because it can keep a record.
+Why can't the broker avoid duplicates? It cannot tell "the worker crashed before the work" from "the worker did the work and crashed before the ack". Only your consumer can tell, because only your consumer can keep a record.
 
-## Solution: consumer-side idempotency
+## How your listener does it
 
-Give the consumer a memory of what it already processed, keyed by the event's identity. Step 12's event already carries one — `eventId` exists precisely for this:
+You built it in [sub-step 8 of the README](README.md#8-the-consumer-a-listener-that-is-safe-to-call-twice). The three ideas:
 
-```java
-public record ParcelDelivered(UUID eventId, String parcelId, Instant occurredAt) {}
-```
-
-For ParcelPilot the memory is a `notifications` table with the event id as **primary key**, and the recipe is *record first, act second*:
-
-```sql
--- V3__create_notifications.sql
-CREATE TABLE notifications (
-    event_id     UUID PRIMARY KEY,     -- the dedup key: one row per event, ever
-    parcel_id    VARCHAR(64) NOT NULL,
-    processed_at TIMESTAMP   NOT NULL DEFAULT now()
-);
-```
-
-The primary key is what makes this safe: inserting the same `event_id` twice is *impossible*, and the database enforces it even if two duplicates arrive at the same instant. INSERT-if-absent, then send only if the insert actually inserted:
+1. **Every event carries a unique id.** `ParcelDelivered(eventId, parcelId, recipient, occurredAt)`. The producer creates a fresh `UUID` for each delivery.
+2. **The id is a primary key.** `notifications.event_id UUID PRIMARY KEY`. The database refuses a second row with the same id, even if two copies arrive in the same millisecond.
+3. **Insert-if-absent, then act.**
 
 ```java
-@Component
-public class ParcelDeliveredConsumer {
-
-    private static final Logger log = LoggerFactory.getLogger(ParcelDeliveredConsumer.class);
-    private final JdbcTemplate jdbc;
-
-    public ParcelDeliveredConsumer(JdbcTemplate jdbc) {
-        this.jdbc = jdbc;
-    }
-
-    @RabbitListener(queues = "parcel-delivered")
-    public void handle(ParcelDelivered event) {
-        // INSERT-if-absent: ON CONFLICT DO NOTHING inserts 0 rows for a duplicate
-        int inserted = jdbc.update("""
-            INSERT INTO notifications (event_id, parcel_id)
-            VALUES (?, ?) ON CONFLICT DO NOTHING
-            """, event.eventId(), event.parcelId());
-
-        if (inserted == 0) {
-            log.info("duplicate event {} for parcel {} - already processed, skipping",
-                     event.eventId(), event.parcelId());
-            return;   // method returns normally -> message is acked and dropped
-        }
-
-        log.info("notification sent for {}", event.parcelId());
-    }
+int inserted = jdbc.update("""
+        INSERT INTO notifications (event_id, parcel_id)
+        VALUES (?, ?) ON CONFLICT (event_id) DO NOTHING
+        """, event.eventId(), event.parcelId());
+if (inserted == 0) {
+    return;   // duplicate: skip it, and returning normally acks it
 }
+// send the notification
 ```
 
-Two details worth saying out loud:
+Two details to say out loud:
 
-- **The duplicate is acknowledged, not rejected.** Skipping *is* successful processing of a duplicate. Returning normally lets Spring ack it, and the queue is rid of it.
-- **Record before the side effect.** If you sent first and recorded second, a crash between the two would re-send on redelivery — the original bug, back again. (Record-first has the mirror flaw: crash after insert but before send, and the notification is never sent. For a text message, course policy is "rather skip than spam". The bulletproof version — do both in one transaction — is the outbox pattern hinted at in the step 12 quiz.)
+- **A duplicate is acknowledged, not rejected.** Skipping a duplicate *is* handling it correctly. Returning normally lets Spring ack it, and it leaves the queue.
+- **Record before the side effect.** If you sent first and recorded second, a crash between the two would send again after the redelivery: the original bug. Record-first has the opposite risk: a crash after the insert but before sending means one notification is **never** sent, and a retry would skip it too. ParcelPilot's rule is "rather miss one text than spam". When both risks are unacceptable (payments), teams use the **transactional outbox** pattern, explained in [Messaging and queues](../../references/architecture/messaging-and-queues.md#the-dual-write-problem).
 
 ```mermaid
 sequenceDiagram
   participant Q as RabbitMQ
-  participant W as Worker
+  participant W as Listener
   participant DB as notifications table
   Q->>W: ParcelDelivered (eventId=e1)
   W->>DB: INSERT e1 ... ON CONFLICT DO NOTHING
   DB-->>W: 1 row inserted
   W->>W: send notification
   W-->>Q: ack
-  Q->>W: ParcelDelivered (eventId=e1)  [redelivered!]
+  Q->>W: ParcelDelivered (eventId=e1) [redelivered!]
   W->>DB: INSERT e1 ... ON CONFLICT DO NOTHING
   DB-->>W: 0 rows (already there)
-  W-->>Q: ack (skip silently)
+  W-->>Q: ack (skip)
 ```
 
-## Proof
+## Prove it
 
-Force the same event through twice and watch the logs treat them differently.
+> [!TRY]
+> 1. Start the app (`mvn spring-boot:run`) and open `http://localhost:15672` (`guest` / `guest`) → **Queues** → `parcel-delivered` → **Publish message**.
+> 2. In **Properties**, add `content_type` = `application/json`. (Without it, the JSON converter does not know the bytes are JSON.)
+> 3. Paste this payload and press **Publish message** two times:
+>    ```json
+>    {"eventId":"11111111-1111-1111-1111-111111111111","parcelId":"P-1","recipient":"Ava","occurredAt":"2026-01-01T10:00:00Z"}
+>    ```
+> 4. Look at the app log, then count the rows:
+>    ```bash
+>    docker exec -it parcelpilot-db psql -U parcelpilot -d parcelpilot \
+>      -c "SELECT event_id, parcel_id FROM notifications WHERE parcel_id = 'P-1';"
+>    ```
+>
+> You should see one `notification sent for P-1 to Ava`, one `Duplicate event 11111111-… for parcel P-1, skipping`, and exactly **one** row.
 
-**Option A — publish the same payload twice** via the RabbitMQ management UI (`http://localhost:15672`, guest/guest): *Queues → parcel-delivered → Publish message*, paste one JSON payload with a fixed `eventId`, publish it **twice**:
-
-```json
-{"eventId": "11111111-1111-1111-1111-111111111111", "parcelId": "P-1", "occurredAt": "2026-01-01T10:00:00Z"}
-```
-
-**Option B — provoke a genuine redelivery**: stop the worker after processing but before ack, exactly as walked through in the [duplicate delivery scenario of the event-driven lab](event-driven-lab.md).
-
-Either way, the log must show one send and one skip:
-
-```text
-notification sent for P-1
-duplicate event 11111111-1111-1111-1111-111111111111 for parcel P-1 - already processed, skipping
-```
-
-And the table holds exactly one row:
-
-```bash
-docker exec -it parcelpilot-db psql -U parcelpilot -d parcelpilot \
-  -c "SELECT event_id, parcel_id FROM notifications;"
-```
-
-That's the step 12 acceptance criterion "re-delivering the same event does not produce a second notification", now proven rather than assumed.
+For a real redelivery (not a hand-made copy), do the crash scenario in the [event-driven lab](event-driven-lab.md). The automated version of this proof is the test `theSameEventTwice_isHandledOnlyOnce` in [ParcelDeliveredFlowTest](solution/src/test/java/com/parcelpilot/ParcelDeliveredFlowTest.java).
 
 ## Pros and cons
 
 | Pros | Cons |
 |---|---|
-| Duplicates become harmless — at-least-once is now safe to build on | A table (or cache) of processed ids to store and eventually clean up |
-| The database enforces the guarantee, even under concurrent duplicates | Every event **must** carry a stable unique id — producer discipline forever |
-| Skips are visible in logs (you can *see* redeliveries happening) | One more query on every message handled |
-| The pattern transfers as-is to payments, emails, webhooks… | Doesn't solve producer-side gaps (dual-write needs the outbox pattern) |
+| Duplicates become harmless, so at-least-once is safe to build on | A table of handled ids to store and clean up one day |
+| The database enforces it, even for duplicates that arrive at the same time | Every event **must** carry a stable unique id, forever |
+| Skips are visible in the log | One more query per message |
+| The same trick works for payments, emails, webhooks | It does not fix the producer side (dual write needs the outbox) |
 
-## When you don't need it
+## When you do not need it
 
-If the operation is **naturally idempotent**, replaying it is already harmless and no dedup table is needed. `UPDATE parcels SET status = 'DELIVERED' WHERE id = 'P-1'` lands on the same final state no matter how often it runs. The rule of thumb: *setting* a value is naturally idempotent, *adding/sending/incrementing* is not — "send a text", "append a row", "charge €5" all need the dedup key. When unsure, assume you need it.
+Some operations are **naturally idempotent**: `UPDATE parcels SET status = 'DELIVERED' WHERE id = 'P-1'` ends in the same state however often it runs. Rule of thumb: *setting* a value is naturally idempotent; *adding, sending, counting* is not. "Send a text", "append a row", "charge €5" all need the dedup key. When unsure, assume you need it.
+
+## Check yourself
+
+> [!CHECK]
+> 1. Why is `event_id` the **primary key** and not a normal column?
+>    <details><summary>Answer</summary>A primary key makes a second row with the same id impossible. The database enforces it even when two copies of the event arrive at the same moment, so a check-then-insert race cannot slip through.</details>
+> 2. The listener sees a duplicate. Does it ack the message or reject it?
+>    <details><summary>Answer</summary>It acks it (returns normally). The duplicate was handled correctly by skipping it. Rejecting it would send it to retries and the dead-letter queue for nothing.</details>
+> 3. What goes wrong if you send first and record second?
+>    <details><summary>Answer</summary>A crash between "send" and "record" leaves no row. The redelivered message inserts its row and sends again: the customer gets two notifications.</details>
 
 ## Next
 
-- What happens when a message doesn't just duplicate but *keeps failing*: [Retries and dead letters](retries-and-dead-letters.md).
-- Delivery-guarantee vocabulary in one place: [Messaging and queues](../../references/architecture/messaging-and-queues.md).
+- When a message does not only repeat but keeps **failing**: [Retries and dead letters](retries-and-dead-letters.md).
 - Back to [Step 12](README.md).

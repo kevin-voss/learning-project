@@ -1,5 +1,10 @@
 # Rate limiting lab
 
+Companion to [Step 15](README.md), sub-step 6.
+
+> [!PICTURE]
+> A guard stands at the depot door with a tally counter. Each visitor may come in twenty times a minute. Visit number twenty-one hears "not now, come back in 42 seconds". When the minute is over, the counter starts again.
+
 ## Real-world problem
 
 A broken scanner repeatedly calls an endpoint, or a public caller floods an API. Even correct application code can become unavailable when requests exceed its capacity.
@@ -24,7 +29,7 @@ flowchart LR
 | | Fixed window | Token bucket |
 |---|---|---|
 | Burst behavior | Allows a double burst at the window edge: 10 requests at 0:59 + 10 more at 1:00 all pass | Smooth: a burst spends saved-up tokens, then the steady refill rate caps everything |
-| Implementation | Trivial — one counter and a reset time per client | Slightly more — token count + last-refill timestamp per client, refill math on each request |
+| Implementation | Tiny — one counter and a reset time per client | Slightly more — token count + last-refill timestamp per client, refill math on each request |
 | Memory per client | One integer + one timestamp | One number + one timestamp (about the same) |
 | Behavior under sustained load | Hard cutoffs, then a fresh full window | Steady drip at the refill rate |
 | Good default for | Understanding the idea, internal tools | Public APIs (most real limiters are token-bucket-shaped) |
@@ -32,6 +37,15 @@ flowchart LR
 ## Implementation boundary
 
 Rate limiting belongs before expensive work: a Spring filter, gateway, or reverse proxy. A single in-memory counter is acceptable for understanding the algorithm but fails when replicas scale. Redis permits shared counters across local service instances.
+
+ParcelPilot's `RateLimitFilter` is a **fixed window** in Redis: the key `rate:<ip>:<minute>` is increased with `INCR` (atomic, so two parallel requests can never both read "19") and expires after 60 seconds. Watch the counters while you send requests:
+
+```bash
+docker compose exec redis redis-cli KEYS 'rate:*'
+docker compose exec redis redis-cli GET 'rate:<the key you saw>'
+```
+
+Behind Docker, every request from your laptop arrives from the same gateway IP, so all your curls share one counter. In production behind a proxy you would read the client IP from the proxy's header instead, and only trust that header from your own proxy.
 
 ## API contract
 
@@ -41,7 +55,7 @@ Use a tiny limit locally to make the behavior visible. A production limit needs 
 
 ## See it with curl
 
-With your limiter in place (Build item 3 of the [step README](README.md)) and a small local limit — say 20 requests per minute — hammer the endpoint and print only the status codes:
+With your limiter in place (sub-step 6 of the [step README](README.md)) and the local limit of 20 requests per minute, hammer the endpoint and print only the status codes:
 
 ```bash
 for i in $(seq 1 25); do
@@ -62,7 +76,7 @@ Expected: the first 20 pass, then the limiter slams the door on the rest.
 429
 ```
 
-Now look at *what* a rejected request gets, not just the status. If your filter sets `Retry-After` (it should — that's the API contract above):
+Now look at *what* a rejected request gets, not only the status. If your filter sets `Retry-After` (it should — that's the API contract above):
 
 ```bash
 curl -si http://localhost:8080/parcels/P-1 | head -5
@@ -70,11 +84,12 @@ curl -si http://localhost:8080/parcels/P-1 | head -5
 
 ```text
 HTTP/1.1 429
+X-Request-Id: 9c1e0b7a
 Retry-After: 42
 Content-Type: application/json
 ```
 
-`Retry-After: 42` means "try again in 42 seconds" — a well-behaved client sleeps that long instead of hammering harder. If your implementation doesn't set the header yet, add it in the filter where you return the `429`; a limiter that says "no" without saying "when" forces clients to guess.
+`Retry-After: 42` means "try again in 42 seconds" — a well-behaved client sleeps that long instead of hammering harder. A limiter that says "no" without saying "when" forces clients to guess. The body is the usual `ErrorResponse` with the code `RATE_LIMITED`.
 
 Finally, prove that waiting works:
 
@@ -85,6 +100,16 @@ curl -s -o /dev/null -w "%{http_code}\n" http://localhost:8080/parcels/P-1
 ```
 
 `200` again — the window rolled over (or tokens refilled), and the same client is welcome once more. That full arc — 200s, 429s with a `Retry-After`, then 200 after waiting — is the acceptance criterion in the step README.
+
+## Check yourself
+
+> [!CHECK]
+> 1. Why can a fixed window let through 40 requests in two seconds with a limit of 20 per minute?
+>    <details><summary>Answer</summary>20 requests at 0:59 count for the first minute, 20 more at 1:00 count for the next one. A token bucket smooths that burst.</details>
+> 2. Why does `RateLimitFilter` use `INCR` in Redis instead of "read, add one, write back"?
+>    <details><summary>Answer</summary><code>INCR</code> is atomic. With read-add-write, two parallel requests could both read 19 and both write 20, so one request would not be counted.</details>
+> 3. Is a rate limit a replacement for login?
+>    <details><summary>Answer</summary>No. It slows down abuse but does not say who someone is or what they may do. That is step 16.</details>
 
 ## Next
 

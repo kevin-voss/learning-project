@@ -23,7 +23,7 @@ All commands run in `applications/parcelpilot-services`:
 docker compose logs                        # everything, all services, since start
 docker compose logs -f                     # everything, live (Ctrl+C to stop)
 docker compose logs -f parcel-service      # one service, live
-docker compose logs --tail 20 notification-service   # just the last 20 lines
+docker compose logs --tail 20 notification-service   # only the last 20 lines
 docker compose logs --since 5m             # only the last 5 minutes
 docker compose logs -t parcel-service      # add Docker's own timestamps per line
 ```
@@ -49,22 +49,23 @@ curl -s -X PATCH http://localhost:8080/parcels/P-7/status \
   -H 'Content-Type: application/json' -d '{"status":"DELIVERED"}' > /dev/null
 ```
 
-The first terminal shows something like this (details depend on your step-07 log lines):
+The first terminal shows something like this (the `[…]` part is the request id from step 07 and README sub-step 3):
 
 ```text
-parcel-service        | 18:40:11.204  INFO com.parcelpilot.parcel.ParcelController : Created parcel P-7 for recipient Ava
-parcel-service        | 18:40:12.913  INFO com.parcelpilot.parcel.ParcelController : Parcel P-7 status changed to PICKED_UP
-parcel-service        | 18:40:14.101  INFO com.parcelpilot.parcel.ParcelController : Parcel P-7 status changed to DELIVERED
-parcel-service        | 18:40:14.118  INFO com.parcelpilot.parcel.ParcelEventPublisher : Published ParcelDelivered for P-7 (eventId e-42)
-notification-service  | 18:40:14.196  INFO com.parcelpilot.notification.DeliveredEventConsumer : Received ParcelDelivered for P-7 (eventId e-42)
-notification-service  | 18:40:14.201  INFO com.parcelpilot.notification.DeliveredEventConsumer : notification sent for P-7
+parcel-service-1        | 18:40:11.204 INFO  [3f9a1c2e] c.p.parcel.internal.ParcelController : Created parcel P-7
+parcel-service-1        | 18:40:12.913 INFO  [7b0d44e1] c.p.parcel.internal.ParcelController : Parcel P-7 status changed to PICKED_UP
+parcel-service-1        | 18:40:14.101 INFO  [c2e8a9f0] c.p.parcel.internal.RabbitNotifier : Published ParcelDelivered for P-7 (eventId 5f0c…)
+parcel-service-1        | 18:40:14.118 INFO  [c2e8a9f0] c.p.parcel.internal.ParcelController : Parcel P-7 status changed to DELIVERED
+notification-service-1  | 18:40:14.196 INFO  [c2e8a9f0] c.p.n.ParcelDeliveredListener : Received ParcelDelivered for P-7 (eventId 5f0c…)
+notification-service-1  | 18:40:14.201 INFO  [c2e8a9f0] c.p.n.ParcelDeliveredListener : notification sent for P-7 to Ava
 ```
 
 How to read it:
 
 - **The left column tells you which service is talking.** The story hops from `parcel-service` to `notification-service` at the moment the event crosses the broker.
-- **Timestamps show the async gap.** ~80 ms between "Published" and "Received" here; if notification-service were down, the first four lines would look identical and the last two would simply be missing. That absence *is* the diagnosis: the message is parked in the queue.
+- **Timestamps show the async gap.** ~80 ms between "Published" and "Received" here; if notification-service were down, the first four lines would look identical and the last two would be missing. That absence *is* the diagnosis: the message is parked in the queue.
 - **The eventId appearing on both sides** is your proof that this consumption belongs to this publish.
+- **The `[c2e8a9f0]` on both sides** is the correlation id. Each request gets its own; the one that delivered the parcel carries its id into notification-service.
 
 ## Grep: from 500 lines to the 6 that matter
 
@@ -78,12 +79,12 @@ Expected: exactly the story above — every line from either service that mentio
 
 ## The pain point this doesn't solve
 
-Grep by parcel ID works — until it doesn't. Two problems:
+Grep by parcel ID works — until it doesn't. This is why README sub-step 3 added a correlation id. Two problems:
 
-1. **Not every line mentions a parcel.** The step-06 catch-all logs "Unhandled error on PATCH /parcels/P-7/status" (good, greppable), but many failure lines — connection errors, consumer crashes mid-deserialization — carry no parcel ID at all. You end up matching on **timestamps**: "the error at 18:40:14... is that *my* 18:40:14 request?"
+1. **Not every line mentions a parcel.** The step-06 catch-all logs "Unexpected error on /parcels/P-7/status" (good, greppable), but many failure lines — connection errors, consumer crashes mid-deserialization — carry no parcel ID at all. You end up matching on **timestamps**: "the error at 18:40:14... is that *my* 18:40:14 request?"
 2. **Concurrency breaks it.** Ten deliveries per second means ten interleaved stories; the parcel ID separates them *only* in lines that include it.
 
-What you want is one ID, generated per request, that rides along **through the event into the consumer**, stamped on every line both services write for that request. That's a correlation ID — the next lab: [correlation-ids.md](correlation-ids.md).
+What you want is one ID, generated per request, that rides along **through the event into the consumer**, stamped on every line both services write for that request. That's the correlation ID: `docker compose logs | grep c2e8a9f0` finds the delivery story even in lines without a parcel ID. Why it works: [correlation-ids.md](correlation-ids.md).
 
 ## Centralized log stacks, in one paragraph
 

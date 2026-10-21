@@ -1,0 +1,86 @@
+# The whole depot with one command:  docker compose up --build
+services:
+  parcel-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: parcelpilot
+      POSTGRES_USER: parcelpilot
+      POSTGRES_PASSWORD: local-dev-only      # local only, never a real secret
+    volumes:
+      - parcel-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U parcelpilot -d parcelpilot"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  notification-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: notifications
+      POSTGRES_USER: notifications
+      POSTGRES_PASSWORD: local-dev-only
+    volumes:
+      - notification-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U notifications -d notifications"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "15672:15672"                        # management UI in your browser
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  parcel-service:
+    build: ./parcel-service
+    ports:
+      - "8080:8080"
+    environment:
+      DB_HOST: parcel-db                     # a service NAME, not localhost
+      DB_USER: parcelpilot
+      DB_PASSWORD: local-dev-only
+      RABBIT_HOST: rabbitmq
+      REDIS_HOST: redis
+      JWT_SECRET: local-dev-only-secret-change-me-0123456789   # local only, never commit a real one
+    depends_on:
+      parcel-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  notification-service:
+    build: ./notification-service
+    ports:
+      - "8081:8081"                          # only for /actuator/health
+    environment:
+      DB_HOST: notification-db
+      DB_PORT: 5432                          # inside the network it is the normal port
+      DB_USER: notifications
+      DB_PASSWORD: local-dev-only
+      RABBIT_HOST: rabbitmq
+    depends_on:
+      notification-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+volumes:
+  parcel-data:
+  notification-data:

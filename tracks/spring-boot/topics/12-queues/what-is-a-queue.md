@@ -1,35 +1,34 @@
 # What is a queue, really?
 
-## The real-world analogy
+> [!PICTURE]
+> At a post office, a customer puts a parcel on the sorting belt and leaves. Sorting goes on after the customer is gone. The belt holds the work until a worker is ready. That belt is a queue.
 
-At a post office, a customer puts a parcel on the sorting belt, then leaves. Sorting continues after the customer is gone. The belt is a queue: it holds work until a worker is ready.
+## The parts, in ParcelPilot words
 
-In ParcelPilot:
-
-- the **producer** is the code that publishes `ParcelDelivered`.
-- the **message** says which parcel was delivered.
-- RabbitMQ is the **broker** that holds and routes the message.
-- the **consumer** is the notification worker.
-- an **acknowledgement** tells the broker the worker completed the job.
+- The **producer** is the code that publishes `ParcelDelivered` (`RabbitNotifier`).
+- The **message** says which parcel was delivered, to whom, and when.
+- **RabbitMQ** is the **broker**: it holds and routes the messages.
+- The **consumer** is the notification listener (`ParcelDeliveredListener`).
+- An **ack** tells the broker "this job is done, you can delete the message".
 
 ```mermaid
 flowchart LR
   A[operator marks delivered] --> P[parcel API: producer]
   P --> Q[queue: waiting messages]
-  Q --> W[notification worker: consumer]
-  W --> N[send/log notification]
-  W -->|acknowledge| Q
+  Q --> W[notification listener: consumer]
+  W --> N[send notification]
+  W -->|ack| Q
 ```
 
 ## What problem does it solve?
 
-Without a queue, the API waits:
+Without a queue, the API waits for the slowest part:
 
 ```text
 operator → API → database → email provider → response
 ```
 
-If the email provider takes ten seconds or fails, the operator waits or sees an error even though the parcel update worked.
+If the email provider takes ten seconds or fails, the operator waits or sees an error, even though the parcel update worked.
 
 With a queue:
 
@@ -39,31 +38,43 @@ operator → API → database + queue → response now
                          notification later
 ```
 
-The caller gets a response after the important parcel state is saved. The worker can retry notification delivery later.
+The caller gets an answer as soon as the important part (the parcel) is saved. The listener can retry the notification later.
 
 ## When should I use one?
 
-Use a queue when all are broadly true:
+Use a queue when all of these are true:
 
-1. the work can happen later.
-2. the caller does not need the final result in the same HTTP response.
-3. the work benefits from retries, buffering, or independent scaling.
-4. you accept that different parts of the system may be briefly out of sync.
+1. The work can happen later.
+2. The caller does not need the result in the same HTTP response.
+3. The work gains from retries, buffering, or scaling on its own.
+4. It is fine that parts of the system disagree for a moment.
 
-Examples: email, SMS, thumbnail creation, billing exports, audit events, scheduled imports, and slow third-party webhooks.
+Good examples: email, SMS, thumbnails, billing exports, audit events, slow webhooks.
 
-Do not use one for ordinary reads or validations the request must know immediately: login password validation, checking stock before accepting an order, or reading a parcel by ID.
+Bad examples: checking a password at login, checking stock before accepting an order, reading a parcel by id. The caller needs those answers **now**.
 
-## Why RabbitMQ first?
+## RabbitMQ, Kafka, SQS
 
-RabbitMQ visibly exposes queues, messages, consumers, acknowledgements, and retries. It is a good learning broker and runs locally in Docker.
+- **RabbitMQ**: task queues and routing. You can watch it work in its web page. We start here.
+- **Kafka**: a durable event log with replay. Good for huge streams and many independent readers.
+- **AWS SQS**: a queue run by Amazon. Good when you are on AWS and do not want to run a broker.
 
-- **RabbitMQ**: task queues and routing. Start here.
-- **Kafka**: durable event log with replay and partitions, useful for high-throughput streams and several independent consumers.
-- **AWS SQS**: managed cloud queue, good when running on AWS and avoiding broker operations matters.
+They are not the same product with different names. The problem decides. More in [Messaging and queues](../../references/architecture/messaging-and-queues.md) and the [architecture track](../../../architecture/index.html).
 
-They are not interchangeable products. The problem and operational constraints decide.
+## The honest limits
 
-## Important limitation
+A queue does not make code reliable by magic. A consumer may receive the same message **twice**, so it must be idempotent ([idempotency lab](idempotency-lab.md)). And "save to the database" plus "publish to the queue" are two actions that can be interrupted in between. That gap is called the **dual-write** problem; the transactional outbox pattern closes it (see [Messaging and queues](../../references/architecture/messaging-and-queues.md#the-dual-write-problem)).
 
-A queue does not make code automatically reliable. A consumer may receive a message twice, so notification processing must be idempotent. And saving a database update plus publishing a message is two actions that can be interrupted. The later transactional-outbox lesson addresses that gap.
+## Check yourself
+
+> [!CHECK]
+> 1. Who is the producer and who is the consumer in ParcelPilot?
+>    <details><summary>Answer</summary>The producer is the parcel side (<code>RabbitNotifier</code>), which publishes <code>ParcelDelivered</code>. The consumer is the notification listener, which takes the message off the queue and sends the notification.</details>
+> 2. Should "is this password correct?" go through a queue?
+>    <details><summary>Answer</summary>No. The caller needs the answer before it can continue. Queues are for work that can happen after the response.</details>
+> 3. What does an ack tell the broker?
+>    <details><summary>Answer</summary>"I finished this message, you can delete it." Without an ack, the broker keeps the message and gives it out again.</details>
+
+## Next
+
+Back to [step 12](README.md) and build it.

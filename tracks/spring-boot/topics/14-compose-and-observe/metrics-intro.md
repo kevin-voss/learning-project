@@ -86,13 +86,13 @@ How to read it:
 - **COUNT** — 27 requests since startup. Sample it every minute and the *difference* is your requests-per-minute.
 - **TOTAL_TIME** — 0.482 s spent handling all of them; `TOTAL_TIME / COUNT` ≈ 18 ms average.
 - **MAX** — the slowest single request recently (61 ms).
-- **availableTags** — the slicing knobs. Drill into just the parcel-read endpoint:
+- **availableTags** — the slicing knobs. Drill into only the parcel-read endpoint:
 
 ```bash
 curl -s 'http://localhost:8080/actuator/metrics/http.server.requests?tag=uri:/parcels/{id}' | jq
 ```
 
-Same three statistics, now for that one endpoint only. Add `&tag=status:404` to see just the misses. Notice `uri` is the *template* `/parcels/{id}`, not each concrete ID — that's deliberate, and it matters (see the cardinality warning below).
+Same three statistics, now for that one endpoint only. Add `&tag=status:404` to see only the misses. Notice `uri` is the *template* `/parcels/{id}`, not each concrete ID — that's deliberate, and it matters (see the cardinality warning below).
 
 JVM metrics are free too — worth one look each:
 

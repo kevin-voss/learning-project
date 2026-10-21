@@ -15,7 +15,7 @@ They look alike and mean opposite things. Check the status line before anything 
 
 | Symptom | Cause | Fix |
 |---|---|---|
-| Every endpoint — even `GET /parcels` that worked five minutes ago — now returns `401` | **This is expected, not a bug.** The moment `spring-boot-starter-security` is on the classpath, Spring Security locks down **every** endpoint by default. Secure-by-default is the whole point: nothing is public until you say so. | Build the `SecurityFilterChain` from the README that explicitly permits what should be public and protects the rest. Don't "fix" it by removing the dependency or permitting everything. |
+| Every endpoint — even `GET /parcels` that worked five minutes ago — now returns `401` | **This is expected, not a bug.** The moment `spring-boot-starter-security` is on the classpath, Spring Security locks down **every** endpoint by default. Secure-by-default is the whole point: nothing is public until you say so. | Build the `SecurityFilterChain` from README sub-step 6 that explicitly permits what should be public and protects the rest. Don't "fix" it by removing the dependency or permitting everything. |
 | Console prints `Using generated security password: …` at startup | Same default lock-down — Spring generated a throwaway user because you haven't configured your own auth yet. | Goes away once your security config and seeded operator are in place. |
 
 ## 401 on the login endpoint itself
@@ -51,8 +51,8 @@ Careful with padding: base64url payloads aren't always a multiple of 4 character
 
 | Symptom | Cause | Fix |
 |---|---|---|
-| Tokens stop working after every service restart | The signing secret is generated randomly at startup, so each restart signs with a new key — every old token's signature no longer verifies. | Configure a fixed secret via an environment variable (see [configuration.md](../../references/tooling/configuration.md)); the same key must verify that signed. |
-| Startup or signing fails with a key-length error (`The specified key byte array is 128 bits which is not secure enough…`) | HS256 requires a key of at least 256 bits (32 bytes). Your secret is too short. | Use a longer secret — at least 32 characters for a local dev value. |
+| Tokens stop working after a restart | The service started with a **different** `JWT_SECRET` than before (for example once from `compose.yaml`, once with the default from `application.properties`), so old signatures no longer verify. | Use one fixed secret per environment, from an environment variable (see [configuration.md](../../references/tooling/configuration.md)). Or log in again. |
+| `POST /auth/login` returns `500`, and the log shows `KeyLengthException: The secret length must be at least 256 bits` | HS256 requires a key of at least 256 bits (32 bytes). Your `JWT_SECRET` is too short. | Use a longer secret — at least 32 characters, even for a local value. |
 | `401` and the log says signature verification failed | Different secret between the service that signed and the code that verifies (common after editing config in one place but not the other, or a stale container built with old config). | Rebuild/restart so everything reads the same secret; confirm with the debug logging below. |
 
 ## 403 with a valid token

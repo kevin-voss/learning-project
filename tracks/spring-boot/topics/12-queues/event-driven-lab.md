@@ -1,83 +1,65 @@
-# Event-driven lab: observer, command, adapter, and idempotency
+# Event-driven lab: watch a message come back
 
-## Problem
+Companion to [Step 12](README.md). Do it after the build works.
 
-The delivery HTTP request should not wait for a notification provider. The code also needs a way to react to an event without the parcel feature depending on every reaction.
+> [!PICTURE]
+> The worker takes a parcel off the belt, puts it in the van, and faints before he can tick it off on his list. The next worker sees no tick, so he puts the same parcel in the van again. Nobody did anything wrong. The list did not know.
 
-## Solution
+## Four names for what you built
 
-Treat “parcel delivered” as an immutable event. The delivery use case is a command. Event listeners act as observers. The RabbitMQ publisher is an adapter around broker-specific code.
+The patterns are not new words to learn by heart. They are names for code you already have:
+
+| Pattern | In ParcelPilot |
+|---|---|
+| **Command** (asks for work, imperative name) | `PATCH /parcels/P-1/status {"status":"DELIVERED"}` |
+| **Event** (a fact, past tense) | `ParcelDelivered(eventId, parcelId, recipient, occurredAt)` |
+| **Adapter** (wraps broker code behind a port) | `RabbitNotifier implements Notifier` |
+| **Observer** (reacts to an event it subscribed to) | `ParcelDeliveredListener` with `@RabbitListener` |
 
 ```mermaid
 flowchart LR
-  C[MarkParcelDelivered command] --> U[delivery use case]
-  U --> E[ParcelDelivered event]
-  E --> P[RabbitMQ adapter/publisher]
-  P --> Q[queue]
-  Q --> N[notification observer/consumer]
+  C[command: mark delivered] --> U[ParcelService]
+  U --> E[event: ParcelDelivered]
+  E --> P[RabbitNotifier adapter]
+  P --> Q[queue parcel-delivered]
+  Q --> N[ParcelDeliveredListener observer]
 ```
 
-## Example event
+## Provoke a duplicate delivery
+
+The dangerous moment is **after the work, before the ack**. Make that moment long. Add a temporary sleep at the **end** of `handle(...)` in `ParcelDeliveredListener`, after the `notification sent` log line:
 
 ```java
-public record ParcelDelivered(
-    UUID eventId, String parcelId, Instant occurredAt) {}
-```
-
-An event describes a fact in the past. Name it in past tense. A command asks for work. Name it as an action.
-
-## Consumer rule
-
-Store or otherwise recognize the `eventId` before the external side effect. If the broker redelivers the same event, acknowledge it without sending another notification.
-
-## Scenario: duplicate delivery (see it happen)
-
-Redelivery is not a rare edge case you must take on faith. Provoke it once and it stops being abstract.
-
-The window to hit is "after processing, before ack". Give yourself time by making the consumer slow for a moment — add a temporary sleep at the **end** of the listener, after the notification log line:
-
-```java
-@RabbitListener(queues = "parcel-delivered")
-public void handle(ParcelDelivered event) throws InterruptedException {
-    log.info("notification sent for {}", event.parcelId());
-    Thread.sleep(10_000);   // TEMPORARY: hold the message unacked for 10s
+log.info("notification sent for {} to {}", event.parcelId(), event.recipient());
+try {
+    Thread.sleep(10_000);   // TEMPORARY: hold the message un-acked for 10 seconds
+} catch (InterruptedException e) {
+    Thread.currentThread().interrupt();
 }
 ```
 
-Then kill the worker inside that window:
+> [!TRY]
+> 1. Start the app: `mvn spring-boot:run`.
+> 2. In a second terminal, create a parcel `P-13`, pick it up, and deliver it (the three `curl` commands from the step README, with `P-13`).
+> 3. The moment `notification sent for P-13` appears, press **Ctrl+C** in the app terminal.
+> 4. Open `http://localhost:15672` → Queues → `parcel-delivered`. The message is back: `Ready: 1`.
+> 5. Start the app again: `mvn spring-boot:run`.
+>
+> You should see the **same** `eventId` arrive a second time. Because your listener is idempotent, the second time logs `Duplicate event … skipping` instead of a second `notification sent`.
 
-```bash
-# 1. rebuild and start the app, watching its logs
-docker build -t parcelpilot-api:12 . && docker run --name parcelpilot-api \
-  --network parcelpilot-net -e DB_HOST=parcelpilot-db -p 8080:8080 -d parcelpilot-api:12
-docker logs -f parcelpilot-api &
+Want to see the bug the `notifications` table prevents? Comment out the `if (inserted == 0)` block and repeat: now `notification sent for P-13` appears twice. Put the block back afterwards, and delete the `Thread.sleep`.
 
-# 2. trigger the event
-curl -i -X PATCH http://localhost:8080/parcels/P-1/status \
-  -H 'Content-Type: application/json' -d '{"status":"DELIVERED"}'
+Why does RabbitMQ do this? It cannot tell "crashed before the work" from "crashed after the work, before the ack". When in doubt it delivers again, so no message is lost. This promise is called **at-least-once delivery**, and every serious queue makes it. The [idempotency lab](idempotency-lab.md) explains the other options and why this one wins.
 
-# 3. the moment "notification sent for P-1" appears: kill the worker DURING the sleep
-docker rm -f parcelpilot-api
+## Trade-offs
 
-# 4. check the queue: Unacked went back to Ready (management UI, or:)
-#    the message survived — the work happened, but the broker never heard the ack
-
-# 5. start the worker again and watch the SAME event arrive a second time
-docker run --name parcelpilot-api --network parcelpilot-net \
-  -e DB_HOST=parcelpilot-db -p 8080:8080 -d parcelpilot-api:12
-docker logs -f parcelpilot-api
-```
-
-The log prints `notification sent for P-1` **again**: the notification really was sent twice for one delivery. Nothing malfunctioned — the broker could not distinguish "crashed before the work" from "crashed after the work, before the ack", so it redelivered. That is **at-least-once delivery**, and it is the default reality of every serious queue system, not a RabbitMQ quirk.
-
-The fix is making duplicates harmless on the consumer side: the [idempotency lab](idempotency-lab.md). (Remove the `Thread.sleep` once you've seen the redelivery.)
-
-## Trade-off
-
-Events reduce direct coupling, but make state eventually consistent: the parcel can show `DELIVERED` briefly before the notification record exists. Log event IDs in producer and consumer so one flow remains traceable.
-
-| Event-driven decoupling: pros | Cons |
+| Events: pros | Events: cons |
 |---|---|
-| Fast responses: the request never waits for slow side work | Eventual consistency: parts of the system briefly disagree |
-| Resilience: a down notification provider no longer fails parcel updates | Duplicates and ordering become your problem (idempotency, above) |
-| Producers and consumers evolve, deploy, and scale independently | Harder tracing: one action spans two processes and a broker — step 14's [correlation IDs](../14-compose-and-observe/correlation-ids.md) restore the thread |
+| The request never waits for slow side work | For a moment, parts of the system disagree (the parcel is `DELIVERED`, the notification does not exist yet) |
+| A broken notification provider no longer breaks parcel updates | Duplicates and ordering become your job |
+| Producer and consumer can change and scale on their own | One action now spans two places; step 14's [correlation IDs](../14-compose-and-observe/correlation-ids.md) tie the logs together again |
+
+## Next
+
+- [Idempotency lab](idempotency-lab.md)
+- Back to [Step 12](README.md)

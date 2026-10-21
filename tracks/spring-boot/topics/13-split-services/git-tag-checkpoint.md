@@ -1,6 +1,6 @@
 # Git tag checkpoint: save the monolith before you break it
 
-Hands-on companion to [Step 13](README.md). Do this **before** touching any code in this step. ~15 minutes, and it may be the first time you ever use Git — that's fine, every command is spelled out.
+Hands-on companion to [Step 13](README.md). Do this **before** touching any code in this step. It may be the first time you ever use Git — that's fine, every command is spelled out.
 
 ## The problem
 
@@ -102,7 +102,7 @@ One commit, one tag. Checkpoint done — go split some services.
 
 You probably won't. But if the split goes sideways:
 
-**Just look at how a file used to be** (most common case — "what did the old controller look like?"):
+**Look at how a file used to be** (most common case — "what did the old controller look like?"):
 
 ```bash
 git show v-step-12-monolith:src/main/java/com/parcelpilot/ParcelController.java

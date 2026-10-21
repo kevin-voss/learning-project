@@ -1,6 +1,9 @@
 # Cache invalidation lab: the parcel that wouldn't update
 
-Hands-on companion to [Step 15](README.md). Do it right after adding `@Cacheable` to the read path (Build item 1) and **before** adding `@CacheEvict` — this lab makes you feel the bug the evict exists to fix.
+Hands-on companion to [Step 15](README.md). Do it in the middle of sub-step 5: add `@Cacheable` to `get`, but **not yet** `@CacheEvict` to `changeStatus`. This lab makes you feel the bug the evict exists to fix.
+
+> [!PICTURE]
+> The clerk wrote "P-1: CREATED" on a sticky note. The parcel is picked up, but nobody tears the note off. Every customer who asks gets the old answer from the note, although the warehouse knows better.
 
 ## The problem
 
@@ -58,16 +61,16 @@ Whoever changes the data kicks the entry out of the cache. The next read misses,
 
 ```java
 @Cacheable(value = "parcels", key = "#id")     // read: check cache first
-public ParcelResponse getParcel(String id) { ... }
+public ParcelResponse get(String id) { ... }
 
 @CacheEvict(value = "parcels", key = "#id")    // write: kick the stale entry out
-public void updateStatus(String id, Status newStatus) { ... }
+public ParcelResponse changeStatus(String id, Status target, Long expectedVersion) { ... }
 ```
 
 | Pros | Cons |
 |---|---|
 | Reads are fresh immediately after a write | Every write path must remember to evict — miss one and staleness returns |
-| Keep a long TTL for read speed; the TTL becomes just a safety net | The evict and the DB write are two actions (a small dual-write, again) |
+| Keep a long TTL for read speed; the TTL becomes a safety net | The evict and the DB write are two actions (a small dual-write, again) |
 
 ### 3. Write-through, in one paragraph
 
@@ -75,7 +78,7 @@ Instead of evicting, the write path **updates** the cache with the new value at 
 
 ## Exercise: fix it and prove it
 
-Add `@CacheEvict(value = "parcels", key = "#id")` to the update method (the README's Build item 1 shows the full code), rebuild, restart, and re-run the whole sequence:
+Add `@CacheEvict(value = "parcels", key = "#id")` to `changeStatus` (README sub-step 5 shows the full code), rebuild, restart (`docker compose up --build -d`), and re-run the whole sequence:
 
 ```bash
 curl -s -X POST http://localhost:8080/parcels \
@@ -92,13 +95,23 @@ The last read shows the **new** status: the PATCH evicted the entry, so the read
 
 > "There are only two hard things in computer science: cache invalidation and naming things." — Phil Karlton
 
-It sounds like a joke; it's a warning. The eviction you just wrote is trivial — **one** cache, **one** write path. The hard part is that invalidation couples *every* write path to *every* cache of that data, forever. Add a bulk-import endpoint next year and forget the evict: stale bug. Add a second cache (an HTTP cache, a second service caching parcel lookups): now the PATCH must invalidate places it doesn't even know exist. Correctness of reads now depends on the discipline of writes, and nothing — no compiler, no test you didn't think to write — enforces it. That's why the strategy choice above matters more than the code.
+It sounds like a joke; it's a warning. The eviction you wrote is tiny — **one** cache, **one** write path. The hard part is that invalidation couples *every* write path to *every* cache of that data, forever. Add a bulk-import endpoint next year and forget the evict: stale bug. Add a second cache (an HTTP cache, a second service caching parcel lookups): now the PATCH must invalidate places it doesn't even know exist. Correctness of reads now depends on the discipline of writes, and nothing — no compiler, no test you didn't think to write — enforces it. That's why the strategy choice above matters more than the code.
 
 ## When not to cache at all
 
 - **Low traffic.** Twelve reads a minute don't need Redis; the database laughs at that load. A cache would add a dependency and a bug class for nothing.
 - **Correctness-critical reads.** If acting on a stale value causes real harm (account balances, inventory before a sale, anything legal), don't cache it — or cache it with the shortest TTL that still helps and explicit invalidation on top.
 - **Data that changes as often as it's read.** Every write evicts, so every read misses: all of the machinery, none of the benefit.
+
+## Check yourself
+
+> [!CHECK]
+> 1. The database says `PICKED_UP`, the API says `CREATED`. Where does the old answer come from?
+>    <details><summary>Answer</summary>From the cache. The read is served from the Redis entry that was written before the change, and nobody removed it.</details>
+> 2. Why must the `value` and `key` of `@CacheEvict` match `@Cacheable` exactly?
+>    <details><summary>Answer</summary>They name the entry. <code>parcels</code> + <code>P-1</code> on the read writes the key <code>parcels::P-1</code>; an evict with another name or key removes a different (or no) entry, and the stale one stays.</details>
+> 3. When is "TTL only, no eviction" good enough?
+>    <details><summary>Answer</summary>When a short, known delay is fine for the reader, like a dashboard of delivered parcels per day. Not for a status a customer is watching right now.</details>
 
 ## Next
 

@@ -1,8 +1,8 @@
 /**
- * JavaScript-Übungen — Thema: Funktionen (Lösungen)
- * 
- * Hier findest du die Lösungen zu den Aufgaben in tasks.js.
- * Nutze diese Datei als Hilfestellung, wenn du nicht weiterkommst.
+ * JavaScript drill: functions (solutions)
+ *
+ * One possible answer for every task in tasks.js.
+ * Try on your own first. Read here when you are stuck.
  */
 
 export function squareNumber(x) {
@@ -10,8 +10,8 @@ export function squareNumber(x) {
 }
 
 export function cubeNumber(x) {
-  return x * x * x;
-  // Alternativ: return x ** 3;
+  return squareNumber(x) * x; // a function can call another function
+  // Also works: return x ** 3;
 }
 
 export function hypotenuseNumber(a, b) {
@@ -20,9 +20,10 @@ export function hypotenuseNumber(a, b) {
 
 export function greetOrDefault(name) {
   if (name === undefined) {
-    return "Hallo, Welt!";
+    return "Hello, world!";
   }
-  return `Hallo, ${name}!`;
+  return `Hello, ${name}!`;
+  // Shorter, with a default value: function greetOrDefault(name = "world") { return `Hello, ${name}!`; }
 }
 
 export function formatEuro(amount) {
@@ -49,7 +50,8 @@ export function joinParts(a, b) {
 }
 
 export function middleValue(a, b, c) {
-  const arr = [a, b, c];
-  arr.sort((x, y) => x - y);
-  return arr[1];
+  const biggest = Math.max(a, b, c);
+  const smallest = Math.min(a, b, c);
+  return a + b + c - biggest - smallest;
+  // With an array: const sorted = [a, b, c].sort((x, y) => x - y); return sorted[1];
 }

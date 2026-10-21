@@ -1,8 +1,9 @@
 /**
- * JavaScript-Übungen — Thema: Arrays (Lösungen)
- * 
- * Hier findest du die Lösungen zu den Aufgaben in tasks.js.
- * Nutze diese Datei als Hilfestellung, wenn du nicht weiterkommst.
+ * JavaScript drill: arrays (solutions)
+ *
+ * One possible answer for every task in tasks.js.
+ * Try on your own first. Read here when you are stuck.
+ * The "Later" comments show shorter built-in ways you will meet after the functions drill.
  */
 
 export function add(array) {
@@ -11,7 +12,7 @@ export function add(array) {
     sum += array[i];
   }
   return sum;
-  // Alternativ: return array.reduce((acc, val) => acc + val, 0);
+  // Later: return array.reduce((total, value) => total + value, 0);
 }
 
 export function average(array) {
@@ -28,7 +29,7 @@ export function findMax(array) {
     }
   }
   return max;
-  // Alternativ: return Math.max(...array);
+  // Shorter: return Math.max(...array);
 }
 
 export function countOccurrences(array, value) {
@@ -39,7 +40,7 @@ export function countOccurrences(array, value) {
     }
   }
   return count;
-  // Alternativ: return array.filter(v => v === value).length;
+  // Later: return array.filter((v) => v === value).length;
 }
 
 export function doubleAll(array) {
@@ -48,7 +49,7 @@ export function doubleAll(array) {
     result.push(array[i] * 2);
   }
   return result;
-  // Alternativ: return array.map(v => v * 2);
+  // Later: return array.map((v) => v * 2);
 }
 
 export function firstOrNull(array) {
@@ -71,7 +72,7 @@ export function range(n) {
 
 export function mergeArrays(a, b) {
   return [...a, ...b];
-  // Alternativ: return a.concat(b);
+  // Also works: return a.concat(b);
 }
 
 export function reversedCopy(array) {
@@ -80,5 +81,14 @@ export function reversedCopy(array) {
     result.push(array[i]);
   }
   return result;
-  // Alternativ: return [...array].reverse();
+  // Shorter: return [...array].reverse();
+}
+
+export function hasEven(array) {
+  for (let i = 0; i < array.length; i++) {
+    if (array[i] % 2 === 0) {
+      return true;
+    }
+  }
+  return false;
 }

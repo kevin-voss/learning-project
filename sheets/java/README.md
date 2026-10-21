@@ -1,109 +1,50 @@
-# Java — foundation sheet
+# Java: where each topic lives
 
-**Rule:** lock the base before frameworks and deep theory.
+> [!PICTURE]
+> A **class** is a cookie cutter. Every cookie you cut with it is an **object**. Same shape, but each cookie can have its own sprinkles.
 
-Full layered path: [`../../../docs/LEARNING_PATH.md`](../../docs/LEARNING_PATH.md) Phase 4 (Layers A–F).  
-Hub: [`../../../tracks/java/`](../../tracks/java/index.html)  
-Server picture: [`server-layers.md`](./server-layers.md)  
-HTTP apply: [`../../05-java-weather-cli/`](../../projects/10-java-weather-cli)
+This page is a map, not a lesson. Each Java topic is taught in one place. Find it here, then go there.
 
-## Toy story
+## The toy words
 
 | Word | Picture |
 |------|---------|
-| **Class** | Cookie cutter |
-| **Object** | One cookie |
-| **Field** | Writing on the cookie |
-| **Method** | What the cookie can do |
-| **`main`** | Front door |
+| **Class** | the cookie cutter: the shape |
+| **Object** | one cookie, made with `new` |
+| **Field** | the sprinkles on one cookie: data it keeps |
+| **Method** | what a cookie can do, like `bark()` for a dog |
+| **`main`** | the front door: Java starts the program here |
+| **Package** | a folder of classes that belong together |
 
-```java
-public class Dog {
-  String name;
+## Where each topic lives
 
-  void bark() {
-    System.out.println(name + " says woof");
-  }
+| Topic | Home |
+|-------|------|
+| Install Java, first program | [Getting started](../../tracks/java/topics/getting-started/index.html) |
+| How Java code is written | [Syntax fundamentals](../../tracks/java/topics/syntax-fundamentals/index.html) |
+| Types and variables | [Types and variables](../../tracks/java/topics/types-and-variables/index.html) |
+| `+`, `==`, `&&` and friends | [Operators](../../tracks/java/topics/operators/index.html) |
+| `if`, `switch`, loops | [Control flow](../../tracks/java/topics/control-flow/index.html) |
+| Methods | [Methods](../../tracks/java/topics/methods/index.html) |
+| Arrays | [Arrays](../../tracks/java/topics/arrays/index.html) |
+| Strings | [Strings](../../tracks/java/topics/strings/index.html) |
+| Classes and objects | [Classes and objects](../../tracks/java/topics/classes-and-objects/index.html) |
+| `ArrayList`, `HashMap`, `HashSet` | [Collections](../../tracks/java/topics/collections/index.html) |
+| Errors: `try` / `catch` | [Exceptions](../../tracks/java/topics/exceptions/index.html) |
+| Reading and writing files | [Files](../../tracks/java/topics/io-basics/index.html) |
+| Finding bugs | [Debugging](../../tracks/java/topics/debugging/index.html) |
+| Maven | [Build tools](../../tracks/java/topics/build-tools/index.html) |
+| JUnit tests | [Testing](../../tracks/java/topics/testing/index.html) |
+| HTTP in Java | [REST and HTTP](../../tracks/java/topics/rest-and-http/index.html) |
+| Controller, service, repository | [How a Java server is structured](server-layers.md) |
+| A real Spring Boot product | [Spring Boot course](../../tracks/spring-boot/README.md) |
 
-  public static void main(String[] args) {
-    Dog d = new Dog();
-    d.name = "Rex";
-    d.bark();
-  }
-}
-```
+All topics on one page: the [Java track](../../tracks/java/index.html). Words you do not know are in the [glossary](../start/glossary.md).
 
-```bash
-javac Dog.java
-java Dog
-```
+> [!CHECK]
+> 1. You make three dogs with `new Dog()`. How many classes and how many objects is that?
+>    <details><summary>Answer</summary>One class (the cutter) and three objects (the cookies).</details>
+> 2. Where do you learn to install Java?
+>    <details><summary>Answer</summary>On the <a href="../../tracks/java/topics/getting-started/index.html">Getting started</a> topic.</details>
 
-## What “foundation” means here
-
-### 1. Language base
-
-- Data types (primitives and references)
-- Methods and classes
-- Control flow
-- Arrays and strings
-
-### 2. Folders, files, packages
-
-```text
-my-app/
-  src/main/java/com/example/demo/
-    DemoApp.java          ← package com.example.demo
-    model/
-      Item.java
-```
-
-- One public class per file (usual rule)
-- Folder path matches package name
-- `javac` / `java` (then Maven later)
-
-### 3. Everyday types
-
-| Type | Use when |
-|------|----------|
-| array | Fixed size, simple list of same type |
-| `ArrayList` | Growable list |
-| `HashMap` | Key → value lookup |
-| `HashSet` | Unique values only |
-
-Pair with CS: arrays, hash tables, Big-O skim.
-
-### 4. Algorithms (light)
-
-- Walk a list (search)
-- Sort a small list
-- Count with a map
-
-Deep algorithm courses stay in [`tracks/computer-science`](../../tracks/computer-science/). Java applies them with lists and maps.
-
-### 5. Java features (base set)
-
-Interfaces, enums, `equals` / `hashCode`, exceptions, try-with-resources.  
-Streams / advanced generics / concurrency wait until Layer F.
-
-### 6. Server shape (before Spring deep-dive)
-
-Read [`server-layers.md`](./server-layers.md): controller → service → repository, plus DTO and entity.  
-Then Postgres + Docker + JDBC. Then Spring Boot.
-
-## Gates (honest checkpoints)
-
-| Gate | You can… |
-|------|----------|
-| A | Packages, compile, class vs object |
-| B | Use `ArrayList` and `HashMap` in a small program |
-| C | Weather CLI + GET vs POST |
-| D | Name controller / service / repo / DTO / entity · Postgres in Docker · one SQL `SELECT` |
-
-Only after **A–D** go deep (JVM detail, patterns catalog, Spring Boot course, JPA).
-
-## Next clicks
-
-1. Hub Layer A topics (getting started → classes)  
-2. Collections + multi-file console practice  
-3. REST topic → project 05  
-4. [`server-layers.md`](./server-layers.md) → JDBC / Postgres / Docker → [Spring Boot](../../tracks/spring-boot/README.md)
+**Next:** go back to the path. It tells you which topic comes now.

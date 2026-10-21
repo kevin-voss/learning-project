@@ -1,172 +1,183 @@
 /**
- * JavaScript-Übungen — Thema: Strings (siehe README.md)
- * Testen: make strings | make strings-task-02
- * 
- * HINWEIS: Falls du nicht weiterkommst, schau in die Datei `solutions.js` für Tipps und Lösungen!
+ * JavaScript drill: strings (read README.md first)
+ * Run the tests from the project folder: make strings | make strings-task-02
+ *
+ * Stuck for more than 10 minutes? Peek at solutions.js.
  */
 
 /**
- * Aufgabe 1 — Enthält der Text ein Teilstück?
+ * Task 1 — Does the text contain a piece?
  *
- * **Deine Aufgabe:** Prüfe, ob ein bestimmtes Textstück in einem Text enthalten ist.
- * **Bereits deklariert:** Die Parameter `text` (der zu durchsuchende Text) und `fragment` (das gesuchte Textstück).
- * **Wie es funktioniert:** Nutze die Methode `.includes(fragment)` auf dem String.
- * **Erwartung:** `true` oder `false`.
+ * **Your job:** Check if `fragment` appears somewhere in `text`.
+ * **You get:** `text` (the text to search) and `fragment` (the piece you look for).
+ * **How:** Use `text.includes(fragment)`.
+ * **Returns:** `true` or `false`.
  *
- * **Test im Terminal (Projektroot):** `make strings-task-01`
+ * **Test it:** `make strings-task-01`
  *
- * @example containsText("hallo", "ll") // → true
- * @example containsText("hallo", "x") // → false
+ * @example containsText("hello", "ll") // → true
+ * @example containsText("hello", "x") // → false
  */
 export function containsText(text, fragment) {
-  return text.includes(fragment); 
+  // TODO: write your code here
+  return false;
 }
 
 /**
- * Aufgabe 2 — Beginnt der Text mit …?
+ * Task 2 — Does the text start with …?
  *
- * **Deine Aufgabe:** Prüfe, ob ein Text mit einem bestimmten Präfix beginnt.
- * **Bereits deklariert:** Die Parameter `text` (der Text) und `prefix` (das gesuchte Präfix).
- * **Wie es funktioniert:** Nutze die Methode `.startsWith(prefix)` auf dem String.
- * **Erwartung:** Boolean.
+ * **Your job:** Check if `text` starts with `prefix`.
+ * **You get:** `text` and `prefix` (two strings).
+ * **How:** Use `text.startsWith(prefix)`.
+ * **Returns:** `true` or `false`.
  *
- * **Test im Terminal (Projektroot):** `make strings-task-02`
+ * **Test it:** `make strings-task-02`
  *
- * @example startsWithText("Hallo", "Hal") // → true
+ * @example startsWithText("Hello", "Hel") // → true
  */
 export function startsWithText(text, prefix) {
-  return text.startsWith(prefix);
+  // TODO: write your code here
+  return false;
 }
 
 /**
- * Aufgabe 3 — Endet der Text mit …?
+ * Task 3 — Does the text end with …?
  *
- * **Deine Aufgabe:** Prüfe, ob ein Text mit einem bestimmten Suffix endet.
- * **Bereits deklariert:** Die Parameter `text` (der Text) und `suffix` (das gesuchte Suffix).
- * **Wie es funktioniert:** Nutze die Methode `.endsWith(suffix)` auf dem String.
- * **Erwartung:** Boolean.
+ * **Your job:** Check if `text` ends with `suffix`.
+ * **You get:** `text` and `suffix` (two strings).
+ * **How:** Use `text.endsWith(suffix)`.
+ * **Returns:** `true` or `false`.
  *
- * **Test im Terminal (Projektroot):** `make strings-task-03`
+ * **Test it:** `make strings-task-03`
  *
- * @example endsWithText("Hallo", "llo") // → true
+ * @example endsWithText("Hello", "llo") // → true
  */
 export function endsWithText(text, suffix) {
-  return text.endsWith(suffix);
+  // TODO: write your code here
+  return false;
 }
 
 /**
- * Aufgabe 4 — Kleinschreibung (Kopie)
+ * Task 4 — Small letters
  *
- * **Deine Aufgabe:** Wandle einen Text komplett in Kleinbuchstaben um.
- * **Bereits deklariert:** Der Parameter `text` (ein String).
- * **Wie es funktioniert:** Nutze die Methode `.toLowerCase()` auf dem String. Das Original wird dabei nicht verändert.
- * **Erwartung:** Neuer String nur in Kleinbuchstaben.
+ * **Your job:** Return the text in small letters only.
+ * **You get:** `text` (a string).
+ * **How:** Use `text.toLowerCase()`. It gives you a new string; `text` stays the same.
+ * **Returns:** A new string in small letters.
  *
- * **Test im Terminal (Projektroot):** `make strings-task-04`
+ * **Test it:** `make strings-task-04`
  *
  * @example toLowerCaseCopy("Hi") // → "hi"
  */
 export function toLowerCaseCopy(text) {
-  return text.toLowerCase();
+  // TODO: write your code here
+  return "";
 }
 
 /**
- * Aufgabe 5 — Großschreibung (Kopie)
+ * Task 5 — Capital letters
  *
- * **Deine Aufgabe:** Wandle einen Text komplett in Großbuchstaben um.
- * **Bereits deklariert:** Der Parameter `text` (ein String).
- * **Wie es funktioniert:** Nutze die Methode `.toUpperCase()` auf dem String.
- * **Erwartung:** Neuer String in Großbuchstaben.
+ * **Your job:** Return the text in capital letters only.
+ * **You get:** `text` (a string).
+ * **How:** Use `text.toUpperCase()`.
+ * **Returns:** A new string in capital letters.
  *
- * **Test im Terminal (Projektroot):** `make strings-task-05`
+ * **Test it:** `make strings-task-05`
  *
  * @example toUpperCaseCopy("hi") // → "HI"
  */
 export function toUpperCaseCopy(text) {
-  return text.toUperCase();
+  // TODO: write your code here
+  return "";
 }
 
 /**
- * Aufgabe 6 — Leerzeichen abschneiden
+ * Task 6 — Cut off spaces
  *
- * **Deine Aufgabe:** Entferne alle Leerzeichen am Anfang und am Ende eines Textes.
- * **Bereits deklariert:** Der Parameter `text` (ein String).
- * **Wie es funktioniert:** Nutze die Methode `.trim()` auf dem String.
- * **Erwartung:** String ohne führende/nachgestellte Leerzeichen.
+ * **Your job:** Remove the spaces at the start and at the end of a text.
+ * **You get:** `text` (a string).
+ * **How:** Use `text.trim()`.
+ * **Returns:** A string with no spaces at the start or end.
  *
- * **Test im Terminal (Projektroot):** `make strings-task-06`
+ * **Test it:** `make strings-task-06`
  *
  * @example trimWhitespace("  a  ") // → "a"
  */
 export function trimWhitespace(text) {
-  return text.trim();
+  // TODO: write your code here
+  return "";
 }
 
 /**
- * Aufgabe 7 — Leerzeichen durch Bindestrich
+ * Task 7 — Dashes instead of spaces
  *
- * **Deine Aufgabe:** Ersetze alle Leerzeichen in einem Text durch Bindestriche (`-`).
- * **Bereits deklariert:** Der Parameter `text` (ein String).
- * **Wie es funktioniert:** Nutze die Methode `.replaceAll(" ", "-")` auf dem String.
- * **Erwartung:** String ohne Leerzeichen an diesen Stellen.
+ * **Your job:** Replace every space with a dash (`-`).
+ * **You get:** `text` (a string).
+ * **How:** Use `text.replaceAll(" ", "-")`.
+ * **Returns:** A string with dashes where the spaces were.
  *
- * **Test im Terminal (Projektroot):** `make strings-task-07`
+ * **Test it:** `make strings-task-07`
  *
  * @example dashInsteadOfSpaces("a b c") // → "a-b-c"
  */
 export function dashInsteadOfSpaces(text) {
-  return text.replaceAll(" ", "-" );
+  // TODO: write your code here
+  return "";
 }
 
 /**
- * Aufgabe 8 — Zeichen zählen
+ * Task 8 — The last letter
  *
- * **Deine Aufgabe:** Finde heraus, wie viele Zeichen ein Text hat.
- * **Bereits deklariert:** Der Parameter `text` (ein String).
- * **Wie es funktioniert:** Frage die Eigenschaft `.length` des Strings ab.
- * **Erwartung:** Ganze Zahl ≥ 0.
+ * **Your job:** Return the last character of a text.
+ * **You get:** `text` (a string, never empty).
+ * **How:** Letters are numbered from 0. `text[0]` is the first one.
+ *   The last one sits at number `text.length - 1`, so use `text[text.length - 1]`.
+ * **Returns:** A string with one character.
  *
- * **Test im Terminal (Projektroot):** `make strings-task-08`
+ * **Test it:** `make strings-task-08`
  *
- * @example characterCount("abc") // → 3
+ * @example lastCharacter("hello") // → "o"
+ * @example lastCharacter("a") // → "a"
  */
-export function characterCount(text) {
-  return text.length;
+export function lastCharacter(text) {
+  // TODO: write your code here
+  return "";
 }
 
 /**
- * Aufgabe 9 — Erste drei Zeichen
+ * Task 9 — The first three characters
  *
- * **Deine Aufgabe:** Schneide die ersten drei Zeichen eines Textes aus.
- * **Bereits deklariert:** Der Parameter `text` (ein String).
- * **Wie es funktioniert:** Nutze die Methode `.slice(0, 3)` auf dem String. Wenn der Text kürzer als 3 Zeichen ist, wird der ganze Text zurückgegeben.
- * **Erwartung:** String der Länge ≤ 3.
+ * **Your job:** Cut out the first three characters of a text.
+ * **You get:** `text` (a string).
+ * **How:** Use `text.slice(0, 3)`: start at 0, stop before 3.
+ *   If the text is shorter than 3, `slice` gives you the whole text.
+ * **Returns:** A string with 3 characters or fewer.
  *
- * **Test im Terminal (Projektroot):** `make strings-task-09`
+ * **Test it:** `make strings-task-09`
  *
  * @example firstThreeChars("abcdef") // → "abc"
  * @example firstThreeChars("ab") // → "ab"
  */
 export function firstThreeChars(text) {
-return text.slice(0, 3); //1. pos. definiert den Start, 2. pos das Ende -> also anfang ist der 1. Parameter der String/ Ende der 3. Parameter der String
+  // TODO: write your code here
+  return "";
 }
 
 /**
- * Aufgabe 10 — Palindrome
+ * Task 10 — Capital first letter
  *
- * **Deine Aufgabe:** Prüfe, ob ein Text ein Palindrom ist (vorwärts und rückwärts gleich gelesen).
- * **Bereits deklariert:** Der Parameter `text` (ein String).
- * **Wie es funktioniert:** Wandle den String in ein Array um (`.split("")`), drehe das Array um (`.reverse()`), füge es wieder zu einem String zusammen (`.join("")`) und vergleiche es mit dem Originaltext.
- * **Erwartung:** Boolean. Tests nur mit einfachen Kleinbuchstaben ohne Leerzeichen.
+ * **Your job:** Make the first letter a capital. Keep the rest as it is.
+ * **You get:** `word` (a string in small letters, never empty).
+ * **How:** Take the first letter with `word[0]` and make it big with `.toUpperCase()`.
+ *   Take the rest with `word.slice(1)`. Glue both parts together with `+`.
+ * **Returns:** A new string.
  *
- * **Test im Terminal (Projektroot):** `make strings-task-10`
+ * **Test it:** `make strings-task-10`
  *
- * @example isPalindromeText("anna") // → true
- * @example isPalindromeText("hallo") // → false
+ * @example capitalizeWord("anna") // → "Anna"
+ * @example capitalizeWord("hello") // → "Hello"
  */
-export function isPalindromeText(text) {
-  let array = text.split("");
-  let turnAround = array.reverse();
-  let together = turnAround.join("");
-  return (together == text);
+export function capitalizeWord(word) {
+  // TODO: write your code here
+  return "";
 }

@@ -1,8 +1,8 @@
 /**
- * JavaScript-Übungen — Thema: Strings (Lösungen)
- * 
- * Hier findest du die Lösungen zu den Aufgaben in tasks.js.
- * Nutze diese Datei als Hilfestellung, wenn du nicht weiterkommst.
+ * JavaScript drill: strings (solutions)
+ *
+ * One possible answer for every task in tasks.js.
+ * Try on your own first. Read here when you are stuck.
  */
 
 export function containsText(text, fragment) {
@@ -33,15 +33,17 @@ export function dashInsteadOfSpaces(text) {
   return text.replaceAll(" ", "-");
 }
 
-export function characterCount(text) {
-  return text.length;
+export function lastCharacter(text) {
+  return text[text.length - 1];
+  // Also works: return text.slice(-1);
 }
 
 export function firstThreeChars(text) {
-  return text.slice(0, 3);
+  return text.slice(0, 3); // start at 0, stop before 3
 }
 
-export function isPalindromeText(text) {
-  const reversed = text.split("").reverse().join("");
-  return text === reversed;
+export function capitalizeWord(word) {
+  const first = word[0].toUpperCase();
+  const rest = word.slice(1);
+  return first + rest;
 }

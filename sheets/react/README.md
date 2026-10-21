@@ -1,10 +1,7 @@
 # React
 
-**Scope:** Phase 6 optional. Off the main Java spine. Only after Java Layers A–B feel solid (or skip).
-
-**When:** Optional project 04. Read sections as the [roadmap](../../docs/LEARNING_PATH.md) points you.
-
-**Start:** [roadmap → Project 04](../../docs/LEARNING_PATH.md)
+> [!NOTE]
+> A **look it up** page. It is not a step on the path. Use it with the [React todo extra](../../projects/extras/react-todo/README.md), and read only the part you need.
 
 ---
 
@@ -143,7 +140,7 @@ useEffect(() => {
 return <input ref={inputRef} />;
 ```
 
-Project 4: focus edit input in `TodoItem`.
+In the React todo: focus the edit input in `TodoItem`.
 
 ---
 
@@ -195,13 +192,13 @@ React keeps a lightweight copy of the UI, diffs on state change, updates only wh
 
 ---
 
-## 12. Vite + React (Project 4)
+## 12. Vite + React
 
 Node runs the **dev server**; React runs in the **browser**:
 
 ```bash
-npm create vite@latest 04-react-todo-app -- --template react
-cd 04-react-todo-app
+npm create vite@latest react-todo -- --template react
+cd react-todo
 npm install
 npm run dev
 ```
@@ -229,19 +226,17 @@ Install **React Developer Tools** browser extension.
 
 ---
 
-## 14. After Project 4
+## 14. After the React todo
 
 | Next | Where |
 |------|-------|
 | TypeScript + React | [typescript/README.md](../typescript/README.md) |
-| Weather in React | Reuse Project 1 API logic in `useEffect` |
+| Weather in React | Reuse the `fetch` code from [Project 4](../../projects/04-weather-dashboard/README.md) in `useEffect` |
 | React Router | Multi-page apps |
 
 ---
 
-## Project 4 docs
+## The React todo extra
 
-- [Step-by-step](../../projects/extras/react-todo/docs/step-by-step.md)
-- [Component guide](../../projects/extras/react-todo/docs/component-guide.md)
-- [JS: Project 4 syntax](../javascript/by-project.md#project-4--react-todo-app)
-- [Roadmap](../../docs/LEARNING_PATH.md)
+- [React todo: the brief](../../projects/extras/react-todo/README.md)
+- [fetch and await](../javascript/README.md) · [JSON](../javascript/json.md) · [The page tree (DOM)](../javascript/dom.md)

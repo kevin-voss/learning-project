@@ -1,9 +1,9 @@
 import { describe, expect, test } from "bun:test";
 import {
   absoluteValue,
+  averageOfThree,
   ceilValue,
   clampValue,
-  factorialMath,
   floorValue,
   maximumTwo,
   minimumThree,
@@ -12,74 +12,76 @@ import {
   roundTwoDecimals,
 } from "./tasks.js";
 
-// Hilfsfunktion, um bei Fehlern einen Tipp anzuzeigen
+// Helper: when a check fails, show a hint above the error.
 function check(fn, args, expected, hint) {
   try {
     expect(fn(...args)).toBe(expected);
   } catch (e) {
-    throw new Error(`\n💡 TIPP: ${hint}\n\n${e.message}`);
+    throw new Error(`\nHINT: ${hint}\n\n${e.message}`);
   }
 }
 
 describe("math-task-01: floorValue", () => {
-  test("abrunden", () => {
-    check(floorValue, [9.9], 9, "Nutze die Funktion Math.floor(x), um die Zahl abzurunden.");
+  test("rounds down", () => {
+    check(floorValue, [9.9], 9, "Use Math.floor(x) to round down.");
   });
 });
 
 describe("math-task-02: ceilValue", () => {
-  test("aufrunden", () => {
-    check(ceilValue, [2.1], 3, "Nutze die Funktion Math.ceil(x), um die Zahl aufzurunden.");
+  test("rounds up", () => {
+    check(ceilValue, [2.1], 3, "Use Math.ceil(x) to round up.");
   });
 });
 
 describe("math-task-03: absoluteValue", () => {
-  test("Betrag", () => {
-    check(absoluteValue, [-5], 5, "Nutze die Funktion Math.abs(x), um den absoluten Betrag zu berechnen.");
+  test("drops the minus sign", () => {
+    check(absoluteValue, [-5], 5, "Use Math.abs(x) to get the absolute value.");
   });
 });
 
 describe("math-task-04: powerValue", () => {
-  test("Potenz", () => {
-    check(powerValue, [2, 4], 16, "Nutze den Potenz-Operator '**' (z.B. base ** exp) oder die Funktion Math.pow(base, exp).");
+  test("power", () => {
+    check(powerValue, [2, 4], 16, "Use the power operator '**' (base ** exp) or Math.pow(base, exp).");
   });
 });
 
 describe("math-task-05: maximumTwo", () => {
-  test("Maximum von zwei", () => {
-    check(maximumTwo, [3, 7], 7, "Nutze die Funktion Math.max(a, b), um die größere der beiden Zahlen zu finden.");
+  test("bigger of two", () => {
+    check(maximumTwo, [3, 7], 7, "Use Math.max(a, b) to find the bigger number.");
   });
 });
 
 describe("math-task-06: minimumThree", () => {
-  test("Minimum von drei", () => {
-    check(minimumThree, [4, 2, 9], 2, "Nutze die Funktion Math.min(a, b, c), um die kleinste der drei Zahlen zu finden.");
+  test("smallest of three", () => {
+    check(minimumThree, [4, 2, 9], 2, "Use Math.min(a, b, c) to find the smallest number.");
   });
 });
 
 describe("math-task-07: clampValue", () => {
-  test("begrenzen", () => {
-    check(clampValue, [5, 0, 10], 5, "Nutze eine if-Abfrage, um zu prüfen, ob der Wert kleiner als das Minimum oder größer als das Maximum ist.");
-    check(clampValue, [-1, 0, 10], 0, "Nutze eine if-Abfrage, um zu prüfen, ob der Wert kleiner als das Minimum oder größer als das Maximum ist.");
-    check(clampValue, [99, 0, 10], 10, "Nutze eine if-Abfrage, um zu prüfen, ob der Wert kleiner als das Minimum oder größer als das Maximum ist.");
+  test("keeps the value inside the range", () => {
+    const hint = "First Math.max(value, min), then Math.min(thatResult, max). You can write it in one line: Math.min(Math.max(value, min), max).";
+    check(clampValue, [5, 0, 10], 5, hint);
+    check(clampValue, [-1, 0, 10], 0, hint);
+    check(clampValue, [99, 0, 10], 10, hint);
   });
 });
 
-describe("math-task-08: factorialMath", () => {
-  test("Fakultät", () => {
-    check(factorialMath, [0], 1, "Die Fakultät von 0 ist 1. Für n > 0 nutze eine for-Schleife, um alle Zahlen von 1 bis n zu multiplizieren.");
-    check(factorialMath, [5], 120, "Die Fakultät von 0 ist 1. Für n > 0 nutze eine for-Schleife, um alle Zahlen von 1 bis n zu multiplizieren.");
+describe("math-task-08: averageOfThree", () => {
+  test("average", () => {
+    const hint = "Add the three numbers and divide by 3. Use brackets: (a + b + c) / 3.";
+    check(averageOfThree, [1, 2, 3], 2, hint);
+    check(averageOfThree, [2, 4, 9], 5, hint);
   });
 });
 
 describe("math-task-09: roundTwoDecimals", () => {
-  test("zwei Nachkommastellen", () => {
-    check(roundTwoDecimals, [3.146], 3.15, "Multipliziere die Zahl mit 100, runde sie mit Math.round() und teile sie dann wieder durch 100.");
+  test("two decimal places", () => {
+    check(roundTwoDecimals, [3.146], 3.15, "Multiply by 100, round with Math.round(), then divide by 100 again.");
   });
 });
 
 describe("math-task-10: percentage", () => {
-  test("Prozent", () => {
-    check(percentage, [25, 200], 12.5, "Teile den Teil (part) durch das Ganze (whole) und multipliziere das Ergebnis mit 100.");
+  test("percent", () => {
+    check(percentage, [25, 200], 12.5, "Divide the part by the whole and multiply the result by 100.");
   });
 });

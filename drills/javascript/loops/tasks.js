@@ -1,179 +1,187 @@
 /**
- * JavaScript-Übungen — Thema: Schleifen (siehe README.md)
- * Testen: make loops | make loops-task-03
- * 
- * HINWEIS: Falls du nicht weiterkommst, schau in die Datei `solutions.js` für Tipps und Lösungen!
+ * JavaScript drill: loops (read README.md first)
+ * Run the tests from the project folder: make loops | make loops-task-03
+ *
+ * Stuck for more than 10 minutes? Peek at solutions.js.
  */
 
 /**
- * Aufgabe 1 — Summe von 1 bis n
+ * Task 1 — Sum from 1 to n
  *
- * **Deine Aufgabe:** Addiere alle Zahlen von 1 bis `n`.
- * **Bereits deklariert:** Der Parameter `n` (eine Zahl ≥ 0).
- * **Wie es funktioniert:** Nutze eine `for`-Schleife, die von 1 bis `n` läuft, und addiere in jedem Schritt die Schleifenvariable zu einer Summen-Variable. Für `n === 0` soll das Ergebnis `0` sein.
- * **Erwartung:** Ganze Zahl ≥ 0.
+ * **Your job:** Add up all numbers from 1 to `n`.
+ * **You get:** `n` (a number, 0 or more).
+ * **How:** Start with `let sum = 0`. Loop `i` from 1 to `n` and add `i` to `sum` each lap.
+ *   For `n === 0` the loop never runs, so the answer is `0`.
+ * **Returns:** A whole number.
  *
- * **Test im Terminal (Projektroot):** `make loops-task-01`
+ * **Test it:** `make loops-task-01`
  *
- * @example sumFromOneToN(4) // → 10
+ * @example sumFromOneToN(4) // → 10   (1 + 2 + 3 + 4)
  * @example sumFromOneToN(0) // → 0
  */
 export function sumFromOneToN(n) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return 0;
 }
 
 /**
- * Aufgabe 2 — Zeichen wiederholen
+ * Task 2 — Repeat a character
  *
- * **Deine Aufgabe:** Erstelle einen String, der aus einem bestimmten Zeichen besteht, das `count`-mal wiederholt wird.
- * **Bereits deklariert:** Die Parameter `ch` (das Zeichen) und `count` (die Anzahl der Wiederholungen).
- * **Wie es funktioniert:** Nutze eine `for`-Schleife, die `count`-mal läuft, und hänge in jedem Schritt `ch` an eine String-Variable an (`count === 0` → `""`).
- * **Erwartung:** String.
+ * **Your job:** Build a string that has `ch` in it `count` times.
+ * **You get:** `ch` (one character) and `count` (a number).
+ * **How:** Start with `let result = ""`. Loop `count` times and add `ch` to `result` each lap.
+ * **Returns:** A string (`""` when `count` is 0).
  *
- * **Test im Terminal (Projektroot):** `make loops-task-02`
+ * **Test it:** `make loops-task-02`
  *
  * @example repeatCharacter("a", 3) // → "aaa"
  */
 export function repeatCharacter(ch, count) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return "";
 }
 
 /**
- * Aufgabe 3 — Buchstaben zählen
+ * Task 3 — Count a letter
  *
- * **Deine Aufgabe:** Zähle, wie oft ein bestimmtes Zeichen in einem Text vorkommt.
- * **Bereits deklariert:** Die Parameter `str` (der Text) und `ch` (das gesuchte Zeichen).
- * **Wie es funktioniert:** Nutze eine Schleife, um über alle Zeichen von `str` zu iterieren (`str.length`). Wenn das aktuelle Zeichen gleich `ch` ist, erhöhe einen Zähler.
- * **Erwartung:** Ganze Zahl ≥ 0.
+ * **Your job:** Count how often `ch` appears in `str`.
+ * **You get:** `str` (a text) and `ch` (one character).
+ * **How:** Loop `i` from 0 to `str.length - 1`. If `str[i] === ch`, add 1 to a counter.
+ * **Returns:** A whole number (0 or more).
  *
- * **Test im Terminal (Projektroot):** `make loops-task-03`
+ * **Test it:** `make loops-task-03`
  *
  * @example countInString("banana", "a") // → 3
  */
 export function countInString(str, ch) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return 0;
 }
 
 /**
- * Aufgabe 4 — Erster Index oder -1
+ * Task 4 — Multiply from 1 to n (factorial)
  *
- * **Deine Aufgabe:** Finde den Index des ersten Vorkommens eines Wertes in einem Array.
- * **Bereits deklariert:** Die Parameter `arr` (das Array) und `val` (der gesuchte Wert).
- * **Wie es funktioniert:** Nutze eine Schleife, um über das Array zu iterieren. Wenn `arr[i] === val` ist, gib `i` zurück. Wenn die Schleife durchläuft, ohne den Wert zu finden, gib `-1` zurück.
- * **Erwartung:** Ganze Zahl ≥ -1.
+ * **Your job:** Multiply all numbers from 1 to `n`. Mathematicians call this "n factorial" and write `n!`.
+ * **You get:** `n` (a number, 0 or more).
+ * **How:** Start with `let product = 1` (not 0!). Loop `i` from 1 to `n` and multiply `product` by `i`.
+ *   For `n === 0` the loop never runs, so the answer is `1`.
+ * **Returns:** A whole number.
  *
- * **Test im Terminal (Projektroot):** `make loops-task-04`
+ * **Test it:** `make loops-task-04`
  *
- * @example indexOfInArray([1, 2, 3], 2) // → 1
- * @example indexOfInArray([1, 2, 3], 9) // → -1
- */
-export function indexOfInArray(arr, val) {
-  // TODO: Implementiere die Logik hier
-  return -1;
-}
-
-/**
- * Aufgabe 5 — Produkt von 1 bis n
- *
- * **Deine Aufgabe:** Multipliziere alle Zahlen von 1 bis `n`.
- * **Bereits deklariert:** Der Parameter `n` (eine Zahl ≥ 0).
- * **Wie es funktioniert:** Nutze eine Schleife, die von 1 bis `n` läuft, und multipliziere die Schleifenvariable mit einer Produkt-Variable (die mit 1 initialisiert sein sollte). Für `n === 0` → `1` (leeres Produkt).
- * **Erwartung:** Ganze Zahl ≥ 1 für n≥0 in den Tests.
- *
- * **Test im Terminal (Projektroot):** `make loops-task-05`
- *
- * @example productFromOneToN(4) // → 24
+ * @example productFromOneToN(4) // → 24   (1 * 2 * 3 * 4)
  * @example productFromOneToN(0) // → 1
  */
 export function productFromOneToN(n) {
-  // TODO: Implementiere die Logik hier
-  return 1;
-}
-
-/**
- * Aufgabe 6 — Array-Summe (Schleife)
- *
- * **Deine Aufgabe:** Berechne die Summe aller Zahlen in einem Array.
- * **Bereits deklariert:** Der Parameter `arr` (ein Array von Zahlen).
- * **Wie es funktioniert:** Nutze eine Schleife, um über das Array zu iterieren, und addiere jedes Element zu einer Summen-Variable. Ein leeres Array ergibt `0`.
- * **Erwartung:** Zahl.
- *
- * **Test im Terminal (Projektroot):** `make loops-task-06`
- *
- * @example sumArrayFor([1, 2, 3]) // → 6
- */
-export function sumArrayFor(arr) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return 0;
 }
 
 /**
- * Aufgabe 7 — String umdrehen (Schleife)
+ * Task 5 — Turn a string around
  *
- * **Deine Aufgabe:** Drehe einen Text um (von hinten nach vorne).
- * **Bereits deklariert:** Der Parameter `str` (ein String).
- * **Wie es funktioniert:** Nutze eine Schleife, die rückwärts über den String läuft (von `str.length - 1` bis `0`), und hänge jedes Zeichen an einen neuen String an. Nutze keine eingebauten Methoden wie `split/reverse/join`.
- * **Erwartung:** String.
+ * **Your job:** Write a text backwards.
+ * **You get:** `str` (a string).
+ * **How:** Loop backwards: start `i` at `str.length - 1`, go down to 0 with `i--`.
+ *   Add `str[i]` to a new string each lap.
+ * **Returns:** A string.
  *
- * **Test im Terminal (Projektroot):** `make loops-task-07`
+ * **Test it:** `make loops-task-05`
  *
  * @example reverseStringFor("abc") // → "cba"
  */
 export function reverseStringFor(str) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return "";
 }
 
 /**
- * Aufgabe 8 — Countdown-Array
+ * Task 6 — A row of stars
  *
- * **Deine Aufgabe:** Erstelle ein Array, das von `n` bis 1 herunterzählt.
- * **Bereits deklariert:** Der Parameter `n` (eine Zahl ≥ 0).
- * **Wie es funktioniert:** Nutze eine Schleife, die von `n` bis 1 rückwärts läuft, und füge jede Zahl mit `.push()` zu einem Array hinzu. Für `n === 0` → `[]`.
- * **Erwartung:** Array von Zahlen.
+ * **Your job:** Build a string of `n` stars (`*`).
+ * **You get:** `n` (a number, 0 or more).
+ * **How:** Loop `n` times and add `"*"` to a string each lap.
+ * **Returns:** A string (`""` when `n` is 0).
  *
- * **Test im Terminal (Projektroot):** `make loops-task-08`
- *
- * @example countdownArrayFor(3) // → [3, 2, 1]
- */
-export function countdownArrayFor(n) {
-  // TODO: Implementiere die Logik hier
-  return [];
-}
-
-/**
- * Aufgabe 9 — Gerade Zahl vorhanden?
- *
- * **Deine Aufgabe:** Prüfe, ob mindestens eine gerade Zahl im Array vorhanden ist.
- * **Bereits deklariert:** Der Parameter `arr` (ein Array von Zahlen).
- * **Wie es funktioniert:** Nutze eine Schleife. Wenn ein Element durch 2 teilbar ist (`% 2 === 0`), gib sofort `true` zurück. Wenn die Schleife durchläuft, ohne eine gerade Zahl zu finden, gib `false` zurück.
- * **Erwartung:** Boolean.
- *
- * **Test im Terminal (Projektroot):** `make loops-task-09`
- *
- * @example hasEvenFor([1, 3, 4]) // → true
- */
-export function hasEvenFor(arr) {
-  // TODO: Implementiere die Logik hier
-  return false;
-}
-
-/**
- * Aufgabe 10 — Sterne-Zeile
- *
- * **Deine Aufgabe:** Erstelle einen String, der aus `n` Sternen (`*`) besteht.
- * **Bereits deklariert:** Der Parameter `n` (eine Zahl ≥ 0).
- * **Wie es funktioniert:** Nutze eine Schleife, die `n`-mal läuft, und hänge in jedem Schritt ein `*` an einen String an. Für `n === 0` → `""`.
- * **Erwartung:** String.
- *
- * **Test im Terminal (Projektroot):** `make loops-task-10`
+ * **Test it:** `make loops-task-06`
  *
  * @example stringOfStars(3) // → "***"
  */
 export function stringOfStars(n) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return "";
+}
+
+/**
+ * Task 7 — Palindrome
+ *
+ * **Your job:** Check if a word reads the same forwards and backwards, like "anna" or "level".
+ * **You get:** `text` (small letters, no spaces).
+ * **How:** Build the backwards text with a loop (like Task 5), then compare it with `text` using `===`.
+ * **Returns:** `true` or `false`.
+ *
+ * **Test it:** `make loops-task-07`
+ *
+ * @example isPalindromeText("anna") // → true
+ * @example isPalindromeText("hello") // → false
+ */
+export function isPalindromeText(text) {
+  // TODO: write your code here
+  return false;
+}
+
+/**
+ * Task 8 — Sum of the even numbers
+ *
+ * **Your job:** Add up only the even numbers from 1 to `n`.
+ * **You get:** `n` (a number, 0 or more).
+ * **How:** Loop `i` from 1 to `n`. If `i % 2 === 0`, add `i` to the sum.
+ * **Returns:** A whole number.
+ *
+ * **Test it:** `make loops-task-08`
+ *
+ * @example sumOfEvensUpToN(6) // → 12   (2 + 4 + 6)
+ * @example sumOfEvensUpToN(7) // → 12
+ */
+export function sumOfEvensUpToN(n) {
+  // TODO: write your code here
+  return 0;
+}
+
+/**
+ * Task 9 — Where is the letter?
+ *
+ * **Your job:** Find the position of the first `ch` in `str`.
+ * **You get:** `str` (a text) and `ch` (one character).
+ * **How:** Loop over the positions. As soon as `str[i] === ch`, `return i` (this stops the loop).
+ *   If the loop ends without finding it, return `-1`.
+ * **Returns:** A whole number, or `-1` when `ch` is not in `str`.
+ *
+ * **Test it:** `make loops-task-09`
+ *
+ * @example firstIndexOfChar("hello", "l") // → 2
+ * @example firstIndexOfChar("hello", "z") // → -1
+ */
+export function firstIndexOfChar(str, ch) {
+  // TODO: write your code here
+  return -1;
+}
+
+/**
+ * Task 10 — Count the digits (while loop)
+ *
+ * **Your job:** Count how many digits a whole number has.
+ * **You get:** `n` (a whole number, 0 or more).
+ * **How:** Use a `while` loop. Start with `let digits = 1` and `let rest = n`.
+ *   While `rest >= 10`: chop off the last digit with `rest = Math.floor(rest / 10)` and add 1 to `digits`.
+ * **Returns:** A whole number (1 or more).
+ *
+ * **Test it:** `make loops-task-10`
+ *
+ * @example countDigits(1234) // → 4
+ * @example countDigits(7) // → 1
+ */
+export function countDigits(n) {
+  // TODO: write your code here
+  return 0;
 }

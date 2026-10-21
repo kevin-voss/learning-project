@@ -1,20 +1,18 @@
-# HTML — sheet (read before project 00)
+# HTML: the skeleton of a page
 
-**Scope:** Phase 2 / before Java Layer A (web craft).  
-**Time:** ~10 minutes. **Next:** [`../../00-static-page/`](../../projects/01-about-me).
+> [!PICTURE]
+> A web page is a **dollhouse**. HTML builds the walls and rooms. CSS (next page) paints them. JavaScript (later) makes things move.
+>
+> - `<html>` = the whole house
+> - `<head>` = the attic: the title and links, guests do not play here
+> - `<body>` = the rooms where the toys live
+> - `<h1>` = the big sign on the wall
+> - `<p>` = a sentence on a sticky note
+> - `<a href="...">` = a door to another house
 
-HTML is the **skeleton** of a page. CSS is paint. JavaScript is muscles. Today only the skeleton.
+## The idea
 
-## Toy story
-
-Imagine a dollhouse:
-
-- `<html>` = the whole house  
-- `<head>` = the attic (title, links — guests don’t play here)  
-- `<body>` = rooms where toys live  
-- `<h1>` = the big sign on the wall  
-- `<p>` = a sentence on a sticky note  
-- `<a href="...">` = a door to another house  
+HTML is text with **tags** around it. A tag says what a piece of text *is*: a heading, a paragraph, a link. The browser reads the tags and draws the page.
 
 ## Tiny example
 
@@ -33,24 +31,30 @@ Imagine a dollhouse:
 </html>
 ```
 
-## Words to know
+| Tag | Meaning |
+|-----|---------|
+| `h1` … `h6` | headings; a bigger number is a smaller heading |
+| `p` | a paragraph |
+| `ul` + `li` | a list with bullets |
+| `a` with `href` | a link |
+| `img` with `src` and `alt` | a picture, plus words for people who cannot see it |
 
-| Tag idea | Meaning |
-|----------|---------|
-| Heading | `h1`…`h6` — bigger number = smaller heading |
-| Paragraph | `p` |
-| List | `ul` + `li` (bullets) |
-| Link | `a` with `href` |
-| Image | `img` with `src` and `alt` |
+> [!TRY]
+> 1. In VS Code, make a file `hello.html` and paste the example.
+> 2. Right-click the file and choose **Open with Live Server**.
+> 3. Change `Hello` to your name and save.
+>
+> You should see: a page with a big heading, a sentence and a link. The heading changes when you save.
 
-## Do / don’t
+> [!WARN]
+> Use only **one** `h1` per page, for the main title. Colours and layout do not belong in HTML: that is the job of CSS.
 
-- **Do** use one `h1` for the main title.  
-- **Don’t** use HTML for layout colors — that’s CSS next.  
-- **Do** open the file in a browser (double-click or Live Server).
+> [!CHECK]
+> 1. Which tag holds everything you see on the page?
+>    <details><summary>Answer</summary><code>&lt;body&gt;</code>.</details>
+> 2. What does `<a href="...">` make?
+>    <details><summary>Answer</summary>A link: a door to another page.</details>
+> 3. Why does an `img` need `alt`?
+>    <details><summary>Answer</summary>So people who cannot see the picture (and screen readers) know what it shows.</details>
 
-## Checkpoint
-
-You can point at `<body>`, `<h1>`, and `<a>` and say what each is for.
-
-**→ Build:** [Project 00 — Static page](../../projects/01-about-me)
+**Next:** [CSS: paint for the page](../css/README.md), then [Project 1: About-me page](../../projects/01-about-me/README.md)

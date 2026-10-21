@@ -1,42 +1,72 @@
-# Thema: Arrays (Listen)
+# Drill: arrays
 
-## Worum es geht
+> [!PICTURE]
+> An egg carton with numbered cups. Each cup holds one thing. The first cup is number 0, the next is 1, and so on. You can look into one cup by its number, count the cups, or put a new egg into the next free cup.
 
-Ein **Array** ist eine geordnete Liste von Werten: `[1, 2, 3]`. Zugriff mit Index: `arr[0]` ist das erste Element, `arr[arr.length - 1]` das letzte. **Länge:** `arr.length`.
+<div data-anim="shelf"></div>
 
-Viele Aufgaben hier üben:
+## The idea
 
-- **Durchlaufen** mit `for` oder `for...of`
-- **Neue Arrays bilden**, ohne das Original zu verändern (Kopie / neues Array)
-- **Randfälle:** leeres Array → Summe `0`, Maximum oft `null`, etc.
+An **array** is a list of values in square brackets: `[3, 9, 2]`.
 
-## Was du in `tasks.js` tun sollst
+- `array[0]` is the first item. `array[array.length - 1]` is the last.
+- `array.length` is how many items there are.
+- `array.push(x)` puts `x` into a new cup at the end.
+- You walk through an array with the same loop you used on strings: `for (let i = 0; i < array.length; i++)`.
 
-1. Lies pro Funktion, ob du ein **neues Array** zurückgeben musst (`doubleAll`, `mergeArrays`, `reversedCopy`) — dann darfst du das Eingabe-Array **nicht** „in place“ zerstören.
-2. **`range(n)`:** Für `n === 0` ein **leeres** Array `[]`; sonst `[1, 2, …, n]`.
-3. **`firstOrNull` / `lastOrNull`:** Bei leerem Array **`null`** zurückgeben (nicht `undefined`, es sei denn die Tests erlauben es — hier erwarten wir `null`).
+## Tiny example
 
-## Was wir erwarten
+```javascript
+const eggs = [3, 9, 2];
+eggs[0];          // 3
+eggs.length;      // 3
 
-- Stabile Rückgaben genau wie in `tasks.test.js`.
-- **`mergeArrays`:** `a` und `b` unverändert lassen; Ergebnis z. B. mit Spread: `[...a, ...b]`.
+eggs.push(7);     // eggs is now [3, 9, 2, 7]
 
-## Testen
-
-```bash
-make arrays
-make arrays-task-01
+let total = 0;
+for (let i = 0; i < eggs.length; i++) {
+  total = total + eggs[i];
+}
+console.log(total);   // 21
 ```
 
-## Aufgabenliste (Kurzüberblick)
+> [!NOTE]
+> `const` keeps the **label** fixed, not the contents. You may `push` into a `const` array. You may not write `eggs = [1]`.
 
-1. Summe aller Zahlen  
-2. Durchschnitt  
-3. Maximum (oder `null`)  
-4. Vorkommen zählen  
-5. Alle Werte verdoppeln (neues Array)  
-6. Erstes Element oder `null`  
-7. Letztes Element oder `null`  
-8. `range(n)`  
-9. Zwei Arrays verketten  
-10. Umgekehrtes Kopie-Array  
+> [!TRY]
+> 1. Open `drills/javascript/arrays/tasks.js` and solve Task 1.
+> 2. Run `make arrays-task-01` in the project folder.
+> You should see: `1 pass` in green.
+
+## Run this topic's tests
+
+```bash
+make arrays            # all 11 tasks
+make arrays-task-03    # only task 3
+```
+
+No `make`? Run `bun test ./drills/javascript/arrays/` instead.
+
+## The tasks
+
+1. Sum of all numbers
+2. Average (empty array → `0`)
+3. Biggest item (empty array → `null`)
+4. How often is a value there?
+5. Double every number (new array)
+6. First item or `null`
+7. Last item or `null`
+8. Range `1 … n`
+9. Join two arrays (`[...a, ...b]`)
+10. Reversed copy
+11. Is there an even number?
+
+> [!CHECK]
+> 1. `const pets = ["cat", "dog", "fish"]`. What is `pets[1]`?
+>    <details><summary>Answer</summary>`"dog"`. Counting starts at 0.</details>
+> 2. What is `pets[pets.length - 1]`?
+>    <details><summary>Answer</summary>`"fish"`, the last item. `pets.length` is 3, so this is `pets[2]`.</details>
+> 3. Why does `findMax` start with `max = array[0]` and not `max = 0`?
+>    <details><summary>Answer</summary>If every number is negative, 0 would win, but 0 is not in the array.</details>
+
+**Next:** the lesson [Arrays: a shelf with numbered boxes](../../../tracks/computer-science/index.html#arrays), then [Drill: functions](../functions/README.md).

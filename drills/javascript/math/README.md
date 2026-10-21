@@ -1,45 +1,63 @@
-# Thema: Mathe mit `Math`
+# Drill: math
 
-## Worum es geht
+> [!PICTURE]
+> `Math` is a calculator that comes with JavaScript. It has a button for each job: round down, round up, biggest, smallest, square root. You press a button by writing its name and putting your numbers in the brackets.
 
-JavaScript liefert mit **`Math`** viele fertige Helfer: abrunden, aufrunden, Betrag, Minimum, Maximum, Potenzen, Wurzel, … Statt selbst komplizierte Formeln zu bauen, nutzt du diese Funktionen — außer eine Aufgabe sagt ausdrücklich „ohne `Math.max`“ o. Ä.
+## The idea
 
-Wichtige Bausteine:
+You already know `+`, `-`, `*`, `/` and `%`. For everything else, JavaScript has `Math`:
 
-- **`Math.floor(x)`** — Abrunden zur nächsten ganzen Zahl nach unten  
-- **`Math.ceil(x)`** — Aufrunden nach oben  
-- **`Math.abs(x)`** — Betrag (ohne Vorzeichen)  
-- **`Math.max(a, b, …)`** / **`Math.min(...)`** — größter / kleinster Wert  
-- **`Math.pow(a, b)`** oder **`a ** b`** — Potenz  
+- `Math.floor(x)` rounds down. `Math.ceil(x)` rounds up. `Math.round(x)` rounds to the nearest.
+- `Math.abs(x)` drops the minus sign.
+- `Math.max(a, b, …)` gives the biggest, `Math.min(a, b, …)` the smallest.
+- `a ** b` (or `Math.pow(a, b)`) is a power. `Math.sqrt(x)` is a square root.
 
-## Was du in `tasks.js` tun sollst
+Brackets work like in school maths: `(1 + 2) * 3` is `9`, but `1 + 2 * 3` is `7`.
 
-1. Jede Funktion soll einen **klaren Zahlenwert** zurückgeben (oder bei Prozent eine Dezimalzahl wie `12.5`).
-2. Lies die **Beispiele** in den Kommentaren: sie zeigen typische Ein- und Ausgaben.
-3. Bei **Fakultät**: `0! = 1` ist vereinbart; für `n > 0` multiplizierst du `1 * 2 * … * n`.
+## Tiny example
 
-## Was wir erwarten
-
-- **Rundungen** wie in den Tests (z. B. zwei Nachkommastellen bei `roundTwoDecimals`).
-- **`percentage(part, whole)`**: `part / whole * 100`; im Test ist `whole` nie `0`.
-- **`clampValue`**: Werte unter `min` werden zu `min`, über `max` zu `max`, dazwischen unverändert.
-
-## Testen
-
-```bash
-make math
-make math-task-08
+```javascript
+const price = 4.6;
+const roundedDown = Math.floor(price);   // 4
+const roundedUp = Math.ceil(price);      // 5
+const biggest = Math.max(3, 9, 2);       // 9
+const square = 3 ** 2;                   // 9
 ```
 
-## Aufgabenliste (Kurzüberblick)
+> [!TRY]
+> 1. Open `drills/javascript/math/tasks.js`.
+> 2. Solve Task 1 with `Math.floor`.
+> 3. Run `make math-task-01` in the project folder.
+> You should see: `1 pass` in green.
 
-1. Abrunden (`floor`)  
-2. Aufrunden (`ceil`)  
-3. Betrag (`abs`)  
-4. Potenz  
-5. Maximum zweier Zahlen  
-6. Minimum dreier Zahlen  
-7. Clamp (eingrenzen)  
-8. Fakultät  
-9. Auf zwei Dezimalstellen runden  
-10. Prozentanteil  
+## Run this topic's tests
+
+```bash
+make math            # all 10 tasks
+make math-task-08    # only task 8
+```
+
+No `make`? Run `bun test ./drills/javascript/math/` instead.
+
+## The tasks
+
+1. Round down (`Math.floor`)
+2. Round up (`Math.ceil`)
+3. Distance from zero (`Math.abs`)
+4. Power (`**`)
+5. Bigger of two (`Math.max`)
+6. Smallest of three (`Math.min`)
+7. Clamp: keep a value inside a range
+8. Average of three numbers
+9. Round to two decimal places
+10. Percentage
+
+> [!CHECK]
+> 1. What is `Math.floor(7.9)`?
+>    <details><summary>Answer</summary>`7`. Floor always goes down.</details>
+> 2. What is `Math.max(4, 11, 6)`?
+>    <details><summary>Answer</summary>`11`, the biggest number.</details>
+> 3. Why is `(2 + 4) / 2` different from `2 + 4 / 2`?
+>    <details><summary>Answer</summary>Division runs before addition. The first gives `3`, the second gives `4`.</details>
+
+**Next:** [Drill: strings](../strings/README.md)

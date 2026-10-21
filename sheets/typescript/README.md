@@ -1,10 +1,7 @@
 # TypeScript
 
-**Scope:** Phase 6 optional (with React). Not required for Java Layers A–F.
-
-**When:** After optional project 04. Zero knowledge is fine.
-
-Projects 00–04 use **plain JavaScript** on purpose. TypeScript is a side deepen, not the Java spine.
+> [!NOTE]
+> A **look it up** page. It is not a step on the path. The web projects use **plain JavaScript** on purpose. Come here after the [React todo extra](../../projects/extras/react-todo/README.md) if you want types in JavaScript.
 
 ---
 
@@ -43,11 +40,11 @@ TypeScript **compiles to JavaScript** — browsers still run JS.
 
 Before TypeScript, be comfortable with:
 
-- [ ] Project 4 React (components, props, state)
+- [ ] The [React todo extra](../../projects/extras/react-todo/README.md) (components, props, state)
 - [ ] [npm](../npm/README.md) scripts and `package.json`
 - [ ] Basic objects and functions in JS
 
-If you haven't finished Project 4, **skip this folder** and come back.
+If you have not finished the React todo, **skip this page** and come back.
 
 ---
 
@@ -103,10 +100,10 @@ Vite template: `npm create vite@latest my-app -- --template react-ts`
 
 | Area | Language |
 |------|----------|
-| Projects 1–4 curriculum | JavaScript |
+| Web projects on the path | JavaScript |
 | [`drills/javascript/`](../../drills/javascript/) drills | JavaScript |
 
-Learning path: **JS projects → TS in frontend/** or convert todo app to `react-ts`.
+Want to practise? Convert the React todo to a `react-ts` project.
 
 ---
 
@@ -154,4 +151,4 @@ You don't need to memorize `tsconfig.json` on day one.
 
 ## See also
 
-[Roadmap — after all four](../../docs/LEARNING_PATH.md#after-all-four-projects) · [React](../react/README.md) · [JavaScript](../javascript/README.md)
+[React](../react/README.md) · [fetch and await](../javascript/README.md)

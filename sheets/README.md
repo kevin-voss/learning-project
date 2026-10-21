@@ -1,36 +1,32 @@
-# Sheets library
+# Sheets
 
-Short topic pages. **Do not read cover to cover.**
+Short pages, one idea each. The path opens each one at the right time, so you do not read them all at once.
 
-Canonical order: [`../../docs/LEARNING_PATH.md`](../docs/LEARNING_PATH.md).
+## On the path, in order
 
-## Rhythm
+| Sheet | In one line |
+|-------|-------------|
+| [What is a program?](start/README.md) | A program is a recipe for a computer. |
+| [Your first program](start/first-program.md) | Say hello in the browser console. Nothing to install. |
+| [Get set up](setup/README.md) | Terminal, Git, an editor, a GitHub account, this repo and your own branch. |
+| [Git: your daily loop](git/README.md) | Status, add, commit, push, pull, and undo safely. |
+| [HTML](html/README.md) | The skeleton of a web page. |
+| [CSS](css/README.md) | Paint for the page: colours, space, flex, phones. |
+| [The page tree: clicks and changes](javascript/dom.md) | Find elements, change them, react to clicks. |
+| [JSON: data in a parcel](javascript/json.md) | Data as text: `JSON.stringify`, `JSON.parse`, localStorage. |
+| [fetch and await](javascript/README.md) | Ask a server on the internet and wait for the answer. |
+| [Java: where each topic lives](java/README.md) | The toy words and a map of the Java topics. |
+| [How a Java server is structured](java/server-layers.md) | Waiter, chef and pantry: controller, service, repository. |
 
-```text
-LEARNING_PATH / Roadmap phase  →  Sheet (5–20 min)  →  Build  →  Checkpoint
-```
+Any word you do not know: the [glossary](start/glossary.md).
 
-## Sheets
+## Look it up (not on the path)
 
-| Folder | Layer / Phase | When | Start |
-|--------|---------------|------|-------|
-| [html/](./html/) | Phase 2 | Before project 00 (web craft, before Java Layer A) | [README](./html/README.md) |
-| [css/](./css/) | Phase 2 | Style project 00 (web craft, before Java Layer A) | [README](./css/README.md) |
-| [java/](./java/) | Layers A–C (foundation) | Language base before frameworks | [README](./java/README.md) |
-| [java/server-layers.md](./java/server-layers.md) | Layer D | Controller → service → repo picture before Spring | [server-layers](./java/server-layers.md) |
-| [setup/](./setup/) | Phase 2+ tools map | When to install what (web vs Java vs optional) | [getting-started](setup/README.md) |
-| [javascript/](./javascript/) | Phase 3 | Apply notes for weather UI | [by-project](./javascript/by-project.md) |
-| [git/](./git/) | Anytime after setup | Apply only → CS for depth | [README](./git/README.md) |
-| [docker/](../projects/extras/docker-portfolio/README.md) | Phase 5 / Layer D | Dockerfile apply → CS for depth | [README](../projects/extras/docker-portfolio/README.md) |
-| [nodejs/](./nodejs/) · [npm/](./npm/) | Optional Phase 6 | Optional Node CLI | READMEs |
-| [react/](./react/) · [typescript/](./typescript/) | Optional Phase 6 | Optional React/TS | READMEs |
+| Sheet | In one line |
+|-------|-------------|
+| [Node.js](nodejs/README.md) | JavaScript outside the browser. |
+| [npm](npm/README.md) | Installing JavaScript packages, `package.json`. |
+| [React](react/README.md) | Building pages from components, for the React todo extra. |
+| [TypeScript](typescript/README.md) | JavaScript with types. |
 
-## Entry points
-
-| Doc | Purpose |
-|-----|---------|
-| **[../docs/LEARNING_PATH.md](../docs/LEARNING_PATH.md)** | Whole-repo spine (Layers A–F) |
-| **[roadmap.md](../docs/LEARNING_PATH.md)** | Project phase checklists |
-| [../README.md](../projects/README.md) | Project list |
-
-**Rule:** If CS or Java hub already teaches it, this library **links**. It does not rewrite the lesson.
+A sheet never repeats a lesson. When a topic has its own lesson, the sheet links there.

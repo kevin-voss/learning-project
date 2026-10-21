@@ -1,12 +1,7 @@
 # Node.js
 
-**Scope:** Phase 6 optional (project 03). Off the main Java spine. Only after Java Layers A–B, or skip.
-
-**When:** Optional Node weather CLI. Skim browser-vs-Node first. Deep read during project 03.
-
-**Roadmap:** [roadmap → Project 03](../../docs/LEARNING_PATH.md)
-
----
+> [!NOTE]
+> A **look it up** page. It is not a step on the path. Open it when an extra project or a tutorial uses Node.js.
 
 ## One-sentence definition
 
@@ -67,7 +62,7 @@ node cli.js london --forecast
          argv[2]     argv[3]
 ```
 
-Use **Commander** in Project 3 instead of parsing manually.
+For bigger tools, a package like **Commander** reads the arguments for you.
 
 ## Exit codes
 
@@ -91,7 +86,7 @@ export MY_SECRET=abc123
 const secret = process.env.MY_SECRET;
 ```
 
-Project 3: use `.env` + **dotenv** (optional for weather — Open-Meteo needs no key).
+Keep secrets in a `.env` file (never commit it) and load them with the **dotenv** package.
 
 ## Shebang
 
@@ -99,7 +94,7 @@ Project 3: use `.env` + **dotenv** (optional for weather — Open-Meteo needs no
 #!/usr/bin/env node
 ```
 
-First line of CLI entry file — run as `./weather.js` with `chmod +x`.
+First line of a command-line tool. After `chmod +x weather.js` you can run it as `./weather.js`.
 
 ## node vs npm vs npx
 
@@ -121,17 +116,12 @@ Install **LTS** (v20 or v22). Check: `node -v`
 | Wrong folder | `cd` to project root |
 | `node app.js` vs `npm start` | `npm start` runs `package.json` script |
 
-## In this curriculum
+## Where you meet it here
 
-```
-Project 1  →  browser: fetch, DOM
-Project 2  →  Docker serves static files (Node not in container)
-Project 3  →  Node runs your CLI ⭐
-Project 4  →  Node runs Vite dev server; React in browser
-```
+- The [React todo extra](../../projects/extras/react-todo/README.md): Node runs the Vite dev server, React runs in the browser.
+- The JavaScript drills use **Bun**, a Node-like runtime. See [How the drills work](../../drills/javascript/README.md).
 
 ## Further reading
 
 - [Node.js API docs](https://nodejs.org/docs/latest/api/)
 - [npm](../npm/README.md)
-- [03 CLI step-by-step](README.md)

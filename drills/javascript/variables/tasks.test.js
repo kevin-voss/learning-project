@@ -10,93 +10,83 @@ import {
   remainderDivision,
   templateWelcome,
   textToNumber,
-  sumOfArray
 } from "./tasks.js";
 
-// Hilfsfunktion, um bei Fehlern einen Tipp anzuzeigen
+// Helper: when a check fails, show a hint above the error.
 function check(fn, args, expected, hint) {
   try {
     expect(fn(...args)).toBe(expected);
   } catch (e) {
-    throw new Error(`\n💡 TIPP: ${hint}\n\n${e.message}`);
+    throw new Error(`\nHINT: ${hint}\n\n${e.message}`);
   }
 }
 
 describe("variables-task-01: rectangleArea", () => {
-  test("multipliziert Breite und Höhe", () => {
-    check(rectangleArea, [4, 5], 20, "Multipliziere width und height mit dem '*' Operator.");
-    check(rectangleArea, [2, 3], 6, "Multipliziere width und height mit dem '*' Operator.");
+  test("multiplies width and height", () => {
+    check(rectangleArea, [4, 5], 20, "Multiply width and height with the '*' operator.");
+    check(rectangleArea, [2, 3], 6, "Multiply width and height with the '*' operator.");
   });
 });
 
 describe("variables-task-02: celsiusToFahrenheit", () => {
-  test("0 °C ist 32 °F", () => {
-    check(celsiusToFahrenheit, [0], 32, "Die Formel lautet: c * 9/5 + 32. Vergiss nicht, das Ergebnis zurückzugeben (return).");
+  test("0 °C is 32 °F", () => {
+    check(celsiusToFahrenheit, [0], 32, "The formula is c * 9 / 5 + 32. Do not forget to return the result.");
   });
-  test("100 °C ist 212 °F", () => {
-    check(celsiusToFahrenheit, [100], 212, "Die Formel lautet: c * 9/5 + 32. Vergiss nicht, das Ergebnis zurückzugeben (return).");
+  test("100 °C is 212 °F", () => {
+    check(celsiusToFahrenheit, [100], 212, "The formula is c * 9 / 5 + 32. Do not forget to return the result.");
   });
 });
 
 describe("variables-task-03: minutesToSeconds", () => {
-  test("1 Minute = 60 Sekunden", () => {
-    check(minutesToSeconds, [1], 60, "Multipliziere die Minuten mit 60.");
+  test("1 minute is 60 seconds", () => {
+    check(minutesToSeconds, [1], 60, "Multiply the minutes by 60.");
   });
-  test("5 Minuten", () => {
-    check(minutesToSeconds, [5], 300, "Multipliziere die Minuten mit 60.");
+  test("5 minutes", () => {
+    check(minutesToSeconds, [5], 300, "Multiply the minutes by 60.");
   });
 });
 
 describe("variables-task-04: concatWithSpace", () => {
-  test("zwei Wörter mit Leerzeichen", () => {
-    check(concatWithSpace, ["Hallo", "Welt"], "Hallo Welt", "Nutze den '+' Operator, z.B. wordA + ' ' + wordB, oder Template-Strings: `${wordA} ${wordB}`.");
+  test("two words with a space", () => {
+    check(concatWithSpace, ["Hello", "World"], "Hello World", "Use '+', for example wordA + ' ' + wordB, or a template string: `${wordA} ${wordB}`.");
   });
 });
 
 describe("variables-task-05: templateWelcome", () => {
-  test("Willkommens-Template", () => {
-    check(templateWelcome, ["Alex"], "Willkommen, Alex!", "Nutze Backticks (`) für Template-Strings und füge die Variable mit ${name} ein. Achte auf das Ausrufezeichen!");
+  test("welcome text", () => {
+    check(templateWelcome, ["Alex"], "Welcome, Alex!", "Use backticks (`) and put the name in with ${name}. Mind the comma and the exclamation mark!");
   });
 });
 
 describe("variables-task-06: lengthOfText", () => {
-  test("Länge zählen", () => {
-    check(lengthOfText, ["abc"], 3, "Jeder Text (String) hat eine Eigenschaft '.length', die die Anzahl der Zeichen speichert (z.B. text.length).");
+  test("counts characters", () => {
+    check(lengthOfText, ["abc"], 3, "Every string has a '.length' property with the number of characters, for example text.length.");
   });
-  test("leerer String", () => {
-    check(lengthOfText, [""], 0, "Jeder Text (String) hat eine Eigenschaft '.length', die die Anzahl der Zeichen speichert (z.B. text.length).");
+  test("empty string", () => {
+    check(lengthOfText, [""], 0, "Every string has a '.length' property with the number of characters, for example text.length.");
   });
 });
 
 describe("variables-task-07: numberToText", () => {
-  test("Zahl wird String", () => {
-    check(numberToText, [7], "7", "Nutze die Funktion String(n) oder die Methode n.toString(), um eine Zahl in Text umzuwandeln.");
+  test("number becomes string", () => {
+    check(numberToText, [7], "7", "Use String(n) or n.toString() to turn a number into text.");
   });
 });
 
 describe("variables-task-08: textToNumber", () => {
-  test("String wird Zahl", () => {
-    check(textToNumber, ["42"], 42, "Nutze die Funktion Number(text), um Text in eine Zahl umzuwandeln.");
+  test("string becomes number", () => {
+    check(textToNumber, ["42"], 42, "Use Number(text) to turn text into a number.");
   });
 });
 
 describe("variables-task-09: remainderDivision", () => {
-  test("Rest der Division", () => {
-    check(remainderDivision, [10, 3], 1, "Nutze den Modulo-Operator '%' (z.B. a % b), um den Rest zu berechnen.");
+  test("remainder of a division", () => {
+    check(remainderDivision, [10, 3], 1, "Use the remainder operator '%', for example a % b.");
   });
 });
 
 describe("variables-task-10: incrementValue", () => {
-  test("um eins erhöht", () => {
-    check(incrementValue, [4], 5, "Addiere 1 zu n (z.B. n + 1) und gib das Ergebnis zurück.");
-  });
-});
-
-describe("variables-task-11: sum of array", () => {
-  test("sum of array", () => {
-    check(sumOfArray, [[2, 3, 4]], 9, "Nutze eine for-Schleife, um über das Array zu iterieren. Addiere jedes Element zu einer Summen-Variable.");
-    check(sumOfArray, [[3, 9, 2]], 14, "Nutze eine for-Schleife, um über das Array zu iterieren. Addiere jedes Element zu einer Summen-Variable.");
-    check(sumOfArray, [[1]], 1, "Achte darauf, dass die Schleife bei 0 beginnt und solange läuft, wie i < array.length.");
-    check(sumOfArray, [[2, 9, 8]], 19, "Achte darauf, dass die Schleife bei 0 beginnt und solange läuft, wie i < array.length.");
+  test("one bigger", () => {
+    check(incrementValue, [4], 5, "Add 1 to n (n + 1) and return the result.");
   });
 });

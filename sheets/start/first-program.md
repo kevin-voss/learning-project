@@ -35,6 +35,6 @@ If you see a red message, that is OK. Red means "I did not understand". Look for
 > 3. What does red text in the console mean?
 >    <details><summary>Answer</summary>The computer did not understand a line. Fix it and try again.</details>
 
-You just wrote and ran code. Every program on this path, even a big server, starts like this.
+You wrote and ran code. Every program on this path, even a big server, starts like this.
 
-**Next:** go back to the path and open step 3, the terminal.
+**Next:** [The terminal: your first commands](../../tracks/computer-science/index.html#linux-terminal-os)

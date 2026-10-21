@@ -1,8 +1,9 @@
 # Get set up
 
-**Time:** about 1 hour, once. **You need:** a computer and internet. Nothing else.
+> [!PICTURE]
+> Before you cook, you set up the kitchen: a stove, a knife, the recipe book on the table. Here you set up your **coding kitchen**: a terminal, an editor, Git, a GitHub account, and this whole repository on your computer.
 
-At the end you have a terminal, an editor, Git, and this whole repository on your computer.
+You need a computer and internet. Nothing else. You do this once.
 
 ## 1. Open a terminal
 
@@ -11,10 +12,10 @@ The terminal is a window where you type commands instead of clicking.
 | Your computer | What to do |
 |---------------|------------|
 | Mac | Press `Cmd + Space`, type `Terminal`, press Enter. |
-| Windows | Install Ubuntu through WSL: open PowerShell **as administrator**, run `wsl --install`, restart, then open the **Ubuntu** app. Use Ubuntu for everything in this course. |
+| Windows | Install Ubuntu through WSL: open PowerShell **as administrator**, run `wsl --install`, restart, then open the **Ubuntu** app. Use Ubuntu for everything on this path. |
 | Linux | Open the **Terminal** app. |
 
-Type `pwd` and press Enter. It prints the folder you are in. That is your first command.
+Type `pwd` and press Enter. It prints the folder you are in.
 
 ## 2. Install Git
 
@@ -24,14 +25,14 @@ Git saves snapshots of your work. Check if you have it:
 git --version
 ```
 
-If you see a version number, skip ahead. If not:
+If you see a version number, go to step 3. If not:
 
 | Your computer | Command |
 |---------------|---------|
 | Mac | `xcode-select --install` (click Install in the window that opens) |
 | Ubuntu / WSL / Linux | `sudo apt update && sudo apt install -y git` |
 
-Then tell Git your name and email (any email you use for GitHub):
+Then tell Git your name and the email you will use for GitHub:
 
 ```bash
 git config --global user.name "Your Name"
@@ -55,43 +56,50 @@ cd learning-project
 code .
 ```
 
-VS Code opens with every lesson, project and task as files. The website shows the same files, just easier to read.
+VS Code opens with every lesson, project and task as files. The website shows the same files, easier to read.
 
-## 5. Make your own branch
+## 5. Make a GitHub account and sign in
+
+GitHub is the shelf on the internet where your work is kept safe. You need an account before your first `git push`.
+
+1. Go to [github.com/signup](https://github.com/signup) and make a free account. Use the same email as in step 2.
+2. Send your teacher your GitHub **username**. They invite you to this repository.
+3. Open the invitation email (or [github.com/notifications](https://github.com/notifications)) and click **Accept invitation**.
+4. In VS Code, click the **person icon** at the bottom left and choose **Sign in with GitHub**. Your browser opens. Click **Authorize**.
+
+> [!WARN]
+> When you push from the terminal, GitHub does **not** accept your GitHub password. Push from the **terminal inside VS Code** (menu **Terminal → New Terminal**). VS Code then signs you in through the browser.
+
+## 6. Make your own branch and push it
 
 A branch is your own copy of the work. Name it after yourself:
 
 ```bash
 git switch -c your-name
-```
-
-Save your work like this, as often as you like:
-
-```bash
-git add .
-git commit -m "Finish project 00"
 git push -u origin your-name
 ```
 
-Get new lessons from your teacher:
+From now on you save your work with the [daily Git loop](../git/README.md).
 
-```bash
-git pull origin main
-```
+## What to install when
 
-## Install later, when the path says so
+You do not need everything now. Each tool is installed on the page that first needs it.
 
-You do not need these yet. The path tells you when.
+| When on the path | Install | Where |
+|------------------|---------|-------|
+| Now | An editor and Git | this page |
+| First code: JavaScript (the drills) | Bun | [How the drills work](../../drills/javascript/README.md) |
+| Java 1 · The language | Java (the JDK) | [Getting started with Java](../../tracks/java/topics/getting-started/index.html) |
+| Java 4 · Real projects | Maven | [Build tools](../../tracks/java/topics/build-tools/index.html) |
+| Data and servers | Docker | [Docker and containers](../../tracks/computer-science/index.html#docker-containers), then [Get Docker](https://docs.docker.com/get-started/get-docker/) |
+| Only for the extras | Node.js and npm | [Node.js](../nodejs/README.md) |
 
-| Tool | When | Where it is explained |
-|------|------|------------------------|
-| Bun | Stage 5, JavaScript drills | [drills README](../../drills/javascript/README.md) |
-| Java 21 | Stage 6, Java | [Java getting started](../../tracks/java/topics/getting-started/index.html) |
-| Docker | Stage 9, servers and Docker | [Docker sheet](../../projects/extras/docker-portfolio/README.md) |
-| Node.js + npm | Extras only (projects 03 and 04) | [Node.js sheet](../nodejs/README.md) |
+> [!CHECK]
+> 1. Run `git --version`. What should you see?
+>    <details><summary>Answer</summary>A line like <code>git version 2.45.0</code>. Any version number is fine.</details>
+> 2. Run `cd ~/code/learning-project` and then `git branch`. What should you see?
+>    <details><summary>Answer</summary>Your name with a <code>*</code> in front of it.</details>
+> 3. Open `https://github.com/kevin-voss/learning-project/branches` in the browser. Is your branch there?
+>    <details><summary>Answer</summary>Yes, if the push in step 6 worked. If not, check that you accepted the invitation and pushed from the VS Code terminal.</details>
 
-## Check
-
-- `git --version` prints a version.
-- `cd ~/code/learning-project` and `ls` show `README.md`, `projects`, `tracks` and the other folders.
-- `git branch` shows your name with a `*` in front.
+**Next:** [Git: your daily loop](../git/README.md)

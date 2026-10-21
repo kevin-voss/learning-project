@@ -1,42 +1,70 @@
-# Thema: Schleifen (`for`, `while`)
+# Drill: loops
 
-## Worum es geht
+> [!PICTURE]
+> Running laps on a track. You start at the line, run one lap, and add one to your lap counter. You stop when the counter says you are done. A loop runs the same code lap after lap, and `i` is the lap counter.
 
-Schleifen **wiederholen** Code, solange eine Bedingung gilt oder für eine feste Anzahl Schritte.
+<div data-anim="laps"></div>
 
-- **`for`** — oft mit Zähler: `for (let i = 0; i < n; i++)`
-- **`for...of`** — Elemente einer Liste durchlaufen: `for (const x of arr)`
-- **`while`** — solange Bedingung wahr ist
+## The idea
 
-In diesen Aufgaben übst du **Zählen**, **Akkumulieren** (Summe, Produkt, String zusammenbauen) und **Suche** (erster Index).
+A **loop** repeats a block of code.
 
-## Was du in `tasks.js` tun sollst
+- A `for` loop has three parts: where the counter starts, when to keep going, and how the counter changes.
+- `for (let i = 1; i <= 3; i++)` runs three laps with `i` = 1, 2, 3. `i++` means "add 1 to `i`".
+- A `while` loop keeps going as long as its condition is `true`.
+- Most tasks need a box **outside** the loop (a sum, a counter, a string) that grows a little each lap.
 
-1. **`reverseStringFor`:** Baue den neuen String z. B. Zeichen für Zeichen — **nicht** `str.split("").reverse().join("")`, wenn du die Schleifen-Übung ernst meinst (die Aufgabenstellung sagt: mit Schleife).
-2. **`indexOfInArray`:** Wenn `val` nicht vorkommt, gib **`-1`** zurück (wie `Array.prototype.indexOf`).
-3. **`countdownArrayFor`:** Für `n === 0` → `[]`; sonst `[n, n-1, …, 1]`.
+## Tiny example
 
-## Was wir erwarten
+```javascript
+let sum = 0;
+for (let i = 1; i <= 3; i++) {
+  sum = sum + i;
+}
+console.log(sum);   // 6  (1 + 2 + 3)
 
-- **`productFromOneToN(0)`** ist per Definition **`1`** (leeres Produkt).
-- **`stringOfStars(0)`** ist **`""`**.
-
-## Testen
-
-```bash
-make loops
-make loops-task-07
+const word = "cat";
+for (let i = 0; i < word.length; i++) {
+  console.log(word[i]);   // "c", then "a", then "t"
+}
 ```
 
-## Aufgabenliste (Kurzüberblick)
+> [!WARN]
+> A loop whose condition never becomes `false` runs forever. If the terminal hangs, press `Ctrl + C` and check how your counter changes.
 
-1. Summe 1…n  
-2. Zeichen wiederholen  
-3. Buchstaben in String zählen  
-4. Index in Array (oder -1)  
-5. Produkt 1…n  
-6. Array-Summe mit Schleife  
-7. String umdrehen (Schleife)  
-8. Countdown-Array  
-9. Enthält eine gerade Zahl?  
-10. Stern-Zeichenkette  
+> [!TRY]
+> 1. Save the example above as `laps.js` and run `bun laps.js`.
+> 2. Change `i <= 3` to `i <= 5` and run it again.
+> You should see: `6`, the three letters, and then `15` after your change.
+
+## Run this topic's tests
+
+```bash
+make loops            # all 10 tasks
+make loops-task-07    # only task 7
+```
+
+No `make`? Run `bun test ./drills/javascript/loops/` instead.
+
+## The tasks
+
+1. Sum from 1 to n
+2. Repeat a character
+3. Count a letter in a text
+4. Multiply from 1 to n (factorial)
+5. Turn a string around
+6. A row of stars
+7. Palindrome ("anna" backwards is "anna")
+8. Sum of the even numbers
+9. Where is the letter? (or `-1`)
+10. Count the digits (`while`)
+
+> [!CHECK]
+> 1. How many laps does `for (let i = 0; i < 4; i++)` run?
+>    <details><summary>Answer</summary>Four: `i` is 0, 1, 2, 3. At 4 the condition `i < 4` is `false`.</details>
+> 2. Why does the product in task 4 start at `1` and not `0`?
+>    <details><summary>Answer</summary>Anything times 0 is 0. Starting at 1 does not change the result.</details>
+> 3. Where must `let sum = 0` go: inside or outside the loop?
+>    <details><summary>Answer</summary>Outside, before the loop. Inside, it would reset to 0 every lap.</details>
+
+**Next:** [Drill: arrays](../arrays/README.md)

@@ -1,25 +1,15 @@
-# CSS — sheet (style project 00)
+# CSS: paint for the page
 
-**Scope:** Phase 2 / before Java Layer A (web craft).  
-**Time:** ~15 minutes. **Apply on:** [`../../00-static-page/`](../../projects/01-about-me).
+> [!PICTURE]
+> HTML built the dollhouse. CSS **paints** it: colours, space, sizes. It also says whether the toys sit in a row or in a pile. Same house, nicer look.
 
-CSS paints the dollhouse: colors, space, size. Same HTML, nicer look.
+## The idea
 
-## Toy story
-
-HTML put toys in rooms. CSS says:
-
-- How big is the sign?  
-- How much empty floor between toys?  
-- Do toys sit in a row (flex) or a pile?
-
-## Link CSS to HTML
+A CSS rule has a **selector** (what you style) and **properties** (what changes). You put the rules in their own file and link it in `<head>`:
 
 ```html
 <link rel="stylesheet" href="css/styles.css" />
 ```
-
-Put that in `<head>`.
 
 ## Tiny example
 
@@ -29,46 +19,47 @@ body {
   max-width: 40rem;
   margin: 2rem auto;
   padding: 0 1rem;
-  line-height: 1.5;
 }
 
-h1 {
-  color: #0f3d2e;
-}
+h1 { color: #0f3d2e; }
 
 .card {
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 1rem;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  border: 1px solid #ccc;
+  padding: 1rem;
 }
 
 @media (max-width: 600px) {
-  body {
-    margin: 1rem auto;
-  }
+  body { margin: 1rem auto; }
 }
 ```
 
-## Words to know
-
-| Idea | Meaning |
+| Word | Meaning |
 |------|---------|
-| Selector | What you style (`h1`, `.card`) |
-| Property | What changes (`color`, `margin`) |
-| Flex | Put children in a row or column easily |
-| Media query | Different rules on small screens |
+| Selector | what you style: `h1`, `.card` (a class) |
+| Property | what changes: `color`, `margin` |
+| Flex | puts the children in a row or a column |
+| Media query | extra rules for small screens |
 
-## Do / don’t
+> [!TRY]
+> 1. Next to your `hello.html`, make `css/styles.css` with the example. Link it in `<head>`.
+> 2. Open the page with Live Server.
+> 3. Change the `h1` colour, save, and look.
+> 4. Make the browser window very narrow.
+>
+> You should see: the page in the middle of the screen, the new heading colour, and a smaller top margin when the window is narrow.
 
-- **Do** change one thing, refresh, see it.  
-- **Don’t** fight with 20 colors on day one — pick two.  
-- **Do** test a narrow browser window (phone size).
+> [!WARN]
+> Change one thing, save, look. Pick two colours, not twenty. The full flexbox guide is on [MDN](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout/Flexbox), not here.
 
-## Checkpoint
+> [!CHECK]
+> 1. In `.card { padding: 1rem; }`, what is the selector and what is the property?
+>    <details><summary>Answer</summary>The selector is <code>.card</code>. The property is <code>padding</code>.</details>
+> 2. What does `display: flex` do?
+>    <details><summary>Answer</summary>It puts the children of that element in a row (or a column with <code>flex-direction: column</code>).</details>
+> 3. When does a rule inside `@media (max-width: 600px)` work?
+>    <details><summary>Answer</summary>Only when the screen is 600 pixels wide or narrower, like a phone.</details>
 
-Your page uses a linked CSS file, a flex card, and one `@media` rule.
-
-**Canonical deep CSS later:** MDN Flexbox guide — not a second curriculum in this repo.
+**Next:** [Project 1: About-me page](../../projects/01-about-me/README.md)

@@ -1,8 +1,8 @@
 /**
- * JavaScript-Übungen — Thema: Math (Lösungen)
- * 
- * Hier findest du die Lösungen zu den Aufgaben in tasks.js.
- * Nutze diese Datei als Hilfestellung, wenn du nicht weiterkommst.
+ * JavaScript drill: math (solutions)
+ *
+ * One possible answer for every task in tasks.js.
+ * Try on your own first. Read here when you are stuck.
  */
 
 export function floorValue(x) {
@@ -21,7 +21,7 @@ export function absoluteValue(x) {
 }
 
 export function powerValue(base, exp) {
-  return Math.pow(base, exp); // oder base ** exp
+  return base ** exp; // or: Math.pow(base, exp)
 }
 
 export function maximumTwo(a, b) {
@@ -33,19 +33,15 @@ export function minimumThree(a, b, c) {
 }
 
 export function clampValue(value, min, max) {
-  if (value < min) return min;
-  if (value > max) return max;
-  return value;
-  // Alternativ: return Math.min(Math.max(value, min), max);
+  const notTooSmall = Math.max(value, min);
+  const notTooBig = Math.min(notTooSmall, max);
+  return notTooBig;
+  // In one line: return Math.min(Math.max(value, min), max);
 }
 
-export function factorialMath(n) {
-  if (n === 0) return 1;
-  let result = 1;
-  for (let i = 1; i <= n; i++) {
-    result *= i;
-  }
-  return result;
+export function averageOfThree(a, b, c) {
+  const sum = a + b + c;
+  return sum / 3;
 }
 
 export function roundTwoDecimals(x) {

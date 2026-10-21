@@ -12,90 +12,101 @@ import {
   ticketPrice,
 } from "./tasks.js";
 
-// Hilfsfunktion, um bei Fehlern einen Tipp anzuzeigen
+// Helper: when a check fails, show a hint above the error.
 function check(fn, args, expected, hint) {
   try {
     expect(fn(...args)).toBe(expected);
   } catch (e) {
-    throw new Error(`\n💡 TIPP: ${hint}\n\n${e.message}`);
+    throw new Error(`\nHINT: ${hint}\n\n${e.message}`);
   }
 }
 
 describe("conditionals-task-01: signOf", () => {
-  test("Vorzeichen", () => {
-    check(signOf, [-3], -1, "Nutze if/else if, um zu prüfen, ob n negativ, null oder positiv ist. Gib -1 für negativ, 0 für null und 1 für positiv zurück.");
-    check(signOf, [0], 0, "Nutze if/else if, um zu prüfen, ob n negativ, null oder positiv ist. Gib -1 für negativ, 0 für null und 1 für positiv zurück.");
-    check(signOf, [5], 1, "Nutze if/else if, um zu prüfen, ob n negativ, null oder positiv ist. Gib -1 für negativ, 0 für null und 1 für positiv zurück.");
+  test("sign", () => {
+    const hint = "Use if / else if to check below zero, zero, above zero. Return -1, 0 or 1.";
+    check(signOf, [-3], -1, hint);
+    check(signOf, [0], 0, hint);
+    check(signOf, [5], 1, hint);
   });
 });
 
 describe("conditionals-task-02: maxOfTwo", () => {
-  test("Maximum ohne Math.max", () => {
-    check(maxOfTwo, [2, 9], 9, "Vergleiche a und b mit if (a > b). Gib die größere Zahl zurück.");
-    check(maxOfTwo, [10, 5], 10, "Vergleiche a und b mit if (a > b). Gib die größere Zahl zurück.");
+  test("bigger of two without Math.max", () => {
+    const hint = "Compare with if (a > b). Return the bigger number.";
+    check(maxOfTwo, [2, 9], 9, hint);
+    check(maxOfTwo, [10, 5], 10, hint);
   });
 });
 
 describe("conditionals-task-03: isPassing", () => {
-  test("Bestanden?", () => {
-    check(isPassing, [50], true, "Ab score >= 50 ist es bestanden (true), sonst false. Du kannst direkt score >= 50 zurückgeben oder ein if/else verwenden.");
-    check(isPassing, [49], false, "Ab score >= 50 ist es bestanden (true), sonst false. Du kannst direkt score >= 50 zurückgeben oder ein if/else verwenden.");
+  test("passed?", () => {
+    const hint = "50 or more passes (true), else false. You can return score >= 50 directly.";
+    check(isPassing, [50], true, hint);
+    check(isPassing, [49], false, hint);
   });
 });
 
 describe("conditionals-task-04: temperatureFeel", () => {
-  test("Temperaturgefühl", () => {
-    check(temperatureFeel, [5], "kalt", "Nutze if/else if/else: < 10 -> 'kalt'; < 22 -> 'angenehm'; sonst 'warm'.");
-    check(temperatureFeel, [15], "angenehm", "Nutze if/else if/else: < 10 -> 'kalt'; < 22 -> 'angenehm'; sonst 'warm'.");
-    check(temperatureFeel, [25], "warm", "Nutze if/else if/else: < 10 -> 'kalt'; < 22 -> 'angenehm'; sonst 'warm'.");
+  test("how it feels", () => {
+    const hint = "Use if / else if / else: below 10 -> 'cold'; below 22 -> 'nice'; otherwise 'warm'.";
+    check(temperatureFeel, [5], "cold", hint);
+    check(temperatureFeel, [15], "nice", hint);
+    check(temperatureFeel, [25], "warm", hint);
   });
 });
 
 describe("conditionals-task-05: ticketPrice", () => {
-  test("Ticketpreis", () => {
-    check(ticketPrice, [5], 0, "Alter < 6 -> 0 Euro; < 18 -> 8 Euro; sonst -> 15 Euro.");
-    check(ticketPrice, [10], 8, "Alter < 6 -> 0 Euro; < 18 -> 8 Euro; sonst -> 15 Euro.");
-    check(ticketPrice, [20], 15, "Alter < 6 -> 0 Euro; < 18 -> 8 Euro; sonst -> 15 Euro.");
+  test("ticket price", () => {
+    const hint = "Younger than 6 -> 0; younger than 18 -> 8; otherwise 15.";
+    check(ticketPrice, [5], 0, hint);
+    check(ticketPrice, [10], 8, hint);
+    check(ticketPrice, [20], 15, hint);
   });
 });
 
 describe("conditionals-task-06: isLeapYear", () => {
-  test("Schaltjahr", () => {
-    check(isLeapYear, [2024], true, "Ein Jahr ist ein Schaltjahr, wenn es durch 400 teilbar ist. Wenn nicht, aber es ist durch 100 teilbar, ist es KEIN Schaltjahr. Wenn nicht, aber es ist durch 4 teilbar, ist es ein Schaltjahr. Sonst nicht.");
-    check(isLeapYear, [1900], false, "Ein Jahr ist ein Schaltjahr, wenn es durch 400 teilbar ist. Wenn nicht, aber es ist durch 100 teilbar, ist es KEIN Schaltjahr. Wenn nicht, aber es ist durch 4 teilbar, ist es ein Schaltjahr. Sonst nicht.");
-    check(isLeapYear, [2000], false, "Ein Jahr ist ein Schaltjahr, wenn es durch 400 teilbar ist. Wenn nicht, aber es ist durch 100 teilbar, ist es KEIN Schaltjahr. Wenn nicht, aber es ist durch 4 teilbar, ist es ein Schaltjahr. Sonst nicht.");
-    check(isLeapYear, [2400], true, "Ein Jahr ist ein Schaltjahr, wenn es durch 400 teilbar ist. Wenn nicht, aber es ist durch 100 teilbar, ist es KEIN Schaltjahr. Wenn nicht, aber es ist durch 4 teilbar, ist es ein Schaltjahr. Sonst nicht.");
+  test("leap year", () => {
+    const hint = "Check in order: % 400 === 0 -> true; % 100 === 0 -> false; % 4 === 0 -> true; otherwise false.";
+    check(isLeapYear, [2024], true, hint);
+    check(isLeapYear, [2023], false, hint);
+    check(isLeapYear, [1900], false, hint);
+    check(isLeapYear, [2000], true, hint);
+    check(isLeapYear, [2400], true, hint);
   });
 });
 
 describe("conditionals-task-07: absoluteNoMath", () => {
-  test("Betrag ohne Math.abs", () => {
-    check(absoluteNoMath, [-4], 4, "Wenn n < 0 ist, gib -n zurück. Sonst gib n zurück.");
-    check(absoluteNoMath, [4], 4, "Wenn n < 0 ist, gib -n zurück. Sonst gib n zurück.");
+  test("distance from zero without Math.abs", () => {
+    const hint = "If n < 0, return -n. Otherwise return n.";
+    check(absoluteNoMath, [-4], 4, hint);
+    check(absoluteNoMath, [4], 4, hint);
   });
 });
 
 describe("conditionals-task-08: minOfTwo", () => {
-  test("Minimum ohne Math.min", () => {
-    check(minOfTwo, [3, 1], 1, "Vergleiche a und b mit if (a < b). Gib die kleinere Zahl zurück.");
-    check(minOfTwo, [1, 3], 1, "Vergleiche a und b mit if (a < b). Gib die kleinere Zahl zurück.");
+  test("smaller of two without Math.min", () => {
+    const hint = "Compare with if (a < b). Return the smaller number.";
+    check(minOfTwo, [3, 1], 1, hint);
+    check(minOfTwo, [1, 3], 1, hint);
   });
 });
 
 describe("conditionals-task-09: exactlyOneTrue", () => {
-  test("Genau eine wahr", () => {
-    check(exactlyOneTrue, [true, false], true, "Gib true zurück, wenn a und b unterschiedlich sind (a !== b).");
-    check(exactlyOneTrue, [false, true], true, "Gib true zurück, wenn a und b unterschiedlich sind (a !== b).");
-    check(exactlyOneTrue, [true, true], false, "Gib true zurück, wenn a und b unterschiedlich sind (a !== b).");
-    check(exactlyOneTrue, [false, false], false, "Gib true zurück, wenn a und b unterschiedlich sind (a !== b).");
+  test("exactly one is true", () => {
+    const hint = "Return true when a and b are different (a !== b).";
+    check(exactlyOneTrue, [true, false], true, hint);
+    check(exactlyOneTrue, [false, true], true, hint);
+    check(exactlyOneTrue, [true, true], false, hint);
+    check(exactlyOneTrue, [false, false], false, hint);
   });
 });
 
 describe("conditionals-task-10: gradeLetter", () => {
-  test("Notenbuchstabe", () => {
-    check(gradeLetter, [95], "A", ">= 90 -> 'A', >= 80 -> 'B', >= 70 -> 'C', sonst 'D'. Nutze if/else if/else.");
-    check(gradeLetter, [85], "B", ">= 90 -> 'A', >= 80 -> 'B', >= 70 -> 'C', sonst 'D'. Nutze if/else if/else.");
-    check(gradeLetter, [75], "C", ">= 90 -> 'A', >= 80 -> 'B', >= 70 -> 'C', sonst 'D'. Nutze if/else if/else.");
-    check(gradeLetter, [65], "D", ">= 90 -> 'A', >= 80 -> 'B', >= 70 -> 'C', sonst 'D'. Nutze if/else if/else.");
+  test("grade letter", () => {
+    const hint = "90 or more -> 'A', 80 or more -> 'B', 70 or more -> 'C', otherwise 'D'. Check the biggest first.";
+    check(gradeLetter, [95], "A", hint);
+    check(gradeLetter, [85], "B", hint);
+    check(gradeLetter, [75], "C", hint);
+    check(gradeLetter, [65], "D", hint);
   });
 });

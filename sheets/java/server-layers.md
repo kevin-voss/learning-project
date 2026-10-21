@@ -1,96 +1,71 @@
 # How a Java server is structured
 
-**Scope:** Java **Layer D** (foundation). Not Spring Boot deep-dive. Not JPA.
+> [!PICTURE]
+> A **restaurant**. The **waiter** takes your order and brings the plate. The **chef** cooks by the recipe. The **pantry** keeps the food on shelves.
+>
+> Nobody does the other one's job. The waiter never cooks, the chef never runs to your table.
 
-**Read after:** Gates A–C (language, collections, weather CLI).  
-**Then:** Postgres + Docker, then [Spring Boot](../../tracks/spring-boot/README.md) (Layer F).
+<div data-anim="restaurant"></div>
 
-## Problem
+## The idea
 
-If every line of code lives in one class, the app becomes spaghetti. HTTP, rules, and SQL get mixed. Hard to test. Hard to change.
+A server gets many jobs: read the HTTP request, check the rules, save data. If one class does all of that, it turns into spaghetti: hard to read, hard to test, hard to change.
 
-## Solution
+So a Java server gives each job its own class:
 
-Give each job its own place.
+| Restaurant | Server part | Its one job |
+|---|---|---|
+| Waiter | **Controller** | reads the HTTP request, calls the service, sends the response |
+| Chef | **Service** | the rules: "is the title empty?", "may this user do that?" |
+| Pantry | **Repository** | loads and saves data in the database |
+| Order ticket | **DTO** | the shape of the data in a request or response (JSON) |
 
 ```text
-Browser or API client
-        │
-        ▼
-  Controller     ← HTTP only (path, status, DTO in/out)
-        │
-        ▼
-  Service        ← business rules ("can this user do that?")
-        │
-        ▼
-  Repository     ← database talk (SQL or JPA)
-        │
-        ▼
-    Postgres
+Browser ──▶ Controller ──▶ Service ──▶ Repository ──▶ Database
+  (guest)     (waiter)      (chef)       (pantry)
 ```
 
-| Piece | Job | Not its job |
-|-------|-----|-------------|
-| **Controller** | Read request, call service, return response | Heavy rules, raw SQL |
-| **Service** | Rules and workflows | HTTP status trivia, SQL strings (ideally) |
-| **Repository** | Load and save data | Business policy |
-| **DTO** | Shape of data on the wire (JSON) | DB table mapping |
-| **Entity** | Shape of data in the domain / DB row | HTTP headers |
+## Tiny example
 
-Toy picture:
+One order goes through the restaurant: a new todo "Milk".
 
-- Controller = waiter (takes the order, brings the plate)
-- Service = kitchen (cooks by the recipe)
-- Repository = pantry (gets ingredients / puts leftovers away)
-- DTO = order ticket the waiter writes
-- Entity = the actual ingredient jars in the pantry
+```java
+class TodoController {                    // waiter
+  TodoService service;
+  TodoDto create(TodoDto order) {         // POST /api/todos
+    return service.add(order.title());
+  }
+}
 
-## Example flow (todo app)
+class TodoService {                       // chef
+  TodoRepository repository;
+  TodoDto add(String title) {
+    if (title.isBlank()) throw new IllegalArgumentException("Title is empty");
+    return repository.save(title);
+  }
+}
+```
 
-1. `POST /api/todos` with JSON `{ "title": "Milk" }`  
-2. Controller turns JSON into a DTO and calls service  
-3. Service checks title is not blank  
-4. Repository `INSERT` into Postgres  
-5. Controller returns `201` and a DTO for the new todo  
+The controller does not check rules. The service does not know about HTTP. The repository (not shown) only talks to the database.
 
-## Postgres and connection
+> [!TRY]
+> 1. Open the [Spring Boot course](../../tracks/spring-boot/README.md) and find the first web API step.
+> 2. Look at the class names in its code.
+>
+> You should see: names that end in `Controller`, `Service` and `Repository`. For each, say out loud: waiter, chef or pantry?
 
-| Idea | Meaning |
-|------|---------|
-| Database | Named box of tables (example: `todo`) |
-| Table | Rows and columns |
-| JDBC | Java API to send SQL |
-| Connection URL | `jdbc:postgresql://localhost:5432/todo` |
-| User / password | Who may open the box |
+> [!WARN]
+> The most common mistake is a **fat controller**: rules and database code inside the waiter. It works for a day, then nobody can change it. Keep the waiter thin.
 
-Always use **parameters** in SQL (prepared statements). Never glue user text into a query string.
+> [!NOTE]
+> How the repository really talks to a database with SQL is the job of [Project 11: the parcel database](../../projects/README.md). The idea of tables and queries is in [Databases and SQL](../../tracks/computer-science/index.html#database-sql-fundamentals).
 
-## Docker role
+> [!CHECK]
+> 1. Which part decides "a todo title may not be empty"?
+>    <details><summary>Answer</summary>The service (the chef). Rules live there.</details>
+> 2. Which part knows the URL `/api/todos` and the status code `201`?
+>    <details><summary>Answer</summary>The controller (the waiter). It is the only part that speaks HTTP.</details>
+> 3. A class has `INSERT INTO todo …` in it. What should it be called?
+>    <details><summary>Answer</summary>A repository (the pantry). Database code lives only there.</details>
 
-- Run **Postgres** in a container so everyone has the same DB  
-- Later run the **app** in a container too  
-- Compose file = "start DB (+ app) with one command"
-
-CS Docker lesson is canonical.
-
-## When to use what (persistence)
-
-| Approach | When |
-|----------|------|
-| Plain JDBC | Learning SQL and connections |
-| JdbcTemplate | Spring app, you still write SQL |
-| JPA / entities | After JDBC feels clear |
-
-## Pitfalls
-
-- Fat controllers (rules inside HTTP layer)
-- Skipping service "because the app is small" then growing forever
-- Using entities as API JSON without thinking (tight coupling)
-- Opening DB connections and never closing them (use try-with-resources)
-
-## Checkpoint
-
-Point at a class in a Spring sample and say: controller, repository, or neither.  
-Explain DTO vs entity in one sentence each.
-
-**Next:** CS SQL fundamentals → JDBC practice → [Spring Boot](../../tracks/spring-boot/README.md).
+**Next:** [Databases and SQL](../../tracks/computer-science/index.html#database-sql-fundamentals)

@@ -1,12 +1,7 @@
 # npm (Node Package Manager)
 
-**Scope:** Phase 6 optional (projects 03–04). Not on the main Java spine. Maven is the Java build tool (Layer C).
-
-**When:** Optional Node CLI or React. Read `package.json` before `npm init`.
-
-**Roadmap:** [roadmap → Project 03 / 04](../../docs/LEARNING_PATH.md)
-
----
+> [!NOTE]
+> A **look it up** page. It is not a step on the path. Java projects use [Maven](../../tracks/java/topics/build-tools/index.html) instead of npm.
 
 ## One-sentence definition
 
@@ -62,7 +57,7 @@ Created by `npm init`. Key fields:
 | Field | Meaning |
 |-------|---------|
 | `name` | Package name (unique on npm if publishing) |
-| `bin` | CLI command → file (Project 3) |
+| `bin` | command name → file, for command-line tools |
 | `scripts` | `npm run <name>` |
 | `dependencies` | Required at runtime |
 | `devDependencies` | Dev/test only |
@@ -97,12 +92,14 @@ Created by `npm init`. Key fields:
 | In package.json | Yes | No |
 | Use | Project code | Tools like `create-vite` |
 
-## `npm link` (Project 3)
+## `npm link`
+
+Try your own command-line tool as if it were installed:
 
 ```bash
-cd projects/03-cli-tool
+cd my-weather-cli
 npm link
-weather london   # works globally while developing
+weather london   # works everywhere while you develop
 npm unlink -g weather-cli
 ```
 
@@ -121,7 +118,7 @@ Run without permanent global install.
 - Run `npm audit`
 - Check package names on npmjs.com
 
-## Publishing (Project 3 bonus)
+## Publishing (optional)
 
 ```bash
 npm login
@@ -129,7 +126,7 @@ npm publish --dry-run
 npm publish
 ```
 
-## npm in Project 4 (React)
+## npm in the [React todo extra](../../projects/extras/react-todo/README.md)
 
 ```bash
 npm create vite@latest react-todo-app -- --template react
@@ -154,4 +151,4 @@ npm run build
 
 ## See also
 
-[Node.js](../nodejs/README.md) · [Roadmap](../../docs/LEARNING_PATH.md) · [03 step-by-step](../nodejs/README.md)
+[Node.js](../nodejs/README.md) · [React](../react/README.md)

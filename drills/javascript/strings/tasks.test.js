@@ -1,87 +1,90 @@
 import { describe, expect, test } from "bun:test";
 import {
-  characterCount,
+  capitalizeWord,
   containsText,
   dashInsteadOfSpaces,
   endsWithText,
   firstThreeChars,
-  isPalindromeText,
+  lastCharacter,
   startsWithText,
   toLowerCaseCopy,
   toUpperCaseCopy,
   trimWhitespace,
 } from "./tasks.js";
 
-// Hilfsfunktion, um bei Fehlern einen Tipp anzuzeigen
+// Helper: when a check fails, show a hint above the error.
 function check(fn, args, expected, hint) {
   try {
     expect(fn(...args)).toBe(expected);
   } catch (e) {
-    throw new Error(`\n💡 TIPP: ${hint}\n\n${e.message}`);
+    throw new Error(`\nHINT: ${hint}\n\n${e.message}`);
   }
 }
 
 describe("strings-task-01: containsText", () => {
-  test("enthält Text", () => {
-    check(containsText, ["hallo", "ll"], true, "Nutze die Methode .includes(fragment) auf dem String.");
-    check(containsText, ["hallo", "x"], false, "Nutze die Methode .includes(fragment) auf dem String.");
+  test("contains a piece", () => {
+    check(containsText, ["hello", "ll"], true, "Use text.includes(fragment).");
+    check(containsText, ["hello", "x"], false, "Use text.includes(fragment).");
   });
 });
 
 describe("strings-task-02: startsWithText", () => {
-  test("beginnt mit", () => {
-    check(startsWithText, ["Hallo", "Hal"], true, "Nutze die Methode .startsWith(prefix) auf dem String.");
-    check(startsWithText, ["Hallo", "all"], false, "Nutze die Methode .startsWith(prefix) auf dem String.");
+  test("starts with", () => {
+    check(startsWithText, ["Hello", "Hel"], true, "Use text.startsWith(prefix).");
+    check(startsWithText, ["Hello", "ell"], false, "Use text.startsWith(prefix).");
   });
 });
 
 describe("strings-task-03: endsWithText", () => {
-  test("endet mit", () => {
-    check(endsWithText, ["Hallo", "llo"], true, "Nutze die Methode .endsWith(suffix) auf dem String.");
-    check(endsWithText, ["Hallo", "Hal"], false, "Nutze die Methode .endsWith(suffix) auf dem String.");
+  test("ends with", () => {
+    check(endsWithText, ["Hello", "llo"], true, "Use text.endsWith(suffix).");
+    check(endsWithText, ["Hello", "Hel"], false, "Use text.endsWith(suffix).");
   });
 });
 
 describe("strings-task-04: toLowerCaseCopy", () => {
-  test("Kleinschreibung", () => {
-    check(toLowerCaseCopy, ["Hi"], "hi", "Nutze die Methode .toLowerCase() auf dem String.");
+  test("small letters", () => {
+    check(toLowerCaseCopy, ["Hi"], "hi", "Use text.toLowerCase().");
   });
 });
 
 describe("strings-task-05: toUpperCaseCopy", () => {
-  test("Großschreibung", () => {
-    check(toUpperCaseCopy, ["hi"], "HI", "Nutze die Methode .toUpperCase() auf dem String.");
+  test("capital letters", () => {
+    check(toUpperCaseCopy, ["hi"], "HI", "Use text.toUpperCase().");
   });
 });
 
 describe("strings-task-06: trimWhitespace", () => {
-  test("Leerzeichen abschneiden", () => {
-    check(trimWhitespace, ["  a  "], "a", "Nutze die Methode .trim() auf dem String.");
+  test("cuts off spaces", () => {
+    check(trimWhitespace, ["  a  "], "a", "Use text.trim().");
   });
 });
 
 describe("strings-task-07: dashInsteadOfSpaces", () => {
-  test("Bindestrich statt Leerzeichen", () => {
-    check(dashInsteadOfSpaces, ["a b c"], "a-b-c", "Nutze die Methode .replaceAll(' ', '-') auf dem String.");
+  test("dashes instead of spaces", () => {
+    check(dashInsteadOfSpaces, ["a b c"], "a-b-c", "Use text.replaceAll(' ', '-').");
   });
 });
 
-describe("strings-task-08: characterCount", () => {
-  test("Zeichen zählen", () => {
-    check(characterCount, ["abc"], 3, "Frage die Eigenschaft .length des Strings ab.");
+describe("strings-task-08: lastCharacter", () => {
+  test("last letter", () => {
+    const hint = "Letters are numbered from 0. The last one is text[text.length - 1].";
+    check(lastCharacter, ["hello"], "o", hint);
+    check(lastCharacter, ["a"], "a", hint);
   });
 });
 
 describe("strings-task-09: firstThreeChars", () => {
-  test("erste drei Zeichen", () => {
-    check(firstThreeChars, ["abcdef"], "abc", "Nutze die Methode .slice(0, 3) auf dem String.");
-    check(firstThreeChars, ["ab"], "ab", "Wenn der Text kürzer als 3 Zeichen ist, wird der ganze Text zurückgegeben.");
+  test("first three characters", () => {
+    check(firstThreeChars, ["abcdef"], "abc", "Use text.slice(0, 3).");
+    check(firstThreeChars, ["ab"], "ab", "If the text is shorter than 3, slice gives you the whole text.");
   });
 });
 
-describe("strings-task-10: isPalindromeText", () => {
-  test("Palindrom", () => {
-    check(isPalindromeText, ["anna"], true, "Wandle den String in ein Array um (.split('')), drehe das Array um (.reverse()), füge es wieder zu einem String zusammen (.join('')) und vergleiche es mit dem Originaltext.");
-    check(isPalindromeText, ["hallo"], false, "Wandle den String in ein Array um (.split('')), drehe das Array um (.reverse()), füge es wieder zu einem String zusammen (.join('')) und vergleiche es mit dem Originaltext.");
+describe("strings-task-10: capitalizeWord", () => {
+  test("capital first letter", () => {
+    const hint = "word[0].toUpperCase() gives the big first letter. word.slice(1) gives the rest. Glue them with +.";
+    check(capitalizeWord, ["anna"], "Anna", hint);
+    check(capitalizeWord, ["hello"], "Hello", hint);
   });
 });

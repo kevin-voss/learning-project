@@ -1,96 +1,101 @@
 import { describe, expect, test } from "bun:test";
 import {
+  countDigits,
   countInString,
-  countdownArrayFor,
-  hasEvenFor,
-  indexOfInArray,
+  firstIndexOfChar,
+  isPalindromeText,
   productFromOneToN,
   repeatCharacter,
   reverseStringFor,
   stringOfStars,
-  sumArrayFor,
   sumFromOneToN,
+  sumOfEvensUpToN,
 } from "./tasks.js";
 
-// Hilfsfunktion, um bei Fehlern einen Tipp anzuzeigen
+// Helper: when a check fails, show a hint above the error.
 function check(fn, args, expected, hint) {
   try {
-    if (typeof expected === "object" && expected !== null) {
-      expect(fn(...args)).toEqual(expected);
-    } else {
-      expect(fn(...args)).toBe(expected);
-    }
+    expect(fn(...args)).toBe(expected);
   } catch (e) {
-    throw new Error(`\n💡 TIPP: ${hint}\n\n${e.message}`);
+    throw new Error(`\nHINT: ${hint}\n\n${e.message}`);
   }
 }
 
 describe("loops-task-01: sumFromOneToN", () => {
-  test("Summe von 1 bis n", () => {
-    check(sumFromOneToN, [4], 10, "Nutze eine for-Schleife, die von 1 bis n läuft, und addiere in jedem Schritt die Schleifenvariable zu einer Summen-Variable.");
-    check(sumFromOneToN, [0], 0, "Für n === 0 soll das Ergebnis 0 sein.");
+  test("sum from 1 to n", () => {
+    check(sumFromOneToN, [4], 10, "Loop i from 1 to n (i <= n) and add i to a sum variable each lap.");
+    check(sumFromOneToN, [0], 0, "For n === 0 the answer is 0. Did you start with let sum = 0?");
   });
 });
 
 describe("loops-task-02: repeatCharacter", () => {
-  test("Zeichen wiederholen", () => {
-    check(repeatCharacter, ["a", 3], "aaa", "Nutze eine for-Schleife, die count-mal läuft, und hänge in jedem Schritt ch an eine String-Variable an.");
-    check(repeatCharacter, ["x", 0], "", "Für count === 0 soll das Ergebnis ein leerer String sein.");
+  test("repeat a character", () => {
+    check(repeatCharacter, ["a", 3], "aaa", "Loop count times and add ch to a string variable each lap.");
+    check(repeatCharacter, ["x", 0], "", "For count === 0 the answer is an empty string.");
   });
 });
 
 describe("loops-task-03: countInString", () => {
-  test("Buchstaben zählen", () => {
-    check(countInString, ["banana", "a"], 3, "Nutze eine Schleife, um über alle Zeichen von str zu iterieren (str.length). Wenn das aktuelle Zeichen gleich ch ist, erhöhe einen Zähler.");
-    check(countInString, ["hello", "z"], 0, "Wenn das Zeichen nicht im String vorkommt, soll das Ergebnis 0 sein.");
+  test("count a letter", () => {
+    check(countInString, ["banana", "a"], 3, "Loop over every position (i < str.length). If str[i] === ch, add 1 to a counter.");
+    check(countInString, ["hello", "z"], 0, "When the letter is not there, the answer is 0.");
   });
 });
 
-describe("loops-task-04: indexOfInArray", () => {
-  test("Erster Index", () => {
-    check(indexOfInArray, [[1, 2, 3], 2], 1, "Nutze eine Schleife, um über das Array zu iterieren. Wenn arr[i] === val ist, gib i zurück. Wenn die Schleife durchläuft, ohne den Wert zu finden, gib -1 zurück.");
-    check(indexOfInArray, [[1, 2, 3], 9], -1, "Wenn der Wert nicht im Array vorkommt, soll das Ergebnis -1 sein.");
+describe("loops-task-04: productFromOneToN", () => {
+  test("multiply from 1 to n", () => {
+    check(productFromOneToN, [4], 24, "Start with let product = 1. Loop i from 1 to n and multiply product by i.");
+    check(productFromOneToN, [5], 120, "Start with let product = 1. Loop i from 1 to n and multiply product by i.");
+    check(productFromOneToN, [0], 1, "For n === 0 the answer is 1. Did you start with 1 instead of 0?");
   });
 });
 
-describe("loops-task-05: productFromOneToN", () => {
-  test("Produkt von 1 bis n", () => {
-    check(productFromOneToN, [4], 24, "Nutze eine Schleife, die von 1 bis n läuft, und multipliziere die Schleifenvariable mit einer Produkt-Variable (die mit 1 initialisiert sein sollte).");
-    check(productFromOneToN, [0], 1, "Für n === 0 soll das Ergebnis 1 sein (leeres Produkt).");
+describe("loops-task-05: reverseStringFor", () => {
+  test("turn a string around", () => {
+    check(reverseStringFor, ["abc"], "cba", "Loop backwards from str.length - 1 down to 0 (i--) and add str[i] to a new string.");
+    check(reverseStringFor, [""], "", "An empty string stays empty.");
   });
 });
 
-describe("loops-task-06: sumArrayFor", () => {
-  test("Array-Summe", () => {
-    check(sumArrayFor, [[1, 2, 3]], 6, "Nutze eine Schleife, um über das Array zu iterieren, und addiere jedes Element zu einer Summen-Variable.");
-    check(sumArrayFor, [[]], 0, "Ein leeres Array ergibt 0.");
+describe("loops-task-06: stringOfStars", () => {
+  test("a row of stars", () => {
+    check(stringOfStars, [3], "***", "Loop n times and add '*' to a string each lap.");
+    check(stringOfStars, [0], "", "For n === 0 the answer is an empty string.");
   });
 });
 
-describe("loops-task-07: reverseStringFor", () => {
-  test("String umdrehen", () => {
-    check(reverseStringFor, ["abc"], "cba", "Nutze eine Schleife, die rückwärts über den String läuft (von str.length - 1 bis 0), und hänge jedes Zeichen an einen neuen String an.");
-    check(reverseStringFor, [""], "", "Ein leerer String bleibt leer.");
+describe("loops-task-07: isPalindromeText", () => {
+  test("palindrome", () => {
+    const hint = "Build the backwards text with a loop (like task 5), then compare: backwards === text.";
+    check(isPalindromeText, ["anna"], true, hint);
+    check(isPalindromeText, ["level"], true, hint);
+    check(isPalindromeText, ["hello"], false, hint);
   });
 });
 
-describe("loops-task-08: countdownArrayFor", () => {
-  test("Countdown-Array", () => {
-    check(countdownArrayFor, [3], [3, 2, 1], "Nutze eine Schleife, die von n bis 1 rückwärts läuft, und füge jede Zahl mit .push() zu einem Array hinzu.");
-    check(countdownArrayFor, [0], [], "Für n === 0 soll das Ergebnis ein leeres Array sein.");
+describe("loops-task-08: sumOfEvensUpToN", () => {
+  test("sum of the even numbers", () => {
+    const hint = "Loop i from 1 to n. Only when i % 2 === 0, add i to the sum.";
+    check(sumOfEvensUpToN, [6], 12, hint);
+    check(sumOfEvensUpToN, [7], 12, hint);
+    check(sumOfEvensUpToN, [0], 0, hint);
   });
 });
 
-describe("loops-task-09: hasEvenFor", () => {
-  test("Gerade Zahl vorhanden?", () => {
-    check(hasEvenFor, [[1, 3, 4]], true, "Nutze eine Schleife. Wenn ein Element durch 2 teilbar ist (% 2 === 0), gib sofort true zurück.");
-    check(hasEvenFor, [[1, 3, 5]], false, "Wenn die Schleife durchläuft, ohne eine gerade Zahl zu finden, gib false zurück.");
+describe("loops-task-09: firstIndexOfChar", () => {
+  test("where is the letter", () => {
+    check(firstIndexOfChar, ["hello", "l"], 2, "Loop over the positions. As soon as str[i] === ch, return i.");
+    check(firstIndexOfChar, ["hello", "h"], 0, "Positions start at 0.");
+    check(firstIndexOfChar, ["hello", "z"], -1, "After the loop, return -1: the letter was not found.");
   });
 });
 
-describe("loops-task-10: stringOfStars", () => {
-  test("Sterne-Zeile", () => {
-    check(stringOfStars, [3], "***", "Nutze eine Schleife, die n-mal läuft, und hänge in jedem Schritt ein '*' an einen String an.");
-    check(stringOfStars, [0], "", "Für n === 0 soll das Ergebnis ein leerer String sein.");
+describe("loops-task-10: countDigits", () => {
+  test("count the digits", () => {
+    const hint = "let digits = 1; let rest = n; while (rest >= 10) { rest = Math.floor(rest / 10); digits = digits + 1; }";
+    check(countDigits, [1234], 4, hint);
+    check(countDigits, [7], 1, hint);
+    check(countDigits, [0], 1, hint);
+    check(countDigits, [10], 2, hint);
   });
 });

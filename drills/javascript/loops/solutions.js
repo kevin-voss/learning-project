@@ -1,8 +1,8 @@
 /**
- * JavaScript-Übungen — Thema: Schleifen (Lösungen)
- * 
- * Hier findest du die Lösungen zu den Aufgaben in tasks.js.
- * Nutze diese Datei als Hilfestellung, wenn du nicht weiterkommst.
+ * JavaScript drill: loops (solutions)
+ *
+ * One possible answer for every task in tasks.js.
+ * Try on your own first. Read here when you are stuck.
  */
 
 export function sumFromOneToN(n) {
@@ -19,7 +19,7 @@ export function repeatCharacter(ch, count) {
     result += ch;
   }
   return result;
-  // Alternativ: return ch.repeat(count);
+  // Built-in shortcut: return ch.repeat(count);
 }
 
 export function countInString(str, ch) {
@@ -32,30 +32,12 @@ export function countInString(str, ch) {
   return count;
 }
 
-export function indexOfInArray(arr, val) {
-  for (let i = 0; i < arr.length; i++) {
-    if (arr[i] === val) {
-      return i;
-    }
-  }
-  return -1;
-  // Alternativ: return arr.indexOf(val);
-}
-
 export function productFromOneToN(n) {
   let product = 1;
   for (let i = 1; i <= n; i++) {
     product *= i;
   }
   return product;
-}
-
-export function sumArrayFor(arr) {
-  let sum = 0;
-  for (let i = 0; i < arr.length; i++) {
-    sum += arr[i];
-  }
-  return sum;
 }
 
 export function reverseStringFor(str) {
@@ -66,28 +48,48 @@ export function reverseStringFor(str) {
   return reversed;
 }
 
-export function countdownArrayFor(n) {
-  const result = [];
-  for (let i = n; i >= 1; i--) {
-    result.push(i);
-  }
-  return result;
-}
-
-export function hasEvenFor(arr) {
-  for (let i = 0; i < arr.length; i++) {
-    if (arr[i] % 2 === 0) {
-      return true;
-    }
-  }
-  return false;
-}
-
 export function stringOfStars(n) {
   let result = "";
   for (let i = 0; i < n; i++) {
     result += "*";
   }
   return result;
-  // Alternativ: return "*".repeat(n);
+}
+
+export function isPalindromeText(text) {
+  let backwards = "";
+  for (let i = text.length - 1; i >= 0; i--) {
+    backwards += text[i];
+  }
+  return backwards === text;
+}
+
+export function sumOfEvensUpToN(n) {
+  let sum = 0;
+  for (let i = 1; i <= n; i++) {
+    if (i % 2 === 0) {
+      sum += i;
+    }
+  }
+  return sum;
+}
+
+export function firstIndexOfChar(str, ch) {
+  for (let i = 0; i < str.length; i++) {
+    if (str[i] === ch) {
+      return i;
+    }
+  }
+  return -1;
+  // Built-in shortcut: return str.indexOf(ch);
+}
+
+export function countDigits(n) {
+  let digits = 1;
+  let rest = n;
+  while (rest >= 10) {
+    rest = Math.floor(rest / 10);
+    digits++;
+  }
+  return digits;
 }

@@ -1,178 +1,181 @@
 /**
- * JavaScript-Übungen — Thema: Math (siehe README.md)
- * Testen: make math | make math-task-05
- * 
- * HINWEIS: Falls du nicht weiterkommst, schau in die Datei `solutions.js` für Tipps und Lösungen!
+ * JavaScript drill: math (read README.md first)
+ * Run the tests from the project folder: make math | make math-task-05
+ *
+ * Stuck for more than 10 minutes? Peek at solutions.js.
  */
 
 /**
- * Aufgabe 1 — Abrunden
+ * Task 1 — Round down
  *
- * **Deine Aufgabe:** Runde eine Zahl zur nächsten ganzen Zahl nach unten ab.
- * **Bereits deklariert:** Der Parameter `x` (eine Kommazahl wie 9.9).
- * **Wie es funktioniert:** Nutze die Funktion `Math.floor(x)`, um die Zahl abzurunden und gib das Ergebnis zurück.
- * **Erwartung:** Ganze Zahl.
+ * **Your job:** Round a number down to the whole number below it.
+ * **You get:** `x` (a number like 9.9).
+ * **How:** Use `Math.floor(x)` and return the result.
+ * **Returns:** A whole number.
  *
- * **Test im Terminal (Projektroot):** `make math-task-01`
+ * **Test it:** `make math-task-01`
  *
  * @example floorValue(9.9) // → 9
  */
 export function floorValue(x) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return 0;
 }
 
 /**
- * Aufgabe 2 — Aufrunden
+ * Task 2 — Round up
  *
- * **Deine Aufgabe:** Runde eine Zahl zur nächsten ganzen Zahl nach oben auf.
- * **Bereits deklariert:** Der Parameter `x` (eine Kommazahl wie 2.1).
- * **Wie es funktioniert:** Nutze die Funktion `Math.ceil(x)`, um die Zahl aufzurunden und gib das Ergebnis zurück.
- * **Erwartung:** Ganze Zahl.
+ * **Your job:** Round a number up to the whole number above it.
+ * **You get:** `x` (a number like 2.1).
+ * **How:** Use `Math.ceil(x)` and return the result.
+ * **Returns:** A whole number.
  *
- * **Test im Terminal (Projektroot):** `make math-task-02`
+ * **Test it:** `make math-task-02`
  *
  * @example ceilValue(2.1) // → 3
  */
 export function ceilValue(x) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return 0;
 }
 
 /**
- * Aufgabe 3 — Betrag
+ * Task 3 — Distance from zero
  *
- * **Deine Aufgabe:** Berechne den absoluten Betrag einer Zahl (also ohne Vorzeichen).
- * **Bereits deklariert:** Der Parameter `x` (eine Zahl, z.B. -5).
- * **Wie es funktioniert:** Nutze die Funktion `Math.abs(x)` und gib das Ergebnis zurück.
- * **Erwartung:** Zahl ≥ 0.
+ * **Your job:** Drop the minus sign. This is called the absolute value.
+ * **You get:** `x` (a number, for example -5).
+ * **How:** Use `Math.abs(x)` and return the result.
+ * **Returns:** A number (0 or more).
  *
- * **Test im Terminal (Projektroot):** `make math-task-03`
+ * **Test it:** `make math-task-03`
  *
  * @example absoluteValue(-5) // → 5
  */
 export function absoluteValue(x) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return 0;
 }
 
 /**
- * Aufgabe 4 — Potenz
+ * Task 4 — Power
  *
- * **Deine Aufgabe:** Berechne die Potenz aus Basis und Exponent (Basis hoch Exponent).
- * **Bereits deklariert:** Die Parameter `base` (Basis) und `exp` (Exponent).
- * **Wie es funktioniert:** Nutze den Potenz-Operator `**` (z.B. `base ** exp`) oder die Funktion `Math.pow(base, exp)`.
- * **Erwartung:** Zahl.
+ * **Your job:** Work out `base` to the power of `exp` (2 to the power of 4 is 2 * 2 * 2 * 2).
+ * **You get:** `base` and `exp` (two numbers).
+ * **How:** Use the power operator `**` (`base ** exp`) or `Math.pow(base, exp)`.
+ * **Returns:** A number.
  *
- * **Test im Terminal (Projektroot):** `make math-task-04`
+ * **Test it:** `make math-task-04`
  *
  * @example powerValue(2, 4) // → 16
  */
 export function powerValue(base, exp) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return 0;
 }
 
 /**
- * Aufgabe 5 — Größere von zwei Zahlen
+ * Task 5 — The bigger of two numbers
  *
- * **Deine Aufgabe:** Finde heraus, welche von zwei Zahlen größer ist.
- * **Bereits deklariert:** Die Parameter `a` und `b` (zwei Zahlen).
- * **Wie es funktioniert:** Nutze die Funktion `Math.max(a, b)` und gib das Ergebnis zurück.
- * **Erwartung:** Der größere der beiden Werte.
+ * **Your job:** Find the bigger of two numbers.
+ * **You get:** `a` and `b` (two numbers).
+ * **How:** Use `Math.max(a, b)` and return the result.
+ * **Returns:** The bigger number.
  *
- * **Test im Terminal (Projektroot):** `make math-task-05`
+ * **Test it:** `make math-task-05`
  *
  * @example maximumTwo(3, 7) // → 7
  */
 export function maximumTwo(a, b) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return 0;
 }
 
 /**
- * Aufgabe 6 — Kleinste von drei Zahlen
+ * Task 6 — The smallest of three numbers
  *
- * **Deine Aufgabe:** Finde heraus, welche von drei Zahlen die kleinste ist.
- * **Bereits deklariert:** Die Parameter `a`, `b` und `c` (drei Zahlen).
- * **Wie es funktioniert:** Nutze die Funktion `Math.min(a, b, c)` und gib das Ergebnis zurück.
- * **Erwartung:** Der kleinste Wert.
+ * **Your job:** Find the smallest of three numbers.
+ * **You get:** `a`, `b` and `c` (three numbers).
+ * **How:** Use `Math.min(a, b, c)` and return the result.
+ * **Returns:** The smallest number.
  *
- * **Test im Terminal (Projektroot):** `make math-task-06`
+ * **Test it:** `make math-task-06`
  *
  * @example minimumThree(4, 2, 9) // → 2
  */
 export function minimumThree(a, b, c) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return 0;
 }
 
 /**
- * Aufgabe 7 — Clamp (eingrenzen)
+ * Task 7 — Clamp (keep a value inside a range)
  *
- * **Deine Aufgabe:** Begrenze einen Wert auf einen Bereich zwischen einem Minimum und einem Maximum.
- * **Bereits deklariert:** Die Parameter `value` (der Wert), `min` (das Minimum) und `max` (das Maximum).
- * **Wie es funktioniert:** Wenn `value` kleiner als `min` ist, gib `min` zurück. Wenn `value` größer als `max` ist, gib `max` zurück. Ansonsten gib `value` zurück. Du kannst das mit `if`-Abfragen oder einer Kombination aus `Math.min` und `Math.max` lösen.
- * **Erwartung:** Ergebnis liegt immer zwischen `min` und `max` inklusive.
+ * **Your job:** Keep `value` between `min` and `max`. Too small → `min`. Too big → `max`. Otherwise `value`.
+ * **You get:** `value`, `min` and `max` (three numbers).
+ * **How:** Two steps. First `Math.max(value, min)` lifts a too-small value up to `min`.
+ *   Then `Math.min(thatResult, max)` pulls a too-big value down to `max`.
+ * **Returns:** A number between `min` and `max` (both included).
  *
- * **Test im Terminal (Projektroot):** `make math-task-07`
+ * **Test it:** `make math-task-07`
  *
  * @example clampValue(5, 0, 10) // → 5
  * @example clampValue(-1, 0, 10) // → 0
+ * @example clampValue(99, 0, 10) // → 10
  */
 export function clampValue(value, min, max) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return 0;
 }
 
 /**
- * Aufgabe 8 — Fakultät
+ * Task 8 — Average of three numbers
  *
- * **Deine Aufgabe:** Berechne die Fakultät einer Zahl (n!).
- * **Bereits deklariert:** Der Parameter `n` (eine Zahl ≥ 0).
- * **Wie es funktioniert:** Die Fakultät von 0 ist 1 (`0! = 1`). Für `n > 0` ist es das Produkt aller Zahlen von 1 bis `n` (`1 * 2 * … * n`). Nutze eine `for`-Schleife oder Rekursion.
- * **Erwartung:** Ganze Zahl.
+ * **Your job:** Work out the average (the mean) of three numbers.
+ * **You get:** `a`, `b` and `c` (three numbers).
+ * **How:** Add them up, then divide by 3. Use brackets: `(a + b + c) / 3`.
+ *   Without brackets, JavaScript divides `c` by 3 first, like in school maths.
+ * **Returns:** A number.
  *
- * **Test im Terminal (Projektroot):** `make math-task-08`
+ * **Test it:** `make math-task-08`
  *
- * @example factorialMath(0) // → 1
- * @example factorialMath(5) // → 120
+ * @example averageOfThree(1, 2, 3) // → 2
+ * @example averageOfThree(2, 4, 9) // → 5
  */
-export function factorialMath(n) {
-  // TODO: Implementiere die Logik hier
+export function averageOfThree(a, b, c) {
+  // TODO: write your code here
   return 0;
 }
 
 /**
- * Aufgabe 9 — Auf zwei Nachkommastellen runden
+ * Task 9 — Round to two decimal places
  *
- * **Deine Aufgabe:** Runde eine Kommazahl auf genau zwei Nachkommastellen.
- * **Bereits deklariert:** Der Parameter `x` (eine Kommazahl wie 3.146).
- * **Wie es funktioniert:** Multipliziere die Zahl mit 100, runde sie mit `Math.round()` und teile sie dann wieder durch 100.
- * **Erwartung:** Zahl mit höchstens zwei Dezimalstellen.
+ * **Your job:** Round a number to two digits after the dot.
+ * **You get:** `x` (a number like 3.146).
+ * **How:** Multiply by 100, round with `Math.round()`, then divide by 100 again.
+ * **Returns:** A number with at most two digits after the dot.
  *
- * **Test im Terminal (Projektroot):** `make math-task-09`
+ * **Test it:** `make math-task-09`
  *
  * @example roundTwoDecimals(3.146) // → 3.15
  */
 export function roundTwoDecimals(x) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return 0;
 }
 
 /**
- * Aufgabe 10 — Prozentanteil
+ * Task 10 — Percentage
  *
- * **Deine Aufgabe:** Berechne, wie viel Prozent ein Teil vom Ganzen ausmacht.
- * **Bereits deklariert:** Die Parameter `part` (der Teil) und `whole` (das Ganze).
- * **Wie es funktioniert:** Teile den Teil durch das Ganze und multipliziere das Ergebnis mit 100 (`part / whole * 100`).
- * **Erwartung:** Dezimalzahl (z. B. `12.5` für ein Viertel von 200, wenn `part` 50 wäre).
+ * **Your job:** Work out what percent `part` is of `whole`.
+ * **You get:** `part` and `whole` (two numbers, `whole` is never 0).
+ * **How:** Divide the part by the whole and multiply by 100: `part / whole * 100`.
+ * **Returns:** A number, for example `12.5`.
  *
- * **Test im Terminal (Projektroot):** `make math-task-10`
+ * **Test it:** `make math-task-10`
  *
  * @example percentage(25, 200) // → 12.5
  */
 export function percentage(part, whole) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return 0;
 }

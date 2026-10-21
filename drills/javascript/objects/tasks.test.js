@@ -12,7 +12,8 @@ import {
   sumCartTotal,
 } from "./tasks.js";
 
-// Hilfsfunktion, um bei Fehlern einen Tipp anzuzeigen
+// Helper: when a check fails, show a hint above the error.
+// Objects are compared field by field (toEqual), everything else exactly (toBe).
 function check(fn, args, expected, hint) {
   try {
     if (typeof expected === "object" && expected !== null) {
@@ -21,103 +22,105 @@ function check(fn, args, expected, hint) {
       expect(fn(...args)).toBe(expected);
     }
   } catch (e) {
-    throw new Error(`\n💡 TIPP: ${hint}\n\n${e.message}`);
+    throw new Error(`\nHINT: ${hint}\n\n${e.message}`);
   }
 }
 
 describe("objects-task-01: fullNameFromPerson", () => {
-  test("Vorname und Nachname", () => {
+  test("first and last name", () => {
     check(
       fullNameFromPerson,
       [{ firstName: "Ada", lastName: "Lovelace" }],
       "Ada Lovelace",
-      "Greife auf person.firstName und person.lastName zu und verbinde sie mit einem Leerzeichen (z.B. mit Template-Strings)."
+      "Read person.firstName and person.lastName and put one space between them."
     );
   });
 });
 
 describe("objects-task-02: bumpPatchVersion", () => {
-  test("Patch erhöhen", () => {
+  test("next patch", () => {
     const original = { major: 1, minor: 2, patch: 3 };
     check(
       bumpPatchVersion,
       [original],
       { major: 1, minor: 2, patch: 4 },
-      "Erstelle ein neues Objekt und kopiere alle Eigenschaften des alten Objekts (z.B. mit dem Spread-Operator ...version). Überschreibe dann die Eigenschaft patch mit dem um 1 erhöhten Wert."
+      "Return { ...version, patch: version.patch + 1 }."
     );
-    expect(original.patch).toBe(3); // Original darf nicht mutiert sein
+    expect(original.patch).toBe(3); // the old object must stay the same
   });
 });
 
 describe("objects-task-03: countKeys", () => {
-  test("Anzahl der Keys", () => {
-    check(countKeys, [{ a: 1, b: 2 }], 2, "Nutze die Funktion Object.keys(obj), um ein Array aller Eigenschaften zu erhalten, und frage dann dessen Länge (.length) ab.");
-    check(countKeys, [{}], 0, "Nutze die Funktion Object.keys(obj), um ein Array aller Eigenschaften zu erhalten, und frage dann dessen Länge (.length) ab.");
+  test("number of fields", () => {
+    const hint = "Object.keys(obj) gives an array of the keys. Return its .length.";
+    check(countKeys, [{ a: 1, b: 2 }], 2, hint);
+    check(countKeys, [{}], 0, hint);
   });
 });
 
 describe("objects-task-04: objectHasKey", () => {
-  test("Key vorhanden?", () => {
-    check(objectHasKey, [{ x: 1 }, "x"], true, "Nutze den in-Operator (z.B. key in obj) oder die Funktion Object.hasOwn(obj, key).");
-    check(objectHasKey, [{ x: 1 }, "y"], false, "Nutze den in-Operator (z.B. key in obj) oder die Funktion Object.hasOwn(obj, key).");
+  test("is the field there", () => {
+    const hint = "Use key in obj, or Object.hasOwn(obj, key).";
+    check(objectHasKey, [{ x: 1 }, "x"], true, hint);
+    check(objectHasKey, [{ x: 1 }, "y"], false, hint);
   });
 });
 
 describe("objects-task-05: pickTitleAuthor", () => {
-  test("Titel und Autor", () => {
+  test("title and author", () => {
     check(
       pickTitleAuthor,
       [{ title: "1984", author: "Orwell" }],
-      "1984 von Orwell",
-      "Greife auf book.title und book.author zu und verbinde sie mit dem Wort 'von' (z.B. `${title} von ${author}`)."
+      "1984 by Orwell",
+      "Use a template string: `${book.title} by ${book.author}`."
     );
   });
 });
 
 describe("objects-task-06: makePoint", () => {
-  test("Punkt erzeugen", () => {
-    check(makePoint, [2, 3], { x: 2, y: 3 }, "Erstelle ein neues Objekt mit den Eigenschaften x und y und weise ihnen die übergebenen Werte zu (z.B. { x: x, y: y }).");
+  test("make a point", () => {
+    check(makePoint, [2, 3], { x: 2, y: 3 }, "Return { x: x, y: y }.");
   });
 });
 
 describe("objects-task-07: incrementPersonAge", () => {
-  test("Alter erhöhen", () => {
+  test("one year older", () => {
     const original = { name: "Bo", age: 20 };
     check(
       incrementPersonAge,
       [original],
       { name: "Bo", age: 21 },
-      "Nutze den Spread-Operator (...person), um alle Eigenschaften in ein neues Objekt zu kopieren, und überschreibe dann die Eigenschaft age mit person.age + 1."
+      "Return { ...person, age: person.age + 1 }."
     );
-    expect(original.age).toBe(20); // Original unberührt
+    expect(original.age).toBe(20); // the old object must stay the same
   });
 });
 
 describe("objects-task-08: sumCartTotal", () => {
-  test("Warenkorb-Summe", () => {
+  test("cart total", () => {
     check(
       sumCartTotal,
       [[{ price: 2, qty: 3 }, { price: 5, qty: 1 }]],
       11,
-      "Nutze eine Schleife, um über das Array zu iterieren. Multipliziere für jedes Element price mit qty und addiere das Ergebnis zu einer Summen-Variable."
+      "Loop over items. Add items[i].price * items[i].qty to a sum each lap."
     );
-    check(sumCartTotal, [[]], 0, "Ein leeres Array sollte 0 ergeben.");
+    check(sumCartTotal, [[]], 0, "An empty cart gives 0.");
   });
 });
 
 describe("objects-task-09: listSortedKeys", () => {
-  test("Sortierte Keys", () => {
-    check(listSortedKeys, [{ b: 1, a: 2 }], "a,b", "Nutze Object.keys(obj), um ein Array der Keys zu erhalten. Sortiere das Array mit .sort() und verbinde die Elemente mit .join(',').");
+  test("sorted field names", () => {
+    check(listSortedKeys, [{ b: 1, a: 2 }], "a,b", "Object.keys(obj).sort().join(',')");
   });
 });
 
 describe("objects-task-10: addCoords", () => {
-  test("Koordinaten addieren", () => {
+  test("add two points", () => {
     check(
       addCoords,
       [{ x: 1, y: 2 }, { x: 3, y: 4 }],
       { x: 4, y: 6 },
-      "Erstelle ein neues Objekt mit den Eigenschaften x und y. Der Wert für x ist a.x + b.x, der Wert für y ist a.y + b.y."
+      "Return a new object: x is a.x + b.x, y is a.y + b.y."
     );
   });
 });

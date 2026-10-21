@@ -1,183 +1,190 @@
 /**
- * JavaScript-Übungen — Thema: Verzweigungen (siehe README.md)
- * Testen: make conditionals | make conditionals-task-04
- * 
- * HINWEIS: Falls du nicht weiterkommst, schau in die Datei `solutions.js` für Tipps und Lösungen!
+ * JavaScript drill: if / else (read README.md first)
+ * Run the tests from the project folder: make conditionals | make conditionals-task-04
+ *
+ * Stuck for more than 10 minutes? Peek at solutions.js.
  */
 
 /**
- * Aufgabe 1 — Vorzeichen
+ * Task 1 — Sign of a number
  *
- * **Deine Aufgabe:** Bestimme das Vorzeichen einer Zahl.
- * **Bereits deklariert:** Der Parameter `n` (eine Zahl).
- * **Wie es funktioniert:** Nutze `if`/`else if`, um zu prüfen, ob `n` negativ, null oder positiv ist. Gib `-1` für negativ, `0` für null und `1` für positiv zurück.
- * **Erwartung:** Nur diese drei Zahlen.
+ * **Your job:** Tell if a number is below zero, zero, or above zero.
+ * **You get:** `n` (a number).
+ * **How:** Use `if` / `else if` / `else`. Return `-1` for below zero, `0` for zero, `1` for above zero.
+ * **Returns:** Only `-1`, `0` or `1`.
  *
- * **Test im Terminal (Projektroot):** `make conditionals-task-01`
+ * **Test it:** `make conditionals-task-01`
  *
  * @example signOf(-3) // → -1
  * @example signOf(0) // → 0
  * @example signOf(5) // → 1
  */
 export function signOf(n) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return 0;
 }
 
 /**
- * Aufgabe 2 — Maximum ohne Math.max
+ * Task 2 — Bigger of two, without Math.max
  *
- * **Deine Aufgabe:** Finde die größere von zwei Zahlen heraus, ohne `Math.max` zu verwenden.
- * **Bereits deklariert:** Die Parameter `a` und `b` (zwei Zahlen).
- * **Wie es funktioniert:** Vergleiche `a` und `b` mit `if` (`a > b`). Gib die größere Zahl zurück.
- * **Erwartung:** Die größere der beiden Zahlen.
+ * **Your job:** Return the bigger of two numbers. Do not use `Math.max`.
+ * **You get:** `a` and `b` (two numbers).
+ * **How:** Compare with `if (a > b)`. Return the bigger one.
+ * **Returns:** The bigger number.
  *
- * **Test im Terminal (Projektroot):** `make conditionals-task-02`
+ * **Test it:** `make conditionals-task-02`
  *
  * @example maxOfTwo(2, 9) // → 9
  */
 export function maxOfTwo(a, b) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return 0;
 }
 
 /**
- * Aufgabe 3 — Bestanden?
+ * Task 3 — Passed?
  *
- * **Deine Aufgabe:** Prüfe, ob eine Punktzahl zum Bestehen reicht.
- * **Bereits deklariert:** Der Parameter `score` (eine Punktzahl).
- * **Wie es funktioniert:** Ab `score >= 50` ist es bestanden (`true`), sonst `false`. Du kannst direkt `score >= 50` zurückgeben oder ein `if`/`else` verwenden.
- * **Erwartung:** Boolean.
+ * **Your job:** Check if a score is enough to pass.
+ * **You get:** `score` (a number).
+ * **How:** 50 or more passes (`true`), less fails (`false`).
+ *   You can return `score >= 50` directly, or use `if` / `else`.
+ * **Returns:** `true` or `false`.
  *
- * **Test im Terminal (Projektroot):** `make conditionals-task-03`
+ * **Test it:** `make conditionals-task-03`
  *
  * @example isPassing(50) // → true
  * @example isPassing(49) // → false
  */
 export function isPassing(score) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return false;
 }
 
 /**
- * Aufgabe 4 — Temperaturgefühl
+ * Task 4 — How does it feel outside?
  *
- * **Deine Aufgabe:** Beschreibe, wie sich eine Temperatur anfühlt.
- * **Bereits deklariert:** Der Parameter `celsius` (eine Temperatur in Grad Celsius).
- * **Wie es funktioniert:** Nutze `if`/`else if`/`else`: `< 10` → `"kalt"`; `< 22` → `"angenehm"`; sonst `"warm"`.
- * **Erwartung:** String (exakt diese Strings).
+ * **Your job:** Describe a temperature in one word.
+ * **You get:** `celsius` (a temperature).
+ * **How:** Below 10 → `"cold"`. Below 22 → `"nice"`. Otherwise → `"warm"`.
+ * **Returns:** Exactly one of these strings.
  *
- * **Test im Terminal (Projektroot):** `make conditionals-task-04`
+ * **Test it:** `make conditionals-task-04`
  *
- * @example temperatureFeel(5) // → "kalt"
- * @example temperatureFeel(15) // → "angenehm"
+ * @example temperatureFeel(5) // → "cold"
+ * @example temperatureFeel(15) // → "nice"
  */
 export function temperatureFeel(celsius) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return "";
 }
 
 /**
- * Aufgabe 5 — Ticketpreis nach Alter
+ * Task 5 — Ticket price by age
  *
- * **Deine Aufgabe:** Bestimme den Preis für ein Ticket basierend auf dem Alter.
- * **Bereits deklariert:** Der Parameter `age` (das Alter in Jahren).
- * **Wie es funktioniert:** Alter `< 6` → `0` Euro; `< 18` → `8` Euro; sonst → `15` Euro.
- * **Erwartung:** Zahl (Euro, ganzzahlig).
+ * **Your job:** Work out the ticket price for a person.
+ * **You get:** `age` (in years).
+ * **How:** Younger than 6 → `0` euros. Younger than 18 → `8`. Otherwise → `15`.
+ * **Returns:** A whole number (euros).
  *
- * **Test im Terminal (Projektroot):** `make conditionals-task-05`
+ * **Test it:** `make conditionals-task-05`
  *
  * @example ticketPrice(5) // → 0
  * @example ticketPrice(10) // → 8
  */
 export function ticketPrice(age) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return 0;
 }
 
 /**
- * Aufgabe 6 — Schaltjahr
+ * Task 6 — Leap year
  *
- * **Deine Aufgabe:** Prüfe, ob ein Jahr ein Schaltjahr ist.
- * **Bereits deklariert:** Der Parameter `year` (eine Jahreszahl).
- * **Wie es funktioniert:** Regeln für Schaltjahre: Ein Jahr ist ein Schaltjahr, wenn es durch 400 teilbar ist. Wenn nicht, aber es ist durch 100 teilbar, ist es KEIN Schaltjahr. Wenn nicht, aber es ist durch 4 teilbar, ist es ein Schaltjahr. Sonst nicht.
- * **Erwartung:** Boolean.
+ * **Your job:** Check if a year is a leap year (February has 29 days).
+ * **You get:** `year` (a number).
+ * **How:** Check in this order. You can divide by 400 with no rest → leap year.
+ *   Otherwise you can divide by 100 → not a leap year.
+ *   Otherwise you can divide by 4 → leap year. Otherwise → not a leap year.
+ *   "No rest" means `year % 400 === 0`.
+ * **Returns:** `true` or `false`.
  *
- * **Test im Terminal (Projektroot):** `make conditionals-task-06`
+ * **Test it:** `make conditionals-task-06`
  *
  * @example isLeapYear(2024) // → true
  * @example isLeapYear(1900) // → false
+ * @example isLeapYear(2000) // → true
  */
 export function isLeapYear(year) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return false;
 }
 
 /**
- * Aufgabe 7 — Betrag ohne Math.abs
+ * Task 7 — Distance from zero, without Math.abs
  *
- * **Deine Aufgabe:** Berechne den absoluten Betrag einer Zahl (ohne Vorzeichen), ohne `Math.abs` zu verwenden.
- * **Bereits deklariert:** Der Parameter `n` (eine Zahl).
- * **Wie es funktioniert:** Wenn `n < 0` ist, gib `-n` zurück. Sonst gib `n` zurück.
- * **Erwartung:** Zahl ≥ 0.
+ * **Your job:** Drop the minus sign. Do not use `Math.abs`.
+ * **You get:** `n` (a number).
+ * **How:** If `n < 0`, return `-n`. Otherwise return `n`.
+ * **Returns:** A number (0 or more).
  *
- * **Test im Terminal (Projektroot):** `make conditionals-task-07`
+ * **Test it:** `make conditionals-task-07`
  *
  * @example absoluteNoMath(-4) // → 4
  */
 export function absoluteNoMath(n) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return 0;
 }
 
 /**
- * Aufgabe 8 — Minimum ohne Math.min
+ * Task 8 — Smaller of two, without Math.min
  *
- * **Deine Aufgabe:** Finde die kleinere von zwei Zahlen heraus, ohne `Math.min` zu verwenden.
- * **Bereits deklariert:** Die Parameter `a` und `b` (zwei Zahlen).
- * **Wie es funktioniert:** Vergleiche `a` und `b` mit `if` (`a < b`). Gib die kleinere Zahl zurück.
- * **Erwartung:** Zahl.
+ * **Your job:** Return the smaller of two numbers. Do not use `Math.min`.
+ * **You get:** `a` and `b` (two numbers).
+ * **How:** Compare with `if (a < b)`. Return the smaller one.
+ * **Returns:** A number.
  *
- * **Test im Terminal (Projektroot):** `make conditionals-task-08`
+ * **Test it:** `make conditionals-task-08`
  *
  * @example minOfTwo(3, 1) // → 1
  */
 export function minOfTwo(a, b) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return 0;
 }
 
 /**
- * Aufgabe 9 — Genau eine wahr (XOR)
+ * Task 9 — Exactly one is true
  *
- * **Deine Aufgabe:** Prüfe, ob genau einer von zwei Wahrheitswerten `true` ist (Exklusiv-Oder).
- * **Bereits deklariert:** Die Parameter `a` und `b` (zwei Booleans).
- * **Wie es funktioniert:** Gib `true` zurück, wenn `a` und `b` unterschiedlich sind (`a !== b`).
- * **Erwartung:** Boolean.
+ * **Your job:** Return `true` when exactly one of two booleans is `true`.
+ * **You get:** `a` and `b` (two booleans).
+ * **How:** Exactly one is true when they are different: `a !== b`.
+ *   With and/or/not it is `(a && !b) || (!a && b)`.
+ * **Returns:** `true` or `false`.
  *
- * **Test im Terminal (Projektroot):** `make conditionals-task-09`
+ * **Test it:** `make conditionals-task-09`
  *
  * @example exactlyOneTrue(true, false) // → true
  * @example exactlyOneTrue(true, true) // → false
  */
 export function exactlyOneTrue(a, b) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return false;
 }
 
 /**
- * Aufgabe 10 — Notenbuchstabe
+ * Task 10 — Grade letter
  *
- * **Deine Aufgabe:** Wandle eine Punktzahl in einen Notenbuchstaben um.
- * **Bereits deklariert:** Der Parameter `score` (eine Punktzahl).
- * **Wie es funktioniert:** `>= 90` → `"A"`, `>= 80` → `"B"`, `>= 70` → `"C"`, sonst `"D"`. Nutze `if`/`else if`/`else`.
- * **Erwartung:** Ein Buchstabe als String.
+ * **Your job:** Turn a score into a grade letter.
+ * **You get:** `score` (a number).
+ * **How:** 90 or more → `"A"`. 80 or more → `"B"`. 70 or more → `"C"`. Otherwise → `"D"`.
+ *   Check the biggest number first.
+ * **Returns:** One letter as a string.
  *
- * **Test im Terminal (Projektroot):** `make conditionals-task-10`
+ * **Test it:** `make conditionals-task-10`
  *
  * @example gradeLetter(95) // → "A"
  */
 export function gradeLetter(score) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return "";
 }

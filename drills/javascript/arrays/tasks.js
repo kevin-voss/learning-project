@@ -1,181 +1,202 @@
 /**
- * JavaScript-Übungen — Thema: Arrays (siehe README.md)
- * Testen: make arrays | make arrays-task-01
- * 
- * HINWEIS: Falls du nicht weiterkommst, schau in die Datei `solutions.js` für Tipps und Lösungen!
+ * JavaScript drill: arrays (read README.md first)
+ * Run the tests from the project folder: make arrays | make arrays-task-01
+ *
+ * Stuck for more than 10 minutes? Peek at solutions.js.
  */
 
 /**
- * Aufgabe 1 — Summe aller Zahlen
+ * Task 1 — Sum of all numbers
  *
- * **Deine Aufgabe:** Berechne die Summe aller Elemente in einem Array.
- * **Bereits deklariert:** Der Parameter `array` (ein Array von Zahlen).
- * **Wie es funktioniert:** Addiere alle Elemente mit einer Schleife oder der Methode `.reduce()`. Ein leeres Array ergibt die Summe `0`.
- * **Erwartung:** Zahl.
+ * **Your job:** Add up every number in the array.
+ * **You get:** `array` (an array of numbers).
+ * **How:** Like the loops drill: `let sum = 0`, loop `i` from 0 to `array.length - 1`, add `array[i]`.
+ * **Returns:** A number (`0` for an empty array).
  *
- * **Test im Terminal (Projektroot):** `make arrays-task-01`
+ * **Test it:** `make arrays-task-01`
  *
  * @example add([1, 2, 3]) // → 6
  * @example add([]) // → 0
  */
 export function add(array) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return 0;
 }
 
 /**
- * Aufgabe 2 — Durchschnitt
+ * Task 2 — Average
  *
- * **Deine Aufgabe:** Berechne den Durchschnitt aller Zahlen in einem Array.
- * **Bereits deklariert:** Der Parameter `array` (ein Array von Zahlen).
- * **Wie es funktioniert:** Teile die Summe aller Elemente durch die Anzahl der Elemente (`array.length`). Ein leeres Array ergibt `0` (nicht `NaN`).
- * **Erwartung:** Zahl.
+ * **Your job:** Work out the average of all numbers in the array.
+ * **You get:** `array` (an array of numbers).
+ * **How:** Divide the sum by the number of items (`array.length`).
+ *   An empty array must give `0`, not `NaN` ("not a number"), so check `array.length === 0` first.
+ * **Returns:** A number.
  *
- * **Test im Terminal (Projektroot):** `make arrays-task-02`
+ * **Test it:** `make arrays-task-02`
  *
  * @example average([2, 4, 6]) // → 4
  * @example average([]) // → 0
  */
 export function average(array) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return 0;
 }
 
 /**
- * Aufgabe 3 — Größtes Element
+ * Task 3 — Biggest item
  *
- * **Deine Aufgabe:** Finde das größte Element (Maximum) in einem Array.
- * **Bereits deklariert:** Der Parameter `array` (ein Array von Zahlen).
- * **Wie es funktioniert:** Nutze eine Schleife, um das größte Element zu finden, oder die Funktion `Math.max(...array)`. Ein leeres Array ergibt `null`.
- * **Erwartung:** Zahl oder `null`.
+ * **Your job:** Find the biggest number in the array.
+ * **You get:** `array` (an array of numbers).
+ * **How:** Empty array → return `null`. Otherwise start with `let max = array[0]`,
+ *   loop over the rest, and replace `max` whenever you find something bigger.
+ * **Returns:** A number, or `null`.
  *
- * **Test im Terminal (Projektroot):** `make arrays-task-03`
+ * **Test it:** `make arrays-task-03`
  *
  * @example findMax([3, 9, 2]) // → 9
  * @example findMax([]) // → null
  */
 export function findMax(array) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return null;
 }
 
 /**
- * Aufgabe 4 — Wie oft kommt der Wert vor?
+ * Task 4 — How often is it there?
  *
- * **Deine Aufgabe:** Zähle, wie oft ein bestimmter Wert in einem Array vorkommt.
- * **Bereits deklariert:** Die Parameter `array` (das Array) und `value` (der gesuchte Wert).
- * **Wie es funktioniert:** Nutze eine Schleife oder `.filter()`, um die Vorkommen von `value` zu zählen (Strikte Gleichheit `===`).
- * **Erwartung:** Ganze Zahl ≥ 0.
+ * **Your job:** Count how often `value` appears in the array.
+ * **You get:** `array` and `value`.
+ * **How:** Loop over the array. If `array[i] === value`, add 1 to a counter.
+ * **Returns:** A whole number (0 or more).
  *
- * **Test im Terminal (Projektroot):** `make arrays-task-04`
+ * **Test it:** `make arrays-task-04`
  *
  * @example countOccurrences([1, 2, 2, 3], 2) // → 2
  */
 export function countOccurrences(array, value) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return 0;
 }
 
 /**
- * Aufgabe 5 — Alle Werte verdoppeln
+ * Task 5 — Double every number
  *
- * **Deine Aufgabe:** Erstelle ein neues Array, in dem jedes Element des ursprünglichen Arrays verdoppelt ist. Das Original-Array darf nicht verändert werden.
- * **Bereits deklariert:** Der Parameter `array` (ein Array von Zahlen).
- * **Wie es funktioniert:** Nutze eine Schleife und `.push()`, oder die Methode `.map(v => v * 2)`.
- * **Erwartung:** Neues Array gleicher Länge.
+ * **Your job:** Make a new array where every number is doubled. Do not change the old array.
+ * **You get:** `array` (an array of numbers).
+ * **How:** Start with `const result = []`. Loop over `array` and `result.push(array[i] * 2)`.
+ * **Returns:** A new array with the same length.
  *
- * **Test im Terminal (Projektroot):** `make arrays-task-05`
+ * **Test it:** `make arrays-task-05`
  *
  * @example doubleAll([1, 2, 3]) // → [2, 4, 6]
  */
 export function doubleAll(array) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return [];
 }
 
 /**
- * Aufgabe 6 — Erstes Element oder null
+ * Task 6 — First item or null
  *
- * **Deine Aufgabe:** Gib das erste Element eines Arrays zurück.
- * **Bereits deklariert:** Der Parameter `array` (ein beliebiges Array).
- * **Wie es funktioniert:** Wenn das Array nicht leer ist, gib `array[0]` zurück. Sonst gib `null` zurück.
- * **Erwartung:** Wert oder `null`.
+ * **Your job:** Return the first item of the array.
+ * **You get:** `array` (any array).
+ * **How:** If the array is empty, return `null`. Otherwise return `array[0]`.
+ * **Returns:** An item, or `null`.
  *
- * **Test im Terminal (Projektroot):** `make arrays-task-06`
+ * **Test it:** `make arrays-task-06`
  *
  * @example firstOrNull([7, 8]) // → 7
  * @example firstOrNull([]) // → null
  */
 export function firstOrNull(array) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return null;
 }
 
 /**
- * Aufgabe 7 — Letztes Element oder null
+ * Task 7 — Last item or null
  *
- * **Deine Aufgabe:** Gib das letzte Element eines Arrays zurück.
- * **Bereits deklariert:** Der Parameter `array` (ein beliebiges Array).
- * **Wie es funktioniert:** Wenn das Array nicht leer ist, gib das Element am Index `array.length - 1` zurück. Sonst gib `null` zurück.
- * **Erwartung:** Wert oder `null`.
+ * **Your job:** Return the last item of the array.
+ * **You get:** `array` (any array).
+ * **How:** If the array is empty, return `null`. Otherwise return `array[array.length - 1]`.
+ * **Returns:** An item, or `null`.
  *
- * **Test im Terminal (Projektroot):** `make arrays-task-07`
+ * **Test it:** `make arrays-task-07`
  *
  * @example lastOrNull([7, 8]) // → 8
  */
 export function lastOrNull(array) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return null;
 }
 
 /**
- * Aufgabe 8 — Range 1 … n
+ * Task 8 — Range 1 … n
  *
- * **Deine Aufgabe:** Erstelle ein Array, das alle Zahlen von 1 bis `n` enthält.
- * **Bereits deklariert:** Der Parameter `n` (eine Zahl ≥ 0).
- * **Wie es funktioniert:** Nutze eine Schleife von 1 bis `n` und füge jede Zahl mit `.push()` zu einem neuen Array hinzu. Für `n === 0` gib ein leeres Array `[]` zurück.
- * **Erwartung:** Array von Zahlen.
+ * **Your job:** Make an array with all numbers from 1 to `n`.
+ * **You get:** `n` (a number, 0 or more).
+ * **How:** Start with `const result = []`. Loop `i` from 1 to `n` and `result.push(i)`.
+ * **Returns:** An array of numbers (`[]` when `n` is 0).
  *
- * **Test im Terminal (Projektroot):** `make arrays-task-08`
+ * **Test it:** `make arrays-task-08`
  *
  * @example range(4) // → [1, 2, 3, 4]
  * @example range(0) // → []
  */
 export function range(n) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return [];
 }
 
 /**
- * Aufgabe 9 — Zwei Arrays verketten
+ * Task 9 — Join two arrays
  *
- * **Deine Aufgabe:** Erstelle ein neues Array, das zuerst alle Elemente aus `a` und dann alle aus `b` enthält. `a` und `b` dürfen nicht verändert werden.
- * **Bereits deklariert:** Die Parameter `a` und `b` (zwei Arrays).
- * **Wie es funktioniert:** Nutze den Spread-Operator (z.B. `[...a, ...b]`) oder die Methode `a.concat(b)`.
- * **Erwartung:** Neues Array.
+ * **Your job:** Make a new array with all items of `a`, then all items of `b`. Do not change `a` or `b`.
+ * **You get:** `a` and `b` (two arrays).
+ * **How:** Use the spread operator: `[...a, ...b]`. The `...` tips all items out of an array.
+ * **Returns:** A new array.
  *
- * **Test im Terminal (Projektroot):** `make arrays-task-09`
+ * **Test it:** `make arrays-task-09`
  *
  * @example mergeArrays([1, 2], [3, 4]) // → [1, 2, 3, 4]
  */
 export function mergeArrays(a, b) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return [];
 }
 
 /**
- * Aufgabe 10 — Umgekehrtes Kopie-Array
+ * Task 10 — Reversed copy
  *
- * **Deine Aufgabe:** Erstelle ein neues Array, das die Elemente des ursprünglichen Arrays in umgekehrter Reihenfolge enthält. Das Original-Array darf nicht verändert werden.
- * **Bereits deklariert:** Der Parameter `array` (ein beliebiges Array).
- * **Wie es funktioniert:** Nutze eine rückwärts laufende Schleife und `.push()`, oder erstelle eine Kopie und drehe sie um (z.B. `[...array].reverse()`).
- * **Erwartung:** Neues Array.
+ * **Your job:** Make a new array with the items in the opposite order. Do not change the old array.
+ * **You get:** `array` (any array).
+ * **How:** Loop backwards (from `array.length - 1` down to 0) and `push` each item into a new array.
+ * **Returns:** A new array.
  *
- * **Test im Terminal (Projektroot):** `make arrays-task-10`
+ * **Test it:** `make arrays-task-10`
  *
  * @example reversedCopy([1, 2, 3]) // → [3, 2, 1]
  */
 export function reversedCopy(array) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return [];
+}
+
+/**
+ * Task 11 — Is there an even number?
+ *
+ * **Your job:** Check if at least one number in the array is even.
+ * **You get:** `array` (an array of numbers).
+ * **How:** Loop over the array. As soon as `array[i] % 2 === 0`, return `true`.
+ *   If the loop ends without finding one, return `false`.
+ * **Returns:** `true` or `false`.
+ *
+ * **Test it:** `make arrays-task-11`
+ *
+ * @example hasEven([1, 3, 4]) // → true
+ * @example hasEven([1, 3, 5]) // → false
+ */
+export function hasEven(array) {
+  // TODO: write your code here
+  return false;
 }

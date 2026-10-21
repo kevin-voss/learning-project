@@ -1,177 +1,178 @@
 /**
- * JavaScript-Übungen — Thema: Objekte (siehe README.md)
- * Testen: make objects | make objects-task-06
- * 
- * HINWEIS: Falls du nicht weiterkommst, schau in die Datei `solutions.js` für Tipps und Lösungen!
+ * JavaScript drill: objects (read README.md first)
+ * Run the tests from the project folder: make objects | make objects-task-06
+ *
+ * Stuck for more than 10 minutes? Peek at solutions.js.
  */
 
 /**
- * Aufgabe 1 — Vollständiger Name
+ * Task 1 — Full name
  *
- * **Deine Aufgabe:** Baue aus dem Vornamen und Nachnamen einer Person einen vollständigen Namen zusammen.
- * **Bereits deklariert:** Der Parameter `person` (ein Objekt mit den Eigenschaften `firstName` und `lastName`).
- * **Wie es funktioniert:** Greife auf die Eigenschaften `person.firstName` und `person.lastName` zu und verbinde sie mit einem Leerzeichen (z.B. mit Template-Strings).
- * **Erwartung:** String mit genau einem Leerzeichen in der Mitte.
+ * **Your job:** Build a full name from a person's first and last name.
+ * **You get:** `person` (an object with `firstName` and `lastName`).
+ * **How:** Read `person.firstName` and `person.lastName` and put one space between them.
+ * **Returns:** A string.
  *
- * **Test im Terminal (Projektroot):** `make objects-task-01`
+ * **Test it:** `make objects-task-01`
  *
  * @example fullNameFromPerson({ firstName: "Ada", lastName: "Lovelace" }) // → "Ada Lovelace"
  */
 export function fullNameFromPerson(person) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return "";
 }
 
 /**
- * Aufgabe 2 — Patch-Version erhöhen
+ * Task 2 — Next patch version
  *
- * **Deine Aufgabe:** Erhöhe die Patch-Version eines Versionsobjekts um 1, ohne das Originalobjekt zu verändern.
- * **Bereits deklariert:** Der Parameter `version` (ein Objekt mit `major`, `minor` und `patch`).
- * **Wie es funktioniert:** Erstelle ein neues Objekt und kopiere alle Eigenschaften des alten Objekts (z.B. mit dem Spread-Operator `...version`). Überschreibe dann die Eigenschaft `patch` mit dem um 1 erhöhten Wert.
- * **Erwartung:** Neues Objekt `{ major, minor, patch }`.
+ * **Your job:** Add 1 to `patch` in a version object. Do not change the old object.
+ * **You get:** `version` (an object with `major`, `minor` and `patch`).
+ * **How:** Copy all fields into a new object with `...version`, then set `patch` again:
+ *   `{ ...version, patch: version.patch + 1 }`.
+ * **Returns:** A new object `{ major, minor, patch }`.
  *
- * **Test im Terminal (Projektroot):** `make objects-task-02`
+ * **Test it:** `make objects-task-02`
  *
  * @example bumpPatchVersion({ major: 1, minor: 2, patch: 3 }) // → { major: 1, minor: 2, patch: 4 }
  */
 export function bumpPatchVersion(version) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return {};
 }
 
 /**
- * Aufgabe 3 — Anzahl der Keys
+ * Task 3 — How many fields?
  *
- * **Deine Aufgabe:** Finde heraus, wie viele Eigenschaften (Keys) ein Objekt hat.
- * **Bereits deklariert:** Der Parameter `obj` (ein beliebiges Objekt).
- * **Wie es funktioniert:** Nutze die Funktion `Object.keys(obj)`, um ein Array aller Eigenschaften zu erhalten, und frage dann dessen Länge (`.length`) ab.
- * **Erwartung:** Ganze Zahl ≥ 0.
+ * **Your job:** Count the fields (keys) of an object.
+ * **You get:** `obj` (any object).
+ * **How:** `Object.keys(obj)` gives an array of all keys. Return its `.length`.
+ * **Returns:** A whole number (0 or more).
  *
- * **Test im Terminal (Projektroot):** `make objects-task-03`
+ * **Test it:** `make objects-task-03`
  *
  * @example countKeys({ a: 1, b: 2 }) // → 2
  * @example countKeys({}) // → 0
  */
 export function countKeys(obj) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return 0;
 }
 
 /**
- * Aufgabe 4 — Key vorhanden?
+ * Task 4 — Is the field there?
  *
- * **Deine Aufgabe:** Prüfe, ob ein Objekt eine bestimmte Eigenschaft (Key) besitzt.
- * **Bereits deklariert:** Die Parameter `obj` (das Objekt) und `key` (der Name der Eigenschaft als String).
- * **Wie es funktioniert:** Nutze den `in`-Operator (z.B. `key in obj`) oder die Funktion `Object.hasOwn(obj, key)`.
- * **Erwartung:** Boolean (`true` oder `false`).
+ * **Your job:** Check if an object has a field with this name.
+ * **You get:** `obj` (an object) and `key` (the field name as a string).
+ * **How:** Use `key in obj`, or `Object.hasOwn(obj, key)`.
+ * **Returns:** `true` or `false`.
  *
- * **Test im Terminal (Projektroot):** `make objects-task-04`
+ * **Test it:** `make objects-task-04`
  *
  * @example objectHasKey({ x: 1 }, "x") // → true
  */
 export function objectHasKey(obj, key) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return false;
 }
 
 /**
- * Aufgabe 5 — Titel und Autor
+ * Task 5 — Title and author
  *
- * **Deine Aufgabe:** Erstelle einen Text, der Titel und Autor eines Buches verbindet.
- * **Bereits deklariert:** Der Parameter `book` (ein Objekt mit `title` und `author`).
- * **Wie es funktioniert:** Greife auf `book.title` und `book.author` zu und verbinde sie mit dem Wort "von" (z.B. `` `${title} von ${author}` ``).
- * **Erwartung:** String (Wort „von“ klein, wie im Test).
+ * **Your job:** Describe a book in one line.
+ * **You get:** `book` (an object with `title` and `author`).
+ * **How:** Read `book.title` and `book.author` and put the word "by" between them.
+ * **Returns:** A string like `"1984 by Orwell"`.
  *
- * **Test im Terminal (Projektroot):** `make objects-task-05`
+ * **Test it:** `make objects-task-05`
  *
- * @example pickTitleAuthor({ title: "1984", author: "Orwell" }) // → "1984 von Orwell"
+ * @example pickTitleAuthor({ title: "1984", author: "Orwell" }) // → "1984 by Orwell"
  */
 export function pickTitleAuthor(book) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return "";
 }
 
 /**
- * Aufgabe 6 — Punkt erzeugen
+ * Task 6 — Make a point
  *
- * **Deine Aufgabe:** Erstelle ein neues Objekt, das einen Punkt mit x- und y-Koordinaten darstellt.
- * **Bereits deklariert:** Die Parameter `x` und `y` (zwei Zahlen).
- * **Wie es funktioniert:** Erstelle ein neues Objekt mit den Eigenschaften `x` und `y` und weise ihnen die übergebenen Werte zu (z.B. `{ x: x, y: y }`).
- * **Erwartung:** Objekt mit genau diesen Keys.
+ * **Your job:** Build a new object for a point with `x` and `y`.
+ * **You get:** `x` and `y` (two numbers).
+ * **How:** Return `{ x: x, y: y }`.
+ * **Returns:** An object with exactly these two fields.
  *
- * **Test im Terminal (Projektroot):** `make objects-task-06`
+ * **Test it:** `make objects-task-06`
  *
  * @example makePoint(2, 3) // → { x: 2, y: 3 }
  */
 export function makePoint(x, y) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return {};
 }
 
 /**
- * Aufgabe 7 — Alter um 1 erhöhen (neues Objekt)
+ * Task 7 — One year older (new object)
  *
- * **Deine Aufgabe:** Erstelle ein neues Person-Objekt, bei dem das Alter um 1 erhöht ist. Das Originalobjekt darf nicht verändert werden.
- * **Bereits deklariert:** Der Parameter `person` (ein Objekt mit `name` und `age`).
- * **Wie es funktioniert:** Nutze den Spread-Operator (`...person`), um alle Eigenschaften in ein neues Objekt zu kopieren, und überschreibe dann die Eigenschaft `age` mit `person.age + 1`.
- * **Erwartung:** Neues Objekt.
+ * **Your job:** Return a new person who is one year older. Do not change the old object.
+ * **You get:** `person` (an object with `name` and `age`).
+ * **How:** `{ ...person, age: person.age + 1 }`.
+ * **Returns:** A new object.
  *
- * **Test im Terminal (Projektroot):** `make objects-task-07`
+ * **Test it:** `make objects-task-07`
  *
  * @example incrementPersonAge({ name: "Bo", age: 20 }) // → { name: "Bo", age: 21 }
  */
 export function incrementPersonAge(person) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return {};
 }
 
 /**
- * Aufgabe 8 — Warenkorb-Summe
+ * Task 8 — Shopping cart total
  *
- * **Deine Aufgabe:** Berechne den Gesamtpreis aller Artikel in einem Warenkorb.
- * **Bereits deklariert:** Der Parameter `items` (ein Array von Objekten, die jeweils `price` und `qty` (Menge) haben).
- * **Wie es funktioniert:** Nutze eine Schleife, um über das Array zu iterieren. Multipliziere für jedes Element `price` mit `qty` und addiere das Ergebnis zu einer Summen-Variable.
- * **Erwartung:** Zahl ≥ 0. Ein leeres Array ergibt 0.
+ * **Your job:** Add up the price of everything in a shopping cart.
+ * **You get:** `items` (an array of objects, each with `price` and `qty`, the quantity).
+ * **How:** Loop over `items`. For each item add `items[i].price * items[i].qty` to a sum.
+ * **Returns:** A number (`0` for an empty cart).
  *
- * **Test im Terminal (Projektroot):** `make objects-task-08`
+ * **Test it:** `make objects-task-08`
  *
  * @example sumCartTotal([{ price: 2, qty: 3 }, { price: 5, qty: 1 }]) // → 11
  */
 export function sumCartTotal(items) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return 0;
 }
 
 /**
- * Aufgabe 9 — Sortierte Keys als Text
+ * Task 9 — Sorted field names
  *
- * **Deine Aufgabe:** Erstelle einen Text, der alle Eigenschaften (Keys) eines Objekts alphabetisch sortiert und mit Kommas getrennt auflistet.
- * **Bereits deklariert:** Der Parameter `obj` (ein beliebiges Objekt).
- * **Wie es funktioniert:** Nutze `Object.keys(obj)`, um ein Array der Keys zu erhalten. Sortiere das Array mit `.sort()` und verbinde die Elemente mit `.join(",")`.
- * **Erwartung:** String wie `"a,b"`.
+ * **Your job:** List all field names in A–Z order, separated by commas.
+ * **You get:** `obj` (any object).
+ * **How:** `Object.keys(obj)` gives the names. `.sort()` puts them in order. `.join(",")` glues them with commas.
+ * **Returns:** A string like `"a,b"`.
  *
- * **Test im Terminal (Projektroot):** `make objects-task-09`
+ * **Test it:** `make objects-task-09`
  *
  * @example listSortedKeys({ b: 1, a: 2 }) // → "a,b"
  */
 export function listSortedKeys(obj) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return "";
 }
 
 /**
- * Aufgabe 10 — Koordinaten addieren
+ * Task 10 — Add two points
  *
- * **Deine Aufgabe:** Addiere die x- und y-Koordinaten zweier Punkte und erstelle daraus einen neuen Punkt.
- * **Bereits deklariert:** Die Parameter `a` und `b` (zwei Objekte, die jeweils `x` und `y` haben).
- * **Wie es funktioniert:** Erstelle ein neues Objekt mit den Eigenschaften `x` und `y`. Der Wert für `x` ist `a.x + b.x`, der Wert für `y` ist `a.y + b.y`.
- * **Erwartung:** Neues Objekt mit `x` und `y`.
+ * **Your job:** Add two points field by field and return a new point.
+ * **You get:** `a` and `b` (two objects, each with `x` and `y`).
+ * **How:** The new `x` is `a.x + b.x`. The new `y` is `a.y + b.y`.
+ * **Returns:** A new object with `x` and `y`.
  *
- * **Test im Terminal (Projektroot):** `make objects-task-10`
+ * **Test it:** `make objects-task-10`
  *
  * @example addCoords({ x: 1, y: 2 }, { x: 3, y: 4 }) // → { x: 4, y: 6 }
  */
 export function addCoords(a, b) {
-  // TODO: Implementiere die Logik hier
+  // TODO: write your code here
   return {};
 }

@@ -183,7 +183,7 @@
   display: inline-block;
   padding: 2px 9px;
   border-radius: 999px;
-  color: #fff;
+  color: var(--lp-bg);
   font: 700 12px / 1.5 var(--lp-font);
   letter-spacing: 0.03em;
   text-transform: uppercase;
@@ -192,7 +192,6 @@
 .lp-tag.read { background: var(--lp-read); }
 .lp-tag.do { background: var(--lp-do); }
 .lp-tag.check { background: var(--lp-check); }
-:root[data-theme='dark'] .lp-tag { color: #10131a; }
 
 .lp-theme-toggle {
   border: 1px solid var(--lp-line);

@@ -46,7 +46,7 @@ Other homes: terminal, HTTP and the call stack are taught in the [CS track](../c
 ```text
 java/
 ├── index.html            hub page (reads js/topics/registry.js)
-├── css/                  main.css imports tokens, base, layout, components/, hub/
+├── css/                  main.css imports bridge (site theme → hub names), base, layout, components/, hub/
 ├── js/
 │   ├── topics/registry.js    the topic list, in path order
 │   ├── topics/core-topic.js  Java.addCoreTopic(id, details, lessons)

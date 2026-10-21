@@ -311,3 +311,4 @@ details.code-explain > summary { cursor: pointer; list-style: revert; }
 
 /* Animation host inside the Picture block (scene styles come from hub/theme/anim) */
 .lesson-anim { margin-top: 16px; }
+details.code-explain:not([open]) > summary { margin-bottom: 0; }

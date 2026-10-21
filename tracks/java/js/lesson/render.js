@@ -207,10 +207,26 @@
       else L.showToast(`${value} belongs to another topic.`);
     };
 
+    // Diagrams take their colours when drawn, so redraw them when the theme changes.
+    function redrawDiagramsOnThemeChange() {
+      const redraw = () => {
+        const detail = document.getElementById('detail');
+        if (detail && detail.querySelector('.mermaid')) renderDetail();
+      };
+      if (window.matchMedia) {
+        const query = window.matchMedia('(prefers-color-scheme: dark)');
+        if (query.addEventListener) query.addEventListener('change', redraw);
+      }
+      if (window.MutationObserver) {
+        new MutationObserver(redraw).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+      }
+    }
+
     renderRoadmap();
     renderSidebar();
     renderDetail();
     renderPractice();
+    redrawDiagramsOnThemeChange();
   }
 
   Java.renderLessonTopic = renderLessonTopic;

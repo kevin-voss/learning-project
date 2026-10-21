@@ -127,7 +127,7 @@ code { font-family: var(--lp-mono); font-size: 0.88em; padding: 1px 6px; border-
   justify-self: start;
   padding: 2px 8px;
   border-radius: 999px;
-  color: #fff;
+  color: var(--lp-bg);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.03em;
@@ -216,6 +216,7 @@ code { font-family: var(--lp-mono); font-size: 0.88em; padding: 1px 6px; border-
   .hero-grid, .footer-grid { grid-template-columns: 1fr; }
   .nav-links { display: none; }
   .progress-pill { margin-left: auto; }
+  .progress-pill[hidden] + .lp-theme-toggle { margin-left: auto; }
 }
 
 @media (max-width: 560px) {

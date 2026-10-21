@@ -198,7 +198,7 @@ function renderPatternCode(pattern) {
           </div>
           <button class="copy-btn" onclick="copyCode(this)">copy</button>
         </div>
-        <pre><code class="language-plaintext">${escapeHtml(pattern.code)}</code></pre>
+        <pre><code class="language-java">${escapeHtml(pattern.code)}</code></pre>
       </div>
       <div class="code-explain">
         <div class="code-explain-title">Beginner walkthrough</div>

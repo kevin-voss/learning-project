@@ -3,16 +3,16 @@ Java.topics.controlFlow = Java.topics.controlFlow || {};
 Java.topics.controlFlow.categories = {
   branches: {
     name: 'Branches',
-    color: '#fbbf24',
-    bg: 'rgba(251, 191, 36, 0.1)',
-    glow: 'rgba(251, 191, 36, 0.4)',
+    color: 'var(--amber)',
+    bg: 'var(--amber-bg)',
+    glow: 'var(--amber-glow)',
     desc: 'Choose a path'
   },
   loops: {
     name: 'Loops',
-    color: '#fb7185',
-    bg: 'rgba(251, 113, 133, 0.1)',
-    glow: 'rgba(251, 113, 133, 0.4)',
+    color: 'var(--coral)',
+    bg: 'var(--coral-bg)',
+    glow: 'var(--coral-glow)',
     desc: 'Repeat work'
   }
 };

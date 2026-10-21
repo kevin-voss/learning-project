@@ -3,23 +3,23 @@ Java.topics.restAndHttp = Java.topics.restAndHttp || {};
 Java.topics.restAndHttp.categories = {
   foundations: {
     name: 'Foundations',
-    color: '#2dd4bf',
-    bg: 'rgba(45, 212, 191, 0.1)',
-    glow: 'rgba(45, 212, 191, 0.4)',
+    color: 'var(--teal)',
+    bg: 'var(--teal-bg)',
+    glow: 'var(--teal-glow)',
     desc: 'Resources and contracts'
   },
   methods: {
     name: 'Methods',
-    color: '#fbbf24',
-    bg: 'rgba(251, 191, 36, 0.1)',
-    glow: 'rgba(251, 191, 36, 0.4)',
+    color: 'var(--amber)',
+    bg: 'var(--amber-bg)',
+    glow: 'var(--amber-glow)',
     desc: 'HTTP verbs and intent'
   },
   design: {
     name: 'Design',
-    color: '#a78bfa',
-    bg: 'rgba(167, 139, 250, 0.1)',
-    glow: 'rgba(167, 139, 250, 0.4)',
+    color: 'var(--violet)',
+    bg: 'var(--violet-bg)',
+    glow: 'var(--violet-glow)',
     desc: 'Status and shape'
   }
 };

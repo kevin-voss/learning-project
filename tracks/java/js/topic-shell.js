@@ -16,13 +16,13 @@
     <section class="hero">
       <div class="container">
         <a class="hub-back" href="../../index.html">← All Java topics</a>
-        <div class="hero-badge">${details.badge}</div>
+        <div class="hero-badge">Topic ${String(topic.order).padStart(2, '0')} · Java 21 LTS</div>
         <h1>${details.headline}<br><span class="accent">${details.accent}</span></h1>
-        <p>${details.intro}</p>
+        <p>${Java.lesson.renderInline(details.intro)}</p>
         <div class="hero-stats">
-          <div class="hero-stat"><div class="num">${topic.stats[0].value}</div><div class="lbl">${topic.stats[0].label}</div></div>
+          <div class="hero-stat"><div class="num">${(Java.topics[topicId].lessons || []).length}</div><div class="lbl">Lessons</div></div>
           <div class="hero-stat"><div class="num">21</div><div class="lbl">Java LTS</div></div>
-          <div class="hero-stat"><div class="num">Ubuntu</div><div class="lbl">Commands</div></div>
+          <div class="hero-stat"><div class="num">${topic.order}</div><div class="lbl">Topic</div></div>
         </div>
       </div>
     </section>
@@ -31,7 +31,7 @@
       <div class="container">
         <div class="section-head">
           <div><div class="num-tag">A / OVERVIEW</div><h2>The Roadmap</h2></div>
-          <p>${details.overview}</p>
+          <p>${Java.lesson.renderInline(details.overview)}</p>
         </div>
         <div class="roadmap-lanes" id="roadmap"></div>
       </div>
@@ -41,7 +41,7 @@
       <div class="container">
         <div class="section-head">
           <div><div class="num-tag">B / LESSON</div><h2>The Details</h2></div>
-          <p>What · why · mental model · terminal commands where relevant · code · mistakes</p>
+          <p>Picture · idea · tiny example · try it · check</p>
         </div>
         <div class="detail-grid">
           <aside class="sidebar" id="sidebar"></aside>

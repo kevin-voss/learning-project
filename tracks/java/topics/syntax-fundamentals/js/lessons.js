@@ -243,3 +243,18 @@ public class ImportsExample {
     related: ['Project Layout', 'Java Modules (JPMS)']
   }
 ];
+
+Java.topics.syntaxFundamentals.tryIt = {
+  steps: [
+    'Make `Grammar.java` with a class `Grammar` and a `main` method.',
+    'Add a `//` comment that says what the program does.',
+    'Print two lines. Then delete one `;` and compile. Read the error. Put the `;` back.'
+  ],
+  see: 'first `error: \';\' expected` with a line number, then your two lines after the fix.'
+};
+
+Java.topics.syntaxFundamentals.check = [
+  { q: 'What ends almost every Java statement?', a: 'A semicolon `;`.' },
+  { q: 'What do `{` and `}` mark?', a: 'A block: the start and end of a class, a method, an if or a loop.' },
+  { q: 'Which name follows Java style for a class: `shoppingCart`, `ShoppingCart` or `shopping_cart`?', a: '`ShoppingCart`. Classes start with a capital letter. Variables and methods start small: `shoppingCart`.' }
+];

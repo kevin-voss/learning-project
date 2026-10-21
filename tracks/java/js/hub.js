@@ -11,8 +11,7 @@
     core: 'Core Java',
     workflow: 'Workflow',
     applied: 'Applied Java',
-    advanced: 'Advanced',
-    projects: 'Projects'
+    advanced: 'Go deeper'
   };
 
   function byOrder(a, b) {
@@ -102,7 +101,6 @@
     if (!stats) return;
 
     const available = topics.filter(topic => topic.status === 'available');
-    const projectCount = topics.filter(topic => topic.tier === 'projects').length;
 
     stats.innerHTML = `
       <div class="hero-stat">
@@ -114,8 +112,8 @@
         <div class="lbl">Java LTS</div>
       </div>
       <div class="hero-stat">
-        <div class="num">${projectCount}</div>
-        <div class="lbl">Project track</div>
+        <div class="num">Try + Check</div>
+        <div class="lbl">On every topic</div>
       </div>
     `;
   }

@@ -17,6 +17,7 @@ const flowGlossary = [
 Java.topics.controlFlow.lessons = [
   {
     id: 'if-else',
+    anim: 'traffic',
     num: '01',
     title: 'if/else',
     category: 'branches',
@@ -318,4 +319,19 @@ Java.topics.controlFlow.lessons = [
     related: ['for Loop', 'switch Statement'],
     glossary: flowGlossary
   }
+];
+
+Java.topics.controlFlow.tryIt = {
+  steps: [
+    'Make `Count.java` with a `for` loop from 1 to 10.',
+    'Inside, print `even` or `odd` next to each number with an `if`.',
+    'Stop the loop early with `break` when the number is 7.'
+  ],
+  see: '`1 odd` to `6 even`, and then the loop stops.'
+};
+
+Java.topics.controlFlow.check = [
+  { q: 'How many times does `for (int i = 0; i < 3; i++)` run?', a: 'Three times: i is 0, 1 and 2.' },
+  { q: 'When is `do-while` better than `while`?', a: 'When the body must run at least once, for example to ask a question before checking the answer.' },
+  { q: 'What does `continue` do?', a: 'It skips the rest of this round and goes on to the next round of the loop.' }
 ];

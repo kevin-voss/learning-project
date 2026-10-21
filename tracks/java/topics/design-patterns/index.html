@@ -4,18 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Design Patterns Roadmap · Java Learning Hub</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
   <link rel="stylesheet" href="../../css/main.css">
 </head>
-<body>
-  <div class="grid-bg"></div>
-  <div class="glow glow-1"></div>
-  <div class="glow glow-2"></div>
-  <div class="glow glow-3"></div>
+<body class="lp-hl">
 
   <header class="site-header">
     <div class="container">
@@ -30,7 +22,7 @@
           <span><span class="dot behavioral"></span>Behavioral</span>
           <span><span class="dot architectural"></span>Architectural</span>
         </div>
-      </nav>
+      <button type="button" class="lp-theme-toggle" data-theme-toggle aria-label="Switch light or dark">◐</button></nav>
     </div>
   </header>
 
@@ -38,7 +30,7 @@
     <section class="hero">
       <div class="container">
         <a class="hub-back" href="../../index.html">← All Java topics</a>
-        <div class="hero-badge">Topic 20 · Design patterns</div>
+        <div class="hero-badge">Topic 21 · Design patterns</div>
         <h1>Design Patterns,<br><span class="accent">demystified.</span></h1>
         <p>Twelve essential patterns every developer should know — from <strong>Singleton</strong> to <strong>Template Method</strong>. Real Java code, real-world analogies, when to use them, and why they exist in the first place.</p>
         <div class="hero-stats">
@@ -82,12 +74,25 @@
             <div class="num-tag">B / DEEP DIVE</div>
             <h2>The Details</h2>
           </div>
-          <p>Definition · real-world analogy · Java code · when to use · why · pros &amp; cons</p>
+          <p>Picture · idea · Java code · when to use · pros &amp; cons</p>
         </div>
         <div class="detail-grid">
           <aside class="sidebar" id="sidebar"></aside>
           <article class="detail" id="detail"></article>
         </div>
+      </div>
+    </section>
+
+    <section class="section" id="practice-section">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="num-tag">C / PRACTICE</div>
+            <h2>Try it, then check yourself</h2>
+          </div>
+          <p>Do the steps in your editor. Then answer the questions before you open the answers.</p>
+        </div>
+        <div class="practice-grid" id="practice"></div>
       </div>
     </section>
   </main>
@@ -109,7 +114,11 @@
 
   <script src="../../js/ns.js"></script>
   <script src="js/categories.js"></script>
-  <script src="js/patterns.js"></script>
+  <script src="js/patterns-creational.js"></script>
+  <script src="js/patterns-structural.js"></script>
+  <script src="js/patterns-behavioral.js"></script>
+  <script src="../../js/lesson/util.js"></script>
+  <script src="../../js/lesson/sections.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

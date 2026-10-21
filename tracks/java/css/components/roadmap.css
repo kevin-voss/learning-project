@@ -1,0 +1,122 @@
+/* Roadmap */
+.roadmap-lanes {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.lane {
+  background: linear-gradient(180deg, var(--card) 0%, var(--bg-2) 100%);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+}
+.lane::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--lane-color);
+  opacity: 0.7;
+}
+.lane-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.lane-tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 6px;
+  background: var(--lane-bg);
+  color: var(--lane-color);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.lane-name {
+  font-family: var(--font);
+  font-size: 18px;
+  font-weight: 600;
+}
+.lane-desc {
+  font-size: 12px;
+  color: var(--dim);
+  margin-left: auto;
+  font-family: var(--mono);
+}
+
+.lane-track {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.pattern-card {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  outline: none;
+}
+.pattern-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  background: var(--lane-color);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.3s;
+}
+.pattern-card:hover, .pattern-card:focus-visible {
+  border-color: var(--lane-color);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px -10px var(--lane-glow);
+}
+.pattern-card:hover::before, .pattern-card:focus-visible::before { transform: scaleY(1); }
+.pattern-card.active {
+  border-color: var(--lane-color);
+  background: linear-gradient(180deg, var(--lane-bg) 0%, var(--bg-2) 100%);
+  box-shadow: 0 0 0 1px var(--lane-color), 0 10px 30px -10px var(--lane-glow);
+}
+.pattern-card.active::before { transform: scaleY(1); }
+.pattern-card .num {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--dim);
+  margin-bottom: 8px;
+  letter-spacing: 0.05em;
+}
+.pattern-card .name {
+  font-family: var(--font);
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.pattern-card .name .icon {
+  color: var(--lane-color);
+  font-size: 16px;
+}
+.pattern-card .tag {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+

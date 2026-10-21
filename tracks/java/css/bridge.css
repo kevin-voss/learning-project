@@ -1,0 +1,39 @@
+/* Bridge: the Java hub's own variable names, defined from the site theme
+   (hub/theme/tokens.css, injected by the build). The values after the comma are
+   the light theme, used when you open a page straight from disk. */
+:root {
+  --bg: var(--lp-bg, #faf8f3);
+  --bg-2: var(--lp-surface-2, #f3efe6);
+  --card: var(--lp-surface, #ffffff);
+  --card-2: var(--lp-surface-2, #f3efe6);
+  --border: var(--lp-line, #e4dfd3);
+  --border-strong: color-mix(in srgb, var(--lp-text, #1f2933) 22%, transparent);
+  --fg: var(--lp-text, #1f2933);
+  --muted: var(--lp-text-muted, #5f6b7a);
+  --dim: var(--lp-text-muted, #5f6b7a);
+  --accent: var(--lp-accent, #2f6fde);
+  --on-accent: var(--lp-on-accent, #ffffff);
+  --code-bg: var(--lp-code-bg, #f4f1ea);
+  --code-text: var(--lp-code-text, #24292f);
+  --shadow: var(--lp-shadow, 0 1px 2px rgba(31, 41, 51, 0.06), 0 6px 20px rgba(31, 41, 51, 0.07));
+  --radius: var(--lp-radius, 12px);
+  --font: var(--lp-font, system-ui, -apple-system, 'Segoe UI', sans-serif);
+  --mono: var(--lp-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+
+  /* The four lane colours, mapped to theme colours that read on light and dark */
+  --teal: var(--lp-accent, #2f6fde);
+  --amber: var(--lp-check, #b7791f);
+  --coral: var(--lp-code-keyword, #b8326e);
+  --violet: var(--lp-code-title, #6f42c1);
+  --green: var(--lp-do, #1f9d55);
+  --red: var(--lp-warn, #c0392b);
+
+  --teal-bg: color-mix(in srgb, var(--teal) 10%, transparent);
+  --amber-bg: color-mix(in srgb, var(--amber) 10%, transparent);
+  --coral-bg: color-mix(in srgb, var(--coral) 10%, transparent);
+  --violet-bg: color-mix(in srgb, var(--violet) 10%, transparent);
+  --teal-glow: color-mix(in srgb, var(--teal) 35%, transparent);
+  --amber-glow: color-mix(in srgb, var(--amber) 35%, transparent);
+  --coral-glow: color-mix(in srgb, var(--coral) 35%, transparent);
+  --violet-glow: color-mix(in srgb, var(--violet) 35%, transparent);
+}

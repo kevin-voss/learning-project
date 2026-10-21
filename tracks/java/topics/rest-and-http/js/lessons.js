@@ -6,15 +6,13 @@ const httpGlossary = [
   { term: 'endpoint', definition: 'A URL path where a client can access a resource or collection.' },
   { term: 'idempotent', definition: 'Safe to repeat: one request or many identical requests have the same intended server effect.' },
   { term: 'safe', definition: 'A safe method is intended for reading only, not changing server state.' },
-  { term: 'request body', definition: 'Data sent after the headers, often JSON, used by POST, PUT, PATCH, and QUERY.' },
-  { term: 'status code', definition: 'A three-digit response number that tells the client what happened.' },
-  { term: 'QUERY', definition: 'HTTP method from RFC 10008 for safe, idempotent requests with request content.' }
+  { term: 'request body', definition: 'Data sent after the headers, often JSON, used by POST, PUT and PATCH.' },
+  { term: 'status code', definition: 'A three-digit response number that tells the client what happened.' }
 ];
 
 Java.topics.restAndHttp.lessons = [
   {
     id: 'rest-resources',
-    num: '01',
     title: 'REST Resources',
     category: 'foundations',
     icon: '/api',
@@ -58,7 +56,6 @@ Accept: application/json`,
   },
   {
     id: 'get',
-    num: '02',
     title: 'GET',
     category: 'methods',
     icon: 'GET',
@@ -93,12 +90,11 @@ Accept: application/json`,
       'Request bodies on GET are not reliably interoperable.',
       'Easy to misuse for actions that should change server state.'
     ],
-    related: ['QUERY', 'Status Codes'],
+    related: ['POST', 'Status Codes'],
     glossary: httpGlossary
   },
   {
     id: 'post',
-    num: '03',
     title: 'POST',
     category: 'methods',
     icon: 'POST',
@@ -145,7 +141,6 @@ Content-Type: application/json
   },
   {
     id: 'put-patch-delete',
-    num: '04',
     title: 'PUT, PATCH, DELETE',
     category: 'methods',
     icon: 'Δ',
@@ -191,164 +186,42 @@ Host: example.com`,
     glossary: httpGlossary
   },
   {
-    id: 'query',
-    num: '05',
-    title: 'QUERY',
-    category: 'methods',
-    icon: 'QUERY',
-    tagline: 'Safe search with a body',
-    definition: 'QUERY is an HTTP method defined by RFC 10008. It lets a client send request content for safe, idempotent processing and receive the result.',
-    realWorld: 'It is like submitting a detailed search worksheet to a librarian. The librarian reads the worksheet and returns matching books, but does not change the library records.',
-    syntax: 'QUERY /resource/search with a request body. Use it for complex read-only searches where GET query parameters become too large or awkward.',
-    exampleLabel: 'HTTP QUERY Example',
-    codeLanguage: 'http',
-    fileName: 'query.http',
-    code: `QUERY /api/orders/search HTTP/1.1
-Host: example.com
-Content-Type: application/json
-Accept: application/json
-
-{
-  "status": ["open", "delayed"],
-  "createdAfter": "2026-01-01",
-  "totalGreaterThan": 100,
-  "sort": ["-createdAt"]
-}`,
-    keyPoints: [
-      'QUERY is safe and idempotent like a read operation.',
-      'QUERY can carry request content, unlike interoperable GET patterns.',
-      'QUERY is useful for complex searches and filters.',
-      'Because it is newer, support across frameworks and gateways must be checked.'
-    ],
-    commonMistakes: [
-      'Using QUERY to change data.',
-      'Assuming every deployed HTTP stack already supports QUERY.',
-      'Replacing simple GET filters with QUERY when a URL would be clearer.'
-    ],
-    pros: [
-      'Handles complex read-only queries without huge URLs.',
-      'Communicates safer retry behavior better than POST-for-search.',
-      'Keeps search criteria in structured request content.'
-    ],
-    cons: [
-      'Newer method, so infrastructure support may lag.',
-      'Browser form support and tooling are less familiar than GET and POST.',
-      'Teams must document caching and compatibility behavior explicitly.'
-    ],
-    related: ['GET', 'Idempotency'],
-    glossary: httpGlossary
-  },
-  {
     id: 'idempotency',
-    num: '06',
     title: 'Idempotency',
     category: 'design',
     icon: '↻',
-    tagline: 'Repeat without multiplying effects',
-    definition: 'An idempotent request can be repeated with the same intended server effect as making it once.',
-    realWorld: 'Pressing an elevator button five times still requests the same floor. It should not schedule five separate elevators.',
-    syntax: 'GET, PUT, DELETE, and QUERY are idempotent by intent. POST is not automatically idempotent unless the API adds a key or rule.',
-    exampleLabel: 'HTTP Example',
-    codeLanguage: 'http',
-    fileName: 'idempotency.http',
-    code: `PUT /api/users/42/email HTTP/1.1
-Host: example.com
-Content-Type: application/json
-
-{
-  "email": "mina@example.com"
-}`,
-    keyPoints: [
-      'Idempotency matters for retries after network failures.',
-      'PUT replacement is naturally repeatable.',
-      'POST creation may need an Idempotency-Key header.',
-      'Idempotent does not mean the response must be byte-for-byte identical.'
-    ],
-    commonMistakes: [
-      'Thinking idempotent means no data changes ever happen.',
-      'Retrying non-idempotent POST requests without a plan.',
-      'Ignoring payment and order creation duplicate risks.'
-    ],
-    pros: [
-      'Safer retries and more resilient clients.',
-      'Clearer distributed-system behavior.',
-      'Helpful for queues, gateways, and mobile networks.'
-    ],
-    cons: [
-      'Requires careful API and database design.',
-      'Idempotency keys add storage and expiry decisions.',
-      'Mislabeling a method as idempotent can create subtle bugs.'
-    ],
-    related: ['QUERY', 'POST'],
+    tagline: 'Safe to press twice',
+    realWorld: 'Pressing the lift button five times still calls one lift to your floor.',
+    definition: 'A request is idempotent when sending it twice has the same effect as sending it once. GET, PUT and DELETE are. POST is not: two POSTs can make two orders. The full idea lives in the [HTTP lesson](../../../computer-science/index.html#http-requests-responses).',
+    keyPoints: ['Retry GET, PUT and DELETE without fear.', 'Be careful when you retry a POST.'],
+    commonMistakes: ['Retrying a payment POST and charging twice.'],
+    related: ['POST', 'PUT, PATCH, DELETE'],
     glossary: httpGlossary
   },
   {
     id: 'status-codes',
-    num: '07',
     title: 'Status Codes',
     category: 'design',
     icon: '200',
-    tagline: 'Tell the client what happened',
-    definition: 'A status code is the server’s compact answer about the result of a request.',
-    realWorld: 'It is like a delivery slip: delivered, created, missing address, forbidden, or warehouse error.',
-    why: 'Clients, logs, gateways, monitors, and humans can react quickly when the status code matches what actually happened.',
-    howThink: 'Read the first digit first: 2xx worked, 4xx means the client needs to change something or authenticate, 5xx means the server failed.',
-    whenUse: 'Use status codes every time a Java API controller returns a response, especially for validation, login, permissions, missing resources, conflicts, and server failures.',
-    syntax: 'Use 200 OK for successful reads, 201 Created for creation, 204 No Content for success with no body, 400 for malformed input, 401 when login is missing or invalid, 403 when login is valid but not allowed, 404 not found, 409 conflict, 422 semantic validation failure, 429 rate limit, 500 server bug, and 503 temporary service outage.',
-    statusCodes: [
-      { code: 200, name: 'OK', happened: 'The request worked and the response body contains the result.', example: 'GET /api/books/42 -> 200 with book JSON' },
-      { code: 201, name: 'Created', happened: 'The server created a new resource.', example: 'POST /api/orders -> 201 with Location: /api/orders/991' },
-      { code: 204, name: 'No Content', happened: 'The request worked, but there is no response body to send back.', example: 'DELETE /api/sessions/current -> 204' },
-      { code: 400, name: 'Bad Request', happened: 'The request was malformed or missing basic required data.', example: 'POST /api/users with invalid JSON -> 400' },
-      { code: 401, name: 'Unauthorized', happened: 'The client is not authenticated; the server does not know who is calling.', example: 'GET /api/me without a token -> 401' },
-      { code: 403, name: 'Forbidden', happened: 'The client is authenticated, but this user is not allowed to do that action.', example: 'DELETE /api/users/7 as a normal user -> 403' },
-      { code: 404, name: 'Not Found', happened: 'The requested resource or route was not found.', example: 'GET /api/books/999999 -> 404' },
-      { code: 409, name: 'Conflict', happened: 'The request conflicts with current server state.', example: 'POST /api/users with an email already taken -> 409' },
-      { code: 422, name: 'Unprocessable Content', happened: 'The JSON was readable, but the values fail business validation.', example: 'POST /api/orders with quantity -3 -> 422' },
-      { code: 429, name: 'Too Many Requests', happened: 'The client sent too many requests in a time window.', example: 'POST /api/login too often -> 429' },
-      { code: 500, name: 'Internal Server Error', happened: 'A server bug or unexpected failure stopped a valid-looking request.', example: 'GET /api/reports when code throws unexpectedly -> 500' },
-      { code: 503, name: 'Service Unavailable', happened: 'The service is temporarily unavailable, overloaded, or down for maintenance.', example: 'GET /api/search while search service is restarting -> 503' }
-    ],
-    exampleLabel: 'HTTP Example',
-    codeLanguage: 'http',
-    fileName: 'status-codes.http',
-    code: `HTTP/1.1 201 Created
-Location: /api/orders/991
-Content-Type: application/json
-
-{
-  "id": 991,
-  "status": "open"
-}`,
-    keyPoints: [
-      '2xx means success.',
-      '4xx means the client request needs correction or permission.',
-      '5xx means the server failed to complete a valid-looking request.',
-      'Status codes and response bodies should agree.',
-      '401 means “please authenticate”; 403 means “you are authenticated, but not allowed.”'
-    ],
-    commonMistakes: [
-      'Returning 200 OK for every response, including errors.',
-      'Using 500 for validation problems.',
-      'Hiding useful error details from the client.',
-      'Mixing up 401 and 403: missing login is 401, insufficient permission is 403.'
-    ],
-    pros: [
-      'Standard status codes make APIs easier to debug.',
-      'Clients can branch behavior without parsing custom text first.',
-      'Monitoring tools understand status classes.'
-    ],
-    cons: [
-      'Status codes alone are not enough; error bodies still matter.',
-      'Teams sometimes disagree on close choices like 400 vs 422.',
-      'Incorrect codes are worse than simple but consistent codes.'
-    ],
-    related: ['REST Resources', 'POST'],
+    tagline: 'The first digit tells the story',
+    realWorld: 'A parcel slip: delivered, wrong address, or the depot is on fire.',
+    definition: 'Every response starts with a three-digit status code. Read the first digit: 2 means it worked, 4 means the client asked wrongly, 5 means the server broke. All codes are explained in the [HTTP lesson](../../../computer-science/index.html#http-requests-responses).',
+    table: {
+      label: 'The three you meet first',
+      head: ['Code', 'Means', 'Java API example'],
+      rows: [
+        ['`200` / `201`', 'OK / Created', 'GET a book, POST a new order'],
+        ['`400` / `404`', 'Bad request / Not found', 'missing field, unknown id'],
+        ['`500`', 'Server error', 'an exception nobody caught']
+      ]
+    },
+    keyPoints: ['2xx worked. 4xx: fix the request. 5xx: fix the server.'],
+    commonMistakes: ['Returning 200 with an error message inside the body.'],
+    related: ['REST Resources'],
     glossary: httpGlossary
   },
   {
     id: 'request-response-shape',
-    num: '08',
     title: 'Request and Response Shape',
     category: 'design',
     icon: '{}',
@@ -393,4 +266,19 @@ Content-Type: application/json
     related: ['Status Codes', 'REST Resources'],
     glossary: httpGlossary
   }
+];
+
+Java.topics.restAndHttp.tryIt = {
+  steps: [
+    'Open the terminal.',
+    'Run `curl -i https://jsonplaceholder.typicode.com/todos/1`.',
+    'Run `curl -i https://jsonplaceholder.typicode.com/todos/999999`.'
+  ],
+  see: '`HTTP/2 200` and a small JSON todo first. Then `HTTP/2 404` and `{}`.'
+};
+
+Java.topics.restAndHttp.check = [
+  { q: 'Which method reads data without changing anything?', a: 'GET.' },
+  { q: 'You want to add a new order. Which method?', a: 'POST, to the collection: `POST /api/orders`.' },
+  { q: 'The server answers 404. Whose side is the problem on?', a: 'The client’s: the thing asked for does not exist. 4xx means "fix the request".' }
 ];

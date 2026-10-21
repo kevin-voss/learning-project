@@ -1,196 +1,77 @@
-# Java Learning Hub
+# Java hub
 
-**Main language focus of this repo.**
+The home for the Java language on the path. One topic per page, from your first program to design patterns. Open [`index.html`](index.html) in a browser. You run the code in your own terminal with `javac` and `java` (Java 21).
 
-| Doc | Role |
-|-----|------|
-| [`docs/LEARNING_PATH.md`](../../docs/LEARNING_PATH.md) Phase 4 | Layers A–F (foundation → server → deep) |
-| [`sheets/java/`](../../sheets/java/README.md) | Foundation sheet |
-| [`sheets/java/server-layers.md`](../../sheets/java/server-layers.md) | Controller / service / repo / DTO / entity |
-| [`projects/10-java-weather-cli/`](../../projects/10-java-weather-cli) | HTTP client apply after REST topic |
+The order of the steps lives in `hub/path.mjs`. This folder only holds the pages.
 
-**Order of mastery:** language + packages → Array / ArrayList / HashMap → Maven folders → HTTP client → server layers + Postgres + Docker → **only then** JVM deep, patterns catalog, Spring Boot course, JPA.
+## How a topic page works
 
-Static interactive learner for Java topics. Open [`index.html`](index.html) in a browser or serve the folder locally. The student environment is **Ubuntu Linux only**. All runnable Java examples target **Java 21 LTS** only: no preview features, incubator APIs, Windows commands, or macOS-only setup.
+Every lesson follows the page shape from [docs/STYLE.md](../../docs/STYLE.md):
 
-Prefer **simple examples** (cookie-cutter = class, cookie = object). Run every snippet in the Ubuntu terminal with `javac` / `java`.
+**Picture → The idea → Tiny example → Try it → Check yourself**
 
-## Ubuntu Setup
+Each topic ends with one "Try it" (numbered steps and "You should see") and three "Check yourself" questions with hidden answers. Lessons marked **Deeper** are optional on the first pass.
 
-Students should install and verify Java from an Ubuntu terminal:
+## Topics
 
-```bash
-sudo apt update
-sudo apt install openjdk-21-jdk
+| # | Topic | Folder |
+|---|-------|--------|
+| 1 | Getting started: install Java, first program | `topics/getting-started/` |
+| 2 | Syntax fundamentals | `topics/syntax-fundamentals/` |
+| 3 | Types and variables (stack, heap, references) | `topics/types-and-variables/` |
+| 4 | Operators | `topics/operators/` |
+| 5 | Control flow | `topics/control-flow/` |
+| 6 | Methods | `topics/methods/` |
+| 7 | Arrays | `topics/arrays/` |
+| 8 | Strings and text | `topics/strings/` |
+| 9 | Classes and objects | `topics/classes-and-objects/` |
+| 10 | Collections | `topics/collections/` |
+| 11 | Exceptions | `topics/exceptions/` |
+| 12 | Reading and writing files | `topics/io-basics/` |
+| 13 | Debugging | `topics/debugging/` |
+| 14 | Interfaces | `topics/interfaces/` |
+| 15 | Enums | `topics/enums/` |
+| 16 | Build tools: Maven | `topics/build-tools/` |
+| 17 | Testing with JUnit | `topics/testing/` |
+| 18 | REST and HTTP methods | `topics/rest-and-http/` |
+| 19 | Recursion | `topics/recursion/` |
+| 20 | JVM and memory | `topics/jvm-memory/` |
+| 21 | Design patterns | `topics/design-patterns/` |
+| 22 | UML diagrams | `topics/uml-diagrams/` |
 
-java --version
-javac --version
-```
+Other homes: terminal, HTTP and the call stack are taught in the [CS track](../computer-science/index.html). Git lives in [sheets/git](../../sheets/git/README.md). Projects live in the [project ladder](../../projects/README.md).
 
-Both version commands should report `21.x`. Lessons should prefer Ubuntu terminal commands such as `mkdir`, `cd`, `nano`, `javac`, `java`, `jshell`, `git`, `mvn`, `gradle`, and `sudo apt install ...`.
-
-## Homepage Structure
-
-The hub is registry-driven and renders:
-
-- **Ordered Curriculum Path:** one beginner-to-advanced sequence from Ubuntu setup through practice projects.
-- **Terminal Practice:** browser pages show lessons, code, and diagrams. Actual Java execution happens in Ubuntu Terminal with `javac` and `java`.
-- **Runnable Snippet Flow:** plain `.java` lesson snippets automatically show the beginner order: create a practice folder, create the file, open it with `code`, paste/save, compile, then run.
-- **Stages & Topics:** grouped cards for foundation, core Java, workflow, applied Java, advanced, and projects.
-- **Hover Glossary:** beginner definitions for Java keywords, data types, Git terms, REST terms, and UML terms.
-
-Available topic links must point to explicit `index.html` files so the hub works when opened directly from disk.
-
-## Layout
+## Files
 
 ```text
 java/
-├── index.html                    # Hub: path + terminal practice + grouped topics + glossary
-├── README.md
-├── css/
-│   ├── tokens.css
-│   ├── base.css
-│   ├── layout.css
-│   ├── components.css
-│   ├── hub.css
-│   └── main.css
+├── index.html            hub page (reads js/topics/registry.js)
+├── css/                  main.css imports tokens, base, layout, components/, hub/
 ├── js/
-│   ├── ns.js
-│   ├── glossary.js               # Global beginner glossary
-│   ├── hub.js                    # Hub page renderer
-│   ├── lesson-topic.js           # Shared topic lesson renderer
-│   ├── topic-shell.js            # Shared shell for generated topic pages
-│   └── topics/
-│       ├── registry.js           # Topic catalog
-│       └── core-lessons.js       # Shared lessons for new core topics
-└── topics/
-    ├── getting-started/
-    ├── syntax-fundamentals/
-    ├── types-and-variables/
-    ├── operators/
-    ├── control-flow/
-    ├── methods/
-    ├── classes-and-objects/
-    ├── arrays/
-    ├── strings/
-    ├── collections/
-    ├── exceptions/
-    ├── io-basics/
-    ├── debugging/
-    ├── testing/
-    ├── build-tools/
-    ├── git-basics/
-    ├── rest-and-http/
-    ├── uml-diagrams/
-    ├── jvm-memory/
-    ├── design-patterns/
-    └── practice-projects/
+│   ├── topics/registry.js    the topic list, in path order
+│   ├── topics/core-topic.js  Java.addCoreTopic(id, details, lessons)
+│   ├── lesson/               renderer: util, explain, sections, ui, render
+│   ├── topic-shell.js        builds the page for shell topics
+│   └── glossary.js, hub.js, ns.js
+└── topics/<topic>/
+    ├── index.html        a short shell that loads the scripts
+    └── js/lessons.js     the lessons (some topics also have categories.js and app.js)
 ```
 
-## Registry Schema
+## Add or change a lesson
 
-Topics live in [`js/topics/registry.js`](js/topics/registry.js).
+A lesson is a plain object in `topics/<topic>/js/lessons.js`:
 
 ```js
 {
-  id: 'methods',
-  title: 'Methods',
-  tagline: 'Name reusable behavior',
-  description: 'Short learner-facing summary.',
-  path: 'topics/methods/index.html', // explicit index.html required for available topics
-  status: 'available',               // available | in-progress | planned
-  tier: 'foundation',                // foundation | core | workflow | applied | advanced | projects
-  order: 6,                          // global beginner-to-advanced order
-  prerequisites: ['control-flow'],
-  ltsNote: 'Java 21 LTS',
-  stats: [
-    { value: '3', label: 'Lessons' }
-  ],
-  accent: 'teal'                     // amber | teal | coral | violet
+  id: 'base-case', title: 'Countdown and the Base Case', category: 'concept',
+  realWorld: 'The picture: a thing a child knows.',
+  definition: 'The idea in 2–5 short sentences. `code` and [links](../x/index.html) work.',
+  fileName: 'Countdown.java', code: `...at most ~15 lines...`,
+  tryIt: { steps: ['Do this.', 'Then this.'], see: 'what appears.' },
+  check: [{ q: 'A question?', a: 'The answer.' }],
+  keyPoints: [], commonMistakes: [], related: ['Methods']
 }
 ```
 
-## Curriculum
-
-| Order | Topic | Stage | Status | Path |
-|-------|-------|-------|--------|------|
-| 1 | Getting Started on Ubuntu | Foundation | Available | `topics/getting-started/index.html` |
-| 2 | Syntax Fundamentals | Foundation | Available | `topics/syntax-fundamentals/index.html` |
-| 3 | Types & Variables | Foundation | Available | `topics/types-and-variables/index.html` |
-| 4 | Operators | Foundation | Available | `topics/operators/index.html` |
-| 5 | Control Flow | Foundation | Available | `topics/control-flow/index.html` |
-| 6 | Methods | Foundation | Available | `topics/methods/index.html` |
-| 7 | Classes & Objects | Foundation | Available | `topics/classes-and-objects/index.html` |
-| 8 | Arrays | Foundation | Available | `topics/arrays/index.html` |
-| 9 | Strings & Text | Foundation | Available | `topics/strings/index.html` |
-| 10 | Collections | Core Java | Available | `topics/collections/index.html` |
-| 11 | Exceptions | Core Java | Available | `topics/exceptions/index.html` |
-| 12 | I/O Basics | Core Java | Available | `topics/io-basics/index.html` |
-| 13 | Debugging | Workflow | Available | `topics/debugging/index.html` |
-| 14 | Testing | Workflow | Available | `topics/testing/index.html` |
-| 15 | Maven & Gradle Basics | Workflow | Available | `topics/build-tools/index.html` |
-| 16 | Git Basics | Workflow | Available | `topics/git-basics/index.html` |
-| 17 | REST & HTTP | Applied Java | Available | `topics/rest-and-http/index.html` |
-| 18 | UML Diagrams | Applied Java | Available | `topics/uml-diagrams/index.html` |
-| 19 | JVM & Memory | Advanced | Available | `topics/jvm-memory/index.html` |
-| 20 | Design Patterns | Advanced | Available | `topics/design-patterns/index.html` |
-| 21 | Practice Projects | Projects | Available | `topics/practice-projects/index.html` |
-
-## Topic Page Data
-
-Existing basics topics use per-folder data files:
-
-```text
-topics/<topic-id>/
-  index.html
-  js/
-    categories.js
-    lessons.js
-    app.js
-```
-
-New shared-shell topics use:
-
-```text
-topics/<topic-id>/index.html
-js/topics/core-lessons.js
-js/topic-shell.js
-```
-
-Lesson objects follow this shape:
-
-```js
-{
-  id,
-  num,
-  title,
-  category,
-  tagline,
-  definition,
-  realWorld,
-  fileName,
-  codeLanguage, // omit or use 'java' only for Java snippets that should compile
-  code,
-  syntax,
-  commands: [], // optional override; plain .java snippets get generated beginner run steps
-  keyPoints: [],
-  commonMistakes: [],
-  pros: [],
-  cons: [],
-  glossary: [
-    { term, definition }
-  ],
-  related: []
-}
-```
-
-## Conventions
-
-- Keep all setup and commands Ubuntu-only.
-- Keep execution realistic: static browser pages can edit and save code but cannot run Java without an added runtime. Actual execution belongs in the Ubuntu terminal with `javac` and `java`.
-- For runnable beginner snippets, show the full order: create/enter a folder, create the `.java` file, open it with `code`, paste the lesson code, save, compile with `javac`, and run with `java`.
-- Omit `commands` for simple single-file `.java` snippets so [`js/lesson-topic.js`](js/lesson-topic.js) can generate the standard ordered flow. Add custom `commands` only when a lesson needs a special layout such as `src/` and `out/`.
-- Use `codeLanguage: 'bash'`, `'http'`, `'json'`, or `'plaintext'` for non-Java examples so verification can compile only Java snippets.
-- Available registry paths should point to explicit `index.html` files.
-- Beginner terminology should use `glossary` entries or the global [`js/glossary.js`](js/glossary.js). The renderer shows viewport-safe hover/focus explanations.
-- Data-type lessons should include sizes, ranges, overflow behavior, and the light stack/heap/reference model before deeper JVM content.
+A topic's own `tryIt` and `check` go into the `details` of `Java.addCoreTopic(...)`, or onto `Java.topics.<name>` for topics with their own `categories.js`. Use `category: 'deeper'` for optional lessons. No build step: every page is plain `<script>` tags.

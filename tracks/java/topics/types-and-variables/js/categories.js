@@ -3,16 +3,23 @@ Java.topics.typesAndVariables = Java.topics.typesAndVariables || {};
 Java.topics.typesAndVariables.categories = {
   values: {
     name: 'Values',
-    color: '#fb7185',
-    bg: 'rgba(251, 113, 133, 0.1)',
-    glow: 'rgba(251, 113, 133, 0.4)',
+    color: 'var(--coral)',
+    bg: 'var(--coral-bg)',
+    glow: 'var(--coral-glow)',
     desc: 'Kinds of data'
   },
   variables: {
     name: 'Variables',
-    color: '#fbbf24',
-    bg: 'rgba(251, 191, 36, 0.1)',
-    glow: 'rgba(251, 191, 36, 0.4)',
+    color: 'var(--amber)',
+    bg: 'var(--amber-bg)',
+    glow: 'var(--amber-glow)',
     desc: 'Names and lifetime'
+  },
+  deeper: {
+    name: 'Deeper',
+    color: 'var(--violet)',
+    bg: 'var(--violet-bg)',
+    glow: 'var(--violet-glow)',
+    desc: 'Optional: come back later'
   }
 };

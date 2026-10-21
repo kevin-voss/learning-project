@@ -207,3 +207,18 @@ Java.topics.operators.lessons = [
     related: ['Logical Operators', 'Control Flow']
   }
 ];
+
+Java.topics.operators.tryIt = {
+  steps: [
+    'Make `Maths.java`. Print `7 / 2`, `7 % 2` and `7.0 / 2`.',
+    'Make `int age = 12;` and print `age >= 10 && age < 13`.',
+    'Print `2 + 3 * 4` and `(2 + 3) * 4`.'
+  ],
+  see: '`3`, `1`, `3.5`, then `true`, then `14` and `20`.'
+};
+
+Java.topics.operators.check = [
+  { q: 'Why is `7 / 2` equal to 3 in Java?', a: 'Both numbers are int, so Java does whole-number division and drops the .5.' },
+  { q: 'What does `%` give you?', a: 'The rest after dividing. `7 % 2` is 1. It is handy to test even and odd numbers.' },
+  { q: 'What is the difference between `=` and `==`?', a: '`=` puts a value in a variable. `==` asks "are these equal?" and gives true or false.' }
+];

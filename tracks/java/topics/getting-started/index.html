@@ -4,18 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Getting Started on Ubuntu · Java Learning Hub</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
   <link rel="stylesheet" href="../../css/main.css">
 </head>
-<body>
-  <div class="grid-bg"></div>
-  <div class="glow glow-1"></div>
-  <div class="glow glow-2"></div>
-  <div class="glow glow-3"></div>
+<body class="lp-hl">
 
   <header class="site-header">
     <div class="container">
@@ -29,7 +21,7 @@
           <span><span class="dot structural"></span>First Run</span>
           <span><span class="dot behavioral"></span>Ubuntu</span>
         </div>
-      </nav>
+      <button type="button" class="lp-theme-toggle" data-theme-toggle aria-label="Switch light or dark">◐</button></nav>
     </div>
   </header>
 
@@ -39,9 +31,9 @@
         <a class="hub-back" href="../../index.html">← All Java topics</a>
         <div class="hero-badge">Topic 01 · Ubuntu · Java 21 LTS</div>
         <h1>Getting Started on Ubuntu,<br><span class="accent">from install to first run.</span></h1>
-        <p>Learn what terminal commands, sudo, apt, OpenJDK, JDK, JRE, JVM, javac, and java are for, then build a tiny first program without any framework or build tool.</p>
+        <p>Install Java, write your first program, then compile and run it. The details come last.</p>
         <div class="hero-stats">
-          <div class="hero-stat"><div class="num">10</div><div class="lbl">Lessons</div></div>
+          <div class="hero-stat"><div class="num">6</div><div class="lbl">Lessons</div></div>
           <div class="hero-stat"><div class="num">apt</div><div class="lbl">Ubuntu install</div></div>
           <div class="hero-stat"><div class="num">0→1</div><div class="lbl">First program</div></div>
         </div>
@@ -55,7 +47,7 @@
             <div class="num-tag">A / OVERVIEW</div>
             <h2>The Roadmap</h2>
           </div>
-          <p>Move from command basics to installation, compiling, and running a simple class.</p>
+          <p>First run: install → first program → compile and run. Then: what to do if something breaks.</p>
         </div>
         <div class="roadmap-lanes" id="roadmap"></div>
       </div>
@@ -68,7 +60,7 @@
             <div class="num-tag">B / LESSON</div>
             <h2>The Details</h2>
           </div>
-          <p>What · why · mental model · commands · code · mistakes</p>
+          <p>Picture · idea · tiny example · try it · check</p>
         </div>
         <div class="detail-grid">
           <aside class="sidebar" id="sidebar"></aside>
@@ -91,7 +83,7 @@
   <script src="../../js/topics/registry.js"></script>
   <script src="js/categories.js"></script>
   <script src="js/lessons.js"></script>
-  <script src="../../js/lesson-topic.js"></script>
+  <script src="../../js/lesson/util.js"></script><script src="../../js/lesson/explain.js"></script><script src="../../js/lesson/sections.js"></script><script src="../../js/lesson/ui.js"></script><script src="../../js/lesson/render.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

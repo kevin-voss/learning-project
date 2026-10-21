@@ -235,12 +235,7 @@ function renderDetail() {
     </div>
     <div class="detail-body">
       <div class="detail-section">
-        <div class="detail-section-label">${icons.info}Definition</div>
-        <p class="def-text">${p.definition}</p>
-      </div>
-      
-      <div class="detail-section">
-        <div class="detail-section-label">${icons.world}Real-World Analogy</div>
+        <div class="detail-section-label">${icons.world}Picture</div>
         <div class="real-world">
           <div class="emoji">${p.icon}</div>
           <div class="content">
@@ -248,6 +243,11 @@ function renderDetail() {
             <div class="text">${p.realWorld}</div>
           </div>
         </div>
+      </div>
+
+      <div class="detail-section">
+        <div class="detail-section-label">${icons.info}The idea</div>
+        <p class="def-text">${p.definition}</p>
       </div>
       
       ${renderPatternCode(p)}
@@ -356,8 +356,33 @@ function showToast(msg) {
   window._toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
 }
 
+// Try it + Check yourself for the whole topic (rendered with the shared lesson helpers)
+const practice = {
+  tryIt: {
+    steps: [
+      'Pick Strategy. Make an interface `Discount` with `int apply(int price)`.',
+      'Write two classes: `NoDiscount` (returns the price) and `HalfPrice` (returns price / 2).',
+      'In `main`, put both in a `List<Discount>` and print `apply(100)` for each.'
+    ],
+    see: '`100` and `50`. The loop never needs an if to choose the discount.'
+  },
+  check: [
+    { q: 'What is a design pattern?', a: 'A named, well-known answer to a problem that comes up again and again. It is an idea, not a library.' },
+    { q: 'You need exactly one shared settings object. Which pattern?', a: 'Singleton. Use it rarely: it is a global value in disguise.' },
+    { q: 'Several screens must update when data changes. Which pattern?', a: 'Observer: the data keeps a list of listeners and tells each of them.' }
+  ]
+};
+
+function renderPractice() {
+  const root = document.getElementById('practice');
+  if (!root || !Java.lesson || !Java.lesson.renderTryIt) return;
+  const owner = { glossary: [] };
+  root.innerHTML = Java.lesson.renderTryIt(practice.tryIt, owner) + Java.lesson.renderCheck(practice.check, owner);
+}
+
 // Initialize the page
 renderRoadmap();
 renderSidebar();
 renderDetail();
+renderPractice();
 })();

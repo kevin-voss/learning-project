@@ -1,0 +1,22 @@
+{
+  "task": "05_4",
+  "tests": [
+    { "name": "Klausur: the sheet's shrinking triangle",
+      "input": ["Klausur"],
+      "expect": ["Klausur", "Klausu", "Klaus", "Klau", "Kla", "Kl", "K"] },
+    { "name": "Hi: two letters → two lines",
+      "input": ["Hi"],
+      "expect": ["Hi", "H"] },
+    { "name": "A: one letter → only A",
+      "input": ["A"],
+      "expect": ["A"],
+      "reject": ["AA"] },
+    { "name": "Test: four lines down to T",
+      "input": ["Test"],
+      "expect": ["Test", "Tes", "Te", "T"] },
+    { "name": "Ab: shrinks, does not grow",
+      "input": ["Ab"],
+      "expect": ["Ab", "A"],
+      "reject": ["Abc"] }
+  ]
+}

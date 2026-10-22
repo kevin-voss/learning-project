@@ -1,0 +1,29 @@
+{
+  "task": "05_2",
+  "tests": [
+    { "name": "sheet example: 100, 200, 50, 300, then −1 → count 4, sum 650, average 162.5",
+      "input": ["100", "200", "50", "300", "-1"],
+      "expect": ["Count: 1", "Sum: 100", "Average: 100.0",
+                 "Count: 2", "Sum: 300", "Average: 150.0",
+                 "Count: 3", "Sum: 350", "Average: 116.66666666666667",
+                 "Count: 4", "Sum: 650", "Average: 162.5"] },
+    { "name": "one valid number then stop: count 1, sum 10",
+      "input": ["10", "-5"],
+      "expect": ["Count: 1", "Sum: 10", "Average: 10.0"],
+      "reject": ["Count: 2"] },
+    { "name": "zero counts as a valid number",
+      "input": ["0", "0", "-1"],
+      "expect": ["Count: 1", "Sum: 0", "Average: 0.0",
+                 "Count: 2", "Sum: 0", "Average: 0.0"] },
+    { "name": "first input already negative: no stats printed",
+      "input": ["-1"],
+      "reject": ["Count:", "Sum:", "Average:"] },
+    { "name": "two equal numbers: average equals the number",
+      "input": ["7", "7", "-1"],
+      "expect": ["Count: 2", "Sum: 14", "Average: 7.0"] },
+    { "name": "negative stop is not added to the sum",
+      "input": ["5", "15", "-100"],
+      "expect": ["Count: 2", "Sum: 20", "Average: 10.0"],
+      "reject": ["Count: 3", "Sum: -80"] }
+  ]
+}

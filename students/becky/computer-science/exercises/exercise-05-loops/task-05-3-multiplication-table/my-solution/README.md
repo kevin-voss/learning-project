@@ -1,0 +1,37 @@
+# My solution · Task 05_3 ✏️
+
+This is your desk. It is empty on purpose: you write the whole program yourself, from the first line to the last.
+
+Create a file `TimesTable.java` in this folder. The class inside must have the same name: `public class TimesTable`. The [exercise page](../../README.md) explains every idea you need.
+
+This program reads nothing from the keyboard. It only prints.
+
+## How to run it
+
+When your file is written, open a terminal **in this folder** (`my-solution/`), then:
+
+```bash
+javac TimesTable.java
+```
+
+```bash
+java TimesTable
+```
+
+`javac` = "translate my code for the computer". `java` = "now run it". Changed the code? Run `javac` again before `java`, or you run the old version.
+
+## Test it
+
+The task has tests: they check what your program prints. Any file and class name works. Run them from the main folder of the repo (where the `Makefile` is):
+
+```bash
+make test-task TASK=05_3
+```
+
+In Cursor, `/test` runs them and explains the first ❌ (and makes extra tests for edge cases when you ask).
+
+## Rules for this desk
+
+- Change anything you like here.
+- Do not copy from [`../solution/`](../solution/README.md). Look there only when you are done.
+- Stuck? Read the [exercise page](../../README.md) again, then the helpers in the [task](../README.md). In Cursor: `/stuck`, then `/check`.

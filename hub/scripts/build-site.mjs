@@ -47,6 +47,18 @@ const THEME_HEAD = [
 const THEME_BODY = ['/hub/theme/anim/scenes.js', '/hub/theme/anim/player.js', '/hub/progress.js', '/hub/chat/chat.js']
   .map((src) => `<script src="${src}" defer></script>`).join('\n  ')
 
+// Parent page one level up (or /hub/ if nothing above has a page).
+function backHref(file) {
+  let dir = basename(file) === 'README.md' ? dirname(dirname(file)) : dirname(file)
+  while (dir && dir !== '.') {
+    if (['index.html', 'README.md'].some((entry) => existsSync(join(ROOT, dir, entry)))) {
+      return `/${dir}/`
+    }
+    dir = dirname(dir)
+  }
+  return '/hub/'
+}
+
 // "Home › sheets › javascript › dom.md": every folder that has a page is a link.
 function crumbs(file) {
   const parts = file.split('/')
@@ -62,6 +74,13 @@ function crumbs(file) {
   return `<nav class="lp-crumbs" aria-label="You are here"><a href="/hub/">Home</a> › ${[...links, `<span aria-current="page">${escape(here)}</span>`].join(' › ')}</nav>`
 }
 
+function trail(file) {
+  return `<div class="lp-trail">
+  <a class="lp-back" href="${backHref(file)}">← Back</a>
+  ${crumbs(file)}
+</div>`
+}
+
 function shell(title, file, body) {
   return `<!DOCTYPE html>
 <html lang="en">
@@ -73,7 +92,7 @@ function shell(title, file, body) {
 </head>
 <body class="lp-page">
   ${HEADER}
-  ${crumbs(file)}
+  ${trail(file)}
   <main class="lp-sheet">
 ${body}
   </main>

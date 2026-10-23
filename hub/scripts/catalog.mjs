@@ -310,7 +310,10 @@ function studentTasksPage(student) {
 </head>
 <body class="lp-page lp-tasks-page">
   ${HEADER}
+  <div class="lp-trail">
+  <a class="lp-back" href="/hub/#tasks">← Back</a>
   <nav class="lp-crumbs" aria-label="You are here"><a href="/hub/">Home</a> › <a href="/hub/#tasks">My tasks</a> › <span aria-current="page">${escape(student.title)}</span></nav>
+  </div>
   <main class="lp-sheet lp-tasks">
     <h1>${escape(student.title)} · My tasks</h1>
     <p>${escape(formatCounts(student.counts))}. Open a subject or exercise to see its tasks. Status comes from each exercise README.</p>

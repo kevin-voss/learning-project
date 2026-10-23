@@ -303,6 +303,49 @@
   border: 1px solid color-mix(in srgb, var(--lp-warn) 25%, transparent);
 }
 
+.lp-chat-thinking {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--lp-text-muted);
+  font-style: italic;
+}
+
+.lp-chat-thinking-label {
+  font-size: 13px;
+}
+
+.lp-chat-thinking-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.lp-chat-thinking-dots i {
+  display: block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--lp-text-muted);
+  opacity: 0.35;
+  animation: lp-chat-dot 1.2s ease-in-out infinite;
+}
+
+.lp-chat-thinking-dots i:nth-child(2) { animation-delay: 0.2s; }
+.lp-chat-thinking-dots i:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes lp-chat-dot {
+  0%, 80%, 100% { opacity: 0.35; transform: translateY(0); }
+  40% { opacity: 1; transform: translateY(-2px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lp-chat-thinking-dots i {
+    animation: none;
+    opacity: 0.7;
+  }
+}
+
 .lp-chat-form {
   display: flex;
   gap: var(--lp-s2);
@@ -329,6 +372,11 @@
   border-color: var(--lp-accent);
 }
 
+.lp-chat-form textarea:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
 .lp-chat-form button[type="submit"] {
   align-self: flex-end;
   padding: 8px 12px;
@@ -338,6 +386,7 @@
   color: var(--lp-on-accent);
   font: 700 13px / 1 var(--lp-font);
   cursor: pointer;
+  min-width: 5.5rem;
 }
 
 .lp-chat-form button[type="submit"]:disabled {

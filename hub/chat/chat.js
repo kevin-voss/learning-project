@@ -355,6 +355,14 @@
     historyEl.append(clear)
   }
 
+  function setBusy(next) {
+    busy = next
+    sendBtn.disabled = busy
+    input.disabled = busy
+    sendBtn.textContent = busy ? 'Thinking…' : 'Send'
+    form.toggleAttribute('aria-busy', busy)
+  }
+
   function render() {
     scopeEl.textContent = title
     const chat = activeChat()
@@ -370,8 +378,13 @@
 
     renderHistory()
 
+    sendBtn.disabled = busy
+    input.disabled = busy
+    sendBtn.textContent = busy ? 'Thinking…' : 'Send'
+    form.toggleAttribute('aria-busy', busy)
+
     list.replaceChildren()
-    if (!messages.length) {
+    if (!messages.length && !busy) {
       const empty = document.createElement('p')
       empty.className = 'lp-chat-empty'
       empty.textContent = `Ask about this task. Short hints, not the full answer. Up to ${MAX_MESSAGES} messages per chat, then a new one starts.`
@@ -384,6 +397,16 @@
       bubble.dataset.role = m.role
       bubble.textContent = m.content
       list.append(bubble)
+    }
+    if (busy) {
+      const thinking = document.createElement('div')
+      thinking.className = 'lp-chat-msg lp-chat-thinking'
+      thinking.dataset.role = 'assistant'
+      thinking.setAttribute('aria-label', 'Thinking')
+      thinking.innerHTML =
+        '<span class="lp-chat-thinking-label">Thinking</span>' +
+        '<span class="lp-chat-thinking-dots" aria-hidden="true"><i></i><i></i><i></i></span>'
+      list.append(thinking)
     }
     list.scrollTop = list.scrollHeight
   }
@@ -430,11 +453,8 @@
     chat.messages.push({ role: 'user', content: text })
     input.value = ''
     persist()
+    setBusy(true)
     render()
-
-    busy = true
-    sendBtn.disabled = true
-    sendBtn.textContent = '…'
 
     const payload = {
       scope: {
@@ -474,10 +494,9 @@
       })
     }
 
-    busy = false
-    sendBtn.disabled = false
-    sendBtn.textContent = 'Send'
+    setBusy(false)
     render()
+    input.focus()
   })
 
   input.addEventListener('keydown', (event) => {

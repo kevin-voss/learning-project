@@ -149,6 +149,7 @@
 
   const storageKey = STORAGE_PREFIX + scope.scopeId
   let store = loadStore(storageKey)
+  saveStore(storageKey, store) // keep the same active chat across close / reopen
   let title = pageTitle()
   let exerciseMarkdown = ''
   let busy = false
@@ -186,24 +187,26 @@
   root.innerHTML = `
     <button type="button" class="lp-chat-fab" aria-label="Open help chat">Help</button>
     <div class="lp-chat-panel" role="dialog" aria-label="Exercise help chat" hidden>
-      <div class="lp-chat-head">
-        <div class="lp-chat-head-text">
-          <p class="lp-chat-label">You are on</p>
-          <p class="lp-chat-scope"></p>
+      <aside class="lp-chat-history" hidden></aside>
+      <div class="lp-chat-main">
+        <div class="lp-chat-head">
+          <div class="lp-chat-head-text">
+            <p class="lp-chat-label">You are on</p>
+            <p class="lp-chat-scope"></p>
+          </div>
+          <div class="lp-chat-actions">
+            <button type="button" class="lp-chat-icon" data-action="history" title="Chat history" aria-label="Chat history">${ICON_HISTORY}</button>
+            <button type="button" class="lp-chat-icon" data-action="new" title="New chat" aria-label="New chat">${ICON_NEW}</button>
+            <button type="button" class="lp-chat-icon" data-action="close" title="Close" aria-label="Close chat">${ICON_CLOSE}</button>
+          </div>
         </div>
-        <div class="lp-chat-actions">
-          <button type="button" class="lp-chat-icon" data-action="history" title="Chat history" aria-label="Chat history">${ICON_HISTORY}</button>
-          <button type="button" class="lp-chat-icon" data-action="new" title="New chat" aria-label="New chat">${ICON_NEW}</button>
-          <button type="button" class="lp-chat-icon" data-action="close" title="Close" aria-label="Close chat">${ICON_CLOSE}</button>
-        </div>
+        <div class="lp-chat-warn" hidden></div>
+        <div class="lp-chat-messages" aria-live="polite"></div>
+        <form class="lp-chat-form">
+          <textarea name="message" rows="2" placeholder="Ask a question…" required></textarea>
+          <button type="submit">Send</button>
+        </form>
       </div>
-      <div class="lp-chat-warn" hidden></div>
-      <div class="lp-chat-history" hidden></div>
-      <div class="lp-chat-messages" aria-live="polite"></div>
-      <form class="lp-chat-form">
-        <textarea name="message" rows="2" placeholder="Ask a question…" required></textarea>
-        <button type="submit">Send</button>
-      </form>
     </div>
   `
   document.body.append(root)
@@ -213,22 +216,44 @@
   const scopeEl = root.querySelector('.lp-chat-scope')
   const warnEl = root.querySelector('.lp-chat-warn')
   const historyEl = root.querySelector('.lp-chat-history')
+  const historyBtn = root.querySelector('[data-action="history"]')
   const list = root.querySelector('.lp-chat-messages')
   const form = root.querySelector('.lp-chat-form')
   const input = form.querySelector('textarea')
   const sendBtn = form.querySelector('button[type="submit"]')
 
+  // Drop an unused empty chat on close so reopen resumes the last real thread.
+  function pruneEmptyActive() {
+    const chat = activeChat()
+    if (!chat || conversationMessages(chat).length > 0 || store.chats.length <= 1) return
+    store.chats = store.chats.filter((c) => c.id !== chat.id)
+    const previous = [...store.chats].reverse().find((c) => conversationMessages(c).length > 0)
+    store.activeId = (previous || store.chats.at(-1)).id
+    saveStore(storageKey, store)
+  }
+
   function setOpen(open) {
+    if (!open) {
+      pruneEmptyActive()
+      saveStore(storageKey, store)
+      showHistory = false
+      root.removeAttribute('data-history')
+    }
     root.toggleAttribute('data-open', open)
     panel.hidden = !open
     if (open) {
+      // Resume the same active chat — never auto-create on open.
+      store = loadStore(storageKey)
+      showHistory = false
       render()
       input.focus()
     }
   }
 
   function renderHistory() {
+    root.toggleAttribute('data-history', showHistory)
     historyEl.hidden = !showHistory
+    historyBtn.setAttribute('aria-pressed', showHistory ? 'true' : 'false')
     historyEl.replaceChildren()
     if (!showHistory) return
 
@@ -259,8 +284,8 @@
         store.activeId = chat.id
         saveStore(storageKey, store)
         warning = ''
-        showHistory = false
         render()
+        input.focus()
       })
       historyEl.append(btn)
     }

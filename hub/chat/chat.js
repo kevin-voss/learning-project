@@ -17,6 +17,14 @@
   const ICON_CLOSE = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>'
   const ICON_TRASH = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>'
 
+  // Fixed tutor commands — Becky can pick them, not edit the list.
+  const COMMANDS = [
+    { id: 'question', label: '/question', blurb: 'Ask about a word or idea on this page' },
+    { id: 'stuck', label: '/stuck', blurb: 'Get a small hint when you are stuck' },
+    { id: 'review', label: '/review', blurb: 'Check your thinking — no full answer' },
+  ]
+  const COMMAND_IDS = new Set(COMMANDS.map((c) => c.id))
+
   function parseScope(pathname) {
     const path = pathname.replace(/\/(index|README)\.html$/i, '/').replace(/\/+$/, '/') || '/'
     const task = path.match(
@@ -291,7 +299,10 @@
         <div class="lp-chat-warn" hidden></div>
         <div class="lp-chat-messages" aria-live="polite"></div>
         <form class="lp-chat-form">
-          <textarea name="message" rows="2" placeholder="Ask a question…" maxlength="${MAX_INPUT}" required></textarea>
+          <div class="lp-chat-compose">
+            <ul class="lp-chat-slash" role="listbox" aria-label="Commands" hidden></ul>
+            <textarea name="message" rows="2" placeholder="Ask… or type / for commands" maxlength="${MAX_INPUT}" required></textarea>
+          </div>
           <button type="submit">Send</button>
         </form>
       </div>
@@ -307,8 +318,92 @@
   const historyBtn = root.querySelector('[data-action="history"]')
   const list = root.querySelector('.lp-chat-messages')
   const form = root.querySelector('.lp-chat-form')
+  const slashEl = form.querySelector('.lp-chat-slash')
   const input = form.querySelector('textarea')
   const sendBtn = form.querySelector('button[type="submit"]')
+
+  let slashOpen = false
+  let slashIndex = 0
+  let slashMatches = COMMANDS.slice()
+
+  function parseCommand(text) {
+    const match = String(text || '').match(/^\/([a-zA-Z][\w-]*)(?:\s+([\s\S]*))?$/)
+    if (!match) return { command: null, rest: String(text || '').trim() }
+    const id = match[1].toLowerCase()
+    if (!COMMAND_IDS.has(id)) return { command: null, rest: String(text || '').trim() }
+    return { command: id, rest: (match[2] || '').trim() }
+  }
+
+  function slashQuery() {
+    const value = input.value
+    const caret = input.selectionStart ?? value.length
+    // Only at the start of the message: "/…" or "/partial" with caret in that token.
+    const before = value.slice(0, caret)
+    const match = before.match(/^\/([a-zA-Z][\w-]*)?$/)
+    if (!match) return null
+    if (value.slice(caret).match(/^\S/)) return null
+    return (match[1] || '').toLowerCase()
+  }
+
+  function hideSlash() {
+    slashOpen = false
+    slashEl.hidden = true
+    slashEl.replaceChildren()
+    input.removeAttribute('aria-activedescendant')
+  }
+
+  function showSlash(matches, active) {
+    slashMatches = matches
+    slashIndex = Math.max(0, Math.min(active, matches.length - 1))
+    slashOpen = matches.length > 0
+    slashEl.hidden = !slashOpen
+    slashEl.replaceChildren()
+    if (!slashOpen) {
+      input.removeAttribute('aria-activedescendant')
+      return
+    }
+    matches.forEach((cmd, i) => {
+      const li = document.createElement('li')
+      li.id = `lp-chat-slash-${cmd.id}`
+      li.role = 'option'
+      li.className = 'lp-chat-slash-item'
+      li.setAttribute('aria-selected', i === slashIndex ? 'true' : 'false')
+      if (i === slashIndex) li.dataset.active = '1'
+      li.innerHTML = `<span class="lp-chat-slash-label"></span><span class="lp-chat-slash-blurb"></span>`
+      li.querySelector('.lp-chat-slash-label').textContent = cmd.label
+      li.querySelector('.lp-chat-slash-blurb').textContent = cmd.blurb
+      li.addEventListener('mousedown', (event) => {
+        event.preventDefault()
+        pickSlash(cmd)
+      })
+      slashEl.append(li)
+    })
+    input.setAttribute('aria-activedescendant', `lp-chat-slash-${matches[slashIndex].id}`)
+  }
+
+  function refreshSlash() {
+    if (busy || input.disabled) {
+      hideSlash()
+      return
+    }
+    const query = slashQuery()
+    if (query === null) {
+      hideSlash()
+      return
+    }
+    const matches = COMMANDS.filter((c) => c.id.startsWith(query))
+    const prevId = slashMatches[slashIndex]?.id
+    const keep = matches.findIndex((c) => c.id === prevId)
+    showSlash(matches, keep >= 0 ? keep : 0)
+  }
+
+  function pickSlash(cmd) {
+    input.value = `${cmd.label} `
+    hideSlash()
+    input.focus()
+    const pos = input.value.length
+    input.setSelectionRange(pos, pos)
+  }
 
   // Drop an unused empty chat on close so reopen resumes the last real thread.
   function pruneEmptyActive() {
@@ -322,6 +417,7 @@
 
   function setOpen(open) {
     if (!open) {
+      hideSlash()
       pruneEmptyActive()
       saveStore(storageKey, store)
       showHistory = false
@@ -424,7 +520,7 @@
     if (limited && !busy) {
       input.placeholder = `Daily limit reached (${DAILY_LIMIT}). Try again tomorrow.`
     } else {
-      input.placeholder = 'Ask a question…'
+      input.placeholder = 'Ask… or type / for commands'
     }
   }
 
@@ -448,7 +544,9 @@
     if (!messages.length && !busy) {
       const empty = document.createElement('p')
       empty.className = 'lp-chat-empty'
-      empty.textContent = `Ask about this task. Short hints, not the full answer. Up to ${MAX_MESSAGES} messages per chat · ${DAILY_LIMIT} questions/day · ${remainingToday()} left today.`
+      empty.textContent =
+        `Type / for /question, /stuck, /review. Short hints, not the full answer. ` +
+        `Up to ${MAX_MESSAGES} messages per chat · ${DAILY_LIMIT}/day · ${remainingToday()} left today.`
       list.append(empty)
       return
     }
@@ -502,6 +600,7 @@
 
   form.addEventListener('submit', async (event) => {
     event.preventDefault()
+    hideSlash()
     const text = input.value.trim()
     if (!text || busy) return
 
@@ -513,6 +612,14 @@
 
     if (remainingToday() <= 0) {
       warning = `Daily limit reached (${DAILY_LIMIT} questions). Try again tomorrow.`
+      render()
+      return
+    }
+
+    const { command } = parseCommand(text)
+    if (text.startsWith('/') && !command) {
+      warning = 'Unknown command. Try /question, /stuck, or /review.'
+      refreshSlash()
       render()
       return
     }
@@ -541,6 +648,7 @@
         taskMarkdown: scope.kind === 'task' ? sheetMarkdown() : '',
         exerciseMarkdown: scope.kind === 'exercise' ? sheetMarkdown() : exerciseMarkdown,
       },
+      command: command || undefined,
       messages: conversationMessages(chat),
     }
 
@@ -573,11 +681,44 @@
     input.focus()
   })
 
+  input.addEventListener('input', () => {
+    refreshSlash()
+  })
+
   input.addEventListener('keydown', (event) => {
+    if (slashOpen) {
+      if (event.key === 'ArrowDown') {
+        event.preventDefault()
+        showSlash(slashMatches, slashIndex + 1)
+        return
+      }
+      if (event.key === 'ArrowUp') {
+        event.preventDefault()
+        showSlash(slashMatches, slashIndex - 1)
+        return
+      }
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        hideSlash()
+        return
+      }
+      if ((event.key === 'Enter' || event.key === 'Tab') && slashMatches[slashIndex]) {
+        event.preventDefault()
+        pickSlash(slashMatches[slashIndex])
+        return
+      }
+    }
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault()
       form.requestSubmit()
     }
+  })
+
+  input.addEventListener('blur', () => {
+    // Delay so a mousedown on an option can fire first.
+    setTimeout(() => {
+      if (document.activeElement !== input) hideSlash()
+    }, 120)
   })
 
   function boot() {

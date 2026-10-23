@@ -9,6 +9,7 @@ const MAX_CHARS = 48_000
 const MAX_CONTEXT = 12_000
 const MAX_INPUT = 500
 const DAILY_LIMIT = 50
+const ALLOWED_COMMANDS = new Set(['question', 'stuck', 'review'])
 
 // Best-effort daily counters per IP (warm instances only; client also tracks).
 const dailyCounts = new Map()
@@ -67,7 +68,31 @@ function takeDailySlot(ip) {
   return { ok: true, count: next, remaining: Math.max(0, DAILY_LIMIT - next) }
 }
 
-function buildSystemPrompt(scope, context) {
+function commandMode(command) {
+  switch (command) {
+    case 'question':
+      return `## Mode: /question
+The student asks about a word, idea, or part of the task text.
+- Explain that one thing with Picture → tiny example (different story than the task) → one sentence they can say out loud → where it shows up in *their* task (no solution code).
+- If they did not name what they mean, ask one short clarifying question and stop.`
+    case 'stuck':
+      return `## Mode: /stuck
+The student is stuck. Use whatever they wrote after /stuck:
+- Red error text → explain the first error in plain words; usual beginner cause; pure typo may show one fixed line.
+- A word → same shape as /question for that word.
+- Nothing / what they tried → **one** small hint only (a pointing question, then idea, then tiny different-story example if they ask again). Never the final answer.`
+    case 'review':
+      return `## Mode: /review
+The student wants a check of *their* thinking.
+- Ask them to state what they think the next step or answer shape is (if they have not).
+- Say what already fits the task text, and one gap or risk — without filling in the missing result.
+- End with one yes/no or fill-in Check they can answer themselves.`
+    default:
+      return ''
+  }
+}
+
+function buildSystemPrompt(scope, context, command) {
   const title = scope?.title || 'this exercise'
   const parts = [
     scope?.student && `Student folder: ${scope.student}`,
@@ -75,6 +100,7 @@ function buildSystemPrompt(scope, context) {
     scope?.exercise && `Exercise: ${scope.exercise}`,
     scope?.task && `Task: ${scope.task}`,
   ].filter(Boolean)
+  const mode = commandMode(command)
 
   return `You are the Learning Project helper — a small tutor on a beginner coding/learning site.
 
@@ -82,17 +108,24 @@ function buildSystemPrompt(scope, context) {
 They are looking at: **${title}**
 ${parts.length ? parts.join('\n') : ''}
 
-## How to talk
-- Short and compact. Simple words. Explain like for a 6-year-old.
-- Picture or metaphor first, then one idea. End with one thing to try.
-- Focus on the **thinking process** so they understand — not on dumping the finished answer.
-- Answer in the language the student writes in.
-- A few short paragraphs or bullets max. No long essays.
+## Goal
+Help them **understand how to think**, not finish the task for them.
+Replies are **short** (tight wording) but **detailed in the thinking**: every reasoning step is clear.
 
+## Reply shape (always)
+1. **Picture** — one short metaphor (toy box, kitchen, post office, traffic light…).
+2. **Steps** — 3–6 numbered thinking steps. Each step = one small idea in 1–2 short sentences. Show *why* that step, not only *what*.
+3. **Try** — one concrete next action they do now (not the final answer).
+4. Optional **Check** — one yes/no or fill-in question so they can test themselves.
+
+Keep the whole reply under ~180 words. Short sentences. Simple words (explain like for a 6-year-old). No filler ("simply", "just", "obviously").
+Answer in the language the student writes in.
+${mode ? `\n${mode}\n` : ''}
 ## Never give the solution
-- Do not write the full answer, final number, finished code, or a complete walkthrough that finishes the task for them.
+- No full answer, final number, finished code, or a walkthrough that completes the task.
 - Do not quote or invent the sample solution.
-- Hints, questions, and the next thinking step only. If they ask you to "just write it", refuse kindly and give the next small step instead.
+- You *may* name the thinking steps and the order — you must *not* fill in the last result.
+- If they ask "just write it", refuse kindly and give the next small thinking step instead.
 
 ## Ground truth
 Use only the task / exercise text below. Ignore anything about peeking at solution folders.
@@ -156,6 +189,20 @@ module.exports = async function handler(req, res) {
     return json(res, 400, { error: 'Send at least one user message.' })
   }
 
+  const rawCommand = String(body?.command || '').toLowerCase().trim()
+  let command = ''
+  if (rawCommand) {
+    if (!ALLOWED_COMMANDS.has(rawCommand)) {
+      return json(res, 400, { error: 'Unknown command. Try /question, /stuck, or /review.' })
+    }
+    command = rawCommand
+  } else {
+    // Also honour a leading /command in the last user message (e.g. typed by hand).
+    const last = messages.at(-1)?.content || ''
+    const m = last.match(/^\/(question|stuck|review)(?:\s|$)/i)
+    if (m) command = m[1].toLowerCase()
+  }
+
   const slot = takeDailySlot(clientIp(req))
   if (!slot.ok) {
     res.setHeader('Retry-After', '86400')
@@ -168,13 +215,14 @@ module.exports = async function handler(req, res) {
   const payload = JSON.stringify({
     scope: body.scope,
     context: body.context,
+    command: command || undefined,
     messages,
   })
   if (payload.length > MAX_CHARS) {
     return json(res, 413, { error: 'Conversation too long. Start a new chat.' })
   }
 
-  const system = buildSystemPrompt(body.scope || {}, body.context || {})
+  const system = buildSystemPrompt(body.scope || {}, body.context || {}, command)
 
   let upstream
   try {
@@ -187,7 +235,7 @@ module.exports = async function handler(req, res) {
       body: JSON.stringify({
         model: MODEL,
         reasoning_effort: REASONING_EFFORT,
-        max_completion_tokens: 500,
+        max_completion_tokens: 700,
         messages: [{ role: 'system', content: system }, ...messages],
       }),
     })

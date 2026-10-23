@@ -74,17 +74,106 @@
   -webkit-box-orient: vertical;
 }
 
-.lp-chat-head button {
+.lp-chat-actions {
+  display: flex;
+  gap: 2px;
   flex-shrink: 0;
-  border: 0;
-  background: transparent;
-  color: var(--lp-text-muted);
-  font: 400 12px / 1 var(--lp-font);
-  cursor: pointer;
-  padding: 4px 6px;
 }
 
-.lp-chat-head button:hover { color: var(--lp-text); }
+.lp-chat-icon {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--lp-text-muted);
+  cursor: pointer;
+}
+
+.lp-chat-icon:hover {
+  color: var(--lp-text);
+  background: color-mix(in srgb, var(--lp-line) 55%, transparent);
+}
+
+.lp-chat-icon:focus-visible {
+  outline: 2px solid var(--lp-accent);
+  outline-offset: 1px;
+}
+
+.lp-chat-warn {
+  margin: 0;
+  padding: 8px var(--lp-s3);
+  background: var(--lp-check-bg);
+  color: var(--lp-check);
+  font-size: 12px;
+  line-height: 1.35;
+  border-bottom: 1px solid var(--lp-line);
+}
+
+.lp-chat-history {
+  max-height: 40%;
+  overflow-y: auto;
+  padding: var(--lp-s2) var(--lp-s3);
+  border-bottom: 1px solid var(--lp-line);
+  background: var(--lp-surface);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.lp-chat-history-label {
+  margin: 0 0 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--lp-text-muted);
+}
+
+.lp-chat-history-empty {
+  margin: 0;
+  font-size: 12px;
+  color: var(--lp-text-muted);
+}
+
+.lp-chat-history-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--lp-line);
+  border-radius: 8px;
+  background: var(--lp-bg);
+  color: var(--lp-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.lp-chat-history-item:hover {
+  border-color: var(--lp-accent);
+}
+
+.lp-chat-history-item[data-active] {
+  background: var(--lp-accent-soft);
+  border-color: var(--lp-accent);
+}
+
+.lp-chat-history-preview {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.lp-chat-history-meta {
+  font-size: 11px;
+  color: var(--lp-text-muted);
+}
 
 .lp-chat-messages {
   flex: 1;

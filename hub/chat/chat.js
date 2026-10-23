@@ -434,6 +434,24 @@
     }
   }
 
+  // Open the panel with the composer prefilled (e.g. from the selection toolbar).
+  // Does not send — the student can edit, then hit Send.
+  function openDraft(draft) {
+    const text = String(draft || '').slice(0, MAX_INPUT)
+    const chat = activeChat()
+    if (chat && conversationMessages(chat).length > 0) {
+      startNewChat()
+    }
+    warning = ''
+    showHistory = false
+    setOpen(true)
+    input.value = text
+    hideSlash()
+    const pos = input.value.length
+    input.setSelectionRange(pos, pos)
+    input.focus()
+  }
+
   function renderHistory() {
     const past = listedChats()
     // Never leave an empty sidebar open.
@@ -730,6 +748,120 @@
       })
     }
   }
+
+  // Floating bar above a text selection: Copy, or Ask AI (opens chat prefilled).
+  const selBar = document.createElement('div')
+  selBar.className = 'lp-sel-bar'
+  selBar.setAttribute('role', 'toolbar')
+  selBar.setAttribute('aria-label', 'Selection actions')
+  selBar.hidden = true
+  selBar.innerHTML =
+    '<button type="button" data-action="copy">Copy</button>' +
+    '<button type="button" data-action="ask">Ask AI</button>'
+  document.body.append(selBar)
+
+  let lastSelectedText = ''
+
+  function hideSelBar() {
+    selBar.hidden = true
+    lastSelectedText = ''
+  }
+
+  function sheetRoot() {
+    return document.querySelector('main.lp-sheet, .lp-sheet, #sheet') || document.body
+  }
+
+  function selectedInSheet() {
+    const sel = window.getSelection()
+    if (!sel || sel.isCollapsed || sel.rangeCount === 0) return null
+    const text = sel.toString().replace(/\s+/g, ' ').trim()
+    if (!text) return null
+    const range = sel.getRangeAt(0)
+    const node = range.commonAncestorContainer
+    const el = node.nodeType === Node.ELEMENT_NODE ? node : node.parentElement
+    if (!el || !sheetRoot().contains(el)) return null
+    if (root.contains(el) || selBar.contains(el)) return null
+    if (el.closest('textarea, input, select, [contenteditable="true"]')) return null
+    return { text, range }
+  }
+
+  function placeSelBar(range) {
+    const rect = range.getBoundingClientRect()
+    if (rect.width === 0 && rect.height === 0) {
+      hideSelBar()
+      return
+    }
+    selBar.hidden = false
+    const bar = selBar.getBoundingClientRect()
+    let top = rect.top - bar.height - 8
+    let left = rect.left + (rect.width - bar.width) / 2
+    left = Math.max(8, Math.min(left, window.innerWidth - bar.width - 8))
+    if (top < 8) top = Math.min(rect.bottom + 8, window.innerHeight - bar.height - 8)
+    selBar.style.top = `${Math.round(top)}px`
+    selBar.style.left = `${Math.round(left)}px`
+  }
+
+  function refreshSelBar() {
+    const picked = selectedInSheet()
+    if (!picked) {
+      if (!selBar.contains(document.activeElement)) hideSelBar()
+      return
+    }
+    lastSelectedText = picked.text
+    placeSelBar(picked.range)
+  }
+
+  document.addEventListener('mouseup', (event) => {
+    if (selBar.contains(event.target)) return
+    setTimeout(refreshSelBar, 0)
+  })
+  document.addEventListener('keyup', (event) => {
+    if (event.key === 'Shift' || event.key.startsWith('Arrow')) {
+      setTimeout(refreshSelBar, 0)
+    }
+  })
+  document.addEventListener('selectionchange', () => {
+    const sel = window.getSelection()
+    if (sel && !sel.isCollapsed) return
+    if (selBar.contains(document.activeElement)) return
+    hideSelBar()
+  })
+  window.addEventListener('scroll', hideSelBar, true)
+  window.addEventListener('resize', hideSelBar)
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && !selBar.hidden) hideSelBar()
+  })
+
+  // Keep the highlight while clicking the bar.
+  selBar.addEventListener('mousedown', (event) => {
+    event.preventDefault()
+  })
+
+  selBar.querySelector('[data-action="copy"]').addEventListener('click', async () => {
+    const text = lastSelectedText || selectedInSheet()?.text || ''
+    if (!text) return
+    const btn = selBar.querySelector('[data-action="copy"]')
+    try {
+      await navigator.clipboard.writeText(text)
+      btn.textContent = 'Copied'
+      setTimeout(() => {
+        btn.textContent = 'Copy'
+      }, 1200)
+    } catch {
+      btn.textContent = 'Copy failed'
+      setTimeout(() => {
+        btn.textContent = 'Copy'
+      }, 1200)
+    }
+  })
+
+  selBar.querySelector('[data-action="ask"]').addEventListener('click', () => {
+    const text = lastSelectedText || selectedInSheet()?.text || ''
+    if (!text) return
+    hideSelBar()
+    window.getSelection()?.removeAllRanges()
+    openDraft(`/question ${text}`)
+  })
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', boot)

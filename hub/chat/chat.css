@@ -457,3 +457,65 @@
     width: 160px;
   }
 }
+
+/* Selection toolbar (Copy / Ask AI) above highlighted exercise text. */
+.lp-sel-bar {
+  position: fixed;
+  z-index: 450;
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  background: var(--lp-surface);
+  color: var(--lp-text);
+  border: 1px solid var(--lp-line);
+  border-radius: var(--lp-radius-sm);
+  box-shadow: var(--lp-shadow);
+  font: 700 12px / 1 var(--lp-font);
+}
+
+.lp-sel-bar[hidden] {
+  display: none !important;
+}
+
+.lp-sel-bar button {
+  margin: 0;
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.lp-sel-bar button:hover {
+  background: var(--lp-accent-soft);
+  color: var(--lp-accent);
+}
+
+.lp-sel-bar button:focus-visible {
+  outline: 2px solid var(--lp-accent);
+  outline-offset: 1px;
+}
+
+.lp-sel-bar button[data-action="ask"] {
+  color: var(--lp-accent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .lp-sel-bar:not([hidden]) {
+    animation: lp-sel-in 120ms ease-out;
+  }
+}
+
+@keyframes lp-sel-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -12,6 +12,12 @@ Written answer — no compile step. Powers of two are enough; decimals are optio
 
 On **this sheet**, sizes are **binary** (powers of 1024), not the marketing “1000” sizes.
 
+### Step 0 — Picture first
+
+> [!PICTURE]
+> Nesting boxes. Each bigger box holds **1024** of the smaller ones.  
+> Kilo → Mega → Giga. Always ×1024, never ×1000 on this sheet.
+
 ### Step 1 — Start from one byte
 
 ```text

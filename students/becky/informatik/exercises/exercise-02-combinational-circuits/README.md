@@ -40,37 +40,46 @@ These tasks are **written answers** (formulas and circuit sketches), not program
 
 ## What you will learn
 
+Read this slowly. One picture at a time. Then do the matching task.
+
 ### 1. NAND and NOR as universal bricks
 
-Picture a toolbox that holds **only one kind of Lego brick**. You can still build many shapes if you snap them cleverly.
+> [!PICTURE]
+> A toolbox that holds **only one kind of Lego brick**. You can still build many shapes if you snap them cleverly.
 
-A **NAND** gate is “AND, then flip”: `¬(x ∧ y)`.  
-A **NOR** gate is “OR, then flip”: `¬(x ∨ y)`.
+Tiny meanings:
+
+- **NAND** = “AND, then flip”: `¬(x ∧ y)`.
+- **NOR** = “OR, then flip”: `¬(x ∨ y)`.
 
 Two useful shortcuts:
 
-- Tie **both inputs** of a NAND (or NOR) to the **same** wire → that gate becomes a **NOT**.
-- De Morgan: `x ∨ y = ¬(¬x ∧ ¬y)`. So OR = invert both inputs, then NAND.
+1. Tie **both inputs** of a NAND (or NOR) to the **same** wire → that gate becomes a **NOT**.
+2. De Morgan: `x ∨ y = ¬(¬x ∧ ¬y)`. So OR = invert both inputs, then NAND.
 
 **In task 02_1** you draw OR made only of NANDs, and OR made only of NORs.
 
 ### 2. Combinational circuit — no memory
 
-Picture a light that **only** cares about the switches **right now**. Flip a switch and the lamp changes at once. It never “remembers” yesterday. That is a **combinational circuit** (*Schaltnetz*): outputs depend only on current inputs.
+> [!PICTURE]
+> A light that **only** cares about the switches **right now**. Flip a switch and the lamp changes at once. It never “remembers” yesterday.
+
+That is a **combinational circuit** (*Schaltnetz*): outputs depend only on current inputs.
 
 **In both tasks** every circuit you draw is combinational.
 
 ### 3. DNF and CNF — two ways to copy a truth table
 
-Picture a scoreboard. Some rows say “lamp on (1)”, some say “lamp off (0)”.
+> [!PICTURE]
+> A scoreboard. Some rows say “lamp on (1)”. Some rows say “lamp off (0)”. You copy those rows into a formula.
 
-**DNF (disjunctive normal form)** — build from the **1**-rows:
+**DNF** — build from the **1**-rows (big OR of small ANDs):
 
 1. Take every row where the output is **1**.
 2. For that row, AND the inputs so that this row alone makes a 1 (use `¬` where the bit is 0).
 3. OR all those terms together.
 
-**CNF (conjunctive normal form)** — build from the **0**-rows:
+**CNF** — build from the **0**-rows (big AND of small ORs):
 
 1. Take every row where the output is **0**.
 2. For that row, OR the inputs so that this row alone makes a 0.
@@ -82,7 +91,10 @@ Pick the form with **fewer terms** when the sheet asks for the smallest expressi
 
 ### 4. 7-segment display — one digit from lamps
 
-Picture a digital clock digit made of **seven bars** (segments). Each bar is on or off. Bits `a`, `b`, `c` choose which digit pattern you want; each segment gets its own formula.
+> [!PICTURE]
+> A digital clock digit made of **seven bars** (segments). Each bar is on or off — like seven tiny lamps that draw a number.
+
+Bits `a`, `b`, `c` choose which digit pattern you want. Each segment gets its own formula.
 
 On the lecture slide (Chapter 03, slide 33) two of those segment signals are called **`m`** and **`l`**. Task 02_2 uses that table (copied into the task so you do not need the PDF open).
 

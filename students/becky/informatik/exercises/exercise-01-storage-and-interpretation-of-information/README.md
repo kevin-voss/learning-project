@@ -45,14 +45,18 @@ These tasks are **written answers** (bit flips, counts, ASCII lookups), not prog
 
 ## What you will learn
 
+Read this slowly. One picture at a time. Then do the matching task.
+
 ### 1. Binary complement — flip every bit, then add one
 
-Picture a light board with eight lamps. Each lamp is either **on (1)** or **off (0)**.
+> [!PICTURE]
+> A light board with eight lamps. Each lamp is either **on (1)** or **off (0)**. Binary complement means: flip every lamp, then add one bump on the right.
 
-To build the **binary complement** (two’s complement of an 8-bit pattern):
+Tiny steps:
 
 1. **Invert** every bit: 0 becomes 1, 1 becomes 0.
 2. **Add** `00000001` (add one in binary).
+3. Keep all 8 bits.
 
 ```mermaid
 flowchart LR
@@ -64,10 +68,14 @@ flowchart LR
 
 ### 2. Binary number vs text — same digits, different boxes
 
-Picture the number **42** written on paper.
+> [!PICTURE]
+> The number **42** on paper. As a **number**, the computer packs it into one bit-box. As **text**, each character (`'4'`, `'2'`) gets its **own** byte — like two separate letter tiles.
 
-- As a **binary number**, the computer packs it into a fixed **bit box** from the type table (often 8, 16, or 32 bits).
-- As an **ASCII string**, each **character** (`'4'`, `'2'`) gets its **own byte**. So `"42"` needs 2 bytes for the digits — and often one more `00` byte if the string is **null-terminated**.
+Tiny steps:
+
+- As a **binary number**, use the type table (often 8, 16, or 32 bits).
+- As an **ASCII string**, count one byte per character.
+- A **null-terminated** string also needs one extra `00` byte at the end.
 
 ```mermaid
 flowchart TB
@@ -94,7 +102,14 @@ The sheet’s **data-type cheat sheet** (copied as text, not an image):
 
 ### 3. BCD — each digit keeps its own nibble
 
-Picture writing a phone number with **one stamp per digit**. **BCD** (Binary-Coded Decimal) does that: every decimal digit becomes a **4-bit** group (a **nibble**).
+> [!PICTURE]
+> Writing a phone number with **one stamp per digit**. **BCD** does that: every decimal digit becomes a **4-bit** group (a **nibble**). Do not glue all bits into one big binary number.
+
+Tiny steps:
+
+1. Split the bit string into groups of 4.
+2. Read each group as a digit `0…9`.
+3. Glue the digits left to right.
 
 ```mermaid
 flowchart LR
@@ -110,7 +125,14 @@ flowchart LR
 
 ### 4. Kilo, Mega, Giga — powers of 1024
 
-Picture nesting boxes. In this course (binary sizes), each step multiplies by 1024 = `2¹⁰`.
+> [!PICTURE]
+> Nesting boxes. Each bigger box holds **1024** of the smaller ones. That is `2¹⁰`.
+
+Tiny steps:
+
+1. 1 KByte = 2¹⁰ Byte.
+2. 1 MByte = 2²⁰ Byte.
+3. 1 GByte = 2³⁰ Byte.
 
 The sheet’s **size-unit cheat sheet** (copied as text, not an image):
 
@@ -135,7 +157,14 @@ flowchart LR
 
 ### 5. ASCII — a table from byte to letter
 
-Picture a dictionary: each byte value (often written in **hex** with an `h`, like `48h`) maps to one character.
+> [!PICTURE]
+> A dictionary: each byte value (often written in **hex** with an `h`, like `48h`) maps to one character — like a code book for letters.
+
+Tiny steps:
+
+1. Look up each byte in the ASCII table.
+2. Write the matching character.
+3. Stop at `00h` if the string is null-terminated (that byte is not a letter).
 
 | Hex range | Characters |
 |-----------|------------|

@@ -32,7 +32,7 @@ Now letter by letter:
 
 | Character | How to find it | Hex |
 |-----------|----------------|-----|
-| `'H'` | uppercase, 8th letter after `'A'` → `41h + 7` | `48h` |
+| `'H'` | 8th letter of the alphabet (`A`=1st … `H`=8th) → `41h + 7` | `48h` |
 | `'a'` | start of lowercase block | `61h` |
 | `'l'` | `'a'` + 11 → `61h + 0Bh` | `6Ch` |
 | `'l'` | same as previous `'l'` | `6Ch` |

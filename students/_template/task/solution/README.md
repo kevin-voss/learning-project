@@ -16,13 +16,15 @@ TODO — pick the shape that matches the task:
 **If this is written** (math, Informatik, gates, tables, proofs — no code): do **not** jump to the final answer. Teach with tiny numbered steps (see `/new-exercise` → “Programming vs written solutions”):
 
 1. Aim in one sentence (what we must show / find).
-2. What we look at first (rules, letters, count of rows, …).
-3. Do the work one piece at a time (one rewrite, one bit, one row, one clause).
-4. After each important piece: a short *why* or mini-check.
-5. Put the pieces together → final answer / table / sketch.
-6. Spot-check one or two values against the task.
+2. **Rules / recipes on the table** (name the tools that exist).
+3. What we look at first (shape, letters, count of rows, …).
+4. At each choice: what you see → which rule matches → **why that rule (not another)** → apply.
+5. Do the work one piece at a time (one rewrite, one bit, one row, one clause).
+6. After each important piece: a short *why* or mini-check.
+7. Put the pieces together → final answer / table / sketch.
+8. Spot-check one or two values against the task.
 
-One idea per step. Short sentences. Same numbers as the sheet. Show intermediate values.
+One idea per step. Short sentences. Same numbers as the sheet. Show intermediate values. The thinking process matters as much as the answer.
 
 ## Common mistakes
 

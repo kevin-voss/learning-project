@@ -46,12 +46,14 @@ Code (and printed text) is English too: class names, variable names, comments an
 - `solution/README.md` must **teach how you got there**, not only show the final answer. A beginner should be able to redo the work by reading the steps alone.
 - Shape of the walkthrough:
   1. Aim in one sentence (what we must show / find).
-  2. Tiny numbered steps — **one idea per step** (one rewrite, one row, one bit, one clause).
-  3. After each important step: a short *why* or a mini-check.
-  4. Show intermediate values (partial formulas, half-filled table rows, nibbles, …).
-  5. Final answer boxed clearly at the end.
-  6. Common mistakes table.
-- Do **not** dump a finished table or formula with “therefore done”. Build it. Same numbers and letters as the sheet.
+  2. **Rules / recipes on the table** when more than one tool exists (name them).
+  3. Tiny numbered steps — **one idea per step** (one rewrite, one row, one bit, one clause).
+  4. At each choice: **what you see → which rule matches → why that rule (not another) → apply**.
+  5. After each important step: a short *why* or a mini-check.
+  6. Show intermediate values (partial formulas, half-filled table rows, nibbles, …).
+  7. Final answer boxed clearly at the end.
+  8. Common mistakes table.
+- Do **not** dump a finished table or formula with “therefore done”. Build it. Same numbers and letters as the sheet. The **thinking process** (available rules → choose → why) matters as much as the answer.
 
 ## 4. Verify
 

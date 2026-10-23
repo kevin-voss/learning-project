@@ -42,16 +42,22 @@ These tasks are **written answers** (truth tables and short explanations), not p
 
 ## What you will learn
 
+Read this slowly. One picture at a time. Then do the matching task.
+
 ### 1. CMOS gate — two teams of taps
 
-Picture a lamp between a **high** shelf (+5 V) and the **floor** (ground). Two teams of taps decide:
+> [!PICTURE]
+> A lamp on a wire between a **high shelf** (+5 V) and the **floor** (ground). Two teams of water taps decide: pull the lamp up (1) or pull it down (0).
 
-- **Pull-up** (top, PMOS): can connect the lamp to +5 V → output becomes **1**.
-- **Pull-down** (bottom, NMOS): can connect the lamp to ground → output becomes **0**.
+Tiny steps:
 
-A PMOS turns **on** when its gate is **0**. An NMOS turns **on** when its gate is **1**. On the sheet you write **L** (leitet = conducts) or **NL** (nicht leitet = does not conduct).
+1. **Pull-up** (top, PMOS) can connect the lamp to +5 V → output **1**.
+2. **Pull-down** (bottom, NMOS) can connect the lamp to ground → output **0**.
+3. A PMOS turns **on** when its gate is **0**.
+4. An NMOS turns **on** when its gate is **1**.
+5. On the sheet write **L** (conducts) or **NL** (does not conduct).
 
-**In task 03_1** the pull-up has two PMOS in **parallel**, the pull-down has two NMOS in **series**. That pattern is a **NAND** gate. You write the truth table, name the gate, and fill L / NL for `x = 1`, `y = 0`.
+**In task 03_1** the pull-up has two PMOS in **parallel** (side by side). The pull-down has two NMOS in **series** (one after the other). That pattern is a **NAND** gate.
 
 ```text
   +5 V ──┬── PMOS(x) ──┐
@@ -60,11 +66,15 @@ A PMOS turns **on** when its gate is **0**. An NMOS turns **on** when its gate i
 
 ### 2. Encoder — many lamps, short code
 
-Picture four doorbells. Only one rings at a time. An **encoder** turns “which doorbell?” into a short binary number. A **4-to-2 encoder** has four one-hot inputs and two output bits.
+> [!PICTURE]
+> Four doorbells. Only one rings at a time. An **encoder** turns “which doorbell?” into a short binary number — like writing the door number in two bits.
+
+Tiny steps for a **4-to-2 encoder**:
+
+1. Four inputs: `I0` … `I3` (only one is 1).
+2. Two outputs: `A1 A0` (the binary number of that input).
 
 ```text
-  I0..I3 ──► [4-to-2 encoder] ──► A1 A0
-
   which input is 1 | A1 A0
   I0               | 0  0
   I1               | 0  1
@@ -76,7 +86,13 @@ Picture four doorbells. Only one rings at a time. An **encoder** turns “which 
 
 ### 3. Multiplexer — a railway switch
 
-Picture two tracks (`x` and `y`) and one exit (`z`). A lever **`s`** (select) chooses which track is connected. That box is a **2-to-1 multiplexer**.
+> [!PICTURE]
+> Two train tracks (`x` and `y`) and one exit (`z`). A lever **`s`** chooses which track is connected. That box is a **2-to-1 multiplexer**.
+
+Tiny steps:
+
+1. `s = 0` → exit `z` follows track `x`.
+2. `s = 1` → exit `z` follows track `y`.
 
 ```text
   x ──►|&|──┐          (AND with NOT s)
@@ -87,27 +103,24 @@ Picture two tracks (`x` and `y`) and one exit (`z`). A lever **`s`** (select) ch
   s ────┘
 ```
 
-```text
-s = 0 → z follows x
-s = 1 → z follows y
-```
-
 **In task 03_3** you say what `s` is for in the given circuit.
 
 ### 4. Half adder — sum and carry
 
-Picture adding two one-bit numbers. You need:
+> [!PICTURE]
+> Adding two one-bit numbers on your fingers. You need the ones digit (**sum**) and a spill to the next column (**carry**) when both fingers are up.
 
-- **`s`** (Summe / **sum**): the ones digit → built with **XOR** (`=1`).
-- **`ü`** (Übertrag / **carry**): the “spill into the next column” → built with **AND** (`&`).
+Tiny steps:
+
+1. **`s`** (sum) = ones digit → **XOR** (`=1`).
+2. **`ü`** (carry) = spill → **AND** (`&`).
+3. Together they are a **half adder**.
 
 ```text
   a ──┬──►|=1|──► s
   b ──┤
       └──►|&|───► ü
 ```
-
-That pair is a **half adder**.
 
 **In task 03_4** both inputs are `1`. You find `s` and `ü`.
 

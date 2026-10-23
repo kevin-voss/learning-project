@@ -15,7 +15,16 @@ For the number `48024667`, say how many **bytes** you need
 - (a) as a binary integer type, and  
 - (b) as an ASCII digit string.
 
-### 2. Part (a) — binary / integer storage
+### 2. Picture first
+
+> [!PICTURE]
+> Same number, two packing styles.  
+> (a) One **number box** sized from the type table.  
+> (b) A row of **letter tiles** — one tile per digit character.
+
+### 3. Part (a) — binary / integer storage
+
+Tiny steps:
 
 1. Ask: does it fit in 16 bits?  
    `unsigned short` max is `65535`.  
@@ -27,7 +36,9 @@ For the number `48024667`, say how many **bytes** you need
 
 **Answer (a): 4 Byte**
 
-### 3. Part (b) — ASCII character string
+### 4. Part (b) — ASCII character string
+
+Tiny steps:
 
 1. Write the number as text: `48024667`.
 2. Count characters: **8** digits.
@@ -42,7 +53,7 @@ flowchart TB
   N --> B["(b) 8 digit characters → 8 Byte<br/>+ null → 9 Byte"]
 ```
 
-### 4. Mini-check
+### 5. Mini-check
 
 - (a) is about **numeric range**, not about how many digit characters you see.
 - (b) is about **characters**, not about binary magnitude.

@@ -25,8 +25,14 @@ Rewrite the following statements into an everyday-language formulation:
 
 ## The task, simply said
 
-1. Keep the sticky-note meanings of `S`, `Z` and `A` in mind.
-2. For each formula, read the quantifiers from the outside in.
+Picture a classroom. Sticky notes mean:
+
+- `S(x)` = sleeps · `Z(x)` = listens · `A(x, y)` = works well with
+
+Then for each formula:
+
+1. Keep those sticky notes next to you.
+2. Read from the **outside in** (`∀` / `∃` first).
 3. Say the same claim in plain English — no logic symbols left in your answer.
 
 ## Check examples

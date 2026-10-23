@@ -12,30 +12,68 @@ Written answer — no compile step. Match the number below.
 
 Read the BCD bit string `0100 0010 1001` as a decimal number.
 
-### 2. What BCD means here
+### 2. Picture first
 
-BCD = **Binary-Coded Decimal**: every **nibble** (4 bits) stands for **one decimal digit** `0…9`.  
-You do **not** treat the whole 12-bit string as one binary integer.
+> [!PICTURE]
+> A phone number stamped **one digit at a time**.  
+> Each stamp is 4 bits (a **nibble**).  
+> BCD means: read each stamp as its own decimal digit. Do **not** glue all bits into one big binary number.
 
-### 3. Split into nibbles (left = highest digit)
+### 3. Recipes on the table
+
+| Recipe | What you do | When |
+|--------|-------------|------|
+| **BCD decode** | Split into 4-bit stamps → digit each → glue | Sheet says BCD — **this task** |
+| One big binary number | Read all 12 bits as a single integer | Different encoding — wrong here |
+
+| Thinking | |
+|----------|--|
+| What does the sheet say? | BCD |
+| Choose | Split into nibbles |
+| Why not one big binary? | That would give 1065 — not BCD |
+
+### 4. Split into stamps (nibbles)
+
+Left stamp = highest digit.
 
 ```text
 0100   0010   1001
 ```
 
-### 4. Translate each nibble
+Three stamps. Three digits.
 
-| Nibble | Binary value | Decimal digit |
-|--------|--------------|---------------|
-| `0100` | 4 | **4** |
-| `0010` | 2 | **2** |
-| `1001` | 9 | **9** |
+### 5. Translate each stamp
 
-*How:* `0100` = 4, `0010` = 2, `1001` = 8+1 = 9.
+Count the place values inside one nibble: `8 4 2 1`.
 
-### 5. Glue the digits in order
+**Stamp `0100`**
 
-Left to right: `4`, then `2`, then `9` → **429**.
+- Only the “4” lamp is on.
+- Digit = **4**
+
+**Stamp `0010`**
+
+- Only the “2” lamp is on.
+- Digit = **2**
+
+**Stamp `1001`**
+
+- The “8” lamp and the “1” lamp are on.
+- Digit = 8 + 1 = **9**
+
+| Nibble | Decimal digit |
+|--------|---------------|
+| `0100` | **4** |
+| `0010` | **2** |
+| `1001` | **9** |
+
+### 6. Glue the digits in order
+
+Left to right: `4`, then `2`, then `9`.
+
+```text
+429
+```
 
 ```mermaid
 flowchart LR
@@ -47,14 +85,19 @@ flowchart LR
   N3 --> Out
 ```
 
-### 6. Final answer
+### 7. Final answer
 
 **429**
 
-### 7. Mini-check (what not to do)
+### 8. Mini-check (what not to do)
 
-If you read all 12 bits as one binary number:  
-`010000101001`₂ = 1065₁₀ — that is a different encoding, **not** BCD.
+If you read all 12 bits as one binary number:
+
+```text
+010000101001₂ = 1065₁₀
+```
+
+That is a different encoding. **Not** BCD.
 
 ## Common mistakes
 

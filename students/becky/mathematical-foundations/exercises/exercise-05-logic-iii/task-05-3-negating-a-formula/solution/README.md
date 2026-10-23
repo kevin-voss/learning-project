@@ -16,69 +16,100 @@ Negate
 F = ∀x ∃y ∀z P(x, y, z)
 ```
 
-so that **no** `¬` sits immediately in front of a quantifier. The only `¬` should sit on `P`.
+Push the “not” all the way in. At the end, `¬` may sit **only** on `P`. No `¬∀` or `¬∃` left.
 
-### 2. Sticky-note flip rules
+### 2. Picture first
 
-| You see | You write |
-|---------|-----------|
-| `¬ ∀…` | `∃ ¬ …` |
-| `¬ ∃…` | `∀ ¬ …` |
+> [!PICTURE]
+> Three locked boxes in a row: ∀ , ∃ , ∀.  
+> A “not” sticker starts on the outside.  
+> Each time the sticker walks into a box, that lock **flips**:  
+> “for all” becomes “there exists”, and “there exists” becomes “for all”.
 
-The `¬` walks inward; each lock it passes flips.
+### 3. Rules on the table (only two)
 
-### 3. Start from ¬F
+| Rule | You see | You write | In words |
+|------|---------|-----------|----------|
+| Flip-∀ | `¬ ∀…` | `∃ ¬ …` | “not every” → “there is one where not” |
+| Flip-∃ | `¬ ∃…` | `∀ ¬ …` | “not (there is one)” → “for every, not” |
+
+That is the whole menu. Nothing else.
+
+### 4. How you choose (always the same thinking)
+
+At every step:
+
+1. Look at the symbol **right after** the `¬`.
+2. If it is `∀` → choose **Flip-∀**. If it is `∃` → choose **Flip-∃**.
+3. Why that one? Because the other rule’s pattern does not match what you see.
+4. Do **not** flip a lock further to the right — the sticker has not reached it yet.
+
+### 5. Start
+
+Write the not in front:
 
 ```text
 ¬ ∀x ∃y ∀z P(x, y, z)
 ```
 
-Still has `¬` in front of `∀x` — not done yet.
+Still not done — `¬` sits in front of a quantifier.
 
-### 4. Flip the outer ∀
+### 6. First flip
+
+| Thinking | |
+|----------|--|
+| What sits after `¬`? | `∀x` |
+| Rules that match? | Only **Flip-∀** |
+| Why not Flip-∃? | We see `∀`, not `∃` |
 
 ```text
 ∃x ¬ ∃y ∀z P(x, y, z)
 ```
 
-*Why:* `¬ ∀x …` becomes `∃x ¬ …`.
+### 7. Second flip
 
-### 5. Flip the next ∃
+| Thinking | |
+|----------|--|
+| What sits after `¬` now? | `∃y` |
+| Choose | **Flip-∃** |
+| Why not Flip-∀? | We see `∃`, not `∀` |
 
 ```text
 ∃x ∀y ¬ ∀z P(x, y, z)
 ```
 
-*Why:* `¬ ∃y …` becomes `∀y ¬ …`.
+### 8. Third flip
 
-### 6. Flip the last ∀
+| Thinking | |
+|----------|--|
+| What sits after `¬` now? | `∀z` |
+| Choose | **Flip-∀** |
+| Why stop after this? | Next the `¬` will touch `P` — that is the goal |
 
 ```text
 ∃x ∀y ∃z ¬ P(x, y, z)
 ```
 
-*Why:* `¬ ∀z …` becomes `∃z ¬ …`. Now `¬` touches only the predicate.
-
-### 7. Final answer
+### 9. Final answer
 
 ```text
 ∃x ∀y ∃z ¬P(x, y, z)
 ```
 
-Quantifier order after the walk: **∃ ∀ ∃** (started as ∀ ∃ ∀; each flipped once).
+Memory trick: start was `∀ ∃ ∀`. After three flips: `∃ ∀ ∃`.
 
-### 8. Mini-check
+### 10. Meaning in words (optional check)
 
-- No `¬∀` or `¬∃` left? Yes.
-- Same three variables in the same left-to-right slots? Yes.
-- Meaning in words: “There is an *x* such that for every *y* there is a *z* with ¬P(x,y,z).” That is exactly “not every *x* has a *y* that works for all *z*.”
+“There is an *x* such that for every *y* there is a *z* with ¬P(x, y, z).”
+
+That is exactly: it is **not** true that every *x* has a *y* that works for all *z*.
 
 ## Common mistakes
 
 | Mistake | What you see | Fix |
 |---------|--------------|-----|
 | Stopping at `¬ ∀x ∃y ∀z P(…)` | Still has `¬` before a quantifier | Keep flipping until `¬` reaches `P` |
-| Flipping only some quantifiers | Wrong meaning | Flip **every** quantifier the `¬` passes |
+| Flipping all three locks in one go “by memory” | Easy to mistype the middle | One lock at a time; match the rule to what you see |
 | Writing `∃x ∃y ∃z ¬P(…)` | Lost the middle `∀` | After flips the order is `∃ ∀ ∃` |
 
 Back to [Task 05_3](../README.md).

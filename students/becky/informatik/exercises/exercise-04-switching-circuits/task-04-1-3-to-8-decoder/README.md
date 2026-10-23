@@ -15,9 +15,11 @@ Give the truth table for the **3-to-8 decoder**.
 
 ## The task, simply said
 
-1. Three inputs: `A2`, `A1`, `A0` (most significant bit first).
+Picture a hotel with 8 rooms. You type a room number with three switches. Exactly one door lamp turns on.
+
+1. Three inputs: `A2`, `A1`, `A0` (`A2` is the high bit).
 2. Eight outputs: `Y0` … `Y7`.
-3. For every input combination, exactly **one** `Yi` is 1; all others are 0.
+3. For every input combo, exactly **one** `Yi` is 1; all others are 0.
 4. The index `i` equals the binary number `A2 A1 A0`.
 
 ## Check examples

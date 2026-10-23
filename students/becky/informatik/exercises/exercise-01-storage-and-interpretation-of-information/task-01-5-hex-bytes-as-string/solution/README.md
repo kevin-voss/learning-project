@@ -12,6 +12,11 @@ Written answer — no compile step. Decode one byte at a time, then join the cha
 
 **What the task asks:** treat each byte as an **ASCII character**, not as one big binary number.
 
+### Step 0 — Picture first
+
+> [!PICTURE]
+> A code book. Each hex byte is one page. You look up the page and write the letter (or digit) you find. Then you join the letters left to right.
+
 ### Step 1 — Remember the digit shortcut
 
 In ASCII, digit characters live here:

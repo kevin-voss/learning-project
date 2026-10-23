@@ -17,6 +17,8 @@ Describe how an **RS flip-flop** works by completing the following truth table.
 
 ## The task, simply said
 
+Picture a sticky light switch: Set turns it on, Reset turns it off, neither keeps it as it was.
+
 1. Use a **NOR-based RS** flip-flop (the usual first teaching form).
 2. Fill next `Q` and next `Q̄` for every `S`/`R` pair.
 3. Write a short note: hold, set, reset, or forbidden.

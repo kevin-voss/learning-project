@@ -41,6 +41,8 @@ These tasks are **written answers**, not programs. There are no automated `make 
 
 ## What you will learn
 
+Read this slowly. One picture at a time. Then do the matching task.
+
 ### 1. Predicates — name tags for claims
 
 > [!PICTURE]
@@ -149,10 +151,24 @@ flowchart TD
   s1 -->|"flip ∃"| s2
 ```
 
-| Outside | Becomes inside |
-|---------|----------------|
-| `¬ ∀x …` | `∃x ¬ …` |
-| `¬ ∃x …` | `∀x ¬ …` |
+#### Rules on the table
+
+| Outside | Becomes inside | In words |
+|---------|----------------|----------|
+| `¬ ∀x …` | `∃x ¬ …` | “not every” → “there is one for which not” |
+| `¬ ∃x …` | `∀x ¬ …` | “not (there is one)” → “for every one, not” |
+
+#### How you choose (the thinking process)
+
+At every step:
+
+1. Look only at what sits **right after** the `¬`.
+2. If it is `∀` → use the first rule. If it is `∃` → use the second.
+3. Why only that rule? Because the other flip rule does not match the lock you see.
+4. Move the `¬` one lock inward. Repeat.
+5. Stop when `¬` sits on the predicate only — no more `¬∀` or `¬∃`.
+
+You never flip a lock that the `¬` has not reached yet.
 
 **In task 05_3** you use this on `F = ∀x ∃y ∀z P(x, y, z)`.
 

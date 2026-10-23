@@ -43,9 +43,19 @@ These tasks are **written answers** (truth tables and fill-ins), not programs. T
 
 ## What you will learn
 
+Read this slowly. One picture at a time. Then do the matching task.
+
 ### 1. Decoder — one key, many doors
 
-Picture a hotel with **8 rooms**. The receptionist types a 3-bit room number. Exactly **one** door lamp turns on. That box is a **3-to-8 decoder**: three input bits → eight outputs, and only the matching output is 1.
+> [!PICTURE]
+> A hotel with **8 rooms**. You type a room number with three switches. Exactly **one** door lamp turns on. That box is a **3-to-8 decoder**.
+
+Tiny steps:
+
+1. Three inputs: `A2`, `A1`, `A0`.
+2. Eight outputs: `Y0` … `Y7`.
+3. Read `A2 A1 A0` as a number (0 to 7).
+4. Only that numbered lamp is **1**. All others are **0**.
 
 ```text
 A2 A1 A0 | which Yi is 1
@@ -59,32 +69,56 @@ A2 A1 A0 | which Yi is 1
 
 ### 2. Demultiplexer — one letter, two mailboxes
 
-Picture one letter and a switch that says “left box or right box”. A **1-to-2 demultiplexer** (often called a **2-demultiplexer** on the sheet) has data `D`, select `S`, and two outputs. The data appears on exactly one output; the other stays 0.
+> [!PICTURE]
+> One letter (`D`) and a lever (`S`). The lever says “left mailbox or right mailbox”. The letter goes into **one** box. The other box stays empty.
+
+That box is a **1-to-2 demultiplexer** (the sheet says **2-demultiplexer**).
+
+Tiny steps:
+
+1. If `S = 0` → `Y0` gets `D`, and `Y1` is 0.
+2. If `S = 1` → `Y1` gets `D`, and `Y0` is 0.
 
 **In task 04_2** you write that truth table.
 
 ### 3. Combinational vs sequential — now vs memory
 
-A decoder has **no memory**: change the inputs and the outputs change at once. A **flip-flop** has memory: its output can stay the same even when the inputs go quiet. That is the jump from *Schaltnetze* (combinational) to *Schaltwerke* (sequential).
+> [!PICTURE]
+> A lamp that only cares about switches **right now** has **no memory**. A sticky light switch that stays on after you leave **has memory**.
+
+- Decoder / demux → no memory (*Schaltnetz*).
+- Flip-flop → remembers one bit (*Schaltwerk*).
 
 **In tasks 04_3–04_5** you work with flip-flops.
 
 ### 4. RS flip-flop — set, reset, hold
 
-Picture a sticky light switch:
+> [!PICTURE]
+> A sticky light switch with two buttons: **Set** (on) and **Reset** (off). If you press nothing, the light stays as it was.
 
-- **Set** (`S = 1`, `R = 0`): turn the light **on** (`Q = 1`).
-- **Reset** (`S = 0`, `R = 1`): turn the light **off** (`Q = 0`).
-- **Hold** (`S = 0`, `R = 0`): leave the light as it was.
-- **Forbidden** (`S = 1`, `R = 1` for a NOR RS cell): both “on” and “off” at once — do not use.
+Tiny steps:
 
-`Q̄` (Q-bar) is the opposite of `Q` when the cell is in a normal state.
+- **Set** (`S = 1`, `R = 0`) → light **on** (`Q = 1`).
+- **Reset** (`S = 0`, `R = 1`) → light **off** (`Q = 0`).
+- **Hold** (`S = 0`, `R = 0`) → leave the light as it was.
+- **Forbidden** (`S = 1`, `R = 1` for a NOR RS cell) → do not use.
+
+`Q̄` (Q-bar) is the opposite of `Q` in a normal state.
 
 **In task 04_3** you complete the RS truth table. **In task 04_4** you fill the 0/1 boxes in a gate sketch.
 
 ### 5. D flip-flop — copy D when the clock allows
 
-Picture a photocopier with a button (the **clock**). A **level-triggered** D flip-flop copies `D` onto `Q` **while the clock level is active** (here: while `CLK = 1`). While `CLK = 0`, `Q` keeps its old value.
+> [!PICTURE]
+> A photocopier. The paper on the glass is `D`. The button is the **clock**. While you hold the button (`CLK = 1`), the copy (`Q`) matches the paper. When you let go (`CLK = 0`), the last copy stays.
+
+That is a **level-triggered** D flip-flop (high-active on this sheet).
+
+Tiny steps:
+
+1. `CLK = 1` → `Q` follows `D`.
+2. `CLK = 0` → `Q` keeps the old value.
+3. Walk the timeline left to right, one time step at a time.
 
 **In task 04_5** you fill `Q` for times `t = 0` … `t = 5`.
 

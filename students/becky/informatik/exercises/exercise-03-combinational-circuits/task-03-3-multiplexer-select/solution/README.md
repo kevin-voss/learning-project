@@ -8,6 +8,11 @@ Written answer — no compile step. Follow the tiny steps, then say the role of 
 
 ## How it works, step by step
 
+### Step 0 — Picture first
+
+> [!PICTURE]
+> Two train tracks (`x` and `y`) and one exit (`z`). The lever `s` chooses which track is connected. That lever is the **select**.
+
 ### Step 1 — Name the parts on the paper
 
 | Symbol | Means |

@@ -12,7 +12,31 @@ Written answer — no compile step. Final list of passed exams: **Mathematics on
 
 Zweistein never lies. Both of his sentences are **true**. Find which exams he passed.
 
-### 2. Invent letters
+### 2. Picture first
+
+> [!PICTURE]
+> Three exam stamps on a desk: Math, Programming, BWL. Each stamp is either **passed** or **not**. Zweistein tells two true sentences. You turn the sentences into formulas, then find the only stamp combo that fits.
+
+### 3. Tools on the table
+
+| Tool | What it does | When you choose it |
+|------|--------------|--------------------|
+| Invent letters | Name each exam stamp | Always first — you need handles |
+| Translate word → symbol | `and`→`∧`, `or`→`∨`, `not`→`¬` | While reading each sentence |
+| De Morgan | `¬(X ∨ Y) ≡ ¬X ∧ ¬Y` | When a `¬` wraps an `or` and you want simpler pieces |
+| Plug-in | Replace letters with T/F you already know | After one sentence has fixed some letters |
+
+### 4. Strategy (why this order)
+
+1. Translate **both** sentences into formulas (so nothing is fuzzy).
+2. Simplify the **stricter** sentence first (the one that forces letters).
+3. Plug those forced letters into the other sentence.
+4. Read off the stamp card.
+
+*Why not guess exams first?*  
+Guessing skips the rules. The formulas force the answer.
+
+### 5. Invent letters (sticky notes)
 
 | Letter | Means |
 |--------|-------|
@@ -22,14 +46,16 @@ Zweistein never lies. Both of his sentences are **true**. Find which exams he pa
 
 “Failed Mathematics” = `¬M`.
 
-### 3. Translate sentence (1) — piece by piece
+### 6. Translate sentence (1) — piece by piece
 
 > I passed Mathematics and Programming, **or** it is not the case that I passed Programming or BWL.
 
-- “Math and Programming” → `M ∧ P`
-- “Programming or BWL” → `P ∨ B`
-- “it is not the case that …” → put `¬` in front → `¬(P ∨ B)`
-- Big “or” between the two halves →
+Tiny steps:
+
+1. “Math and Programming” → `M ∧ P`
+2. “Programming or BWL” → `P ∨ B`
+3. “it is not the case that …” → put `¬` in front → `¬(P ∨ B)`
+4. Big “or” between the two halves →
 
 ```text
 (1)   (M ∧ P) ∨ ¬(P ∨ B)
@@ -47,20 +73,26 @@ so
 (1)   (M ∧ P) ∨ (¬P ∧ ¬B)
 ```
 
-### 4. Translate sentence (2) — piece by piece
+### 7. Translate sentence (2) — piece by piece
 
 > It is false that I passed Programming or failed Mathematics.
 
-- Inside the “it is false that”: `P ∨ ¬M`
-- Whole thing false →
+Tiny steps:
+
+1. Inside the “it is false that”: `P ∨ ¬M`
+2. Whole thing false → wrap with `¬`
 
 ```text
 (2)   ¬(P ∨ ¬M)
 ```
 
-### 5. Simplify sentence (2) first (it is stricter)
+### 8. Choose De Morgan on sentence (2)
 
-De Morgan: `¬(X ∨ Y) ≡ ¬X ∧ ¬Y`.
+| Thinking | |
+|----------|--|
+| What do I see? | `¬(P ∨ ¬M)` — a not outside an or |
+| Which tool matches? | **De Morgan** |
+| Why this sentence first? | After De Morgan it forces two letters at once. Sentence (1) alone leaves more open cases. |
 
 ```text
 ¬(P ∨ ¬M) ≡ ¬P ∧ ¬(¬M) ≡ ¬P ∧ M
@@ -71,11 +103,15 @@ So sentence (2) alone already forces:
 - `M` is **true** (passed Math)
 - `P` is **false** (did **not** pass Programming)
 
-*Why start here:* two letters are already fixed; only `B` is still open.
+Only `B` is still open.
 
-### 6. Plug into sentence (1)
+### 9. Choose plug-in on sentence (1)
 
-We know `M = T`, `P = F`. Put them into `(M ∧ P) ∨ (¬P ∧ ¬B)`:
+| Thinking | |
+|----------|--|
+| What do I know? | `M = T`, `P = F` |
+| Which tool? | **Plug-in** into `(M ∧ P) ∨ (¬P ∧ ¬B)` |
+| Why not invent new rules? | Truth of `∧` / `∨` is enough |
 
 ```text
 (M ∧ P)     →  T ∧ F  →  F
@@ -85,7 +121,9 @@ F ∨ ¬B      →  ¬B
 
 For sentence (1) to stay true, `¬B` must be true → **`B` is false**.
 
-### 7. Put the stamp card together
+*Why?* The left half is already false. So the right half must carry the truth.
+
+### 10. Put the stamp card together
 
 | Exam | Passed? |
 |------|---------|
@@ -93,7 +131,7 @@ For sentence (1) to stay true, `¬B` must be true → **`B` is false**.
 | Programming | no (`¬P`) |
 | BWL | no (`¬B`) |
 
-### 8. Final answer
+### 11. Final answer
 
 Zweistein passed **Mathematics** only.  
 He did **not** pass Programming and did **not** pass BWL.

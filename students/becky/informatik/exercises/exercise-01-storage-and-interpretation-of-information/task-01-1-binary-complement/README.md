@@ -15,9 +15,11 @@ Form the **binary complement** of the 8-bit binary number `01011001b`.
 
 ## The task, simply said
 
-1. Start from `01011001`.
-2. Invert every bit.
-3. Add `00000001` in binary.
+Picture eight lamps in a row. You will flip them, then add one.
+
+1. Write the start pattern: `01011001`.
+2. Invert every bit (`0↔1`). Keep each bit in its place — do not reverse the row.
+3. Add `00000001` in binary (add one on the right).
 4. Write the 8-bit result (you may keep the `b` suffix).
 
 ```mermaid

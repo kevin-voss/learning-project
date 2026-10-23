@@ -18,7 +18,26 @@ A ∨ ¬(B ∨ C) ⇒ B
 
 into an equivalent **DNF** and an equivalent **CNF**, using a truth table.
 
-### 2. Fix the parentheses first
+### 2. Picture first
+
+> [!PICTURE]
+> A scoreboard with eight switch combos. Some rows light the lamp (`T`). Some leave it dark (`F`).  
+> **DNF** copies the lit rows as a big **or** of small **and**-blocks.  
+> **CNF** copies the dark rows as a big **and** of small **or**-blocks.
+
+### 3. Recipes on the table (two tools)
+
+| Recipe | Built from | Shape | When you choose it |
+|--------|------------|-------|--------------------|
+| **DNF** | rows where `G` is **true** | or of and-blocks (minterms) | Sheet asks for DNF / “disjunctive” |
+| **CNF** | rows where `G` is **false** | and of or-blocks (maxterms) | Sheet asks for CNF / “conjunctive” |
+
+This sheet asks for **both**. So we will use **both** recipes — one after the other.
+
+*Why not simplify with algebra instead?*  
+The sheet wants DNF/CNF **via truth table**. So the thinking is: fill the table → sort true/false rows → copy those rows into formulas.
+
+### 4. Fix the parentheses first
 
 `⇒` is weaker than `∨`, so the sheet means:
 
@@ -26,9 +45,10 @@ into an equivalent **DNF** and an equivalent **CNF**, using a truth table.
 G = (A ∨ ¬(B ∨ C)) ⇒ B
 ```
 
-*Why it matters:* a different parse would give a different table.
+*Why this parse (not another)?*  
+If you bind `⇒` earlier, you get a different formula and a different table. Match the course precedence.
 
-### 3. Plan the columns
+### 5. Plan the columns
 
 Three letters → **8 rows**. Helper columns keep mistakes away:
 
@@ -37,11 +57,14 @@ Three letters → **8 rows**. Helper columns keep mistakes away:
 3. `A ∨ ¬(B ∨ C)`  (the left side of ⇒)
 4. `G` = that left side ⇒ `B`
 
-### 4. Fill the table (one idea per column)
+*Why helpers?*  
+So each column uses **one** tiny rule (or, not, or, implication) — easier than doing everything at once.
 
-**How to get `¬(B ∨ C)`:** true only when both `B` and `C` are false.
+### 6. Fill the table (one idea per column)
 
-**How to get `⇒`:** false only when the left side is true and `B` is false.
+**Rule for `¬(B ∨ C)`:** true only when both `B` and `C` are false.
+
+**Rule for `⇒`:** false only when the left side is true and `B` is false.
 
 | A | B | C | B ∨ C | ¬(B ∨ C) | A ∨ ¬(B ∨ C) | G |
 |---|---|---|-------|----------|--------------|---|
@@ -54,22 +77,27 @@ Three letters → **8 rows**. Helper columns keep mistakes away:
 | F | F | T | T     | F        | F            | T |
 | F | F | F | F     | T        | T            | F |
 
-### 5. Sort the rows
+### 7. Sort the rows
 
 - **True** (`G = T`): `TTT`, `TTF`, `FTT`, `FTF`, `FFT` → five minterms for DNF  
 - **False** (`G = F`): `TFT`, `TFF`, `FFF` → three maxterms for CNF  
 
-### 6. Build DNF — one minterm per true row
+### 8. Build DNF — choose the true-row recipe
 
-Rule: letter as-is if `T` in that row, negated if `F`. Join with `∧`. Then join all minterms with `∨`.
+**Thinking:** sheet asks for DNF → pick lit rows only.  
+**Rule for one minterm:** letter as-is if `T` in that row, negated if `F`. Join with `∧`.  
+**Then:** join all minterms with `∨`.
 
-| True row | Minterm |
-|----------|---------|
-| TTT | `A ∧ B ∧ C` |
-| TTF | `A ∧ B ∧ ¬C` |
-| FTT | `¬A ∧ B ∧ C` |
-| FTF | `¬A ∧ B ∧ ¬C` |
-| FFT | `¬A ∧ ¬B ∧ C` |
+*Why not use false rows here?*  
+False rows are for CNF. Mixing them would change the meaning.
+
+| True row | Minterm | In words |
+|----------|---------|----------|
+| TTT | `A ∧ B ∧ C` | A on, B on, C on |
+| TTF | `A ∧ B ∧ ¬C` | A on, B on, C off |
+| FTT | `¬A ∧ B ∧ C` | A off, B on, C on |
+| FTF | `¬A ∧ B ∧ ¬C` | A off, B on, C off |
+| FFT | `¬A ∧ ¬B ∧ C` | A off, B off, C on |
 
 **DNF:**
 
@@ -83,11 +111,13 @@ Optional shorter form (same rows — not required):
 B ∨ (¬A ∧ ¬B ∧ C)
 ```
 
-### 7. Build CNF — one maxterm per false row
+### 9. Build CNF — choose the false-row recipe
 
-Rule (opposite of minterms): if the letter is `T` in that false row, put its **negation** in an **or**-clause; if it is `F`, put the letter itself. Join clauses with `∧`.
+**Thinking:** sheet asks for CNF → pick dark rows only.  
+**Rule for one maxterm (opposite of minterms):** if the letter is `T` in that false row, put its **negation** in an **or**-clause; if it is `F`, put the letter itself. Join clauses with `∧`.
 
-*Why:* that or-clause is false on exactly that one row, so the big and kills exactly the false rows.
+*Why this polarity?*  
+That or-clause is false on exactly that one row, so the big and kills exactly the false rows.
 
 | False row | Maxterm |
 |-----------|---------|
@@ -107,7 +137,7 @@ Optional shorter form (same rows — not required):
 (¬A ∨ B) ∧ (B ∨ C)
 ```
 
-### 8. Mini-check
+### 10. Mini-check
 
 Pick false row `TFT`: plug into the CNF — one clause becomes false → whole CNF false. Good.  
 Pick true row `FFT`: every CNF clause stays true. Good.

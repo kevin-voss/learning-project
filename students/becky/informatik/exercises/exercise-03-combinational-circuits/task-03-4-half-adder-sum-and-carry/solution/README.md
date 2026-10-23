@@ -8,6 +8,12 @@ Written values — no compile step. Follow the tiny steps, then match `s` and `�
 
 ## How it works, step by step
 
+### Step 0 — Picture first
+
+> [!PICTURE]
+> Adding with two fingers. Both fingers are up (`1` and `1`).  
+> The ones digit is the **sum**. The spill to the next column is the **carry**.
+
 ### Step 1 — Read what the paper already gave you
 
 Two vertical input wires. Each has a little box with **`1`**.

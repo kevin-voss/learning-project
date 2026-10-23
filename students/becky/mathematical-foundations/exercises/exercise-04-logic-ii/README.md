@@ -42,6 +42,8 @@ These tasks are **written answers**, not programs. There are no automated `make 
 
 ## What you will learn
 
+Read this slowly. One picture at a time. Then do the matching task.
+
 ### 1. Truth tables — try every switch setting
 
 > [!PICTURE]
@@ -111,15 +113,31 @@ flowchart TD
   F --> S1 --> S2 --> S3 --> Out
 ```
 
-Useful rewrite rules (same meaning):
+#### Rules on the table (same meaning)
 
-| Pattern | Same as |
-|---------|---------|
-| `X ⇒ Y` | `¬X ∨ Y` |
-| `¬(X ∨ Y)` | `¬X ∧ ¬Y` |
-| `¬(X ∧ Y)` | `¬X ∨ ¬Y` |
-| `X ∨ (X ∧ Y)` | `X` (absorption) |
-| `¬Y ∨ (X ∧ ¬Y)` | `¬Y` (absorption) |
+| Rule name | Pattern | Same as | When you reach for it |
+|-----------|---------|---------|------------------------|
+| Implication | `X ⇒ Y` | `¬X ∨ Y` | You still see an arrow `⇒` |
+| De Morgan (or) | `¬(X ∨ Y)` | `¬X ∧ ¬Y` | A `¬` sits outside an `∨` |
+| De Morgan (and) | `¬(X ∧ Y)` | `¬X ∨ ¬Y` | A `¬` sits outside an `∧` |
+| Double not | `¬¬X` | `X` | Two `¬` in a row on the same piece |
+| Absorption | `¬Y ∨ (X ∧ ¬Y)` | `¬Y` | One side of an `∨` already contains the other side |
+
+#### How you choose (the thinking process)
+
+At every step, ask three questions out loud:
+
+1. **What do I see right now?** (an arrow? a `¬(` around an or? a repeated piece?)
+2. **Which rules from the table match that shape?**
+3. **Which matching rule should I use first — and why?**
+
+Usual order of attack (why this order):
+
+1. Kill `⇒` first — arrows are awkward; turn them into `¬` and `∨`.
+2. Push outer `¬` inside with De Morgan — so you can cancel `¬¬` and see repeated pieces.
+3. Absorb / cancel last — only when the shape is clear.
+
+You do **not** guess. You match the **shape**, pick the rule that fits, say why, then rewrite.
 
 A formula is **simpler** when it uses fewer connectives / letters but is true in exactly the same rows.
 

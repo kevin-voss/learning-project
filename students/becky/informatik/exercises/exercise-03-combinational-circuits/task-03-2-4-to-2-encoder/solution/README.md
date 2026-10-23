@@ -10,7 +10,8 @@ Written table — no compile step. Follow the tiny steps, then match the matrix.
 
 ### Step 1 — What an encoder is for
 
-Picture four doorbells (`I0` … `I3`). Only **one** rings at a time. You want a short code that answers: “which doorbell?”
+> [!PICTURE]
+> Four doorbells (`I0` … `I3`). Only **one** rings at a time. You want a short code that answers: “which doorbell?”
 
 ```text
   I0..I3 ──► [4-to-2 encoder] ──► A1 A0

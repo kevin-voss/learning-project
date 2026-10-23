@@ -19,6 +19,9 @@ so that no quantifier has a negation sign immediately in front of it.
 
 ## The task, simply said
 
+Picture three locked boxes in a row. A “not” sticker walks inside and flips every lock (`∀` ↔ `∃`) until it sits only on `P`.
+
+
 1. Start from `¬F`, that is `¬ ∀x ∃y ∀z P(x, y, z)`.
 2. Walk the `¬` inward: flip each quantifier (`∀` ↔ `∃`) and keep moving.
 3. Stop when the only `¬` left is in front of `P(…)`, not in front of a quantifier.

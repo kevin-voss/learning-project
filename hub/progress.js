@@ -171,11 +171,11 @@
       })
       const step = matches.find((s) => !done.has(s.id)) ?? matches[0]
       bar.textContent = ''
-      const home = document.createElement('a')
-      home.href = step ? `/hub/#${step.id}` : '/hub/#path'
-      home.textContent = '← Path'
-      bar.append(home)
-      if (!step) return
+      if (!step) {
+        bar.hidden = true
+        return
+      }
+      bar.hidden = false
 
       const label = document.createElement('span')
       label.className = 'lp-step'

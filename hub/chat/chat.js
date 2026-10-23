@@ -1,4 +1,5 @@
-// Floating tutor chat on student exercise / task pages (Becky only).
+// Floating tutor chat on student exercise / task pages and their subpages (Becky only).
+// Covers task roots, my-solution/, solution/, and code viewers under a task.
 // Several chats per page in localStorage; each chat caps at 3 messages, then a new one starts.
 // At most 10 chats kept — the 11th drops the oldest. Daily cap 50 sends.
 // Replies from POST /api/chat (needs Vercel + OPENAI_API_KEY).
@@ -25,31 +26,40 @@
   ]
   const COMMAND_IDS = new Set(COMMANDS.map((c) => c.id))
 
+  // Task / exercise roots and every subpage under them (my-solution/, solution/,
+  // code viewers like Foo.java.html). Chat history stays keyed to the task/exercise.
   function parseScope(pathname) {
-    const path = pathname.replace(/\/(index|README)\.html$/i, '/').replace(/\/+$/, '/') || '/'
+    let path = pathname.replace(/\/(index|README)\.html$/i, '/')
+    path = path.replace(/\/[^/]+\.html$/i, '/')
+    path = path.replace(/\/+$/, '/') || '/'
+
     const task = path.match(
-      /^\/students\/([^/]+)\/([^/]+)\/exercises\/(exercise-[^/]+)\/(task-[^/]+)\/?$/,
+      /^\/students\/([^/]+)\/([^/]+)\/exercises\/(exercise-[^/]+)\/(task-[^/]+)(?:\/|$)/,
     )
     if (task) {
+      const root = `/students/${task[1]}/${task[2]}/exercises/${task[3]}/${task[4]}/`
       return {
         kind: 'task',
         student: task[1],
         subject: task[2],
         exercise: task[3],
         task: task[4],
+        atRoot: path === root,
         scopeId: `${task[1]}/${task[2]}/${task[3]}/${task[4]}`,
       }
     }
     const exercise = path.match(
-      /^\/students\/([^/]+)\/([^/]+)\/exercises\/(exercise-[^/]+)\/?$/,
+      /^\/students\/([^/]+)\/([^/]+)\/exercises\/(exercise-[^/]+)(?:\/|$)/,
     )
     if (exercise) {
+      const root = `/students/${exercise[1]}/${exercise[2]}/exercises/${exercise[3]}/`
       return {
         kind: 'exercise',
         student: exercise[1],
         subject: exercise[2],
         exercise: exercise[3],
         task: null,
+        atRoot: path === root,
         scopeId: `${exercise[1]}/${exercise[2]}/${exercise[3]}`,
       }
     }
@@ -72,9 +82,7 @@
     }
   }
 
-  async function fetchExerciseMarkdown(scope) {
-    if (scope.kind !== 'task') return ''
-    const url = `/students/${scope.student}/${scope.subject}/exercises/${scope.exercise}/`
+  async function fetchSheetMarkdown(url) {
     try {
       const res = await fetch(url)
       if (!res.ok) return ''
@@ -85,6 +93,22 @@
     } catch {
       return ''
     }
+  }
+
+  async function fetchExerciseMarkdown(scope) {
+    if (scope.kind !== 'task') return ''
+    return fetchSheetMarkdown(
+      `/students/${scope.student}/${scope.subject}/exercises/${scope.exercise}/`,
+    )
+  }
+
+  // On my-solution / solution / code pages, load the task sheet — not the page body
+  // (so the tutor still sees the task, not the sample solution text).
+  async function fetchTaskMarkdown(scope) {
+    if (scope.kind !== 'task' || scope.atRoot) return ''
+    return fetchSheetMarkdown(
+      `/students/${scope.student}/${scope.subject}/exercises/${scope.exercise}/${scope.task}/`,
+    )
   }
 
   function newId() {
@@ -213,6 +237,7 @@
   saveStore(storageKey, store) // keep the same active chat across close / reopen
   let title = pageTitle()
   let exerciseMarkdown = ''
+  let taskMarkdown = scope.kind === 'task' && scope.atRoot ? sheetMarkdown() : ''
   let busy = false
   let warning = ''
   let showHistory = false
@@ -663,7 +688,7 @@
         title,
       },
       context: {
-        taskMarkdown: scope.kind === 'task' ? sheetMarkdown() : '',
+        taskMarkdown: scope.kind === 'task' ? taskMarkdown : '',
         exerciseMarkdown: scope.kind === 'exercise' ? sheetMarkdown() : exerciseMarkdown,
       },
       command: command || undefined,
@@ -746,10 +771,17 @@
       fetchExerciseMarkdown(scope).then((md) => {
         exerciseMarkdown = md
       })
+      if (!scope.atRoot) {
+        fetchTaskMarkdown(scope).then((md) => {
+          if (md) taskMarkdown = md
+        })
+      }
     }
   }
 
   // Floating bar above a text selection: Copy, or Ask AI (opens chat prefilled).
+  // Mobile: never show while a finger is down (that steals the selection handles).
+  // Only appear after the gesture settles; hide as soon as a new touch starts.
   const selBar = document.createElement('div')
   selBar.className = 'lp-sel-bar'
   selBar.setAttribute('role', 'toolbar')
@@ -760,11 +792,21 @@
     '<button type="button" data-action="ask">Ask AI</button>'
   document.body.append(selBar)
 
+  const coarsePointer = () =>
+    window.matchMedia('(pointer: coarse)').matches ||
+    (navigator.maxTouchPoints || 0) > 0
+
   let lastSelectedText = ''
-  let selHideTimer = 0
+  let selTimer = 0
+  let pointersDown = 0
+
+  function clearSelTimer() {
+    clearTimeout(selTimer)
+    selTimer = 0
+  }
 
   function hideSelBar() {
-    clearTimeout(selHideTimer)
+    clearSelTimer()
     selBar.hidden = true
     lastSelectedText = ''
   }
@@ -784,33 +826,38 @@
     if (!el) return null
     if (root.contains(el) || selBar.contains(el)) return null
     if (el.closest('textarea, input, select, [contenteditable="true"]')) return null
-    // Prefer sheet content; still allow selection elsewhere on the page body
-    // (crumbs / trail) so a missed .lp-sheet match does not kill the bar.
     const sheet = sheetRoot()
     if (sheet !== document.body && !sheet.contains(el) && !document.body.contains(el)) return null
     return { text, range }
   }
 
+  function selectionRect(range) {
+    // Prefer the first line so the bar sits above the start handle, not over it.
+    const rects = [...range.getClientRects()].filter((r) => r.width || r.height)
+    return rects[0] || range.getBoundingClientRect()
+  }
+
   function placeSelBar(range) {
-    const rect = range.getBoundingClientRect()
-    if (rect.width === 0 && rect.height === 0) {
+    const rect = selectionRect(range)
+    if (!rect || (rect.width === 0 && rect.height === 0)) {
       hideSelBar()
       return
     }
     selBar.hidden = false
-    // Force layout so width/height are real after un-hiding.
-    const barW = selBar.offsetWidth || 120
-    const barH = selBar.offsetHeight || 36
-    let top = rect.top - barH - 8
+    const barW = selBar.offsetWidth || 140
+    const barH = selBar.offsetHeight || 40
+    const gap = coarsePointer() ? 14 : 8
+    let top = rect.top - barH - gap
     let left = rect.left + (rect.width - barW) / 2
     left = Math.max(8, Math.min(left, window.innerWidth - barW - 8))
-    if (top < 8) top = Math.min(rect.bottom + 8, window.innerHeight - barH - 8)
+    if (top < 8) top = Math.min(rect.bottom + gap, window.innerHeight - barH - 8)
     selBar.style.top = `${Math.round(top)}px`
     selBar.style.left = `${Math.round(left)}px`
   }
 
   function refreshSelBar() {
-    clearTimeout(selHideTimer)
+    if (pointersDown > 0) return
+    clearSelTimer()
     const picked = selectedInSheet()
     if (!picked) {
       if (!selBar.contains(document.activeElement)) hideSelBar()
@@ -820,45 +867,70 @@
     placeSelBar(picked.range)
   }
 
-  // pointerup covers mouse + pen; touchend for phones.
-  function onSelectEnd(event) {
-    if (selBar.contains(event.target)) return
-    // Let the browser finish the selection before we read it.
-    setTimeout(refreshSelBar, 10)
+  function scheduleSelBar() {
+    clearSelTimer()
+    // Touch UIs need time after handle-drag; desktop can be snappier.
+    const delay = coarsePointer() ? 320 : 10
+    selTimer = setTimeout(refreshSelBar, delay)
   }
-  document.addEventListener('pointerup', onSelectEnd)
-  document.addEventListener('touchend', onSelectEnd, { passive: true })
+
+  // New touch/click outside the bar: clear it so the user can select again
+  // or drag native handles without our overlay in the way.
+  document.addEventListener(
+    'pointerdown',
+    (event) => {
+      if (selBar.contains(event.target)) return
+      pointersDown += 1
+      hideSelBar()
+    },
+    true,
+  )
+
+  function onPointerRelease(event) {
+    if (selBar.contains(event.target)) return
+    pointersDown = Math.max(0, pointersDown - 1)
+    if (pointersDown === 0) scheduleSelBar()
+  }
+  document.addEventListener('pointerup', onPointerRelease, true)
+  document.addEventListener('pointercancel', onPointerRelease, true)
+
   document.addEventListener('keyup', (event) => {
-    if (event.key === 'Shift' || event.key.startsWith('Arrow')) {
-      setTimeout(refreshSelBar, 10)
-    }
+    if (event.key === 'Shift' || event.key.startsWith('Arrow')) scheduleSelBar()
   })
+
   document.addEventListener('selectionchange', () => {
+    if (pointersDown > 0) return
     const sel = window.getSelection()
     if (sel && !sel.isCollapsed) {
-      // Update position while dragging; do not require pointerup only.
-      clearTimeout(selHideTimer)
-      selHideTimer = setTimeout(refreshSelBar, 30)
+      // Desktop: follow the drag. Mobile: wait for pointerup (scheduleSelBar).
+      if (!coarsePointer()) scheduleSelBar()
       return
     }
-    // Delay hide so it does not race a just-finished pointerup show.
-    clearTimeout(selHideTimer)
-    selHideTimer = setTimeout(() => {
+    clearSelTimer()
+    selTimer = setTimeout(() => {
       if (selBar.contains(document.activeElement)) return
       const still = window.getSelection()
       if (still && !still.isCollapsed) return
       hideSelBar()
-    }, 150)
+    }, 180)
   })
-  // Window scroll only — capture:true on every nested scroll hid the bar
-  // as soon as it appeared in some browsers.
-  window.addEventListener('scroll', hideSelBar, { passive: true })
+
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (selBar.hidden) return
+      // Keep the bar if the selection is still there; otherwise drop it.
+      if (pointersDown > 0 || !selectedInSheet()) hideSelBar()
+      else refreshSelBar()
+    },
+    { passive: true },
+  )
   window.addEventListener('resize', hideSelBar)
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && !selBar.hidden) hideSelBar()
   })
 
-  // Keep the highlight while clicking the bar.
+  // Keep the highlight while tapping the bar (do not steal focus into the button).
   selBar.addEventListener('pointerdown', (event) => {
     event.preventDefault()
   })

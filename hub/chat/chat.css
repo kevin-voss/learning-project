@@ -471,6 +471,9 @@
   border-radius: var(--lp-radius-sm);
   box-shadow: var(--lp-shadow);
   font: 700 12px / 1 var(--lp-font);
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
 }
 
 .lp-sel-bar[hidden] {
@@ -487,6 +490,8 @@
   font: inherit;
   cursor: pointer;
   white-space: nowrap;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .lp-sel-bar button:hover {
@@ -503,7 +508,22 @@
   color: var(--lp-accent);
 }
 
-@media (prefers-reduced-motion: no-preference) {
+/* Bigger targets + sit clear of native selection handles on phones. */
+@media (pointer: coarse) {
+  .lp-sel-bar {
+    gap: 4px;
+    padding: 4px;
+    border-radius: 10px;
+    font-size: 14px;
+  }
+
+  .lp-sel-bar button {
+    min-height: 44px;
+    padding: 10px 14px;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) and (pointer: fine) {
   .lp-sel-bar:not([hidden]) {
     animation: lp-sel-in 120ms ease-out;
   }

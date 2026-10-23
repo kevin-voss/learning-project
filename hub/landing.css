@@ -153,16 +153,10 @@ code { font-family: var(--lp-mono); font-size: 0.88em; padding: 1px 6px; border-
   font: inherit;
 }
 
-.card h4 { margin: var(--lp-s4) 0 var(--lp-s2); }
-.exercise { margin: var(--lp-s3) 0 var(--lp-s1); font-weight: 700; }
-.task-list { margin: 0; padding: 0; list-style: none; }
-.task-list li { display: flex; flex-wrap: wrap; align-items: center; gap: var(--lp-s2); padding: var(--lp-s2) 0; border-top: 1px solid var(--lp-line); font-size: 15px; }
-.task-num { color: var(--lp-text-muted); font: 700 13px / 1 var(--lp-mono); }
-.task-title { flex: 1; color: var(--lp-text); font-weight: 700; text-decoration: none; }
-.task-links { display: flex; gap: var(--lp-s2); width: 100%; padding-left: 34px; font-size: 14px; }
-.status { padding: 2px 8px; border-radius: 999px; background: var(--lp-surface-2); color: var(--lp-text-muted); font-size: 12px; font-weight: 700; }
-.status.done { background: var(--lp-try-bg); color: var(--lp-do); }
-.status.in-progress { background: var(--lp-check-bg); color: var(--lp-check); }
+.card.student .student-summary { margin-bottom: var(--lp-s2); }
+.card.student .student-subjects { margin: var(--lp-s3) 0; }
+.card.student .student-open { margin: var(--lp-s3) 0 0; font-weight: 700; }
+.card.student .student-open a { color: var(--lp-accent); text-decoration: none; }
 
 /* ---------- Footer ---------- */
 

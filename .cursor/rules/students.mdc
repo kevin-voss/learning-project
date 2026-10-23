@@ -12,6 +12,7 @@ Per-student exercise sheets only. Shared lessons live on the learning path (`hub
 
 ```text
 students/<student>/README.md                          the student's room: list of subjects
+students/<student>/tasks.html                         generated task browser (subjects → exercises → tasks, collapsible); do not edit by hand
   <subject>/README.md                                 the subject: list of folders
     exercises/README.md                               table of exercises
       exercise-<NN>-<slug>/README.md                  story, every new idea explained, tasks table with status, words to know

@@ -10,7 +10,7 @@ A learning site for complete beginners. **One path** in [`hub/path.mjs`](hub/pat
 
 | Area | Path | Stack / notes |
 |------|------|----------------|
-| Hub | `hub/` | Landing page. `path.mjs` = the one ordered step list; `progress.js` = localStorage progress, step bar, theme toggle; `sheet.js` = Markdown page renderer; `theme/` = the one design + animations; `scripts/` checks the path, builds and checks the site · run `make site` |
+| Hub | `hub/` | Landing page. `path.mjs` = the one ordered step list; `progress.js` = localStorage progress, step bar, theme toggle; `sheet.js` = Markdown page renderer; `theme/` = the one design + animations; `scripts/` checks the path, builds and checks the site · run `make site`. **My tasks** on the landing is a short card per student; the full collapsible list is `students/<name>/tasks.html` (written by `catalog.mjs`) |
 | Sheets | `sheets/` | Short Markdown pages, one idea each, picture first |
 | Drills | `drills/javascript/` | Bun tests via root `Makefile` |
 | Java hub | `tracks/java/` | Static HTML/CSS/JS |

@@ -2,6 +2,8 @@
 
 Hi Becky! This is your room. Every folder below is one subject.
 
+**[Open all tasks →](tasks.html)** — subjects and exercises fold open and closed, with status and a continue link.
+
 How it is sorted:
 
 ```text

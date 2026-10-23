@@ -1,8 +1,9 @@
 // Writes the generated parts of hub/index.html:
 //   header    the site header from header.mjs (the same one every page gets)
 //   path      the learning path from hub/path.mjs (checked: every link must exist)
-//   students  every student and task found under students/
+//   students  short cards per student (full lists live on students/<name>/tasks.html)
 //   catalog   "look it up": every course, sheet, project, practice set and doc on disk
+// Also writes students/<name>/tasks.html: subjects → exercises → tasks, each toggleable.
 // Only the path order is written by hand; new folders show up by themselves.
 //
 // Runs inside build-site.mjs and students/scripts/new-exercise.mjs. By hand, from anywhere:
@@ -47,6 +48,13 @@ const escape = (text) => String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;
 const read = (file) => readFileSync(join(ROOT, file), 'utf8')
 const isDir = (path) => existsSync(join(ROOT, path)) && statSync(join(ROOT, path)).isDirectory()
 const href = (path) => relative('hub', path).split('\\').join('/')
+const hrefFrom = (fromDir, path) => relative(fromDir, path).split('\\').join('/')
+
+const THEME_INIT = `<script>try { const t = JSON.parse(localStorage.getItem('learning-project:theme')); if (t) document.documentElement.dataset.theme = t } catch {}</script>`
+const THEME_HEAD = [THEME_INIT, ...['tokens.css', 'components.css', 'anim/anim.css']
+  .map((file) => `<link rel="stylesheet" href="/hub/theme/${file}">`)].join('\n  ')
+const THEME_BODY = ['/hub/theme/anim/scenes.js', '/hub/theme/anim/player.js', '/hub/progress.js']
+  .map((src) => `<script src="${src}" defer></script>`).join('\n  ')
 
 function plain(markdown) {
   return markdown
@@ -175,35 +183,156 @@ function taskStatus(exerciseDir) {
 
 const subfolders = (dir, prefix) => children(dir).filter((name) => name.startsWith(prefix) && isDir(join(dir, name)))
 
+function tally(states) {
+  const counts = { done: 0, 'in progress': 0, todo: 0, total: states.length }
+  for (const state of states) counts[state] = (counts[state] ?? 0) + 1
+  return counts
+}
+
+function formatCounts(counts) {
+  const parts = []
+  if (counts.done) parts.push(`${counts.done} done`)
+  if (counts['in progress']) parts.push(`${counts['in progress']} in progress`)
+  if (counts.todo) parts.push(`${counts.todo} todo`)
+  return parts.join(' · ') || 'No tasks yet'
+}
+
 // students/<student>/<subject>/exercises/exercise-NN-…/task-NN-k-…/
-function studentCard(studentDir) {
+function studentData(studentDir) {
   const subjects = cardDirs(studentDir).map((subjectDir) => {
     const exercisesDir = join(subjectDir, 'exercises')
-    const exercises = isDir(exercisesDir) ? subfolders(exercisesDir, 'exercise-') : []
-    const blocks = exercises.map((exercise) => {
+    const exercises = (isDir(exercisesDir) ? subfolders(exercisesDir, 'exercise-') : []).map((exercise) => {
       const exerciseDir = join(exercisesDir, exercise)
       const status = taskStatus(exerciseDir)
-      const rows = subfolders(exerciseDir, 'task-').map((task) => {
+      const tasks = subfolders(exerciseDir, 'task-').map((task) => {
         const dir = join(exerciseDir, task)
         const state = status[task] ?? 'todo'
         const [, nn, k] = task.split('-')
         const links = [['My solution', 'my-solution/README.md'], ['Sample solution', 'solution/README.md']]
           .filter(([, file]) => existsSync(join(ROOT, dir, file)))
-          .map(([label, file]) => `<a href="${href(join(dir, file))}">${label}</a>`)
-        const title = pageTitle(join(dir, 'README.md')).replace(/^Task\s+\S+\s*·\s*/, '')
-        return `<li><span class="task-num">${escape(`${nn}_${k}`)}</span><a class="task-title" href="${href(join(dir, 'README.md'))}">${escape(title)}</a><span class="status ${escape(state.replace(/\s+/g, '-'))}">${escape(state)}</span><span class="task-links">${links.join('')}</span></li>`
+          .map(([label, file]) => ({ label, path: join(dir, file) }))
+        return {
+          id: `${nn}_${k}`,
+          title: pageTitle(join(dir, 'README.md')).replace(/^Task\s+\S+\s*·\s*/, ''),
+          path: join(dir, 'README.md'),
+          state,
+          links,
+        }
       })
-      return `<p class="exercise"><a href="${href(join(exerciseDir, 'README.md'))}">${escape(pageTitle(join(exerciseDir, 'README.md')))}</a></p>
-            <ul class="task-list">${rows.join('') || '<li>No tasks yet.</li>'}</ul>`
+      return {
+        title: pageTitle(join(exerciseDir, 'README.md')),
+        path: join(exerciseDir, 'README.md'),
+        tasks,
+        counts: tally(tasks.map((task) => task.state)),
+      }
     })
-    return `<h4><a href="${href(join(subjectDir, 'README.md'))}">${escape(pageTitle(join(subjectDir, 'README.md')).split(' · ').pop())}</a></h4>
-            ${blocks.join('\n            ') || '<p>No exercises yet.</p>'}`
+    const states = exercises.flatMap((exercise) => exercise.tasks.map((task) => task.state))
+    return {
+      title: pageTitle(join(subjectDir, 'README.md')).split(' · ').pop(),
+      path: join(subjectDir, 'README.md'),
+      exercises,
+      counts: tally(states),
+    }
   })
-  return `<article class="card student">
-            <div class="card-path">${escape(studentDir)}/</div>
-            <h3><a href="${href(join(studentDir, 'README.md'))}">${escape(pageTitle(join(studentDir, 'README.md')))}</a></h3>
-            ${subjects.join('\n            ')}
+  const states = subjects.flatMap((subject) => subject.exercises.flatMap((exercise) => exercise.tasks.map((task) => task.state)))
+  const next = subjects.flatMap((subject) => subject.exercises.flatMap((exercise) => exercise.tasks)).find((task) => task.state !== 'done') ?? null
+  return {
+    id: basename(studentDir),
+    title: pageTitle(join(studentDir, 'README.md')),
+    dir: studentDir,
+    subjects,
+    counts: tally(states),
+    next,
+  }
+}
+
+function renderTaskRow(task, fromDir) {
+  const links = task.links.map(({ label, path }) => `<a href="${hrefFrom(fromDir, path)}">${escape(label)}</a>`).join('')
+  return `<li><span class="task-num">${escape(task.id)}</span><a class="task-title" href="${hrefFrom(fromDir, task.path)}">${escape(task.title)}</a><span class="status ${escape(task.state.replace(/\s+/g, '-'))}">${escape(task.state)}</span><span class="task-links">${links}</span></li>`
+}
+
+function studentSummaryCard(student) {
+  const tasksPage = join(student.dir, 'tasks.html')
+  const next = student.next
+    ? `<p class="student-next">Continue: <a href="${href(student.next.path)}">${escape(student.next.title)}</a></p>`
+    : student.counts.total
+      ? '<p class="student-next">All tasks done.</p>'
+      : ''
+  const subjects = student.subjects.map((subject) => {
+    const done = subject.counts.done
+    const total = subject.counts.total
+    return `<li><a href="${href(subject.path)}">${escape(subject.title)}</a><span class="student-count">${done}/${total}</span></li>`
+  }).join('')
+  return `<article class="card student" data-student="${escape(student.id)}">
+            <div class="card-path">${escape(student.dir)}/</div>
+            <h3><a href="${href(join(student.dir, 'README.md'))}">${escape(student.title)}</a></h3>
+            <p class="student-summary">${escape(formatCounts(student.counts))}</p>
+            ${next}
+            ${subjects ? `<ul class="student-subjects">${subjects}</ul>` : '<p>No subjects yet.</p>'}
+            <p class="student-open"><a href="${href(tasksPage)}">Open all tasks →</a></p>
           </article>`
+}
+
+function studentTasksPage(student) {
+  const fromDir = student.dir
+  const next = student.next
+    ? `<p class="student-next">Continue: <a href="${hrefFrom(fromDir, student.next.path)}">${escape(student.next.title)}</a> <span class="status ${escape(student.next.state.replace(/\s+/g, '-'))}">${escape(student.next.state)}</span></p>`
+    : student.counts.total
+      ? '<p class="student-next">All tasks done.</p>'
+      : '<p class="student-next">No tasks yet.</p>'
+  const nextPath = student.next?.path
+  const subjects = student.subjects.map((subject) => {
+    const hasOpen = subject.exercises.some((exercise) =>
+      exercise.tasks.some((task) => task.path === nextPath || task.state === 'in progress'))
+    const exercises = subject.exercises.map((exercise) => {
+      const open = exercise.tasks.some((task) => task.path === nextPath || task.state === 'in progress')
+      const rows = exercise.tasks.map((task) => renderTaskRow(task, fromDir)).join('')
+      return `<details class="tasks-exercise"${open ? ' open' : ''}>
+          <summary><span class="tasks-title"><a href="${hrefFrom(fromDir, exercise.path)}">${escape(exercise.title)}</a></span><span class="student-count">${exercise.counts.done}/${exercise.counts.total}</span></summary>
+          <ul class="task-list">${rows || '<li>No tasks yet.</li>'}</ul>
+        </details>`
+    }).join('\n        ')
+    return `<details class="tasks-subject"${hasOpen ? ' open' : ''}>
+        <summary><span class="tasks-title"><a href="${hrefFrom(fromDir, subject.path)}">${escape(subject.title)}</a></span><span class="student-count">${subject.counts.done}/${subject.counts.total}</span></summary>
+        ${exercises || '<p>No exercises yet.</p>'}
+      </details>`
+  }).join('\n      ')
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${escape(student.title)} · My tasks · Learning Project</title>
+  ${THEME_HEAD}
+</head>
+<body class="lp-page lp-tasks-page">
+  ${HEADER}
+  <nav class="lp-crumbs" aria-label="You are here"><a href="/hub/">Home</a> › <a href="/hub/#tasks">My tasks</a> › <span aria-current="page">${escape(student.title)}</span></nav>
+  <main class="lp-sheet lp-tasks">
+    <h1>${escape(student.title)} · My tasks</h1>
+    <p>${escape(formatCounts(student.counts))}. Open a subject or exercise to see its tasks. Status comes from each exercise README.</p>
+    ${next}
+    ${subjects || '<p>No subjects yet.</p>'}
+    <p class="student-room"><a href="./">← Back to ${escape(student.title)}'s room</a> · <a href="/hub/#tasks">All students</a></p>
+  </main>
+  ${THEME_BODY}
+</body>
+</html>
+`
+}
+
+function writeStudentTasksPages() {
+  let changed = false
+  for (const dir of cardDirs('students').filter((path) => existsSync(join(ROOT, path, 'README.md')))) {
+    const file = join(ROOT, dir, 'tasks.html')
+    const next = studentTasksPage(studentData(dir))
+    const prev = existsSync(file) ? readFileSync(file, 'utf8') : null
+    if (prev !== next) {
+      writeFileSync(file, next)
+      changed = true
+    }
+  }
+  return changed
 }
 
 // Turns a path href into the URL the site serves, the way the browser sees it:
@@ -275,11 +404,11 @@ function renderPath() {
 }
 
 function renderStudents() {
-  const students = cardDirs('students').filter((dir) => existsSync(join(ROOT, dir, 'README.md')))
-  const options = students.map((dir) => `<option value="${escape(basename(dir))}">${escape(pageTitle(join(dir, 'README.md')))}</option>`)
+  const students = cardDirs('students').filter((dir) => existsSync(join(ROOT, dir, 'README.md'))).map(studentData)
+  const options = students.map((student) => `<option value="${escape(student.id)}">${escape(student.title)}</option>`)
   return `<label class="student-pick">I am <select id="student-select"><option value="">pick your name</option>${options.join('')}</select></label>
         <div class="card-grid">
-          ${students.map((dir) => studentCard(dir).replace('<article class="card student">', `<article class="card student" data-student="${escape(basename(dir))}">`)).join('\n          ')}
+          ${students.map(studentSummaryCard).join('\n          ')}
         </div>`
 }
 
@@ -305,7 +434,8 @@ function renderLibrary() {
 
 const REGIONS = { header: () => HEADER, path: renderPath, students: renderStudents, catalog: renderLibrary }
 
-// Fills every <!-- name:start --> … <!-- name:end --> region of hub/index.html.
+// Fills every <!-- name:start --> … <!-- name:end --> region of hub/index.html
+// and refreshes students/<name>/tasks.html.
 export function writeCatalog() {
   const file = join(HUB, 'index.html')
   const html = readFileSync(file, 'utf8')
@@ -319,8 +449,13 @@ export function writeCatalog() {
     const indent = next.slice(next.lastIndexOf('\n', a) + 1, a)
     next = `${next.slice(0, a)}${start}\n${indent}${render()}\n${indent}${next.slice(b)}`
   }
-  if (next !== html) writeFileSync(file, next)
-  return next !== html
+  let changed = false
+  if (next !== html) {
+    writeFileSync(file, next)
+    changed = true
+  }
+  if (writeStudentTasksPages()) changed = true
+  return changed
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

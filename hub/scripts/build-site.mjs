@@ -137,7 +137,8 @@ for (const file of BUCKETS.flatMap((bucket) => walk(bucket))) {
     }
   } else if (file.endsWith('.html')) {
     const html = readFileSync(source, 'utf8').replace(MD_LINK, '$1$2.html$3"')
-    writeFileSync(target, file.startsWith('hub/') ? html : withTheme(html))
+    // Hub pages and generated student task pages already include the theme + header.
+    writeFileSync(target, file.startsWith('hub/') || html.includes('lp-global') ? html : withTheme(html))
   } else {
     copyFileSync(source, target)
     if (CODE[extname(file)]) writeFileSync(`${target}.html`, codePage(readFileSync(source, 'utf8'), file))

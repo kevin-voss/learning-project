@@ -61,7 +61,7 @@ git commit -m "feat(becky): solve task 04_1"
 git push
 ```
 
-The website shows all of it too: on the landing page open **My tasks** and pick your name.
+The website shows all of it too: on the landing page open **My tasks**, pick your name, then **Open all tasks**. That page folds subjects and exercises open and closed (`students/<name>/tasks.html`, rebuilt by `make catalog`).
 
 ## Cursor commands for students
 

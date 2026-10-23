@@ -327,3 +327,70 @@
 }
 
 @media print { .lp-bar, .lp-global { display: none; } }
+
+/* ---------- Student tasks (landing cards + students/<name>/tasks.html) ---------- */
+
+.student-summary { margin: 0 0 var(--lp-s2); color: var(--lp-text-muted); font-size: 15px; }
+.student-next { margin: 0 0 var(--lp-s3); font-size: 15px; }
+.student-next a { font-weight: 700; color: var(--lp-accent); text-decoration: none; }
+.student-subjects { margin: 0; padding: 0; list-style: none; }
+.student-subjects li {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--lp-s3);
+  padding: var(--lp-s2) 0;
+  border-top: 1px solid var(--lp-line);
+  font-size: 15px;
+}
+.student-subjects a { color: var(--lp-text); font-weight: 700; text-decoration: none; }
+.student-count { color: var(--lp-text-muted); font: 700 13px / 1.4 var(--lp-mono); white-space: nowrap; }
+
+.task-list { margin: 0; padding: 0; list-style: none; }
+.task-list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--lp-s2);
+  padding: var(--lp-s2) 0;
+  border-top: 1px solid var(--lp-line);
+  font-size: 15px;
+}
+.task-num { color: var(--lp-text-muted); font: 700 13px / 1 var(--lp-mono); }
+.task-title { flex: 1; color: var(--lp-text); font-weight: 700; text-decoration: none; }
+.task-links { display: flex; gap: var(--lp-s2); width: 100%; padding-left: 34px; font-size: 14px; }
+.status {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--lp-surface-2);
+  color: var(--lp-text-muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+.status.done { background: var(--lp-try-bg); color: var(--lp-do); }
+.status.in-progress { background: var(--lp-check-bg); color: var(--lp-check); }
+
+.lp-tasks .tasks-subject,
+.lp-tasks .tasks-exercise {
+  margin: var(--lp-s3) 0;
+  border: 1px solid var(--lp-line);
+  border-radius: var(--lp-radius-sm);
+  background: var(--lp-surface);
+}
+.lp-tasks .tasks-exercise { margin: var(--lp-s2) var(--lp-s3); background: var(--lp-bg); }
+.lp-tasks .tasks-subject > summary,
+.lp-tasks .tasks-exercise > summary {
+  display: flex;
+  align-items: center;
+  gap: var(--lp-s3);
+  padding: var(--lp-s3) var(--lp-s4);
+  cursor: pointer;
+  list-style: none;
+  font-weight: 700;
+}
+.lp-tasks .tasks-subject > summary::-webkit-details-marker,
+.lp-tasks .tasks-exercise > summary::-webkit-details-marker { display: none; }
+.lp-tasks .tasks-title { flex: 1; min-width: 0; }
+.lp-tasks .tasks-title a { color: var(--lp-text); text-decoration: none; }
+.lp-tasks .tasks-title a:hover { color: var(--lp-accent); }
+.lp-tasks .tasks-exercise .task-list { padding: 0 var(--lp-s4) var(--lp-s3); }
+.lp-tasks .student-room { margin-top: var(--lp-s6); color: var(--lp-text-muted); }

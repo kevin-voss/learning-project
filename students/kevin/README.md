@@ -2,6 +2,8 @@
 
 Hi Kevin! This is your room. You already know programming and the basics of classes and objects; here you walk the rest of **Java 25** in order — inheritance, interfaces, collections, exceptions, files, then records, sealed types, virtual threads and the craft around them — then **SQL** on a real database, then the ideas under **Spring Boot and Hibernate**. Every folder below is one subject; do them in the order listed.
 
+**[Open all tasks →](tasks.html)** — subjects and exercises fold open and closed, with status and a continue link.
+
 How it is sorted:
 
 ```text

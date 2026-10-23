@@ -1,11 +1,16 @@
-// Floating tutor chat on student exercise / task pages.
+// Floating tutor chat on student exercise / task pages (Becky only).
 // Several chats per page in localStorage; each chat caps at 3 messages, then a new one starts.
+// At most 10 chats kept — the 11th drops the oldest. Daily cap 50 sends.
 // Replies from POST /api/chat (needs Vercel + OPENAI_API_KEY).
 (function () {
   const STORAGE_PREFIX = 'learning-project:chat:v2:'
   const STORAGE_PREFIX_V1 = 'learning-project:chat:v1:'
+  const RATE_KEY = 'learning-project:chat:rate:v1:becky'
+  const ALLOWED_STUDENT = 'becky'
   const MAX_MESSAGES = 3
-  const MAX_CHATS = 30
+  const MAX_CHATS = 10
+  const MAX_INPUT = 500
+  const DAILY_LIMIT = 50
 
   const ICON_HISTORY = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/><path d="M12 7v5l3 2"/></svg>'
   const ICON_NEW = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>'
@@ -115,14 +120,61 @@
     return emptyStore()
   }
 
+  function pruneToMaxChats(store) {
+    if (store.chats.length <= MAX_CHATS) return store
+    store.chats = store.chats.slice(-MAX_CHATS)
+    if (!store.chats.some((c) => c.id === store.activeId)) {
+      store.activeId = store.chats.at(-1).id
+    }
+    return store
+  }
+
   function saveStore(key, store) {
     try {
-      const chats = store.chats.slice(-MAX_CHATS)
-      localStorage.setItem(key, JSON.stringify({ chats, activeId: store.activeId }))
-      store.chats = chats
+      pruneToMaxChats(store)
+      localStorage.setItem(key, JSON.stringify({ chats: store.chats, activeId: store.activeId }))
     } catch {
       // Private mode: history lasts until the tab closes.
     }
+  }
+
+  function todayStamp() {
+    // Local calendar day so the limit resets at midnight for the student.
+    const d = new Date()
+    const y = d.getFullYear()
+    const m = String(d.getMonth() + 1).padStart(2, '0')
+    const day = String(d.getDate()).padStart(2, '0')
+    return `${y}-${m}-${day}`
+  }
+
+  function loadRate() {
+    try {
+      const raw = localStorage.getItem(RATE_KEY)
+      if (raw) {
+        const data = JSON.parse(raw)
+        if (data && data.day === todayStamp()) {
+          return { day: data.day, count: Math.max(0, Number(data.count) || 0) }
+        }
+      }
+    } catch {}
+    return { day: todayStamp(), count: 0 }
+  }
+
+  function saveRate(rate) {
+    try {
+      localStorage.setItem(RATE_KEY, JSON.stringify(rate))
+    } catch {}
+  }
+
+  function remainingToday() {
+    return Math.max(0, DAILY_LIMIT - loadRate().count)
+  }
+
+  function recordSend() {
+    const rate = loadRate()
+    rate.count += 1
+    saveRate(rate)
+    return rate
   }
 
   function chatPreview(chat) {
@@ -146,10 +198,10 @@
   }
 
   const scope = parseScope(location.pathname)
-  if (!scope) return
+  if (!scope || scope.student !== ALLOWED_STUDENT) return
 
   const storageKey = STORAGE_PREFIX + scope.scopeId
-  let store = loadStore(storageKey)
+  let store = pruneToMaxChats(loadStore(storageKey))
   saveStore(storageKey, store) // keep the same active chat across close / reopen
   let title = pageTitle()
   let exerciseMarkdown = ''
@@ -183,10 +235,13 @@
     const id = newId()
     store.chats.push({ id, createdAt: Date.now(), messages: [] })
     store.activeId = id
-    if (store.chats.length > MAX_CHATS) store.chats = store.chats.slice(-MAX_CHATS)
+    const dropped = store.chats.length > MAX_CHATS
+    pruneToMaxChats(store)
     saveStore(storageKey, store)
     if (opts.warn) {
       warning = `This chat hit the limit of ${MAX_MESSAGES} messages. Started a new chat — open History to see older ones.`
+    } else if (dropped) {
+      warning = `History keeps the last ${MAX_CHATS} chats. The oldest one was removed.`
     } else {
       warning = ''
     }
@@ -236,7 +291,7 @@
         <div class="lp-chat-warn" hidden></div>
         <div class="lp-chat-messages" aria-live="polite"></div>
         <form class="lp-chat-form">
-          <textarea name="message" rows="2" placeholder="Ask a question…" required></textarea>
+          <textarea name="message" rows="2" placeholder="Ask a question…" maxlength="${MAX_INPUT}" required></textarea>
           <button type="submit">Send</button>
         </form>
       </div>
@@ -357,10 +412,20 @@
 
   function setBusy(next) {
     busy = next
-    sendBtn.disabled = busy
-    input.disabled = busy
+    applyFormState()
+  }
+
+  function applyFormState() {
+    const limited = remainingToday() <= 0
+    sendBtn.disabled = busy || limited
+    input.disabled = busy || limited
     sendBtn.textContent = busy ? 'Thinking…' : 'Send'
     form.toggleAttribute('aria-busy', busy)
+    if (limited && !busy) {
+      input.placeholder = `Daily limit reached (${DAILY_LIMIT}). Try again tomorrow.`
+    } else {
+      input.placeholder = 'Ask a question…'
+    }
   }
 
   function render() {
@@ -377,17 +442,13 @@
     }
 
     renderHistory()
-
-    sendBtn.disabled = busy
-    input.disabled = busy
-    sendBtn.textContent = busy ? 'Thinking…' : 'Send'
-    form.toggleAttribute('aria-busy', busy)
+    applyFormState()
 
     list.replaceChildren()
     if (!messages.length && !busy) {
       const empty = document.createElement('p')
       empty.className = 'lp-chat-empty'
-      empty.textContent = `Ask about this task. Short hints, not the full answer. Up to ${MAX_MESSAGES} messages per chat, then a new one starts.`
+      empty.textContent = `Ask about this task. Short hints, not the full answer. Up to ${MAX_MESSAGES} messages per chat · ${DAILY_LIMIT} questions/day · ${remainingToday()} left today.`
       list.append(empty)
       return
     }
@@ -444,6 +505,18 @@
     const text = input.value.trim()
     if (!text || busy) return
 
+    if (text.length > MAX_INPUT) {
+      warning = `Keep it under ${MAX_INPUT} characters.`
+      render()
+      return
+    }
+
+    if (remainingToday() <= 0) {
+      warning = `Daily limit reached (${DAILY_LIMIT} questions). Try again tomorrow.`
+      render()
+      return
+    }
+
     let chat = activeChat()
     if (userCount(chat) >= MAX_MESSAGES) {
       startNewChat({ warn: true })
@@ -479,13 +552,14 @@
       })
       const data = await res.json().catch(() => ({}))
       if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`)
+      recordSend()
       chat.messages.push({
         role: 'assistant',
         content: String(data.reply || '').trim() || '(empty reply)',
       })
       persist()
       if (userCount(chat) >= MAX_MESSAGES) {
-        warning = `This chat hit the limit of ${MAX_MESSAGES} messages. Your next message starts a new chat — older ones stay in History.`
+        warning = `This chat hit the limit of ${MAX_MESSAGES} messages. Your next message starts a new chat — older ones stay in History (max ${MAX_CHATS}).`
       }
     } catch (err) {
       chat.messages.push({

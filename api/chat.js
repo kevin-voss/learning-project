@@ -1,11 +1,17 @@
-// Vercel serverless: student exercise tutor chat.
+// Vercel serverless: student exercise tutor chat (Becky only).
 // Needs OPENAI_API_KEY. Local: use `vercel dev` (plain static servers skip /api).
 
 const MODEL = 'gpt-6-luna'
 const REASONING_EFFORT = 'medium'
+const ALLOWED_STUDENT = 'becky'
 const MAX_MESSAGES = 40
 const MAX_CHARS = 48_000
 const MAX_CONTEXT = 12_000
+const MAX_INPUT = 500
+const DAILY_LIMIT = 50
+
+// Best-effort daily counters per IP (warm instances only; client also tracks).
+const dailyCounts = new Map()
 
 function json(res, status, body) {
   res.statusCode = status
@@ -31,6 +37,34 @@ function readBody(req) {
 function clip(text, max) {
   const s = String(text ?? '')
   return s.length <= max ? s : `${s.slice(0, max)}\n…`
+}
+
+function clientIp(req) {
+  const fwd = req.headers['x-forwarded-for']
+  if (typeof fwd === 'string' && fwd.trim()) return fwd.split(',')[0].trim()
+  return req.socket?.remoteAddress || 'unknown'
+}
+
+function utcDay() {
+  return new Date().toISOString().slice(0, 10)
+}
+
+function takeDailySlot(ip) {
+  const key = `${utcDay()}:${ip}`
+  const count = dailyCounts.get(key) || 0
+  if (count >= DAILY_LIMIT) {
+    return { ok: false, count, remaining: 0 }
+  }
+  const next = count + 1
+  dailyCounts.set(key, next)
+  // Drop stale days so the Map cannot grow forever on a warm instance.
+  if (dailyCounts.size > 500) {
+    const prefix = utcDay()
+    for (const k of dailyCounts.keys()) {
+      if (!k.startsWith(prefix)) dailyCounts.delete(k)
+    }
+  }
+  return { ok: true, count: next, remaining: Math.max(0, DAILY_LIMIT - next) }
 }
 
 function buildSystemPrompt(scope, context) {
@@ -78,7 +112,8 @@ function normalizeMessages(messages) {
     if (!m || (m.role !== 'user' && m.role !== 'assistant')) continue
     const content = String(m.content ?? '').trim()
     if (!content) continue
-    out.push({ role: m.role, content: clip(content, 8000) })
+    const max = m.role === 'user' ? MAX_INPUT : 8000
+    out.push({ role: m.role, content: clip(content, max) })
   }
   return out
 }
@@ -104,9 +139,30 @@ module.exports = async function handler(req, res) {
     return json(res, 400, { error: 'Bad JSON' })
   }
 
+  const student = String(body?.scope?.student || '').toLowerCase()
+  if (student !== ALLOWED_STUDENT) {
+    return json(res, 403, { error: 'Chat is not available for this student.' })
+  }
+
+  const rawLast = Array.isArray(body.messages)
+    ? [...body.messages].reverse().find((m) => m && m.role === 'user')
+    : null
+  if (String(rawLast?.content ?? '').trim().length > MAX_INPUT) {
+    return json(res, 400, { error: `Keep your message under ${MAX_INPUT} characters.` })
+  }
+
   const messages = normalizeMessages(body.messages)
   if (!messages.length || messages.at(-1)?.role !== 'user') {
     return json(res, 400, { error: 'Send at least one user message.' })
+  }
+
+  const slot = takeDailySlot(clientIp(req))
+  if (!slot.ok) {
+    res.setHeader('Retry-After', '86400')
+    return json(res, 429, {
+      error: `Daily limit reached (${DAILY_LIMIT} questions). Try again tomorrow.`,
+      remaining: 0,
+    })
   }
 
   const payload = JSON.stringify({
@@ -149,5 +205,5 @@ module.exports = async function handler(req, res) {
 
   const reply = data?.choices?.[0]?.message?.content?.trim()
   if (!reply) return json(res, 502, { error: 'Empty reply from the model.' })
-  return json(res, 200, { reply })
+  return json(res, 200, { reply, remaining: slot.remaining })
 }

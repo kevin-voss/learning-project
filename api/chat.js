@@ -1,7 +1,8 @@
 // Vercel serverless: student exercise tutor chat.
 // Needs OPENAI_API_KEY. Local: use `vercel dev` (plain static servers skip /api).
 
-const MODEL = 'gpt-5.6-luna-medium'
+const MODEL = 'gpt-6-luna'
+const REASONING_EFFORT = 'medium'
 const MAX_MESSAGES = 40
 const MAX_CHARS = 48_000
 const MAX_CONTEXT = 12_000
@@ -129,8 +130,8 @@ module.exports = async function handler(req, res) {
       },
       body: JSON.stringify({
         model: MODEL,
-        temperature: 0.4,
-        max_tokens: 500,
+        reasoning_effort: REASONING_EFFORT,
+        max_completion_tokens: 500,
         messages: [{ role: 'system', content: system }, ...messages],
       }),
     })

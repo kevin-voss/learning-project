@@ -33,6 +33,8 @@ students/<student>/README.md                          the student's room: list o
 - Explain like for a 6-year-old: short sentences, one idea per paragraph, real-life picture first, code second.
 - A sheet in another language is translated into English faithfully: same meaning, every number and value unchanged. "Words to know" explains the English terms; list a term from the paper sheet next to its English meaning only when it really helps the student match the paper (prefer English only).
 - Solutions use only what the exercise teaches. No clever tricks a beginner has not seen.
+- **Programming solutions:** code in `solution/` only; `README.md` has run commands, a short *why* walkthrough, and real test output.
+- **Written solutions** (Mathematical Foundations, Informatik, any non-code task): `solution/README.md` must **teach how you got there**. Tiny numbered steps (one idea each), intermediate values, a short *why* after important steps, then a clear final answer. Never only dump the finished table/formula. Full shape: `/new-exercise` → “Programming vs written solutions”.
 
 ## Tests (`tests.json`)
 

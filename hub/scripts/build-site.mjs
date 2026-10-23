@@ -19,6 +19,7 @@ const SKIP = new Set(['node_modules', 'dist', 'target', 'solutions', '_template'
 const CODE = { '.java': 'java', '.py': 'python', '.sql': 'sql', '.sh': 'bash', '.kt': 'kotlin', '.go': 'go' }
 const MARKED = 'https://cdnjs.cloudflare.com/ajax/libs/marked/15.0.12/marked.min.js'
 const HLJS = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0'
+const MERMAID = 'https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js'
 
 // Relative links ending in .md become .html (absolute URLs are left alone).
 const MD_LINK = /(href=")([^":#?]+)\.md([#?][^"]*)?"/g
@@ -74,6 +75,7 @@ function shell(title, file, body) {
 ${body}
   </main>
   <script src="${HLJS}/highlight.min.js" defer></script>
+  <script src="${MERMAID}" defer></script>
   <script src="/hub/sheet.js" defer></script>
   ${THEME_BODY}
 </body>
@@ -81,7 +83,7 @@ ${body}
 `
 }
 
-// The markdown is rendered in the browser by hub/sheet.js (boxes, code, links).
+// The markdown is rendered in the browser by hub/sheet.js (boxes, mermaid, code, links).
 function sheetPage(markdown, title, file) {
   const data = JSON.stringify(markdown).replace(/</g, '\\u003c')
   return shell(title, file, `    <article id="sheet">Loading…</article>

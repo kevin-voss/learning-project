@@ -122,6 +122,7 @@
 .lp-sheet a { color: var(--lp-accent); text-underline-offset: 3px; }
 .lp-sheet hr { border: 0; border-top: 1px solid var(--lp-line); margin: var(--lp-s6) 0; }
 .lp-sheet img { max-width: 100%; border-radius: var(--lp-radius-sm); }
+.lp-sheet .mermaid { margin: 0 0 var(--lp-s5); overflow-x: auto; text-align: center; }
 
 .lp-sheet table { width: 100%; border-collapse: collapse; margin: 0 0 var(--lp-s5); font-size: 16px; display: block; overflow-x: auto; }
 .lp-sheet th, .lp-sheet td { text-align: left; padding: var(--lp-s2) var(--lp-s3); border-bottom: 1px solid var(--lp-line); vertical-align: top; }

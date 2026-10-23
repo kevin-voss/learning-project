@@ -4,40 +4,74 @@
 
 ## How to check
 
-Written formula — no compile step. Your answer should match the final line below (up to harmless spacing).
+Written formula — no compile step. Your answer should match the final line (spacing may differ).
 
 ## How it works, step by step
 
-Start from the negation of `F`:
+### 1. Aim
+
+Negate
+
+```text
+F = ∀x ∃y ∀z P(x, y, z)
+```
+
+so that **no** `¬` sits immediately in front of a quantifier. The only `¬` should sit on `P`.
+
+### 2. Sticky-note flip rules
+
+| You see | You write |
+|---------|-----------|
+| `¬ ∀…` | `∃ ¬ …` |
+| `¬ ∃…` | `∀ ¬ …` |
+
+The `¬` walks inward; each lock it passes flips.
+
+### 3. Start from ¬F
 
 ```text
 ¬ ∀x ∃y ∀z P(x, y, z)
 ```
 
-Push `¬` inward; each quantifier flips:
+Still has `¬` in front of `∀x` — not done yet.
 
-1. `¬ ∀x …` → `∃x ¬ …`  
-   ```text
-   ∃x ¬ ∃y ∀z P(x, y, z)
-   ```
+### 4. Flip the outer ∀
 
-2. `¬ ∃y …` → `∀y ¬ …`  
-   ```text
-   ∃x ∀y ¬ ∀z P(x, y, z)
-   ```
+```text
+∃x ¬ ∃y ∀z P(x, y, z)
+```
 
-3. `¬ ∀z …` → `∃z ¬ …`  
-   ```text
-   ∃x ∀y ∃z ¬P(x, y, z)
-   ```
+*Why:* `¬ ∀x …` becomes `∃x ¬ …`.
 
-**Answer:**
+### 5. Flip the next ∃
+
+```text
+∃x ∀y ¬ ∀z P(x, y, z)
+```
+
+*Why:* `¬ ∃y …` becomes `∀y ¬ …`.
+
+### 6. Flip the last ∀
+
+```text
+∃x ∀y ∃z ¬ P(x, y, z)
+```
+
+*Why:* `¬ ∀z …` becomes `∃z ¬ …`. Now `¬` touches only the predicate.
+
+### 7. Final answer
 
 ```text
 ∃x ∀y ∃z ¬P(x, y, z)
 ```
 
-No quantifier has a negation immediately in front of it. The only `¬` sits on the predicate `P`.
+Quantifier order after the walk: **∃ ∀ ∃** (started as ∀ ∃ ∀; each flipped once).
+
+### 8. Mini-check
+
+- No `¬∀` or `¬∃` left? Yes.
+- Same three variables in the same left-to-right slots? Yes.
+- Meaning in words: “There is an *x* such that for every *y* there is a *z* with ¬P(x,y,z).” That is exactly “not every *x* has a *y* that works for all *z*.”
 
 ## Common mistakes
 
@@ -45,6 +79,6 @@ No quantifier has a negation immediately in front of it. The only `¬` sits on t
 |---------|--------------|-----|
 | Stopping at `¬ ∀x ∃y ∀z P(…)` | Still has `¬` before a quantifier | Keep flipping until `¬` reaches `P` |
 | Flipping only some quantifiers | Wrong meaning | Flip **every** quantifier the `¬` passes |
-| Writing `∃x ∃y ∃z ¬P(…)` | Lost the middle `∀` | Order after flips: `∃ ∀ ∃` |
+| Writing `∃x ∃y ∃z ¬P(…)` | Lost the middle `∀` | After flips the order is `∃ ∀ ∃` |
 
 Back to [Task 05_3](../README.md).

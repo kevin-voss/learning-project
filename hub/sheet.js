@@ -1,10 +1,15 @@
 // Renders a generated sheet page (built by hub/scripts/build-site.mjs):
 // markdown → HTML with marked, then the house style on top:
 //   > [!PICTURE] / [!TRY] / [!CHECK] / [!NOTE] / [!WARN] quotes become boxes (docs/STYLE.md),
+//   ```mermaid blocks become diagrams (theme colours from --lp-*),
 //   .md links point to the built .html pages, headings get GitHub-style ids for #links,
 //   code blocks get syntax colours and a Copy button.
 (function () {
   const LABELS = { PICTURE: 'Picture this', TRY: 'Try it', CHECK: 'Check yourself', NOTE: 'Good to know', WARN: 'Watch out' }
+
+  function cssVar(name, fallback) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback
+  }
 
   function boxes(root) {
     for (const quote of root.querySelectorAll('blockquote')) {
@@ -44,6 +49,44 @@
     if (location.hash) document.getElementById(decodeURIComponent(location.hash.slice(1)))?.scrollIntoView()
   }
 
+  // Turn ```mermaid fences into live diagrams (no <img> files).
+  function mermaidDiagrams(root) {
+    const blocks = [...root.querySelectorAll('pre > code.language-mermaid')]
+    if (!blocks.length) return
+    const draw = () => {
+      if (!window.mermaid) return
+      const text = cssVar('--lp-text', '#1f2933')
+      const nodes = blocks.map((code) => {
+        const pre = code.parentElement
+        const src = code.textContent
+        pre.className = 'mermaid'
+        pre.dataset.src = src
+        pre.textContent = src
+        return pre
+      })
+      window.mermaid.initialize({
+        startOnLoad: false,
+        theme: 'base',
+        securityLevel: 'strict',
+        fontFamily: cssVar('--lp-font', 'sans-serif'),
+        themeVariables: {
+          darkMode: getComputedStyle(document.documentElement).colorScheme.includes('dark'),
+          background: cssVar('--lp-surface', '#ffffff'),
+          primaryColor: cssVar('--lp-surface-2', '#f3efe6'),
+          primaryTextColor: text,
+          primaryBorderColor: cssVar('--lp-accent', '#2f6fde'),
+          secondaryColor: cssVar('--lp-accent-soft', '#e6eefc'),
+          tertiaryColor: cssVar('--lp-surface', '#ffffff'),
+          lineColor: cssVar('--lp-text-muted', '#5f6b7a'),
+          textColor: text,
+        },
+      })
+      window.mermaid.run({ nodes }).catch(() => {})
+    }
+    if (window.mermaid) draw()
+    else window.addEventListener('load', draw, { once: true })
+  }
+
   function code(root) {
     for (const block of root.querySelectorAll('pre > code')) {
       if (window.hljs) window.hljs.highlightElement(block)
@@ -69,6 +112,7 @@
       boxes(article)
       links(article)
       anchors(article)
+      mermaidDiagrams(article)
     }
     code(document.querySelector('.lp-sheet') ?? document)
   }

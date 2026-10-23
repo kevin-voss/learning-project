@@ -43,13 +43,19 @@ These tasks are **written answers**, not programs. There are no automated `make 
 
 ### 1. Predicates — name tags for claims
 
-Picture a classroom. On every student’s desk sits a sticky note:
+> [!PICTURE]
+> A classroom. On every student’s desk sits a sticky note with a short claim and empty slots. Fill a slot with a name and the claim becomes true or false.
 
-- `S(x)` means “student *x* sleeps in the lecture.”
-- `Z(x)` means “student *x* listens.”
-- `A(x, y)` means “student *x* works well with student *y*.”
-
-A **predicate** is just a claim with empty slots. You fill the slots with people (or numbers) and the claim becomes true or false.
+```mermaid
+flowchart LR
+  S["S(x) · sleeps"]
+  Z["Z(x) · listens"]
+  A["A(x, y) · works well with"]
+  S --> fill["Fill slots"]
+  Z --> fill
+  A --> fill
+  fill --> TF["true or false"]
+```
 
 Tiny example:
 
@@ -60,25 +66,29 @@ Tiny example:
 
 ### 2. Quantifiers — “every” and “someone”
 
-Picture the same classroom again.
+> [!PICTURE]
+> The same classroom again. `∀` points at **every** desk. `∃` points at **at least one** desk. When two quantifiers stack, read from the outside in — like nested boxes.
 
-- `∀x …` means “**for every** student *x*, …” (nobody is left out).
-- `∃x …` means “**there is at least one** student *x* such that …” (one person is enough).
+```mermaid
+flowchart TD
+  all["∀x … · for every student x"]
+  some["∃x … · there is at least one student x"]
+  nest["∃x ∀y ¬A(x, y)"]
+  nest --> pick["1. Pick one special x"]
+  pick --> every["2. For every y, the claim holds"]
+```
 
 Tiny example:
 
 - `∀x S(x)` — “Every student sleeps in the lecture.”
 - `∃x Z(x)` — “At least one student listens.”
 
-When two quantifiers stack, read **from the outside in**, like nested boxes:
-
-- `∃x ∀y ¬A(x, y)` — first pick one special student *x*, then for **every** *y* the claim about the pair must hold.
-
 **In task 05_1** you use this to turn `∀` and `∃` into words. **In task 05_2** you use the same idea for numbers on the number line.
 
 ### 3. Connectives — and, or, not, if-then
 
-Picture traffic lights for claims:
+> [!PICTURE]
+> Traffic lights for claims. Each connective flips, joins, or guards two sides.
 
 | Symbol | Words | Picture |
 |--------|-------|---------|
@@ -86,6 +96,14 @@ Picture traffic lights for claims:
 | `∨` | or | at least one side is true |
 | `∧` | and | both sides are true |
 | `⇒` | if … then … | when the left is true, the right must be true too |
+
+```mermaid
+flowchart LR
+  left["left side"]
+  right["right side"]
+  left -->|"∨ or ∧ or ⇒"| right
+  left -.->|"¬ flips one side"| left
+```
 
 Useful rewrite (same meaning):
 
@@ -97,9 +115,14 @@ You do **not** have to rewrite unless it helps you say it clearly. The sheet ask
 
 ### 4. Talking about a function with logic
 
-Picture a machine `f` that eats a real number and spits out a real number: `f: ℝ → ℝ`.
+> [!PICTURE]
+> A machine `f` that eats a real number and spits out a real number: `f: ℝ → ℝ`. “Monotonically increasing” means: bigger (or equal) input never gives a smaller output.
 
-“Monotonically increasing” means: if you feed it a bigger (or equal) input, the output never goes down.
+```mermaid
+flowchart LR
+  in["x on the number line"] --> f["machine f"]
+  f --> out["f(x)"]
+```
 
 ```text
 ∀x ∀y ( x ≤ y  ⇒  f(x) ≤ f(y) )
@@ -114,20 +137,22 @@ Picture a machine `f` that eats a real number and spits out a real number: `f: �
 
 ### 5. Pushing ¬ through quantifiers
 
-Picture a row of locked boxes. A “not” in front of the whole row must walk inside, and **every lock flips**:
+> [!PICTURE]
+> A row of locked boxes. A “not” in front of the whole row must walk inside, and **every lock flips** (`∀` ↔ `∃`) until the `¬` sits only on the predicate.
+
+```mermaid
+flowchart TD
+  start["¬ ∀x ∃y Q(x, y)"]
+  s1["∃x ¬ ∃y Q(x, y)"]
+  s2["∃x ∀y ¬ Q(x, y)"]
+  start -->|"flip ∀"| s1
+  s1 -->|"flip ∃"| s2
+```
 
 | Outside | Becomes inside |
 |---------|----------------|
 | `¬ ∀x …` | `∃x ¬ …` |
 | `¬ ∃x …` | `∀x ¬ …` |
-
-Keep walking until the `¬` sits only on the **predicate**, never right in front of a `∀` or `∃`.
-
-Tiny example:
-
-- Start: `¬ ∀x ∃y Q(x, y)`
-- Step: `∃x ¬ ∃y Q(x, y)`
-- Step: `∃x ∀y ¬ Q(x, y)`
 
 **In task 05_3** you use this on `F = ∀x ∃y ∀z P(x, y, z)`.
 

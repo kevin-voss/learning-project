@@ -1,0 +1,18 @@
+{
+  "task": "05_2",
+  "tests": [
+    { "name": "lock, set, commit: the row changes", "input": ["3", "A LOCK", "A SET 8", "A COMMIT"],
+      "expect": ["A locks the row (SELECT ... FOR UPDATE)", "A commits stock=8"] },
+    { "name": "the waiting line: B waits, then gets the lock at the hand-over", "input": ["3", "A LOCK", "B LOCK", "A COMMIT"],
+      "expect": ["A locks the row (SELECT ... FOR UPDATE)", "B waits", "A commits stock=10", "B locks the row (after waiting)"] },
+    { "name": "after the hand-over B holds it: B sets and commits", "input": ["5", "A LOCK", "B LOCK", "A COMMIT", "B SET 7", "B COMMIT"],
+      "expect": ["B waits", "A commits stock=10", "B locks the row (after waiting)", "B commits stock=7"] },
+    { "name": "set without the lock fails, and the row stays at 10", "input": ["3", "B SET 5", "B LOCK", "B COMMIT"],
+      "expect": ["B fails: no lock", "B locks the row (SELECT ... FOR UPDATE)", "B commits stock=10"],
+      "reject": ["stock=5"] },
+    { "name": "commit without the lock fails", "input": ["2", "A COMMIT", "A LOCK"],
+      "expect": ["A fails: no lock", "A locks the row (SELECT ... FOR UPDATE)"] },
+    { "name": "no commands, no output", "input": ["0"],
+      "expect": [], "reject": ["locks", "commits"] }
+  ]
+}

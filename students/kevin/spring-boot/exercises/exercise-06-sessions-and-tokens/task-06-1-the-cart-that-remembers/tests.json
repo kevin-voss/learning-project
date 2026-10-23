@@ -1,0 +1,21 @@
+{
+  "task": "06_1",
+  "tests": [
+    { "name": "login, two adds, show: the cart remembers the order", "input": ["4", "LOGIN ana", "1 ADD milk", "1 ADD bread", "1 SHOW"],
+      "expect": ["set-cookie JSESSIONID=1 for ana", "cart of ana: [milk, bread]"] },
+    { "name": "two guests: two drawers, two separate carts", "input": ["7", "LOGIN ana", "LOGIN bob", "1 ADD milk", "2 ADD toys", "1 SHOW", "2 SHOW", "1 SHOW"],
+      "expect": ["set-cookie JSESSIONID=1 for ana", "set-cookie JSESSIONID=2 for bob", "cart of ana: [milk]", "cart of bob: [toys]", "cart of ana: [milk]"],
+      "reject": ["cart of bob: [milk"] },
+    { "name": "logout closes the drawer: show and add turn 401", "input": ["4", "LOGIN ana", "LOGOUT 1", "1 SHOW", "1 ADD x"],
+      "expect": ["set-cookie JSESSIONID=1 for ana", "session 1 closed", "401 no session 1", "401 no session 1"] },
+    { "name": "a number that never existed", "input": ["3", "LOGIN ana", "9 SHOW", "LOGOUT 9"],
+      "expect": ["set-cookie JSESSIONID=1 for ana", "401 no session 9", "401 no session 9"],
+      "reject": ["cart"] },
+    { "name": "empty cart prints empty brackets", "input": ["2", "LOGIN bob", "1 SHOW"],
+      "expect": ["set-cookie JSESSIONID=1 for bob", "cart of bob: []"] },
+    { "name": "ids count up: a closed number is never reused", "input": ["5", "LOGIN ana", "LOGOUT 1", "LOGIN bob", "2 SHOW", "1 SHOW"],
+      "expect": ["session 1 closed", "set-cookie JSESSIONID=2 for bob", "cart of bob: []", "401 no session 1"] },
+    { "name": "no commands, no output", "input": ["0"],
+      "expect": [], "reject": ["cart", "set-cookie"] }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "task": "03_3",
+  "tests": [
+    { "name": "red always says stop", "input": ["1", "RED 0"],
+      "expect": ["RED: stop"], "reject": ["go", "clear"] },
+    { "name": "green always says go", "input": ["1", "GREEN 0"],
+      "expect": ["GREEN: go"], "reject": ["stop"] },
+    { "name": "yellow with few cars says stop", "input": ["1", "YELLOW 3"],
+      "expect": ["YELLOW: stop"], "reject": ["clear"] },
+    { "name": "yellow with 10 cars: the border is still stop", "input": ["1", "YELLOW 10"],
+      "expect": ["YELLOW: stop"], "reject": ["clear"] },
+    { "name": "yellow with 11 cars: one more than the border clears", "input": ["1", "YELLOW 11"],
+      "expect": ["YELLOW: clear"], "reject": ["stop"] },
+    { "name": "three minutes, one line each, in input order", "input": ["3", "RED 2", "GREEN 7", "YELLOW 20"],
+      "expect": ["RED: stop", "GREEN: go", "YELLOW: clear"] },
+    { "name": "zero minutes: no output at all", "input": ["0"],
+      "reject": ["stop", "go", "clear", "RED", "YELLOW", "GREEN"] }
+  ]
+}

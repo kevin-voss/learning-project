@@ -1,0 +1,28 @@
+{
+  "task": "03_1",
+  "tests": [
+    { "name": "the same book twice: one object, one load",
+      "input": ["2", "FIND 1", "FIND 1"],
+      "expect": ["book 1 -> #1 (Dune)", "book 1 -> #1 (Dune)", "loads: 1"],
+      "reject": ["loads: 2"] },
+    { "name": "two different books: object 1 and object 2",
+      "input": ["2", "FIND 1", "FIND 2"],
+      "expect": ["book 1 -> #1 (Dune)", "book 2 -> #2 (Emma)", "loads: 2"] },
+    { "name": "after CLEAR the same book comes back as a new object and loads again",
+      "input": ["3", "FIND 1", "CLEAR", "FIND 1"],
+      "expect": ["book 1 -> #1 (Dune)", "book 1 -> #2 (Dune)", "loads: 2"],
+      "reject": ["loads: 1"] },
+    { "name": "an unknown id: not found, and nothing was loaded",
+      "input": ["1", "FIND 99"],
+      "expect": ["book 99 -> not found", "loads: 0"] },
+    { "name": "the session still works after a not-found",
+      "input": ["2", "FIND 99", "FIND 3"],
+      "expect": ["book 99 -> not found", "book 3 -> #1 (Persuasion)", "loads: 1"] },
+    { "name": "CLEAR prints nothing, even twice",
+      "input": ["2", "CLEAR", "CLEAR"],
+      "expect": ["loads: 0"] },
+    { "name": "no commands: no loads",
+      "input": ["0"],
+      "expect": ["loads: 0"] }
+  ]
+}

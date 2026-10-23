@@ -1,0 +1,27 @@
+{
+  "task": "04_2",
+  "tests": [
+    { "name": "page 0 size 3: the first three titles in alphabetical order",
+      "input": ["1", "PAGE 0 3"],
+      "expect": ["page 0 of 3: [Beloved, Carrie, Dracula]"],
+      "reject": ["Dune, Emma"] },
+    { "name": "page 2 size 3: one title on the short last page",
+      "input": ["1", "PAGE 2 3"],
+      "expect": ["page 2 of 3: [Ulysses]"],
+      "reject": ["Carrie"] },
+    { "name": "page 3 size 3: past the end is empty",
+      "input": ["1", "PAGE 3 3"],
+      "expect": ["page 3 of 3: []"] },
+    { "name": "size 7: the whole wall fits on one page",
+      "input": ["1", "PAGE 0 7"],
+      "expect": ["page 0 of 1: [Beloved, Carrie, Dracula, Dune, Emma, Persuasion, Ulysses]"] },
+    { "name": "size 10 bigger than the wall: still one page",
+      "input": ["1", "PAGE 0 10"],
+      "expect": ["page 0 of 1: [Beloved, Carrie, Dracula, Dune, Emma, Persuasion, Ulysses]"],
+      "reject": ["page 0 of 2"] },
+    { "name": "no requests: nothing is printed",
+      "input": ["0"],
+      "expect": [],
+      "reject": ["page"] }
+  ]
+}

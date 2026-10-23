@@ -1,0 +1,19 @@
+{
+  "task": "08_2",
+  "tests": [
+    { "name": "zero parcels", "input": ["0"],
+      "expect": ["workers: 0", "sum: 0"] },
+    { "name": "one parcel: only 0*0", "input": ["1"],
+      "expect": ["workers: 1", "sum: 0"] },
+    { "name": "two parcels: 0 + 1", "input": ["2"],
+      "expect": ["workers: 2", "sum: 1"] },
+    { "name": "three parcels: 0+1+4 = 5", "input": ["3"],
+      "expect": ["workers: 3", "sum: 5"] },
+    { "name": "five parcels: sum 30", "input": ["5"],
+      "expect": ["workers: 5", "sum: 30"] },
+    { "name": "ten parcels: sum 285", "input": ["10"],
+      "expect": ["workers: 10", "sum: 285"] },
+    { "name": "four parcels: sum 14", "input": ["4"],
+      "expect": ["workers: 4", "sum: 14"] }
+  ]
+}

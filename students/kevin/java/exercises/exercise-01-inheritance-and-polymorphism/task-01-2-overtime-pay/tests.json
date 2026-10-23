@@ -1,0 +1,19 @@
+{
+  "task": "01_2",
+  "tests": [
+    { "name": "worker under 40 hours", "input": ["1", "ana worker 10"],
+      "expect": ["ana gets 200 credits"] },
+    { "name": "worker exactly 40 hours: overtime starts above", "input": ["1", "ben worker 40"],
+      "expect": ["ben gets 800 credits"], "reject": ["830"] },
+    { "name": "worker 41 hours: one overtime hour", "input": ["1", "ben worker 41"],
+      "expect": ["ben gets 830 credits"] },
+    { "name": "worker zero hours", "input": ["1", "dee worker 0"],
+      "expect": ["dee gets 0 credits"] },
+    { "name": "manager gets worker pay plus 100", "input": ["1", "cy manager 40"],
+      "expect": ["cy gets 900 credits"] },
+    { "name": "manager with overtime too", "input": ["1", "eli manager 41"],
+      "expect": ["eli gets 930 credits"] },
+    { "name": "mixed roles in order", "input": ["3", "ana worker 10", "cy manager 10", "ben worker 50"],
+      "expect": ["ana gets 200 credits", "cy gets 300 credits", "ben gets 1100 credits"] }
+  ]
+}

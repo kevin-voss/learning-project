@@ -1,0 +1,17 @@
+{
+  "task": "10_2",
+  "tests": [
+    { "name": "sheet example three cities", "input": ["5", "Berlin", "oslo", "Berlin", "Rome", "oslo"],
+      "expect": ["berlin", "oslo", "rome"] },
+    { "name": "single uppercased", "input": ["1", "ALPHA"],
+      "expect": ["alpha"] },
+    { "name": "sort a before b", "input": ["2", "b", "a"],
+      "expect": ["a", "b"] },
+    { "name": "all duplicates", "input": ["3", "x", "x", "x"],
+      "expect": ["x"] },
+    { "name": "case variants collapse", "input": ["2", "Go", "go"],
+      "expect": ["go"] },
+    { "name": "zero tags", "input": ["0"],
+      "expect": [], "reject": ["a", "b"] }
+  ]
+}

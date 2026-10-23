@@ -1,0 +1,20 @@
+{
+  "task": "03_1",
+  "tests": [
+    { "name": "the happy chain ends in DELIVERED", "input": ["3", "CREATED", "IN_TRANSIT", "DELIVERED"],
+      "expect": ["ok: CREATED", "ok: IN_TRANSIT", "ok: DELIVERED"] },
+    { "name": "the lost branch", "input": ["3", "CREATED", "IN_TRANSIT", "LOST"],
+      "expect": ["ok: CREATED", "ok: IN_TRANSIT", "ok: LOST"], "reject": ["error"] },
+    { "name": "the first event must be CREATED", "input": ["1", "IN_TRANSIT"],
+      "expect": ["error: IN_TRANSIT"], "reject": ["ok"] },
+    { "name": "DELIVERED is final", "input": ["4", "CREATED", "IN_TRANSIT", "DELIVERED", "IN_TRANSIT"],
+      "expect": ["ok: CREATED", "ok: IN_TRANSIT", "ok: DELIVERED", "error: IN_TRANSIT"],
+      "lines": ["ok: DELIVERED", "error: IN_TRANSIT"] },
+    { "name": "LOST is final too", "input": ["4", "CREATED", "IN_TRANSIT", "LOST", "DELIVERED"],
+      "expect": ["ok: CREATED", "ok: IN_TRANSIT", "ok: LOST", "error: DELIVERED"], "reject": ["ok: DELIVERED"] },
+    { "name": "the run continues after an error, status unchanged", "input": ["4", "CREATED", "CREATED", "IN_TRANSIT", "DELIVERED"],
+      "expect": ["ok: CREATED", "error: CREATED", "ok: IN_TRANSIT", "ok: DELIVERED"] },
+    { "name": "zero events print nothing", "input": ["0"],
+      "expect": [], "reject": ["ok", "error"] }
+  ]
+}

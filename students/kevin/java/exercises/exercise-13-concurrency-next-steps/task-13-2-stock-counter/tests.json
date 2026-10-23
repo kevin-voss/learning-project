@@ -1,0 +1,19 @@
+{
+  "task": "13_2",
+  "tests": [
+    { "name": "two skus, one line each", "input": ["2", "ink 5", "paper 3"],
+      "expect": ["ink: 5", "paper: 3", "skus: 2"] },
+    { "name": "twelve strokes on one sku: nothing lost", "input": ["12", "ink 1", "ink 1", "ink -1", "ink 1", "ink 1", "ink -1", "ink 1", "ink -1", "ink 1", "ink 1", "ink 1", "ink 1"],
+      "expect": ["ink: 6", "skus: 1"] },
+    { "name": "negative deltas add down", "input": ["3", "mug -5", "mug -2", "mug 4"],
+      "expect": ["mug: -3", "skus: 1"], "reject": ["mug: 3"] },
+    { "name": "total 0 is still printed", "input": ["2", "box 5", "box -5"],
+      "expect": ["box: 0", "skus: 1"], "reject": ["skus: 0"] },
+    { "name": "alphabetical order from unsorted input", "input": ["4", "zebra 1", "apple 2", "mango 3", "apple 1"],
+      "expect": ["apple: 3", "mango: 3", "zebra: 1", "skus: 3"] },
+    { "name": "a stroke of 0 changes nothing", "input": ["3", "cup 0", "cup 4", "cup 0"],
+      "expect": ["cup: 4", "skus: 1"] },
+    { "name": "no movements at all", "input": ["0"],
+      "expect": ["skus: 0"], "reject": ["null"] }
+  ]
+}

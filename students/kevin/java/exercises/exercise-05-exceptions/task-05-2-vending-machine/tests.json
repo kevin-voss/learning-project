@@ -1,0 +1,19 @@
+{
+  "task": "05_2",
+  "tests": [
+    { "name": "normal buy with change", "input": ["1", "A1 200"],
+      "expect": ["bought A1, change 50", "sales: 1"] },
+    { "name": "exact pay: change 0", "input": ["1", "A2 200"],
+      "expect": ["bought A2, change 0", "sales: 1"], "reject": ["error"] },
+    { "name": "too little money", "input": ["1", "A1 100"],
+      "expect": ["error: need 50 more cents", "sales: 0"], "reject": ["bought"] },
+    { "name": "unknown slot", "input": ["1", "B9 300"],
+      "expect": ["error: unknown slot B9", "sales: 0"], "reject": ["bought"] },
+    { "name": "negative paid is refused", "input": ["1", "A3 -5"],
+      "expect": ["error: paid cannot be negative", "sales: 0"], "reject": ["bought"] },
+    { "name": "paid is not a number", "input": ["1", "A1 ten"],
+      "expect": ["error: paid is not a number", "sales: 0"], "reject": ["bought"] },
+    { "name": "mixed buys and errors: sales counts only the buys", "input": ["6", "A1 200", "A1 100", "B9 500", "A3 250", "A2 abc", "A1 150"],
+      "expect": ["bought A1, change 50", "error: need 50 more cents", "error: unknown slot B9", "bought A3, change 0", "error: paid is not a number", "bought A1, change 0", "sales: 3"] }
+  ]
+}

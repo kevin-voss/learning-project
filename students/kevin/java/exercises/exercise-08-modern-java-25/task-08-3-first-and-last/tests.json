@@ -1,0 +1,16 @@
+{
+  "task": "08_3",
+  "tests": [
+    { "name": "three stops", "input": ["3", "depot", "market", "harbour"],
+      "expect": ["first: depot", "last: harbour", "reversed: harbour market depot"] },
+    { "name": "one stop is first and last", "input": ["1", "depot"],
+      "expect": ["first: depot", "last: depot", "reversed: depot"] },
+    { "name": "two stops swap in reversed", "input": ["2", "a", "b"],
+      "expect": ["first: a", "last: b", "reversed: b a"] },
+    { "name": "five stops reversed exactly", "input": ["5", "one", "two", "three", "four", "five"],
+      "expect": ["first: one", "last: five"],
+      "lines": ["reversed: five four three two one"] },
+    { "name": "repeated names keep positions", "input": ["3", "x", "y", "x"],
+      "expect": ["first: x", "last: x", "reversed: x y x"] }
+  ]
+}

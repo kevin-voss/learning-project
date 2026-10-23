@@ -1,0 +1,27 @@
+{
+  "task": "03_2",
+  "tests": [
+    { "name": "load, change, flush: the UPDATE runs without a save",
+      "input": ["3", "LOAD 1", "SET 1 Dune Messiah", "FLUSH"],
+      "expect": ["UPDATE books SET title='Dune Messiah' WHERE id=1"] },
+    { "name": "load, flush, no change: nothing to flush",
+      "input": ["2", "LOAD 1", "FLUSH"],
+      "expect": ["nothing to flush"] },
+    { "name": "a detached object's change is ignored at flush",
+      "input": ["4", "LOAD 1", "SET 1 Dune Messiah", "DETACH 1", "FLUSH"],
+      "expect": ["nothing to flush"], "reject": ["UPDATE"] },
+    { "name": "two changed books: two UPDATEs in id order",
+      "input": ["5", "LOAD 2", "LOAD 1", "SET 2 Emma and the Teapot", "SET 1 God Emperor", "FLUSH"],
+      "lines": ["UPDATE books SET title='God Emperor' WHERE id=1",
+                "UPDATE books SET title='Emma and the Teapot' WHERE id=2"] },
+    { "name": "set on an id that was never loaded",
+      "input": ["1", "SET 3 Erewhon"],
+      "expect": ["no object for 3"] },
+    { "name": "set back to the old title: flush sees no difference",
+      "input": ["3", "LOAD 1", "SET 1 Dune", "FLUSH"],
+      "expect": ["nothing to flush"] },
+    { "name": "a second flush finds nothing: the snapshot was refreshed",
+      "input": ["4", "LOAD 1", "SET 1 God Emperor", "FLUSH", "FLUSH"],
+      "expect": ["UPDATE books SET title='God Emperor' WHERE id=1", "nothing to flush"] }
+  ]
+}

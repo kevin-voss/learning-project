@@ -1,0 +1,19 @@
+{
+  "task": "06_2",
+  "tests": [
+    { "name": "login stamps the badge", "input": ["1", "LOGIN ana user"],
+      "expect": ["token ana.user.resuana"] },
+    { "name": "a valid token carries the user: /me needs no lookup", "input": ["2", "LOGIN ana user", "GET /me ana.user.resuana"],
+      "expect": ["token ana.user.resuana", "200 ana (user)"] },
+    { "name": "an admin token opens /admin", "input": ["2", "LOGIN ana admin", "GET /admin ana.admin.nimdaana"],
+      "expect": ["token ana.admin.nimdaana", "200 welcome ana"] },
+    { "name": "a valid user token at /admin: known, but not allowed", "input": ["2", "LOGIN ana user", "GET /admin ana.user.resuana"],
+      "expect": ["token ana.user.resuana", "403 forbidden"], "reject": ["welcome"] },
+    { "name": "a changed role breaks the stamp", "input": ["1", "GET /me ana.admin.resuana"],
+      "expect": ["401 bad signature"], "reject": ["200"] },
+    { "name": "not three parts: wrong shape", "input": ["1", "GET /me ana.user"],
+      "expect": ["401 bad token"], "reject": ["bad signature"] },
+    { "name": "no commands, no output", "input": ["0"],
+      "expect": [], "reject": ["token", "200"] }
+  ]
+}

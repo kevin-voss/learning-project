@@ -1,0 +1,19 @@
+{
+  "task": "03_2",
+  "tests": [
+    { "name": "one small coffee", "input": ["1", "S 1"],
+      "expect": ["order: 1 x S = 150 cents", "total: 150 cents"] },
+    { "name": "two medium coffees", "input": ["1", "M 2"],
+      "expect": ["order: 2 x M = 400 cents", "total: 400 cents"], "reject": ["600"] },
+    { "name": "unknown code is skipped, the run continues", "input": ["2", "S 1", "XL 3"],
+      "expect": ["order: 1 x S = 150 cents", "unknown size: XL", "total: 150 cents"], "reject": ["Exception"] },
+    { "name": "count 0 prints a 0 order and changes nothing", "input": ["1", "L 0"],
+      "expect": ["order: 0 x L = 0 cents", "total: 0 cents"], "reject": ["250"] },
+    { "name": "three orders, one total", "input": ["3", "S 2", "M 1", "L 1"],
+      "expect": ["order: 2 x S = 300 cents", "order: 1 x M = 200 cents", "order: 1 x L = 250 cents", "total: 750 cents"] },
+    { "name": "only unknown codes: total is still printed", "input": ["2", "X 1", "Y 2"],
+      "expect": ["unknown size: X", "unknown size: Y", "total: 0 cents"] },
+    { "name": "zero orders: just the total line", "input": ["0"],
+      "expect": ["total: 0 cents"], "reject": ["order", "unknown"] }
+  ]
+}

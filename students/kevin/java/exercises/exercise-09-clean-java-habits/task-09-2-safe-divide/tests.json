@@ -1,0 +1,19 @@
+{
+  "task": "09_2",
+  "tests": [
+    { "name": "10 / 2 = 5", "input": ["1", "10 2"],
+      "expect": ["5"] },
+    { "name": "divide by zero", "input": ["1", "7 0"],
+      "expect": ["undefined"] },
+    { "name": "negative dividend", "input": ["1", "-9 4"],
+      "expect": ["-2"] },
+    { "name": "negative divisor", "input": ["1", "5 -2"],
+      "expect": ["-2"] },
+    { "name": "three pairs mixed", "input": ["3", "10 2", "7 0", "-9 4"],
+      "expect": ["5", "undefined", "-2"] },
+    { "name": "zero dividend ok", "input": ["1", "0 3"],
+      "expect": ["0"], "reject": ["undefined"] },
+    { "name": "zero pairs", "input": ["0"],
+      "expect": [], "reject": ["undefined"] }
+  ]
+}

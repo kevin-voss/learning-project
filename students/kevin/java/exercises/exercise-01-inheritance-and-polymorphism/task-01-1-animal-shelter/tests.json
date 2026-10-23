@@ -1,0 +1,17 @@
+{
+  "task": "01_1",
+  "tests": [
+    { "name": "one dog", "input": ["1", "rex dog"],
+      "expect": ["rex says woof"] },
+    { "name": "one cat", "input": ["1", "mia cat"],
+      "expect": ["mia says meow"], "reject": ["woof"] },
+    { "name": "one puppy speaks differently from a dog", "input": ["1", "bit puppy"],
+      "expect": ["bit says yip yip"], "reject": ["bit says woof"] },
+    { "name": "two kinds in order", "input": ["2", "rex dog", "mia cat"],
+      "expect": ["rex says woof", "mia says meow"] },
+    { "name": "puppy after dog, same name style", "input": ["3", "ace dog", "bit puppy", "mia cat"],
+      "expect": ["ace says woof", "bit says yip yip", "mia says meow"] },
+    { "name": "zero animals print nothing", "input": ["0"],
+      "expect": [], "reject": ["says"] }
+  ]
+}

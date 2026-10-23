@@ -1,0 +1,21 @@
+{
+  "task": "11_2",
+  "tests": [
+    { "name": "0.10 plus 0.20 is exactly 0.30", "input": ["2", "stamp 0.10 1", "coin 0.20 1"],
+      "expect": ["stamp: 0.10", "coin: 0.20", "total: 0.30", "with vat: 0.36"],
+      "reject": ["0.30000", "0.30000000000000004"] },
+    { "name": "pen 2.99 times 3 is exactly 8.97", "input": ["1", "pen 2.99 3"],
+      "expect": ["pen: 8.97", "total: 8.97", "with vat: 10.67"],
+      "reject": ["8.96", "8.969", "8.969999999999999"] },
+    { "name": "vat rounds half up: 1.25 becomes 1.49", "input": ["1", "toy 0.25 5"],
+      "expect": ["toy: 1.25", "total: 1.25", "with vat: 1.49"], "reject": ["1.48"] },
+    { "name": "qty 0: the line costs nothing", "input": ["1", "bag 4.50 0"],
+      "expect": ["bag: 0.00", "total: 0.00", "with vat: 0.00"], "reject": ["4.50", "4.5"] },
+    { "name": "no items: zero totals with two decimals", "input": ["0"],
+      "expect": ["total: 0.00", "with vat: 0.00"], "reject": ["total: 0", "with vat: 0"] },
+    { "name": "three lines add up in order", "input": ["3", "pen 2.99 3", "book 12.50 1", "ink 3.20 2"],
+      "expect": ["pen: 8.97", "book: 12.50", "ink: 6.40", "total: 27.87", "with vat: 33.17"] },
+    { "name": "odd cents survive: 1.05 times 7", "input": ["1", "sticker 1.05 7"],
+      "expect": ["sticker: 7.35", "total: 7.35", "with vat: 8.75"] }
+  ]
+}

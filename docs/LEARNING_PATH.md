@@ -62,11 +62,17 @@ Optional extras: [Docker for your page](../projects/extras/docker-portfolio/READ
 | Networks, HTTP | CS lessons `networks-ips-requests`, `http-requests-responses` | link |
 | Memory, stack, heap | CS lessons `memory-model`, `stack-heap-gc`; Java `types-and-variables` for Java detail | link |
 | Data structures, Big-O, search, sort | CS track | link |
-| Java language, interfaces, enums, recursion, JUnit basics | [`tracks/java/`](../tracks/java/index.html) | Spring links |
+| Java language, inheritance, interfaces, enums, collections, exceptions, I/O, recursion, JUnit basics | [`tracks/java/`](../tracks/java/index.html) | Spring links; student Kevin · exercises 01–07 practice |
 | REST in Java | Java topic `rest-and-http` | Spring 04 = Spring flavour |
 | SQL | CS lesson `database-sql-fundamentals` | Spring 10 links |
 | Docker | CS lessons `docker-containers`, `docker-compose`; Spring 09 for Java images | link |
 | Server layers | [`sheets/java/server-layers.md`](../sheets/java/server-layers.md) | Spring links |
+| Modern Java 16–25: records, sealed + patterns, sequenced collections, compact main | [`sheets/java/modern/`](../sheets/java/modern/README.md) | student Kevin · exercise 08 |
+| Threads: virtual (final), `CompletableFuture`, concurrent collections, structured concurrency (preview) | [`sheets/java/concurrency/`](../sheets/java/concurrency/README.md) | student Kevin · exercises 08, 13 |
+| Java craft: naming, Optional, immutability, streams | [`sheets/java/advanced/`](../sheets/java/advanced/README.md) | student Kevin · exercises 09–10 |
+| Everyday APIs: `java.time`, `BigDecimal` money, `Collectors` | [`sheets/java/apis/`](../sheets/java/apis/README.md) | student Kevin · exercises 11–12 |
+| Spring ideas: container, bean scopes, the session family, session vs JWT | [`sheets/spring/`](../sheets/spring/README.md) | student Kevin · spring-boot exercises 01, 06; course steps 04, 16 link |
+| Hibernate ideas: persistence context, fetching and N+1, mapping rules | [`sheets/hibernate/`](../sheets/hibernate/README.md) | student Kevin · spring-boot exercises 03–05; course step 10, 15 link |
 | Spring Boot, Maven in depth, Spring testing | [`tracks/spring-boot/`](../tracks/spring-boot/README.md) | — |
 | Design patterns | Java topic `design-patterns` | Spring 02 lab links |
 | Architecture trade-offs | [`tracks/architecture/`](../tracks/architecture/index.html) | Spring = build |

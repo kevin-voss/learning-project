@@ -1,0 +1,17 @@
+{
+  "task": "02_1",
+  "tests": [
+    { "name": "one card payment", "input": ["1", "card 450"],
+      "expect": ["paid 450 cents by card", "total: 450 cents"] },
+    { "name": "one cash payment", "input": ["1", "cash 100"],
+      "expect": ["paid 100 cents by cash", "total: 100 cents"], "reject": ["card"] },
+    { "name": "coupon overrides the default receipt", "input": ["1", "coupon 300"],
+      "expect": ["coupon for 300 cents", "total: 300 cents"], "reject": ["paid 300 cents by coupon"] },
+    { "name": "card then coupon, total adds both", "input": ["2", "card 450", "coupon 300"],
+      "expect": ["paid 450 cents by card", "coupon for 300 cents", "total: 750 cents"] },
+    { "name": "three methods in input order", "input": ["3", "cash 50", "card 50", "coupon 50"],
+      "expect": ["paid 50 cents by cash", "paid 50 cents by card", "coupon for 50 cents", "total: 150 cents"] },
+    { "name": "zero payments still print the total", "input": ["0"],
+      "expect": ["total: 0 cents"], "reject": ["paid"] }
+  ]
+}

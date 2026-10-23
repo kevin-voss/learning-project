@@ -1,0 +1,21 @@
+{
+  "task": "04_1",
+  "tests": [
+    { "name": "two adds then show, in add order", "input": ["ADD hamlet", "ADD dune", "SHOW"],
+      "expect": ["books: hamlet, dune"] },
+    { "name": "a plain add prints nothing at all", "input": ["ADD hamlet"],
+      "expect": [], "reject": ["added", "hamlet"] },
+    { "name": "the same title twice is refused", "input": ["ADD hamlet", "ADD hamlet", "COUNT"],
+      "expect": ["already read: hamlet", "count: 1"], "reject": ["count: 2"] },
+    { "name": "dropping a title not on the list", "input": ["DROP hamlet"],
+      "expect": ["not on the list: hamlet"] },
+    { "name": "drop removes only that title", "input": ["ADD hamlet", "ADD dune", "DROP hamlet", "SHOW"],
+      "expect": ["books: dune"] },
+    { "name": "has says yes for a title on the list", "input": ["ADD hamlet", "HAS hamlet"],
+      "expect": ["has hamlet: yes"], "reject": ["has hamlet: no"] },
+    { "name": "has says no on an empty list", "input": ["HAS hamlet"],
+      "expect": ["has hamlet: no"], "reject": ["yes"] },
+    { "name": "show on an empty list", "input": ["SHOW"],
+      "expect": ["books: (none)"] }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "task": "04_3",
+  "tests": [
+    { "name": "some words go, the kept ones stay in order", "input": ["4", "cat", "dog", "cattle", "bird", "a"],
+      "expect": ["kept: dog bird", "removed: 2"], "reject": ["cat"] },
+    { "name": "the letter is in no word: nothing removed", "input": ["3", "sun", "moon", "sky", "x"],
+      "expect": ["kept: sun moon sky", "removed: 0"] },
+    { "name": "every word has the letter: the shelf is empty", "input": ["3", "ape", "ant", "cobra", "a"],
+      "expect": ["kept: (none)", "removed: 3"], "reject": ["ape"] },
+    { "name": "a repeated word is removed twice and counts twice", "input": ["3", "ha", "hi", "ha", "a"],
+      "expect": ["kept: hi", "removed: 2"] },
+    { "name": "case matters: big A is not little a", "input": ["3", "ARM", "arm", "andy", "a"],
+      "expect": ["kept: ARM", "removed: 2"] },
+    { "name": "the letter alone is a word too", "input": ["3", "a", "b", "aa", "a"],
+      "expect": ["kept: b", "removed: 2"] },
+    { "name": "zero words, the letter line still comes", "input": ["0", "a"],
+      "expect": ["kept: (none)", "removed: 0"], "reject": ["Exception"] }
+  ]
+}

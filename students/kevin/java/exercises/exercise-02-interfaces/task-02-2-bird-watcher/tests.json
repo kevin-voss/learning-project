@@ -1,0 +1,17 @@
+{
+  "task": "02_2",
+  "tests": [
+    { "name": "three birds sorted by wingspan", "input": ["3", "owl 100", "wren 15", "gull 120"],
+      "expect": ["wren: 15 cm", "owl: 100 cm", "gull: 120 cm", "smallest: wren", "largest: gull"] },
+    { "name": "same wingspan: alphabetical name first", "input": ["2", "robin 25", "finch 25"],
+      "expect": ["finch: 25 cm", "robin: 25 cm", "smallest: finch", "largest: robin"] },
+    { "name": "one bird is both smallest and largest", "input": ["1", "kiwi 40"],
+      "expect": ["kiwi: 40 cm", "smallest: kiwi", "largest: kiwi"] },
+    { "name": "already sorted input stays in order", "input": ["2", "tit 12", "crow 90"],
+      "expect": ["tit: 12 cm", "crow: 90 cm", "smallest: tit", "largest: crow"] },
+    { "name": "reverse order input gets flipped", "input": ["3", "c 30", "b 20", "a 10"],
+      "expect": ["a: 10 cm", "b: 20 cm", "c: 30 cm", "smallest: a", "largest: c"] },
+    { "name": "tie in the middle plus a larger bird", "input": ["3", "swan 150", "dove 30", "crow 30"],
+      "expect": ["crow: 30 cm", "dove: 30 cm", "swan: 150 cm", "smallest: crow", "largest: swan"] }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "task": "02_2",
+  "tests": [
+    { "name": "a good book: 201",
+      "input": ["1", "POST Dune 412"],
+      "expect": ["201 created Dune"],
+      "reject": ["400"] },
+    { "name": "blank title: the form comes straight back",
+      "input": ["1", "POST - 100"],
+      "expect": ["400 title must not be blank"] },
+    { "name": "pages not a number: 400, never a crash",
+      "input": ["1", "POST Dune many"],
+      "expect": ["400 pages must be a number"],
+      "reject": ["201", "Exception"] },
+    { "name": "pages 0: one below the border",
+      "input": ["1", "POST Dune 0"],
+      "expect": ["400 pages must be between 1 and 2000"] },
+    { "name": "pages 2001: one above the border",
+      "input": ["1", "POST Dune 2001"],
+      "expect": ["400 pages must be between 1 and 2000"] },
+    { "name": "the borders themselves are valid: 1 and 2000",
+      "input": ["2", "POST Dune 1", "POST Emma 2000"],
+      "expect": ["201 created Dune", "201 created Emma"] },
+    { "name": "two broken rules, listed in rule order",
+      "input": ["1", "POST - many"],
+      "lines": ["400 title must not be blank; pages must be a number"] },
+    { "name": "no requests, no output",
+      "input": ["0"],
+      "expect": [],
+      "reject": ["201"] }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "task": "06_3",
+  "tests": [
+    { "name": "127 twice: the shelf hands out the same box", "input": ["127 127"],
+      "lines": ["equals: true", "==: true", "cached: yes"] },
+    { "name": "128 twice: same number, two fresh boxes", "input": ["128 128"],
+      "lines": ["equals: true", "==: false", "cached: no"] },
+    { "name": "-128: the shelf starts here, borders included", "input": ["-128 -128"],
+      "lines": ["equals: true", "==: true", "cached: yes"] },
+    { "name": "-129: one below the shelf", "input": ["-129 -129"],
+      "lines": ["equals: true", "==: false", "cached: no"] },
+    { "name": "different small numbers: not equal at all", "input": ["5 6"],
+      "lines": ["equals: false", "==: false", "cached: yes"] },
+    { "name": "big different numbers", "input": ["1000 2000"],
+      "lines": ["equals: false", "==: false", "cached: no"] }
+  ]
+}

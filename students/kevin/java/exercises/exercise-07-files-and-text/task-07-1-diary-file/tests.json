@@ -1,0 +1,15 @@
+{
+  "task": "07_1",
+  "tests": [
+    { "name": "three entries are written and echoed in order", "input": ["3", "morning: sorted the mail", "noon: tea break", "evening: locked the door"],
+      "expect": ["wrote 3 lines", "morning: sorted the mail", "noon: tea break", "evening: locked the door"] },
+    { "name": "one entry: the count says 1", "input": ["1", "quiet day at the desk"],
+      "expect": ["wrote 1 lines", "quiet day at the desk"] },
+    { "name": "spaces inside a line survive the file", "input": ["2", "sorted the big blue bags", "tea"],
+      "expect": ["wrote 2 lines", "sorted the big blue bags", "tea"], "reject": ["wrote 1"] },
+    { "name": "entries that look like numbers stay text", "input": ["2", "12", "34"],
+      "expect": ["wrote 2 lines", "12", "34"] },
+    { "name": "zero entries: empty file, only the count", "input": ["0"],
+      "expect": ["wrote 0 lines"], "reject": ["wrote 1", "null"] }
+  ]
+}

@@ -2,7 +2,7 @@
 //
 //   make test-task TASK=04_2              all tests of task 04_2, on my-solution/
 //   make test-task TASK=04_2 PART=a       only the tests of part a)
-//   node students/scripts/test-task.mjs 04_2 [--part a] [--student becky] [--solution] [--main Name]
+//   node students/scripts/test-task.mjs 04_2 [--part a] [--student becky] [--subject java] [--solution] [--main Name]
 //
 // The tests live in the task folder: task-NN-k-<slug>/tests.json. They only look at what the
 // program prints for what is typed in, so the student is free to choose file, class and method
@@ -36,11 +36,11 @@ const repo = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const TIMEOUT_MS = 10000;
 
 function parseArgs(argv) {
-  const opts = { task: '', part: '', student: '', main: '', solution: false };
+  const opts = { task: '', part: '', student: '', subject: '', main: '', solution: false };
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
     if (arg === '--solution') opts.solution = true;
-    else if (['--part', '--student', '--main'].includes(arg)) opts[arg.slice(2)] = argv[++i] || '';
+    else if (['--part', '--student', '--subject', '--main'].includes(arg)) opts[arg.slice(2)] = argv[++i] || '';
     else if (!opts.task) opts.task = arg;
   }
   return opts;
@@ -65,7 +65,7 @@ function allTasks() {
         const exerciseDir = join(exercises, exercise);
         if (!statSync(exerciseDir).isDirectory()) continue;
         for (const task of readdirSync(exerciseDir)) {
-          if (task.startsWith('task-')) found.push({ student, dir: join(exerciseDir, task) });
+          if (task.startsWith('task-')) found.push({ student, subject, dir: join(exerciseDir, task) });
         }
       }
     }
@@ -94,6 +94,7 @@ function findTask(opts) {
   const id = opts.task.replace(/[_.]/g, '-');
   let matches = tasks.filter(task => task.dir.split('/').pop().startsWith(`task-${id}-`));
   if (opts.student) matches = matches.filter(task => task.student === opts.student);
+  if (opts.subject) matches = matches.filter(task => task.subject === opts.subject);
   if (matches.length > 1) {
     const branch = gitBranch();
     const mine = matches.filter(task => branch.includes(task.student));
@@ -101,7 +102,8 @@ function findTask(opts) {
   }
   if (!matches.length) fail(`No task ${opts.task} found. Example: make test-task TASK=04_2`);
   if (matches.length > 1) {
-    fail(`Task ${opts.task} exists for ${matches.map(task => task.student).join(', ')}. Add STUDENT=<name>.`);
+    const where = matches.map(task => `${task.student}/${task.subject}`).join(', ');
+    fail(`Task ${opts.task} exists for ${where}. Add STUDENT=<name> (and SUBJECT=<subject> when a student has several).`);
   }
   return matches[0].dir;
 }

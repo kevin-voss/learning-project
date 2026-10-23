@@ -1,0 +1,19 @@
+{
+  "task": "06_1",
+  "tests": [
+    { "name": "twin slip dropped, first order kept", "input": ["3", "p1 500", "p2 200", "p1 500"],
+      "expect": ["p1 500g", "p2 200g", "unique: 2", "duplicates: 1"] },
+    { "name": "same id, different weight: not twins", "input": ["2", "p1 500", "p1 700"],
+      "expect": ["p1 500g", "p1 700g", "unique: 2", "duplicates: 0"] },
+    { "name": "same weight, different id: not twins", "input": ["2", "p1 500", "p2 500"],
+      "expect": ["p1 500g", "p2 500g", "unique: 2", "duplicates: 0"] },
+    { "name": "all three are twins", "input": ["3", "a 1", "a 1", "a 1"],
+      "expect": ["a 1g", "unique: 1", "duplicates: 2"] },
+    { "name": "no twins at all", "input": ["2", "x 10", "y 20"],
+      "expect": ["x 10g", "y 20g", "unique: 2", "duplicates: 0"] },
+    { "name": "twin far apart keeps first position", "input": ["4", "b 2", "a 1", "c 3", "b 2"],
+      "expect": ["b 2g", "a 1g", "c 3g", "unique: 3", "duplicates: 1"] },
+    { "name": "zero slips", "input": ["0"],
+      "expect": ["unique: 0", "duplicates: 0"], "reject": ["g"] }
+  ]
+}

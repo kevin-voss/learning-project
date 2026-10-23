@@ -1,0 +1,30 @@
+{
+  "task": "02_1",
+  "tests": [
+    { "name": "list all three in id order",
+      "input": ["1", "GET /books"],
+      "expect": ["GET /books -> 200 [Dune, Emma, Persuasion]"] },
+    { "name": "get one by id",
+      "input": ["1", "GET /books/2"],
+      "expect": ["GET /books/2 -> 200 Emma"] },
+    { "name": "get a missing id: 404 with the message",
+      "input": ["1", "GET /books/9"],
+      "expect": ["GET /books/9 -> 404 book 9 not found"],
+      "reject": ["200"] },
+    { "name": "delete then get: gone, and the list shrinks",
+      "input": ["3", "DELETE /books/2", "GET /books/2", "GET /books"],
+      "expect": ["DELETE /books/2 -> 204", "GET /books/2 -> 404 book 2 not found",
+                 "GET /books -> 200 [Dune, Persuasion]"] },
+    { "name": "delete a missing id: 404",
+      "input": ["1", "DELETE /books/7"],
+      "expect": ["DELETE /books/7 -> 404 book 7 not found"],
+      "reject": ["204"] },
+    { "name": "no route for another method",
+      "input": ["1", "POST /books"],
+      "expect": ["POST /books -> 404 no route for POST /books"] },
+    { "name": "no requests, no output",
+      "input": ["0"],
+      "expect": [],
+      "reject": ["200"] }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "task": "12_1",
+  "tests": [
+    { "name": "border counts: a 4.1 book passes a 4.1 bar", "input": ["4", "Ivanhoe Scott 4.3", "Emma Austen 4.1", "Kenilworth Scott 4.0", "Persuasion Austen 4.6", "4.1"],
+      "expect": ["found: 3", "Ivanhoe (4.3)", "Emma (4.1)", "Persuasion (4.6)", "authors: Austen, Scott"],
+      "reject": ["Kenilworth"] },
+    { "name": "a rating below the bar does not pass", "input": ["1", "Hamlet Shakespeare 4.1", "4.2"],
+      "expect": ["found: 0", "authors: Shakespeare"], "reject": ["Hamlet"] },
+    { "name": "all pass when the bar is low", "input": ["3", "Dune Herbert 4.5", "Emma Austen 4.1", "Sea Gann 4.0", "1.0"],
+      "expect": ["found: 3", "Dune (4.5)", "Emma (4.1)", "Sea (4.0)", "authors: Austen, Gann, Herbert"] },
+    { "name": "authors of all books, deduplicated and alphabetical, even when none pass", "input": ["4", "Ivanhoe Scott 4.3", "Emma Austen 4.1", "Kenilworth Scott 4.0", "Persuasion Austen 4.6", "5.0"],
+      "expect": ["found: 0", "authors: Austen, Scott"],
+      "reject": ["Ivanhoe", "Emma"] },
+    { "name": "found books stay in input order, not alphabetical", "input": ["3", "Zoo Orwell 4.0", "Ant Orwell 5.0", "Mid Orwell 3.0", "4.0"],
+      "expect": ["found: 2", "Zoo (4.0)", "Ant (5.0)"] },
+    { "name": "single book exactly at the bar, rating prints as 4.5", "input": ["1", "Dune Herbert 4.5", "4.5"],
+      "expect": ["found: 1", "Dune (4.5)"] },
+    { "name": "empty shelf: (none) authors, min line still there", "input": ["0", "3.0"],
+      "expect": ["found: 0", "authors: (none)"] }
+  ]
+}

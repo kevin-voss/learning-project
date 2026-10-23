@@ -36,7 +36,7 @@ students/<student>/README.md                          the student's room: list o
 
 ## Tests (`tests.json`)
 
-Every task has a `tests.json` next to its `README.md`. `students/scripts/test-task.mjs` runs it on `my-solution/` (`make test-task TASK=04_2`, one part: `PART=a`) and on `solution/` (`SOLUTION=1`). The file format is at the top of that script.
+Every task has a `tests.json` next to its `README.md`. `students/scripts/test-task.mjs` runs it on `my-solution/` (`make test-task TASK=04_2`, one part: `PART=a`) and on `solution/` (`SOLUTION=1`). When the same task id exists for several students or subjects, add `STUDENT=<name>` and `SUBJECT=<subject>` (the runner says so). The file format is at the top of that script.
 
 - **Black box only:** what is typed in → what is printed. Never test class, file, method or variable names, and never the prompt texts ("Side a in cm: "). The student picks their own names.
 - **Start with the task's own test examples** (the same values), then the borders the task cares about: 0, negative, exactly on the border, one less and one more, full and empty, first and last.

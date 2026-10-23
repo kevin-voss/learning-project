@@ -1,0 +1,19 @@
+{
+  "task": "08_1",
+  "tests": [
+    { "name": "one CREATED event", "input": ["1", "CREATED mail-1"],
+      "expect": ["new parcel mail-1"] },
+    { "name": "one SHIPPED event", "input": ["1", "SHIPPED mail-1 bike-3"],
+      "expect": ["mail-1 left on bike-3"] },
+    { "name": "one DELIVERED event", "input": ["1", "DELIVERED mail-1"],
+      "expect": ["mail-1 arrived"] },
+    { "name": "one RETURNED event", "input": ["1", "RETURNED mail-2 wet"],
+      "expect": ["mail-2 came back: wet"] },
+    { "name": "three events in order", "input": ["3", "CREATED a", "SHIPPED a van-9", "DELIVERED a"],
+      "expect": ["new parcel a", "a left on van-9", "a arrived"] },
+    { "name": "returned after created", "input": ["2", "CREATED box-9", "RETURNED box-9 broken"],
+      "expect": ["new parcel box-9", "box-9 came back: broken"] },
+    { "name": "zero events", "input": ["0"],
+      "expect": [], "reject": ["parcel", "left", "arrived"] }
+  ]
+}

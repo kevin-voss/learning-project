@@ -1,0 +1,19 @@
+{
+  "task": "09_1",
+  "tests": [
+    { "name": "known code BER", "input": ["1", "BER"],
+      "expect": ["found: Berlin"] },
+    { "name": "lowercase ber still found", "input": ["1", "ber"],
+      "expect": ["found: Berlin"] },
+    { "name": "unknown code", "input": ["1", "XYZ"],
+      "expect": ["missing: XYZ"] },
+    { "name": "unknown lowercased in message", "input": ["1", "xyz"],
+      "expect": ["missing: XYZ"] },
+    { "name": "three mixed codes", "input": ["3", "OSL", "xyz", "PAR"],
+      "expect": ["found: Oslo", "missing: XYZ", "found: Paris"] },
+    { "name": "Rome", "input": ["1", "ROM"],
+      "expect": ["found: Rome"] },
+    { "name": "zero codes", "input": ["0"],
+      "expect": [], "reject": ["found", "missing"] }
+  ]
+}

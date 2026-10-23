@@ -1,0 +1,19 @@
+{
+  "task": "11_1",
+  "tests": [
+    { "name": "returned on the due day: on time", "input": ["1", "book 2026-10-01 2026-10-01"],
+      "expect": ["book: on time", "total fee: 0 cents"], "reject": ["late"] },
+    { "name": "one day late: 20 cents", "input": ["1", "book 2026-10-01 2026-10-02"],
+      "expect": ["book: late 1 days", "total fee: 20 cents"], "reject": ["on time"] },
+    { "name": "across a month end: three days", "input": ["1", "card 2025-01-29 2025-02-01"],
+      "expect": ["card: late 3 days", "total fee: 60 cents"] },
+    { "name": "across the leap day 2024: two days", "input": ["1", "parcel 2024-02-28 2024-03-01"],
+      "expect": ["parcel: late 2 days", "total fee: 40 cents"], "reject": ["late 1 days", "late 3 days"] },
+    { "name": "early return: on time, no fee", "input": ["1", "gift 2026-10-10 2026-10-01"],
+      "expect": ["gift: on time", "total fee: 0 cents"], "reject": ["late"] },
+    { "name": "no parcels: only the total", "input": ["0"],
+      "expect": ["total fee: 0 cents"], "reject": ["late", "on time"] },
+    { "name": "mixed day: the fee sums the late days", "input": ["3", "book 2026-05-01 2026-05-01", "lamp 2026-05-01 2026-05-04", "toy 2026-05-10 2026-05-09"],
+      "expect": ["book: on time", "lamp: late 3 days", "toy: on time", "total fee: 60 cents"] }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "task": "05_1",
+  "tests": [
+    { "name": "one editor: read, set, commit bumps the version", "input": ["3", "A READ", "A SET 8", "A COMMIT"],
+      "expect": ["A reads stock=10 version=1", "A commits stock=8 version=2"], "reject": ["stale"] },
+    { "name": "the lost update: B commits on an old version and fails", "input": ["6", "A READ", "B READ", "A SET 8", "B SET 9", "A COMMIT", "B COMMIT"],
+      "expect": ["A reads stock=10 version=1", "B reads stock=10 version=1", "A commits stock=8 version=2", "B fails: version 1 is stale, row is at 2"],
+      "reject": ["B commits"] },
+    { "name": "read again and retry: the change lands at version 3", "input": ["8", "A READ", "B READ", "A SET 8", "A COMMIT", "B COMMIT", "B READ", "B SET 9", "B COMMIT"],
+      "expect": ["A commits stock=8 version=2", "B fails: version 1 is stale, row is at 2", "B reads stock=8 version=2", "B commits stock=9 version=3"] },
+    { "name": "commit without a read", "input": ["2", "A COMMIT", "A READ"],
+      "expect": ["A fails: nothing read", "A reads stock=10 version=1"] },
+    { "name": "set without a read", "input": ["1", "B SET 5"],
+      "expect": ["B fails: nothing read"], "reject": ["B reads"] },
+    { "name": "the copy stays after a stale fail: a second commit fails again", "input": ["6", "B READ", "B SET 7", "A READ", "A SET 8", "A COMMIT", "B COMMIT"],
+      "expect": ["A commits stock=8 version=2", "B fails: version 1 is stale, row is at 2"],
+      "reject": ["B commits"] },
+    { "name": "no commands, no output", "input": ["0"],
+      "expect": [], "reject": ["reads", "commits"] }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "task": "05_1",
+  "tests": [
+    { "name": "one valid number", "input": ["1", "10"],
+      "expect": ["sum: 10", "valid: 1", "invalid: 0"], "reject": ["skip"] },
+    { "name": "all valid: no skip lines", "input": ["3", "7", "-2", "20"],
+      "expect": ["sum: 25", "valid: 3", "invalid: 0"], "reject": ["skip"] },
+    { "name": "all invalid: nothing counts", "input": ["3", "abc", "x1", "--"],
+      "expect": ["skip: abc", "skip: x1", "skip: --", "sum: 0", "valid: 0", "invalid: 3"] },
+    { "name": "negative numbers are valid", "input": ["2", "-5", "-7"],
+      "expect": ["sum: -12", "valid: 2", "invalid: 0"], "reject": ["skip"] },
+    { "name": "zero is a valid number", "input": ["2", "0", "5"],
+      "expect": ["sum: 5", "valid: 2", "invalid: 0"], "reject": ["skip"] },
+    { "name": "mix of valid and invalid: the sum check", "input": ["5", "10", "abc", "-5", "3", "1x"],
+      "expect": ["skip: abc", "skip: 1x", "sum: 8", "valid: 3", "invalid: 2"] },
+    { "name": "zero tokens: only the report", "input": ["0"],
+      "expect": ["sum: 0", "valid: 0", "invalid: 0"], "reject": ["skip"] }
+  ]
+}

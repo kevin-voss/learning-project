@@ -1,0 +1,31 @@
+{
+  "task": "01_1",
+  "tests": [
+    { "name": "same singleton twice: same bean, same number",
+      "input": ["2", "GET singleton log", "GET singleton log"],
+      "expect": ["log -> #1 (singleton)", "log -> #1 (singleton)", "created: 1", "singletons: 1"],
+      "reject": ["#2"] },
+    { "name": "prototype twice: a new bean every time",
+      "input": ["2", "GET prototype job", "GET prototype job"],
+      "expect": ["job -> #1 (prototype)", "job -> #2 (prototype)", "created: 2", "singletons: 0"],
+      "reject": ["singletons: 1"] },
+    { "name": "the mixed example: singleton repeats, prototype counts up",
+      "input": ["4", "GET singleton log", "GET singleton log", "GET prototype job", "GET prototype job"],
+      "expect": ["log -> #1 (singleton)", "log -> #1 (singleton)", "job -> #2 (prototype)",
+                 "job -> #3 (prototype)", "created: 3", "singletons: 1"] },
+    { "name": "two singleton names: two beans, two numbers",
+      "input": ["2", "GET singleton log", "GET singleton db"],
+      "expect": ["log -> #1 (singleton)", "db -> #2 (singleton)", "created: 2", "singletons: 2"],
+      "reject": ["db -> #1"] },
+    { "name": "same name: singleton first, then prototype builds again",
+      "input": ["2", "GET singleton log", "GET prototype log"],
+      "expect": ["log -> #1 (singleton)", "log -> #2 (prototype)", "created: 2", "singletons: 1"] },
+    { "name": "same name: prototype first, then singleton keeps its own",
+      "input": ["2", "GET prototype db", "GET singleton db"],
+      "expect": ["db -> #1 (prototype)", "db -> #2 (singleton)", "created: 2", "singletons: 1"] },
+    { "name": "zero requests: only the summary",
+      "input": ["0"],
+      "expect": ["created: 0", "singletons: 0"],
+      "reject": ["->"] }
+  ]
+}

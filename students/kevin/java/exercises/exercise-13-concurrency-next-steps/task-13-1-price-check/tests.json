@@ -1,0 +1,20 @@
+{
+  "task": "13_1",
+  "tests": [
+    { "name": "one shop: voucher comes off", "input": ["1", "shop-a 250"],
+      "expect": ["shop-a: 150", "cheapest: shop-a"] },
+    { "name": "cents 50: voucher stops at 0", "input": ["1", "tiny 50"],
+      "expect": ["tiny: 0"], "reject": ["-50"] },
+    { "name": "cents 100: exactly the voucher, still 0", "input": ["1", "edge 100"],
+      "expect": ["edge: 0"] },
+    { "name": "tie: the first shop in the input wins", "input": ["3", "alpha 150", "beta 150", "gamma 300"],
+      "expect": ["alpha: 50", "beta: 50", "gamma: 200", "cheapest: alpha"],
+      "reject": ["cheapest: beta"] },
+    { "name": "several shops out of price order", "input": ["3", "dear 500", "cheap 120", "mid 200"],
+      "expect": ["dear: 400", "cheap: 20", "mid: 100", "cheapest: cheap"] },
+    { "name": "all below the voucher: all 0, first wins", "input": ["3", "a 30", "b 80", "c 100"],
+      "expect": ["a: 0", "b: 0", "c: 0", "cheapest: a"] },
+    { "name": "no shops at all", "input": ["0"],
+      "expect": ["cheapest: (none)"], "reject": ["null"] }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "task": "10_1",
+  "tests": [
+    { "name": "sheet example 29", "input": ["5", "3", "-1", "4", "0", "2"],
+      "expect": ["sum: 29"] },
+    { "name": "only zero", "input": ["1", "0"],
+      "expect": ["sum: 0"] },
+    { "name": "only negative", "input": ["1", "-5"],
+      "expect": ["sum: 0"] },
+    { "name": "single positive", "input": ["1", "7"],
+      "expect": ["sum: 49"] },
+    { "name": "three ones", "input": ["3", "1", "1", "1"],
+      "expect": ["sum: 3"] },
+    { "name": "empty input", "input": ["0"],
+      "expect": ["sum: 0"] },
+    { "name": "mixed with large", "input": ["4", "10", "-3", "1", "0"],
+      "expect": ["sum: 101"] }
+  ]
+}

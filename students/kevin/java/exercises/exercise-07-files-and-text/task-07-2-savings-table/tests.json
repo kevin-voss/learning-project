@@ -1,0 +1,17 @@
+{
+  "task": "07_2",
+  "tests": [
+    { "name": "two savers, one line each", "input": ["2", "ana 120", "ben 80"],
+      "expect": ["ana: 120", "ben: 80", "grand total: 200"] },
+    { "name": "a repeated name is summed", "input": ["3", "ana 100", "ben 50", "ana 25"],
+      "expect": ["ana: 125", "ben: 50", "grand total: 175"], "reject": ["ana: 100"] },
+    { "name": "names print alphabetically, also when the input is not", "input": ["3", "zoe 10", "ben 20", "ana 30"],
+      "expect": ["ana: 30", "ben: 20", "zoe: 10", "grand total: 60"] },
+    { "name": "one saver alone", "input": ["1", "dee 40"],
+      "expect": ["dee: 40", "grand total: 40"] },
+    { "name": "zero savers: only the header in the file, only the grand total", "input": ["0"],
+      "expect": ["grand total: 0"], "reject": ["name,cents", "null"] },
+    { "name": "cents past a thousand add up", "input": ["3", "pia 2500", "ana 7", "pia 500"],
+      "expect": ["ana: 7", "pia: 3000", "grand total: 3007"] }
+  ]
+}

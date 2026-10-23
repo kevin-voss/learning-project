@@ -1,0 +1,27 @@
+{
+  "task": "01_2",
+  "tests": [
+    { "name": "formal: exact wording, period included",
+      "input": ["formal", "1", "Ada"],
+      "lines": ["Good day, Ada."],
+      "expect": ["wired: GreetingService(FormalGreeter)"],
+      "reject": ["Hey"] },
+    { "name": "casual: exact wording, exclamation mark included",
+      "input": ["casual", "1", "Ada"],
+      "lines": ["Hey Ada!"],
+      "expect": ["wired: GreetingService(CasualGreeter)"],
+      "reject": ["Good day"] },
+    { "name": "formal with two names, in input order",
+      "input": ["formal", "2", "Ada", "Ben"],
+      "expect": ["Good day, Ada.", "Good day, Ben.", "wired: GreetingService(FormalGreeter)"],
+      "reject": ["Hey"] },
+    { "name": "casual with two names",
+      "input": ["casual", "2", "Kim", "Zed"],
+      "expect": ["Hey Kim!", "Hey Zed!", "wired: GreetingService(CasualGreeter)"],
+      "reject": ["Good day"] },
+    { "name": "no names: only the wired line",
+      "input": ["formal", "0"],
+      "expect": ["wired: GreetingService(FormalGreeter)"],
+      "reject": ["Good day"] }
+  ]
+}

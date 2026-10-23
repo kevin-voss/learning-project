@@ -1,0 +1,15 @@
+{
+  "task": "04_2",
+  "tests": [
+    { "name": "alphabetical order: mail typed last is printed first", "input": ["post parcel post", "mail post", "END"],
+      "expect": ["words: 5", "unique: 3", "mail: 1", "parcel: 1", "post: 3"] },
+    { "name": "the same word three times", "input": ["parcel parcel parcel", "END"],
+      "expect": ["words: 3", "unique: 1", "parcel: 3"] },
+    { "name": "case-sensitive: Java and java are two words", "input": ["Java java Java", "END"],
+      "expect": ["words: 3", "unique: 2", "Java: 2", "java: 1"], "reject": ["unique: 1"] },
+    { "name": "one word only", "input": ["stamp", "END"],
+      "expect": ["words: 1", "unique: 1", "stamp: 1"] },
+    { "name": "END as the very first line: zero words", "input": ["END"],
+      "exact": ["words: 0", "unique: 0"] }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "task": "04_1",
+  "tests": [
+    { "name": "lazy: one query for the authors, one per author, so 4",
+      "input": ["MODE lazy"],
+      "expect": ["ana: 2 books", "ben: 1 books", "cy: 0 books", "queries: 4"] },
+    { "name": "lazy: the four SELECTs in the order they run",
+      "input": ["MODE lazy"],
+      "lines": ["-- SELECT * FROM authors",
+                "-- SELECT * FROM books WHERE author_id = 1",
+                "-- SELECT * FROM books WHERE author_id = 2",
+                "-- SELECT * FROM books WHERE author_id = 3"],
+      "expect": ["queries: 4"] },
+    { "name": "fetch: everything arrives in one trip, so 1",
+      "input": ["MODE fetch"],
+      "expect": ["ana: 2 books", "ben: 1 books", "cy: 0 books", "queries: 1"],
+      "reject": ["author_id"] },
+    { "name": "fetch: the single JOIN SELECT line",
+      "input": ["MODE fetch"],
+      "lines": ["-- SELECT * FROM authors JOIN books"],
+      "expect": ["queries: 1"] },
+    { "name": "cy has no books, but her empty shelf still costs a query",
+      "input": ["MODE lazy"],
+      "expect": ["cy: 0 books", "queries: 4"],
+      "reject": ["queries: 3"] }
+  ]
+}

@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Student | Mat |
+| Student | Becky |
 | Subject | Mathematical Foundations · Mathematische Grundlagen der Informatik (Hochschule Hannover) |
 | Language | Written |
 | Created | 2026-10-23 |

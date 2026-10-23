@@ -1,4 +1,4 @@
-# Mat · Mathematical Foundations · Exercises
+# Becky · Mathematical Foundations · Exercises
 
 One folder = one exercise (one exercise sheet). Inside: one folder per task, each with `README.md`, `my-solution/` and `solution/`.
 

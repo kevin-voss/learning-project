@@ -51,9 +51,12 @@ const href = (path) => relative('hub', path).split('\\').join('/')
 const hrefFrom = (fromDir, path) => relative(fromDir, path).split('\\').join('/')
 
 const THEME_INIT = `<script>try { const t = JSON.parse(localStorage.getItem('learning-project:theme')); if (t) document.documentElement.dataset.theme = t } catch {}</script>`
-const THEME_HEAD = [THEME_INIT, ...['tokens.css', 'components.css', 'anim/anim.css']
-  .map((file) => `<link rel="stylesheet" href="/hub/theme/${file}">`)].join('\n  ')
-const THEME_BODY = ['/hub/theme/anim/scenes.js', '/hub/theme/anim/player.js', '/hub/progress.js']
+const THEME_HEAD = [
+  THEME_INIT,
+  ...['tokens.css', 'components.css', 'anim/anim.css'].map((file) => `<link rel="stylesheet" href="/hub/theme/${file}">`),
+  '<link rel="stylesheet" href="/hub/chat/chat.css">',
+].join('\n  ')
+const THEME_BODY = ['/hub/theme/anim/scenes.js', '/hub/theme/anim/player.js', '/hub/progress.js', '/hub/chat/chat.js']
   .map((src) => `<script src="${src}" defer></script>`).join('\n  ')
 
 function plain(markdown) {

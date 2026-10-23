@@ -1,0 +1,175 @@
+/* Student exercise tutor chat — floating help on task / exercise pages. */
+
+.lp-chat {
+  position: fixed;
+  right: max(var(--lp-s4), env(safe-area-inset-right));
+  bottom: max(var(--lp-s4), env(safe-area-inset-bottom));
+  z-index: 400;
+  font: 400 14px / 1.4 var(--lp-font);
+  color: var(--lp-text);
+}
+
+.lp-chat * { box-sizing: border-box; }
+
+.lp-chat-fab {
+  width: 52px;
+  height: 52px;
+  border: 1px solid var(--lp-line);
+  border-radius: 50%;
+  background: var(--lp-accent);
+  color: var(--lp-on-accent);
+  font: 700 15px / 1 var(--lp-font);
+  cursor: pointer;
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--lp-text) 18%, transparent);
+}
+
+.lp-chat-fab:hover { filter: brightness(1.05); }
+.lp-chat-fab:focus-visible { outline: 2px solid var(--lp-accent); outline-offset: 3px; }
+
+.lp-chat[data-open] .lp-chat-fab { display: none; }
+
+.lp-chat-panel {
+  display: none;
+  flex-direction: column;
+  width: min(360px, calc(100vw - 2 * var(--lp-s4)));
+  height: min(480px, calc(100vh - 6rem));
+  background: var(--lp-surface);
+  border: 1px solid var(--lp-line);
+  border-radius: 12px;
+  box-shadow: 0 8px 28px color-mix(in srgb, var(--lp-text) 16%, transparent);
+  overflow: hidden;
+}
+
+.lp-chat[data-open] .lp-chat-panel { display: flex; }
+
+.lp-chat-head {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--lp-s2);
+  padding: var(--lp-s3);
+  border-bottom: 1px solid var(--lp-line);
+  background: var(--lp-surface-2);
+}
+
+.lp-chat-head-text { flex: 1; min-width: 0; }
+
+.lp-chat-label {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--lp-text-muted);
+}
+
+.lp-chat-scope {
+  margin: 2px 0 0;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.lp-chat-head button {
+  flex-shrink: 0;
+  border: 0;
+  background: transparent;
+  color: var(--lp-text-muted);
+  font: 400 12px / 1 var(--lp-font);
+  cursor: pointer;
+  padding: 4px 6px;
+}
+
+.lp-chat-head button:hover { color: var(--lp-text); }
+
+.lp-chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--lp-s3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--lp-s2);
+  background: var(--lp-bg);
+}
+
+.lp-chat-empty {
+  margin: auto;
+  padding: var(--lp-s3);
+  text-align: center;
+  color: var(--lp-text-muted);
+  font-size: 13px;
+}
+
+.lp-chat-msg {
+  max-width: 92%;
+  padding: 8px 10px;
+  border-radius: 10px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 13px;
+}
+
+.lp-chat-msg[data-role="user"] {
+  align-self: flex-end;
+  background: var(--lp-accent-soft);
+  color: var(--lp-text);
+}
+
+.lp-chat-msg[data-role="assistant"] {
+  align-self: flex-start;
+  background: var(--lp-surface);
+  border: 1px solid var(--lp-line);
+}
+
+.lp-chat-msg[data-role="error"] {
+  align-self: stretch;
+  background: var(--lp-warn-bg);
+  color: var(--lp-warn);
+  border: 1px solid color-mix(in srgb, var(--lp-warn) 25%, transparent);
+}
+
+.lp-chat-form {
+  display: flex;
+  gap: var(--lp-s2);
+  padding: var(--lp-s3);
+  border-top: 1px solid var(--lp-line);
+  background: var(--lp-surface);
+}
+
+.lp-chat-form textarea {
+  flex: 1;
+  min-height: 40px;
+  max-height: 96px;
+  resize: none;
+  padding: 8px 10px;
+  border: 1px solid var(--lp-line);
+  border-radius: 8px;
+  background: var(--lp-bg);
+  color: var(--lp-text);
+  font: inherit;
+}
+
+.lp-chat-form textarea:focus {
+  outline: 2px solid var(--lp-accent-soft);
+  border-color: var(--lp-accent);
+}
+
+.lp-chat-form button[type="submit"] {
+  align-self: flex-end;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--lp-accent);
+  color: var(--lp-on-accent);
+  font: 700 13px / 1 var(--lp-font);
+  cursor: pointer;
+}
+
+.lp-chat-form button[type="submit"]:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}

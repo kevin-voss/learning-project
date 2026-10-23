@@ -1,0 +1,9 @@
+{
+  "task": "04_2",
+  "kind": "sql",
+  "setup": "setup.sql",
+  "expect": [
+    "10|ivan|90",
+    "11|hana|240"
+  ]
+}

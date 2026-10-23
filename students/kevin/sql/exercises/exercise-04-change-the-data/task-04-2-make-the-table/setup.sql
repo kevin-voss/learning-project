@@ -1,0 +1,1 @@
+-- Exercise 04 task 2 builds its own tables in answer.sql; nothing to set up.

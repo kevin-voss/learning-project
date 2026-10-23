@@ -35,6 +35,8 @@ Optional<Author> findByIdWithBooks(Long id);
 
 > [!NOTE]
 > **Pagination:** `Pageable` / `Page` in the controller, `findAll(PageRequest.of(page, size, Sort.by("title")))`. Always include an order, or page 2 may repeat rows of page 1.
+>
+> Three more query shapes, awareness level: **Criteria API** builds type-safe dynamic queries (Spring Data specs use it); **native SQL** (`@Query(nativeQuery = true)`) for what JPQL cannot say (window functions, JSONB); and **bulk JPQL** (`update Book b set b.title = :t where …`) runs straight on the database — it skips the persistence context, so loaded entities go stale; follow with `@Modifying(clearAutomatically = true)`. A second-level cache exists but hurts more than it helps until you can measure — skip it.
 
 > [!TRY]
 > 1. Set `spring.jpa.properties.hibernate.generate_statistics=true` and log `org.hibernate.SQL` at DEBUG in dev.

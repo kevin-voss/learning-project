@@ -37,7 +37,7 @@ void rename(Long id, String title) {
 > `@Transactional` rolls back only for **unchecked** exceptions by default (`rollbackFor` changes that). Catching an exception inside the method hides it — the transaction commits anyway. And calling `this.transactionalMethod()` from inside the same class skips the proxy: the annotation does nothing.
 
 > [!NOTE]
-> Put `@Transactional` on the **service** method: one use case, one transaction. Repositories are not the transaction boundary. `readOnly = true` lets Hibernate skip dirty checking.
+> Put `@Transactional` on the **service** method: one use case, one transaction. Repositories are not the transaction boundary. `readOnly = true` lets Hibernate skip dirty checking. Underneath, the database picks an **isolation level** — read committed is the default: you never see a half-written other transaction, but two identical `SELECT`s in one transaction can still see different rows unless you lock (see [locking explained](../../tracks/spring-boot/topics/10-persistence/locking-explained.md)).
 
 > [!CHECK]
 > 1. You load a book, change its title, and the method ends without `save`. Is the title updated?

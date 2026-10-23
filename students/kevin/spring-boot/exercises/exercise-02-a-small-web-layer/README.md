@@ -65,7 +65,7 @@ public class BookController {
 
 - `@RestController`: this class answers HTTP; return values become the response body.
 - `@GetMapping("/books/{id}")`: this method answers `GET /books/<anything>`.
-- `@PathVariable` grabs the `{id}` out of the path.
+- `@PathVariable` grabs the `{id}` out of the path. Its siblings: `@RequestParam` grabs a value after `?` (`GET /books?page=2`), `@RequestBody` the JSON body of a `POST`, `@ResponseStatus` sets the status without a `ResponseEntity`.
 
 **In task 02_1 you build this by hand:** `route(Request)` is the switchboard — the part Spring does for you — and `listBooks`, `getBook`, `deleteBook` are the controller methods.
 

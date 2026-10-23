@@ -1,6 +1,6 @@
 # Kevin
 
-Hi Kevin! This is your room. You already know programming and the basics of classes and objects; here you walk the rest of **Java 25** in order — inheritance, interfaces, collections, exceptions, files, then records, sealed types, virtual threads and the craft around them — and then the ideas under **Spring Boot and Hibernate**. Every folder below is one subject; do them in the order listed.
+Hi Kevin! This is your room. You already know programming and the basics of classes and objects; here you walk the rest of **Java 25** in order — inheritance, interfaces, collections, exceptions, files, then records, sealed types, virtual threads and the craft around them — then **SQL** on a real database, then the ideas under **Spring Boot and Hibernate**. Every folder below is one subject; do them in the order listed.
 
 How it is sorted:
 
@@ -19,6 +19,7 @@ kevin/
 
 <!-- index:start -->
 - [Java](java/README.md)
+- [SQL](sql/README.md)
 - [Spring Boot](spring-boot/README.md)
 <!-- index:end -->
 

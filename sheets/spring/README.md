@@ -15,6 +15,7 @@ These sheets explain the **two ideas people mix up most** in Spring: the contain
 | Validation (`@Valid`) | Course [step 05](../../tracks/spring-boot/topics/05-validation-and-inputs/README.md) |
 | Error handling, `ProblemDetail` | Course [step 06](../../tracks/spring-boot/topics/06-error-handling/README.md) |
 | Logging, testing, Docker | Course steps [07](../../tracks/spring-boot/topics/07-logging-and-observability-basics/README.md), [08](../../tracks/spring-boot/topics/08-testing/README.md), [09](../../tracks/spring-boot/topics/09-docker/README.md) |
+| Calling other services: `RestClient` (RestTemplate is legacy) | [REST and HTTP](../../tracks/java/topics/rest-and-http/index.html) for the ideas; the course's HTTP-client step builds on it |
 | JWT login | Course [step 16](../../tracks/spring-boot/topics/16-jwt-authentication/README.md) |
 | What Hibernate does with your entities | [Hibernate sheets](../hibernate/README.md) |
 

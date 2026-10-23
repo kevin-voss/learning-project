@@ -1,0 +1,22 @@
+{
+  "task": "03_1",
+  "kind": "sql",
+  "setup": "setup.sql",
+  "expect": [
+    "1|ana",
+    "2|ana",
+    "3|ben",
+    "4|cy",
+    "5|eli",
+    "6|eli",
+    "7|ben",
+    "3|Oslo|2000",
+    "5|Oslo|1500",
+    "6|Oslo|90",
+    "7|Oslo|1200",
+    "ben|3200",
+    "ana|2000",
+    "eli|1590",
+    "cy|350"
+  ]
+}

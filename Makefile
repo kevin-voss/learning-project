@@ -16,7 +16,7 @@
 
 TOPICS := variables math strings arrays conditionals loops functions objects
 
-.PHONY: test help new-exercise test-task site catalog check-path $(TOPICS)
+.PHONY: test help new-exercise test-task test-sql site catalog check-path $(TOPICS)
 
 help:
 	@echo "make test              — every drill topic"
@@ -24,6 +24,7 @@ help:
 	@echo "make variables-task-03 — one task (01–11) of a topic"
 	@echo "make new-exercise STUDENT=becky SUBJECT=computer-science NUMBER=05 TITLE=\"Loops\" TASKS=\"Times table, Guess the number\" [LANGUAGE=Java]"
 	@echo "make test-task TASK=04_2 [PART=a] [STUDENT=becky] [SUBJECT=java] [SOLUTION=1] — run a student task's tests.json"
+	@echo "make test-sql TASK=01_1 [STUDENT=kevin] [SUBJECT=sql] [SOLUTION=1] — run a student SQL task (answer.sql)"
 	@echo "make catalog           — rewrite the generated parts of hub/index.html"
 	@echo "make check-path        — check hub/path.mjs (ids, retired ids, links)"
 	@echo "make site              — check the path, build dist/site, check every link"
@@ -69,6 +70,11 @@ new-exercise:
 test-task:
 	@node students/scripts/test-task.mjs "$(TASK)" $(if $(PART),--part "$(PART)") $(if $(STUDENT),--student "$(STUDENT)") $(if $(SUBJECT),--subject "$(SUBJECT)") \
 		$(if $(MAIN),--main "$(MAIN)") $(if $(SOLUTION),--solution)
+
+# Tests of one student SQL task (setup.sql + answer.sql) on my-solution/, or solution/ with SOLUTION=1
+test-sql:
+	@node students/scripts/test-sql.mjs "$(TASK)" $(if $(STUDENT),--student "$(STUDENT)") $(if $(SUBJECT),--subject "$(SUBJECT)") \
+		$(if $(SOLUTION),--solution)
 
 # Website: check the path, refresh the landing page, build dist/site, check links (same as Vercel)
 catalog:

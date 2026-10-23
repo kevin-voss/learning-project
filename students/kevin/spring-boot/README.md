@@ -1,6 +1,6 @@
 # Kevin · Spring Boot
 
-You finished the Java subject. This subject is the bridge to **Spring Boot and Hibernate**: the ideas under the annotations, each one built by hand in plain Java first, so that the real framework never feels like magic.
+You finished the Java subject (and you know `SELECT`, `JOIN` and `GROUP BY` from the [SQL subject](../sql/README.md) — exercise 03 onward builds on it). This subject is the bridge to **Spring Boot and Hibernate**: the ideas under the annotations, each one built by hand in plain Java first, so that the real framework never feels like magic.
 
 | Folder | What is inside |
 |--------|----------------|

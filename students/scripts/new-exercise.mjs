@@ -57,8 +57,10 @@ function slugify(text) {
     .replace(/^-+|-+$/g, '')
 }
 
+const ACRONYMS = { sql: 'SQL', html: 'HTML', css: 'CSS', api: 'API' }
+
 function displayName(slug) {
-  return slug.split('-').map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
+  return slug.split('-').map((word) => ACRONYMS[word] ?? word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
 }
 
 function fill(text, values) {
@@ -82,9 +84,9 @@ function writeFromTemplate(file, templateName, values) {
   return true
 }
 
-// Puts one line between the index markers. A line whose `key` is already there is
+// Puts one line between the index markers. A line whose `key` (or `tail`) is already there is
 // replaced, so a row can grow (e.g. more tasks). `header` lines start an empty table.
-function upsertIndex(file, line, { key = line, header = [] } = {}) {
+function upsertIndex(file, line, { key = line, tail = '', header = [] } = {}) {
   const text = readFileSync(file, 'utf8')
   const start = text.indexOf(START)
   const end = text.indexOf(END)
@@ -93,7 +95,7 @@ function upsertIndex(file, line, { key = line, header = [] } = {}) {
     return
   }
   const body = text.slice(start + START.length, end).split('\n').filter((l) => l.trim() !== '')
-  const at = body.findIndex((l) => l.startsWith(key))
+  const at = body.findIndex((l) => l.startsWith(key) || (tail !== '' && l.endsWith(tail)))
   const lines = at >= 0 ? body.map((l, i) => (i === at ? line : l)) : body.length ? [...body, line] : [...header, line]
   writeFileSync(file, `${text.slice(0, start)}${START}\n${lines.join('\n')}\n${text.slice(end)}`)
 }
@@ -154,8 +156,8 @@ for (const taskTitle of titles) {
 const ids = folders(exerciseDir, `task-${number}-`).map((name) => `${number}_${name.split('-')[2]}`)
 // The exercise keeps the title it was created with ("# Exercise 04 · Branching").
 const exerciseTitle = readFileSync(join(exerciseDir, 'README.md'), 'utf8').match(/^#\s+.*?·\s*(.+)$/m)?.[1]?.trim() ?? title
-upsertIndex(join(ROOT, 'README.md'), `- [${values.STUDENT_NAME}](${student}/README.md)`)
-upsertIndex(join(studentDir, 'README.md'), `- [${values.SUBJECT_NAME}](${subject}/README.md)`)
+upsertIndex(join(ROOT, 'README.md'), `- [${values.STUDENT_NAME}](${student}/README.md)`, { tail: `](${student}/README.md)` })
+upsertIndex(join(studentDir, 'README.md'), `- [${values.SUBJECT_NAME}](${subject}/README.md)`, { tail: `](${subject}/README.md)` })
 upsertIndex(join(exercisesDir, 'README.md'), `| ${number} | [${exerciseTitle}](${exerciseFolder}/README.md) | ${ids.join(' · ')} |`, {
   key: `| ${number} |`,
   header: ['| Exercise | Topic | Tasks |', '|----------|-------|-------|'],

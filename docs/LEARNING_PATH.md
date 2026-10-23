@@ -71,6 +71,7 @@ Optional extras: [Docker for your page](../projects/extras/docker-portfolio/READ
 | Threads: virtual (final), `CompletableFuture`, concurrent collections, structured concurrency (preview) | [`sheets/java/concurrency/`](../sheets/java/concurrency/README.md) | student Kevin · exercises 08, 13 |
 | Java craft: naming, Optional, immutability, streams | [`sheets/java/advanced/`](../sheets/java/advanced/README.md) | student Kevin · exercises 09–10 |
 | Everyday APIs: `java.time`, `BigDecimal` money, `Collectors` | [`sheets/java/apis/`](../sheets/java/apis/README.md) | student Kevin · exercises 11–12 |
+| SQL for beginners: SELECT, WHERE, GROUP BY, JOIN, writes, CREATE TABLE | CS lesson [`database-sql-fundamentals`](../tracks/computer-science/index.html#database-sql-fundamentals), demo for indexes/transactions | student Kevin · sql exercises 01–04; project 11 applies | 
 | Spring ideas: container, bean scopes, the session family, session vs JWT | [`sheets/spring/`](../sheets/spring/README.md) | student Kevin · spring-boot exercises 01, 06; course steps 04, 16 link |
 | Hibernate ideas: persistence context, fetching and N+1, mapping rules | [`sheets/hibernate/`](../sheets/hibernate/README.md) | student Kevin · spring-boot exercises 03–05; course step 10, 15 link |
 | Spring Boot, Maven in depth, Spring testing | [`tracks/spring-boot/`](../tracks/spring-boot/README.md) | — |

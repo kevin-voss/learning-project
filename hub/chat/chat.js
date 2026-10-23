@@ -10,6 +10,7 @@
   const ICON_HISTORY = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/><path d="M12 7v5l3 2"/></svg>'
   const ICON_NEW = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>'
   const ICON_CLOSE = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>'
+  const ICON_TRASH = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>'
 
   function parseScope(pathname) {
     const path = pathname.replace(/\/(index|README)\.html$/i, '/').replace(/\/+$/, '/') || '/'
@@ -168,6 +169,16 @@
     return chat.messages.filter((m) => m.role === 'user').length
   }
 
+  function listedChats() {
+    return store.chats.filter((c) => conversationMessages(c).length > 0)
+  }
+
+  function resetToEmptyChat() {
+    const id = newId()
+    store = { chats: [{ id, createdAt: Date.now(), messages: [] }], activeId: id }
+    saveStore(storageKey, store)
+  }
+
   function startNewChat(opts = {}) {
     const id = newId()
     store.chats.push({ id, createdAt: Date.now(), messages: [] })
@@ -179,7 +190,29 @@
     } else {
       warning = ''
     }
+  }
+
+  function deleteChat(id) {
+    store.chats = store.chats.filter((c) => c.id !== id)
+    if (!store.chats.length) {
+      resetToEmptyChat()
+      showHistory = false
+      warning = ''
+      return
+    }
+    if (store.activeId === id) {
+      const next = [...store.chats].reverse().find((c) => conversationMessages(c).length > 0)
+      store.activeId = (next || store.chats.at(-1)).id
+    }
+    if (!listedChats().length) showHistory = false
+    saveStore(storageKey, store)
+    warning = ''
+  }
+
+  function deleteAllChats() {
+    resetToEmptyChat()
     showHistory = false
+    warning = 'All chats deleted.'
   }
 
   const root = document.createElement('div')
@@ -251,35 +284,38 @@
   }
 
   function renderHistory() {
+    const past = listedChats()
+    // Never leave an empty sidebar open.
+    if (showHistory && !past.length) showHistory = false
+
     root.toggleAttribute('data-history', showHistory)
     historyEl.hidden = !showHistory
+    historyBtn.disabled = past.length === 0
+    historyBtn.title = past.length ? 'Chat history' : 'No past chats yet'
     historyBtn.setAttribute('aria-pressed', showHistory ? 'true' : 'false')
     historyEl.replaceChildren()
     if (!showHistory) return
 
-    const heading = document.createElement('p')
-    heading.className = 'lp-chat-history-label'
-    heading.textContent = 'Past chats'
-    historyEl.append(heading)
+    const head = document.createElement('div')
+    head.className = 'lp-chat-history-head'
+    head.innerHTML = `<p class="lp-chat-history-label">Past chats</p>`
+    historyEl.append(head)
 
-    const ordered = [...store.chats].reverse()
-    if (!ordered.length) {
-      const empty = document.createElement('p')
-      empty.className = 'lp-chat-history-empty'
-      empty.textContent = 'No chats yet.'
-      historyEl.append(empty)
-      return
-    }
-
+    const scroll = document.createElement('div')
+    scroll.className = 'lp-chat-history-list'
+    const ordered = [...past].reverse()
     for (const chat of ordered) {
+      const row = document.createElement('div')
+      row.className = 'lp-chat-history-row'
+      if (chat.id === store.activeId) row.dataset.active = '1'
+
       const btn = document.createElement('button')
       btn.type = 'button'
       btn.className = 'lp-chat-history-item'
-      if (chat.id === store.activeId) btn.dataset.active = '1'
-      const count = userCount(chat)
       btn.innerHTML = `<span class="lp-chat-history-preview"></span><span class="lp-chat-history-meta"></span>`
       btn.querySelector('.lp-chat-history-preview').textContent = chatPreview(chat)
-      btn.querySelector('.lp-chat-history-meta').textContent = `${formatWhen(chat.createdAt)} · ${count}/${MAX_MESSAGES} msgs`
+      btn.querySelector('.lp-chat-history-meta').textContent =
+        `${formatWhen(chat.createdAt)} · ${userCount(chat)}/${MAX_MESSAGES}`
       btn.addEventListener('click', () => {
         store.activeId = chat.id
         saveStore(storageKey, store)
@@ -287,8 +323,36 @@
         render()
         input.focus()
       })
-      historyEl.append(btn)
+
+      const del = document.createElement('button')
+      del.type = 'button'
+      del.className = 'lp-chat-history-del'
+      del.title = 'Delete chat'
+      del.setAttribute('aria-label', 'Delete chat')
+      del.innerHTML = ICON_TRASH
+      del.addEventListener('click', (event) => {
+        event.stopPropagation()
+        deleteChat(chat.id)
+        render()
+        input.focus()
+      })
+
+      row.append(btn, del)
+      scroll.append(row)
     }
+    historyEl.append(scroll)
+
+    const clear = document.createElement('button')
+    clear.type = 'button'
+    clear.className = 'lp-chat-history-clear'
+    clear.textContent = 'Delete all'
+    clear.addEventListener('click', () => {
+      if (!confirm('Delete all chats for this page?')) return
+      deleteAllChats()
+      render()
+      input.focus()
+    })
+    historyEl.append(clear)
   }
 
   function render() {
@@ -341,7 +405,13 @@
     render()
     input.focus()
   })
-  root.querySelector('[data-action="history"]').addEventListener('click', () => {
+  historyBtn.addEventListener('click', () => {
+    if (!listedChats().length) {
+      warning = 'No past chats yet. Send a message first.'
+      showHistory = false
+      render()
+      return
+    }
     showHistory = !showHistory
     render()
   })

@@ -761,8 +761,10 @@
   document.body.append(selBar)
 
   let lastSelectedText = ''
+  let selHideTimer = 0
 
   function hideSelBar() {
+    clearTimeout(selHideTimer)
     selBar.hidden = true
     lastSelectedText = ''
   }
@@ -779,9 +781,13 @@
     const range = sel.getRangeAt(0)
     const node = range.commonAncestorContainer
     const el = node.nodeType === Node.ELEMENT_NODE ? node : node.parentElement
-    if (!el || !sheetRoot().contains(el)) return null
+    if (!el) return null
     if (root.contains(el) || selBar.contains(el)) return null
     if (el.closest('textarea, input, select, [contenteditable="true"]')) return null
+    // Prefer sheet content; still allow selection elsewhere on the page body
+    // (crumbs / trail) so a missed .lp-sheet match does not kill the bar.
+    const sheet = sheetRoot()
+    if (sheet !== document.body && !sheet.contains(el) && !document.body.contains(el)) return null
     return { text, range }
   }
 
@@ -792,16 +798,19 @@
       return
     }
     selBar.hidden = false
-    const bar = selBar.getBoundingClientRect()
-    let top = rect.top - bar.height - 8
-    let left = rect.left + (rect.width - bar.width) / 2
-    left = Math.max(8, Math.min(left, window.innerWidth - bar.width - 8))
-    if (top < 8) top = Math.min(rect.bottom + 8, window.innerHeight - bar.height - 8)
+    // Force layout so width/height are real after un-hiding.
+    const barW = selBar.offsetWidth || 120
+    const barH = selBar.offsetHeight || 36
+    let top = rect.top - barH - 8
+    let left = rect.left + (rect.width - barW) / 2
+    left = Math.max(8, Math.min(left, window.innerWidth - barW - 8))
+    if (top < 8) top = Math.min(rect.bottom + 8, window.innerHeight - barH - 8)
     selBar.style.top = `${Math.round(top)}px`
     selBar.style.left = `${Math.round(left)}px`
   }
 
   function refreshSelBar() {
+    clearTimeout(selHideTimer)
     const picked = selectedInSheet()
     if (!picked) {
       if (!selBar.contains(document.activeElement)) hideSelBar()
@@ -811,29 +820,46 @@
     placeSelBar(picked.range)
   }
 
-  document.addEventListener('mouseup', (event) => {
+  // pointerup covers mouse + pen; touchend for phones.
+  function onSelectEnd(event) {
     if (selBar.contains(event.target)) return
-    setTimeout(refreshSelBar, 0)
-  })
+    // Let the browser finish the selection before we read it.
+    setTimeout(refreshSelBar, 10)
+  }
+  document.addEventListener('pointerup', onSelectEnd)
+  document.addEventListener('touchend', onSelectEnd, { passive: true })
   document.addEventListener('keyup', (event) => {
     if (event.key === 'Shift' || event.key.startsWith('Arrow')) {
-      setTimeout(refreshSelBar, 0)
+      setTimeout(refreshSelBar, 10)
     }
   })
   document.addEventListener('selectionchange', () => {
     const sel = window.getSelection()
-    if (sel && !sel.isCollapsed) return
-    if (selBar.contains(document.activeElement)) return
-    hideSelBar()
+    if (sel && !sel.isCollapsed) {
+      // Update position while dragging; do not require pointerup only.
+      clearTimeout(selHideTimer)
+      selHideTimer = setTimeout(refreshSelBar, 30)
+      return
+    }
+    // Delay hide so it does not race a just-finished pointerup show.
+    clearTimeout(selHideTimer)
+    selHideTimer = setTimeout(() => {
+      if (selBar.contains(document.activeElement)) return
+      const still = window.getSelection()
+      if (still && !still.isCollapsed) return
+      hideSelBar()
+    }, 150)
   })
-  window.addEventListener('scroll', hideSelBar, true)
+  // Window scroll only — capture:true on every nested scroll hid the bar
+  // as soon as it appeared in some browsers.
+  window.addEventListener('scroll', hideSelBar, { passive: true })
   window.addEventListener('resize', hideSelBar)
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && !selBar.hidden) hideSelBar()
   })
 
   // Keep the highlight while clicking the bar.
-  selBar.addEventListener('mousedown', (event) => {
+  selBar.addEventListener('pointerdown', (event) => {
     event.preventDefault()
   })
 

@@ -8,23 +8,19 @@
     icon: 'F',
     tagline: 'What an object knows',
     glossary: terms,
-    realWorld: 'A sign-up form at the swimming pool. It has boxes for name, age and "can swim: yes / no". Every child gets their own copy of the form and writes their own answers in it. A box nobody fills in stays empty.',
+    realWorld: 'A sign-up form at the swimming pool. Same boxes for everybody: name, age, can swim. Every child gets their own copy and writes their own answers. A box nobody fills stays empty.',
     kid: [
-      'Think of the pool form. The form has the same boxes for everybody: name, age, can swim.',
-      'Mia gets one copy and writes "Mia, 7, yes". Leo gets another copy and writes "Leo, 6, no". Mia’s form and Leo’s form are different papers. If Leo changes his age, Mia’s paper does not change.',
-      'In Java, the boxes on the form are **fields**. Every object is one copy of the form. And if you forget to fill in a box, Java writes a "nothing" value for you: `0` for numbers, `false` for yes/no, and `null` (meaning "empty") for text.'
+      'The boxes are **fields**. Every object is one copy of the form. Forget a box? Java fills it: `0` for numbers, `false` for yes/no, `null` (empty) for text.'
     ],
-    definition: 'A **field** is a variable declared inside a class but outside every method. Each object gets its own copy of every field. Together, the values of all fields are the **state** of the object. A field you do not set gets a **default value**: `0`, `0.0`, `false` or `null`.',
+    definition: 'A **field** is a variable declared inside a class but outside every method. Each object gets its own copy. Together, the field values are the **state** of the object. An unset field gets a **default value**: `0`, `0.0`, `false` or `null`.',
     explain: [
-      'You write a field like any variable, with a type and a name, but directly in the class body: `int age;`. It is not inside `main` or any other method. The full name is **instance field** or **instance variable**, because each instance (object) has its own.',
-      'A field lives as long as its object lives. A **local variable** inside a method is gone when the method ends. That is why fields are the place for everything an object must remember: the balance of an account, the name of a dog, the score of a player.',
-      'Fields can have any type: `int`, `double`, `boolean`, `char`, `String`, an array like `int[]`, and even another class like `Dog`. Types like `String`, arrays and your own classes are **reference types**: the field holds a reference (an arrow) to an object, not the object itself.',
-      'Java gives every field a start value by itself. Number fields start at `0` (or `0.0`), `boolean` fields at `false`, `char` fields at the empty character `\\u0000`, and every reference field starts at `null`. `null` means "this arrow points to nothing yet". You met default values in [Types and Variables](../types-and-variables/index.html); here you see them on objects.',
-      'You can also give a field your own start value: `int battery = 100;`. This is a **field initializer**. Every new object then starts with `100` instead of `0`.'
+      'Write a field in the class body: `int age;`. Full name: **instance field** (each instance has its own). It lives as long as the object. A **local variable** inside a method is gone when the method ends.',
+      'Any type is allowed: `int`, `String`, arrays, even another class. Reference types hold an arrow; until set, that is `null`.',
+      'Your own start value = **field initializer**: `int battery = 100;`. Every new object then starts at `100` instead of `0`.'
     ],
-    why: 'An object must remember things between method calls. Local variables forget everything when a method ends. Fields keep the data as long as the object exists.',
-    whenUse: 'Make something a field when it describes the object and must survive from one method call to the next (a name, a balance, a score). Keep it a local variable when only one method needs it for a moment (a loop counter, a temporary sum).',
-    syntax: '`class ClassName { type fieldName; type otherField = startValue; }`. Read or write it with `object.fieldName`.',
+    why: 'An object must remember things between method calls. Locals forget when the method ends. Fields keep the data as long as the object exists.',
+    whenUse: 'Field: describes the object and must survive across calls. Local: only one method needs it for a moment.',
+    syntax: '`class ClassName { type fieldName; type other = startValue; }`. Read or write with `object.fieldName`.',
     fileName: 'RobotDemo.java',
     code: `public class RobotDemo {
     public static void main(String[] args) {
@@ -59,43 +55,34 @@ speed:   0.0
 on:      false
 battery: 100
 Robo has 2 legs, battery 85%`,
-    codeSummary: 'The class `Robot` has five fields. A fresh robot shows the default values (`null`, `0`, `0.0`, `false`) and the start value `100`. Then `main` writes its own values into the fields.',
+    codeSummary: 'A fresh robot shows defaults and the start value `100`. Then `main` writes its own values.',
     codeExplanation: [
-      { label: 'Line 3', code: 'Robot robo = new Robot();', text: 'Makes one `Robot` object. Its fields exist at once, filled with their default or start values.' },
-      { label: 'Line 6', code: 'System.out.println("name:    " + robo.name);', text: '`robo.name` reads the field `name` of this object. Nobody set it, so it is `null` and the text `null` is printed.' },
-      { label: 'Line 7', code: 'System.out.println("legs:    " + robo.legs);', text: 'An `int` field you never set is `0`, not an error. Fields always have a value.' },
-      { label: 'Line 9', code: 'System.out.println("on:      " + robo.on);', text: 'A `boolean` field starts as `false`.' },
-      { label: 'Line 10', code: 'System.out.println("battery: " + robo.battery);', text: 'This field has an initializer (`= 100`), so it starts at `100` instead of `0`.' },
-      { label: 'Line 13', code: 'robo.name = "Robo";', text: 'Writes a value into the field. From now on, this object remembers the name.' },
-      { label: 'Line 16', code: 'robo.battery = robo.battery - 15;', text: 'Reads the field, subtracts 15 and writes the result back. The object now holds `85`.' },
-      { label: 'Line 22', code: 'String name;        // reference type: starts as null', text: 'A field declaration: type and name, in the class body, outside any method.' },
-      { label: 'Line 26', code: 'int battery = 100;  // field initializer: starts as 100', text: 'A field initializer. Java runs it for every new `Robot`, so every robot starts full.' }
+      { label: 'Line 3', code: 'Robot robo = new Robot();', text: 'Makes one object. Fields exist at once with defaults or start values.' },
+      { label: 'Line 6', code: 'System.out.println("name:    " + robo.name);', text: 'Unset reference field → `null`.' },
+      { label: 'Line 10', code: 'System.out.println("battery: " + robo.battery);', text: 'Initializer `= 100` beats the default `0`.' },
+      { label: 'Line 16', code: 'robo.battery = robo.battery - 15;', text: 'Read, change, write back → `85`.' },
+      { label: 'Line 22', code: 'String name;        // reference type: starts as null', text: 'Field declaration: type and name, in the class body, outside any method.' },
+      { label: 'Line 26', code: 'int battery = 100;  // field initializer: starts as 100', text: 'Runs for every new `Robot`.' }
     ],
     sections: [
       {
-        title: 'Fields live in the class, not in a method',
-        text: [
-          'A field and a local variable look alike: both have a type and a name. The difference is **where** you write them. That place decides how long they live and whether they get a default value.'
-        ],
+        title: 'Field vs local variable',
         table: {
           head: ['', 'Field', 'Local variable'],
           rows: [
-            ['Where you write it', 'In the class body, outside methods', 'Inside a method (or a block)'],
-            ['Who owns it', 'Each object has its own copy', 'One call of the method'],
-            ['How long it lives', 'As long as the object lives', 'Until the method (or block) ends'],
-            ['Default value', 'Yes: `0`, `0.0`, `false`, `null`', 'No: you must set it before you read it'],
-            ['How you reach it', '`object.field` (or `field` inside the class)', 'Only by its name, only inside that method']
+            ['Where', 'Class body, outside methods', 'Inside a method'],
+            ['Who owns it', 'Each object has its own', 'One call of the method'],
+            ['How long', 'As long as the object', 'Until the method ends'],
+            ['Default value', 'Yes: `0`, `false`, `null`…', 'No: you must set it first'],
+            ['How you reach it', '`object.field`', 'Only inside that method']
           ]
         },
-        warn: 'A local variable without a value does not compile: `int x; System.out.println(x);` gives "variable x might not have been initialized". A field in the same situation prints `0`.'
+        warn: '`int x; System.out.println(x);` inside a method does not compile. The same as a field prints `0`.'
       },
       {
         title: 'The default values',
-        text: [
-          'When Java makes an object, it fills every field with "zero" of its type before anything else happens. This table shows what that zero looks like for each type.'
-        ],
         table: {
-          head: ['Field type', 'Default value', 'Prints as'],
+          head: ['Field type', 'Default', 'Prints as'],
           rows: [
             ['`byte`, `short`, `int`, `long`', '`0`', '`0`'],
             ['`float`, `double`', '`0.0`', '`0.0`'],
@@ -103,20 +90,20 @@ Robo has 2 legs, battery 85%`,
             ['`char`', '`\\u0000` (character number 0)', 'an invisible character'],
             ['`String`, arrays, every class type', '`null`', '`null`']
           ],
-          note: '`null` is not the text "null" and not an empty text `""`. It means: no object at all. The lesson "null and NullPointerException" shows why that matters.'
+          note: '`null` is not `""`. It means no object at all. See the null lesson later.'
         },
-        tip: 'Do not lean on defaults for important data. A score that starts at `0` is fine. A name that starts as `null` usually is a bug waiting to happen. The lesson "Constructors" shows how to fill every field when the object is made.'
+        tip: 'Do not lean on defaults for important data (a name). Fill those in a constructor (next lessons).'
       },
       {
         title: 'Each object has its own fields',
         text: [
-          'Two objects from the same class share the plan, not the values. Changing a field in one object leaves the other object alone.'
+          'Two objects share the plan, not the values. Changing one leaves the other alone.'
         ],
         mermaid: `flowchart LR
   P["class Player (plan: name, score)"]
   P -->|"new"| A["object ana: name = Ana, score = 30"]
   P -->|"new"| B["object ben: name = Ben, score = 10"]`,
-        diagramNote: 'Both objects have a `name` and a `score` field. Each holds its own values.',
+        diagramNote: 'Both have `name` and `score`. Each holds its own values.',
         fileName: 'ScoreBoard.java',
         code: `public class ScoreBoard {
     public static void main(String[] args) {
@@ -144,8 +131,7 @@ Ben: 10`
       {
         title: 'Fields can hold arrays and other objects',
         text: [
-          'A field can have a reference type: an array or another class. Then the field holds an arrow to that other object. Until you set it, the arrow points nowhere (`null`).',
-          'Here a `Pet` has an array of tricks, and a field `best` of type `Pet` for its best friend. That friend is another `Pet` object.'
+          'A reference field holds an arrow to an array or another object. Until you set it, it is `null`. Read left to right: `rex.best.name`.'
         ],
         fileName: 'PetFriends.java',
         code: `public class PetFriends {
@@ -174,40 +160,37 @@ class Pet {
 best before:   null
 Rex knows 2 tricks
 Rex's best friend is Mia`,
-        tip: '`rex.best.name` reads from left to right: take `rex`, follow its field `best` to the other pet, then read that pet’s `name`. The lesson "Objects Working Together" builds on this.'
+        tip: 'The lesson "Objects Working Together" builds on this.'
       }
     ],
     technical: [
-      'When you write `new Robot()`, the JVM first reserves enough memory on the heap for all fields of a `Robot`. It then sets every byte of that memory to zero. Zero bits mean `0` for numbers, `false` for `boolean` and `null` for references. That is where default values come from: they cost nothing extra.',
-      'Field initializers like `int battery = 100;` are copied by the compiler into the code that builds the object (the constructor, see the lesson "Constructors"). So the order is: memory zeroed, then initializers run, then the constructor body runs.',
-      'Local variables live in the stack frame of one method call. The JVM does not zero them. Instead, the compiler checks that every path sets a local variable before it is read ("definite assignment"). That check is why a local without a value is a compile error, while a field without a value is fine.'
+      '`new Robot()` zeroes heap memory for the fields first (`0` / `false` / `null`). Then initializers run, then the constructor.',
+      'Locals live on the stack and are not zeroed. The compiler forces you to set them before reading ("definite assignment").'
     ],
     tryIt: {
       steps: [
-        'Copy `RobotDemo.java` and run it once with `java RobotDemo.java`.',
-        'Add a field `char letter;` to `Robot` and print `"[" + robo.letter + "]"` before the other lines.',
-        'Change `double speed;` to `double speed = 2.5;` and run again.',
-        'Make a second robot `Robot other = new Robot();` and print `other.battery` after you changed `robo.battery`.'
+        'Copy `RobotDemo.java` and run it.',
+        'Add `char letter;` and print `"[" + robo.letter + "]"`.',
+        'Change to `double speed = 2.5;` and make a second robot; print `other.battery` after changing `robo.battery`.'
       ],
-      see: '`[` followed by an invisible character and `]`, `speed: 2.5`, and `100` for the second robot: its battery did not change when the first one lost 15%.'
+      see: 'an invisible char in the brackets, `speed: 2.5`, and `100` for the second robot — its battery did not change.'
     },
     check: [
-      { q: 'What does `new Robot().legs` give if the class says `int legs;`?', a: '`0`. Every `int` field starts at `0`.' },
-      { q: 'A class has `String nickname;`. What is the value before you set it, and is it the same as `""`?', a: 'It is `null`: no object at all. `""` is a real `String` object with zero characters. They are different.' },
-      { q: 'Why does `int count; System.out.println(count);` inside `main` not compile, while a field `int count;` prints `0`?', a: 'Local variables get no default value; the compiler forces you to set them first. Fields are part of an object, and the JVM zeroes the object’s memory, so fields always start with a default.' }
+      { q: 'What does `new Robot().legs` give if the class says `int legs;`?', a: '`0`.' },
+      { q: 'A class has `String nickname;`. Value before you set it — same as `""`?', a: '`null`: no object. `""` is a real empty string. Different.' },
+      { q: 'Why does a local `int count;` fail to print, while a field prints `0`?', a: 'Locals get no default; the compiler forces a value first. Fields are zeroed with the object.' }
     ],
     keyPoints: [
-      'A field is a variable in the class body, outside every method.',
-      'Every object has its own copy of every field; the values are its state.',
-      'Unset fields get `0`, `0.0`, `false`, `\\u0000` or `null`. Local variables get nothing.',
-      'A field initializer (`int battery = 100;`) gives every new object your own start value.',
-      'A reference field (`String`, array, class) holds an arrow; until set, it is `null`.'
+      'A field lives in the class body; each object has its own copy.',
+      'Unset fields: `0`, `0.0`, `false`, `\\u0000` or `null`. Locals get nothing.',
+      'A field initializer sets your own start value for every new object.',
+      'A reference field holds an arrow; until set, it is `null`.'
     ],
     commonMistakes: [
-      'Writing the "field" inside `main`: `public static void main(...) { int score; }` is a local variable. Move it into the class body: `class Player { int score; }`.',
-      'Thinking `null` is the same as `""`. Calling `name.length()` on a `null` field crashes; give the field a value first.',
-      'Expecting one object’s change to show in another: `ana.score = 5;` does not change `ben.score`. Each object has its own fields.',
-      'Relying on defaults for data that must be set, such as a name. Fill such fields in a constructor (next lessons).'
+      'Writing the "field" inside `main` — that is a local. Move it into the class body.',
+      'Treating `null` like `""`. Call `name.length()` only after you set the field.',
+      'Expecting `ana.score = 5` to change `ben.score`. Each object has its own fields.',
+      'Relying on defaults for data that must be set. Use a constructor.'
     ],
     related: ['Why Classes Exist', 'Creating Objects with new', 'Constructors', 'Types and Variables']
   }]);

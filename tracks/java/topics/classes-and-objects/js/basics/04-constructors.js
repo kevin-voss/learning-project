@@ -8,24 +8,19 @@
     icon: 'C',
     tagline: 'Create objects with state',
     glossary: terms,
-    realWorld: 'A teddy bear workshop. A new bear never leaves the workshop half-finished: at the counter you say its name and its colour, the worker sews them in, and only then do you get your bear.',
+    realWorld: 'A teddy bear workshop. You say the name and colour at the counter. The worker sews them in, then you get your bear — never half-finished.',
     kid: [
-      'At the teddy workshop the worker asks you two questions before the bear is made: "What is its name?" and "What colour?". You say "Bruno, brown". Then the worker sews a name tag and picks brown fur.',
-      'This little "ask and sew" moment happens exactly once for every bear, right when it is born. You never get a bear without a name tag.',
-      'In Java this moment is the **constructor**. It runs once when you write `new`. It takes your answers as parameters and puts them into the fields of the new object.'
+      'That "ask and sew" moment is the **constructor**. It runs once when you write `new`, takes your answers as parameters, and puts them into the fields.'
     ],
-    definition: 'A **constructor** is a block of code with the same name as the class and no return type. It runs exactly once for each `new` and gives the fields of the new object their start values.',
+    definition: 'A **constructor** is a block with the same name as the class and **no return type**. It runs exactly once per `new` and gives the new object its start values.',
     explain: [
-      'A constructor looks like a method, with two differences: its name is the class name (`Student`), and it has no return type, not even `void`. You never call it by its name. `new Student("Ada", 92)` calls it for you and passes the arguments.',
-      'If you write no constructor at all, the compiler adds an empty one with no parameters: `Student() { }`. It is called the **default constructor**. That is why `new Dog()` worked in the earlier lessons.',
-      'A constructor with parameters forces the caller to give the important data at once. `new Student("Ada", 92)` gives you a complete student; nobody can forget the name. As soon as you write **any** constructor yourself, the free default constructor is gone.',
-      'A class can have several constructors with different parameter lists. This is **constructor overloading**, the same idea as [method overloading](../methods/index.html): Java picks the constructor whose parameters fit the arguments.',
-      'To avoid writing the same code twice, one constructor can call another one of the same class with `this(...)`. This is **constructor chaining**. In Java 21, `this(...)` must be the first statement of the constructor.',
-      'Inside a constructor you often see `this.name = name;`. `this.name` is the field of the new object, `name` is the parameter. The next lesson, "The this Keyword", explains it fully.'
+      'Looks like a method, but: name = class name, no return type (not even `void`). You never call it by name — `new Student("Ada", 92)` does.',
+      'Write no constructor → compiler adds empty **default constructor** `Student() { }` (why `new Dog()` worked earlier). Write **any** constructor yourself → the free default is gone.',
+      'Several constructors with different parameter lists = **constructor overloading** (like [method overloading](../methods/index.html)). One can call another with `this(...)` (**constructor chaining**). In Java 21, `this(...)` must be first. `this.name = name;` means field = parameter — next lesson.'
     ],
-    why: 'Without a constructor, every caller must set every field by hand, and it is easy to forget one. A constructor makes sure each object is complete and valid from its first moment.',
-    whenUse: 'Give a class a constructor with parameters for every field that must be known from the start (a name, an id). Add more constructors when callers often want sensible default values.',
-    syntax: '`ClassName(type param, …) { this.field = param; … }`: no return type, same name as the class. Call it with `new ClassName(arguments)`.',
+    why: 'Without a constructor, every caller sets fields by hand and can forget one. A constructor makes each object complete from its first moment.',
+    whenUse: 'Parameters for every field that must be known from the start. Extra constructors when callers often want defaults.',
+    syntax: '`ClassName(type param, …) { this.field = param; }` — no return type. Call with `new ClassName(arguments)`.',
     fileName: 'StudentDemo.java',
     code: `public class StudentDemo {
     public static void main(String[] args) {
@@ -67,23 +62,22 @@ made Unknown
 Ada scored 92
 Bob scored 0
 Unknown scored 0`,
-    codeSummary: '`Student` has three overloaded constructors. The two short ones pass their work on with `this(...)`, so only the main constructor sets the fields and prints "made …".',
+    codeSummary: 'Three overloaded constructors. The short ones chain with `this(...)`, so only the main one sets fields and prints.',
     codeExplanation: [
-      { label: 'Line 3', code: 'Student ada = new Student("Ada", 92);', text: 'Two arguments, a `String` and an `int`, so Java runs the constructor `Student(String name, int grade)`.' },
-      { label: 'Line 4', code: 'Student bob = new Student("Bob");', text: 'One `String` argument, so Java runs `Student(String name)`.' },
-      { label: 'Line 5', code: 'Student someone = new Student();', text: 'No arguments, so Java runs `Student()`. This works only because the class writes that constructor itself.' },
-      { label: 'Line 17', code: 'Student(String name, int grade) {      // the main constructor', text: 'Same name as the class, no return type. The parameters carry the start values.' },
-      { label: 'Line 18', code: 'this.name = name;', text: 'Copies the parameter `name` into the field `name` of the new object.' },
-      { label: 'Line 20', code: 'System.out.println("made " + name);', text: 'Proves when the constructor runs: once per `new`, before `main` goes on.' },
-      { label: 'Line 23', code: 'Student(String name) {                 // no grade yet: start at 0', text: 'A second constructor with a different parameter list: constructor overloading.' },
-      { label: 'Line 24', code: 'this(name, 0);', text: 'Constructor chaining: run the main constructor with `name` and `0`. No code is written twice.' },
-      { label: 'Line 28', code: 'this("Unknown");', text: 'Chains to `Student(String)`, which chains to the main constructor. That is why "made Unknown" is printed.' }
+      { label: 'Line 3', code: 'Student ada = new Student("Ada", 92);', text: 'Matches `Student(String, int)`.' },
+      { label: 'Line 4', code: 'Student bob = new Student("Bob");', text: 'Matches `Student(String)`.' },
+      { label: 'Line 5', code: 'Student someone = new Student();', text: 'Matches `Student()` — only because the class writes it.' },
+      { label: 'Line 17', code: 'Student(String name, int grade) {      // the main constructor', text: 'Same name as the class, no return type.' },
+      { label: 'Line 18', code: 'this.name = name;', text: 'Field ← parameter.' },
+      { label: 'Line 23', code: 'Student(String name) {                 // no grade yet: start at 0', text: 'Different parameter list = overloading.' },
+      { label: 'Line 24', code: 'this(name, 0);', text: 'Constructor chaining: run the main constructor.' },
+      { label: 'Line 28', code: 'this("Unknown");', text: 'Chains to `Student(String)`, which chains to the main one.' }
     ],
     sections: [
       {
         title: 'The default constructor you get for free',
         text: [
-          'A class without any constructor still works with `new`. The compiler quietly adds `Lamp() { }`: no parameters, empty body. All fields keep their default or start values.'
+          'No constructor written → free empty default; fields keep defaults/initializers.'
         ],
         fileName: 'LampDemo.java',
         code: `public class LampDemo {
@@ -103,8 +97,7 @@ class Lamp {
       {
         title: 'Parameters make complete objects',
         text: [
-          'With parameters, the caller must give the values at once. You cannot make a `Teddy` without a name and a colour any more, so you never meet a nameless bear.',
-          'The price: once you write a constructor, the free default constructor disappears. `new Teddy()` then stops compiling.'
+          'With parameters, the caller must give the values at once. Price: once you write a constructor, the free default disappears — `new Teddy()` stops compiling.'
         ],
         fileName: 'TeddyShop.java',
         code: `public class TeddyShop {
@@ -127,48 +120,36 @@ class Teddy {
 }`,
         output: `Bruno is brown
 Snow is white`,
-        warn: 'Add `Teddy t = new Teddy();` to `main` and `javac` says: `error: constructor Teddy in class Teddy cannot be applied to given types;` with `required: String,String` and `found: no arguments`. Either pass the arguments or write a `Teddy()` constructor yourself.'
+        warn: '`new Teddy()` then fails: `required: String,String` / `found: no arguments`. Pass arguments or add `Teddy()`.'
       },
       {
-        title: 'Several constructors: overloading',
-        text: [
-          'Each constructor needs a different parameter list: a different number of parameters, or different types. Java looks at the arguments of `new` and picks the matching one. The names of the parameters do not count.'
-        ],
+        title: 'Overloading and chaining',
         table: {
           head: ['You write', 'Java picks', 'Result'],
           rows: [
             ['`new Student("Ada", 92)`', '`Student(String, int)`', 'name Ada, grade 92'],
             ['`new Student("Bob")`', '`Student(String)`', 'name Bob, grade 0'],
             ['`new Student()`', '`Student()`', 'name Unknown, grade 0'],
-            ['`new Student(92)`', 'nothing fits', 'compile error: no constructor takes one `int`']
+            ['`new Student(92)`', 'nothing fits', 'compile error']
           ]
-        }
-      },
-      {
-        title: 'Chaining with this(...)',
-        text: [
-          'Each short constructor fills in a missing value and hands the work to a longer one with `this(...)`. In the end, one main constructor does the real work. If you later add a check (for example "grade must be 0 to 100"), you add it in one place only.'
-        ],
+        },
         mermaid: `flowchart LR
   A["new Student()"] --> B["Student(): this(#quot;Unknown#quot;)"]
   B --> C["Student(String): this(name, 0)"]
-  C --> D["Student(String, int): sets the fields"]
+  C --> D["Student(String, int): sets fields"]
   E["new Student(#quot;Bob#quot;)"] --> C
   F["new Student(#quot;Ada#quot;, 92)"] --> D`,
-        diagramNote: 'Every arrow ends at the main constructor. That is the only place that writes the fields.',
-        warn: 'In Java 21, `this(...)` must be the **first** statement in the constructor. A `println` before it is a compile error. And a constructor may not chain to itself in a circle.'
+        diagramNote: 'Every path ends at the main constructor — setup code in one place.',
+        warn: 'In Java 21, `this(...)` must be first. A constructor must not chain in a circle.'
       },
       {
-        title: 'Constructor or method? And a copy constructor',
-        text: [
-          'A constructor builds the object. A method works with an object that already exists. A useful kind of constructor is the **copy constructor**: it takes another object of the same class and copies its values into the new one. This gives you a real copy, not a second arrow to the same object.'
-        ],
+        title: 'Constructor vs method · copy constructor',
         table: {
           head: ['', 'Constructor', 'Method'],
           rows: [
-            ['Name', 'Always the class name', 'Any name, starts small'],
-            ['Return type', 'None, not even `void`', 'Always one (`void`, `int`, `String` …)'],
-            ['How it is called', 'With `new ClassName(...)`', 'With `object.name(...)`'],
+            ['Name', 'Always the class name', 'Any name'],
+            ['Return type', 'None, not even `void`', 'Always one'],
+            ['Called', '`new ClassName(...)`', '`object.name(...)`'],
             ['How often', 'Once per object, at birth', 'As often as you like']
           ]
         },
@@ -199,42 +180,37 @@ class Teddy {
 }`,
         output: `Bruno / Bruno Two
 same object? false`,
-        tip: 'Writing `void Teddy(String name)` by mistake makes a **method** called `Teddy`, not a constructor. It compiles, but `new Teddy("x")` then fails. Constructors never have a return type.'
+        tip: '`void Teddy(String name)` is a **method**, not a constructor. Constructors never have a return type.'
       }
     ],
     technical: [
-      'In the bytecode, every constructor is a special method named `<init>`. `new Student("Ada", 92)` becomes: reserve memory and zero it (`new`), then call `<init>(String, int)` on that memory (`invokespecial`). The constructor itself returns nothing; the expression `new …` is what hands you the reference.',
-      'The compiler builds each constructor in this order: first a call to the constructor of the parent class (for your classes that is `Object()`, see the Deeper lesson "Inheritance: extends and super"), then all field initializers like `int watts = 40;` in the order they appear, then your own constructor body.',
-      'If a constructor starts with `this(...)`, the field initializers run only once, inside the constructor at the end of the chain. You can see the generated default constructor with `javap -c Lamp`, which prints the bytecode of a `.class` file.',
-      'A `final` field (you know `final` from [Types and Variables](../types-and-variables/index.html)) must get its value exactly once. The compiler checks that every constructor sets it, which makes constructors the natural home for values that never change, like an id.'
+      'Bytecode name: `<init>`. Order: parent constructor, then field initializers, then your body. With `this(...)`, initializers run once at the end of the chain.',
+      'A `final` field must be set exactly once — the compiler checks every constructor sets it.'
     ],
     tryIt: {
       steps: [
         'Copy `StudentDemo.java` and run it.',
-        'Add a fourth constructor `Student(int grade)` that calls `this("Anonymous", grade);`.',
-        'In `main`, add `Student x = new Student(75);` and print `x.report()`.',
-        'Then put `System.out.println("hi");` above `this(name, 0);` and compile with `javac --release 21 StudentDemo.java`.'
+        'Add `Student(int grade)` that calls `this("Anonymous", grade);`, then `new Student(75)` in `main`.',
+        'Put `System.out.println("hi");` above `this(name, 0);` and compile with `javac --release 21`.'
       ],
-      see: 'a new line `made Anonymous` and later `Anonymous scored 75`. After the last step, a compile error: in Java 21 the call to `this(...)` must come first.'
+      see: '`Anonymous scored 75`. After the last step: compile error — `this(...)` must come first.'
     },
     check: [
-      { q: 'A class has only `Car(String model)`. Does `new Car()` compile?', a: 'No. Once you write a constructor, the compiler no longer adds the default one. Pass a model or add a `Car()` constructor.' },
-      { q: 'What is wrong with `public void Car(String model) { … }` if you meant a constructor?', a: 'It has a return type (`void`), so it is a normal method named `Car`. A constructor has no return type at all.' },
-      { q: 'Why chain constructors with `this(...)` instead of copying the assignments into each one?', a: 'So the setup code exists once. A later change or check goes into the main constructor and every other constructor uses it.' }
+      { q: 'A class has only `Car(String model)`. Does `new Car()` compile?', a: 'No. Writing any constructor removes the free default.' },
+      { q: 'What is wrong with `public void Car(String model)` if you meant a constructor?', a: 'It has a return type, so it is a method. Constructors have none.' },
+      { q: 'Why chain with `this(...)` instead of copying assignments?', a: 'Setup exists once. Later checks go in the main constructor only.' }
     ],
     keyPoints: [
-      'A constructor has the class name and no return type; `new` runs it once per object.',
-      'Without any constructor you get a free, empty default constructor.',
-      'Writing any constructor removes the free one.',
-      'Several constructors with different parameter lists = overloading.',
-      '`this(...)` calls another constructor of the same class; in Java 21 it must come first.',
+      'Constructor: class name, no return type, runs once per `new`.',
+      'No constructor → free empty default. Any constructor you write removes it.',
+      'Overloading = different parameter lists. `this(...)` chains (must be first in Java 21).',
       'A copy constructor `Teddy(Teddy other)` makes a real copy, not an alias.'
     ],
     commonMistakes: [
-      '`void Student(String name)`: the `void` turns it into a method. Remove the return type.',
-      '`Student(String name) { name = name; }`: assigns the parameter to itself, the field stays `null`. Write `this.name = name;`.',
-      'Writing a constructor with parameters and still calling `new Student()` somewhere. Add a `Student()` constructor or pass the arguments.',
-      '`System.out.println("start"); this(name, 0);`: in Java 21 `this(...)` must be the first statement. Move it to the top.'
+      '`void Student(String name)` — remove the return type.',
+      '`name = name;` — assigns the parameter to itself. Use `this.name = name;`.',
+      'Writing a parameterized constructor and still calling `new Student()`.',
+      '`println` before `this(...)` in Java 21 — move `this(...)` to the top.'
     ],
     related: ['Creating Objects with new', 'The this Keyword', 'Encapsulation: private, Getters, Setters', 'Methods']
   }]);

@@ -4,7 +4,7 @@ import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import test from 'node:test'
 import { checkField, normalize } from './normalize.mjs'
-import { highlightJava } from './editor.js'
+import { highlightJava, highlightSource } from './java/editor.js'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '../..')
 
@@ -72,6 +72,10 @@ test('Java highlighting colours keywords, hex, strings and comments', () => {
   assert.match(java, /hljs-string">"Hi"</)
   assert.match(java, /hljs-comment">\/\/ end</)
   assert.equal(highlightJava('each the').includes('hljs'), false)
+  const block = highlightSource('int x;\n/* keep\ngoing */\nreturn x;')
+  assert.match(block, /hljs-comment">\/\* keep</)
+  assert.match(block, /hljs-comment">going \*\/</)
+  assert.match(block, /hljs-keyword">return</)
 })
 
 function walk(dir, out = []) {

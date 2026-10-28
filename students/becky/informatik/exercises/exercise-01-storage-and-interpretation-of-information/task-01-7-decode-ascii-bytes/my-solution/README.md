@@ -1,6 +1,6 @@
 # My solution · Task 01_7 ✏️
 
-This is your desk. Type one step in the editor, press Check, then Done.
+This is your desk. Type one step, press Check, then Done.
 
 Bytes: `57 49 40 48 73 48 00h`
 
@@ -9,7 +9,7 @@ Bytes: `57 49 40 48 73 48 00h`
 
 ## How to check
 
-The editor checks each step. You can also compare with the check rows in the [task](../README.md). In Cursor: `/check`.
+Check compares what you typed. You can also compare with the check rows in the [task](../README.md). In Cursor: `/check`.
 
 ## Next
 

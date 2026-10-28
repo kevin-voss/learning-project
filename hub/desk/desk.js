@@ -1,6 +1,7 @@
-// My-solution desk: one Java editor per step, a local check, then Done.
+// Written my-solution desk: one step, plain inputs, a local check, then Done.
 import { checkField } from './normalize.mjs'
-import { createEditor } from './editor.js'
+import { createForm } from './written.js'
+import { mountJavaEditor } from './java/page.js'
 
 const STORE = 'learning-project:desk:v1'
 
@@ -101,7 +102,7 @@ function boot(mount) {
   mount.replaceChildren()
   const loading = document.createElement('p')
   loading.className = 'lp-desk-loading'
-  loading.textContent = 'Opening the editor…'
+  loading.textContent = 'Opening the steps…'
   mount.append(loading)
 
   fetch(new URL('../checks.json', location.href))
@@ -218,8 +219,7 @@ function renderDesk(mount, key, spec) {
       row.passed = false
     }
     prompt.textContent = part.prompt || part.label
-    editor = createEditor(host, {
-      file: part.file || 'Answer.java',
+    editor = createForm(host, {
       fields: part.fields,
       values: valuesOf(part),
       tabs: spec.parts.map((item) => ({
@@ -267,7 +267,7 @@ function renderDesk(mount, key, spec) {
   }
 
   function refreshTabs() {
-    const tabs = [...host.querySelectorAll('.lp-editor-tab')]
+    const tabs = [...host.querySelectorAll('.lp-step')]
     spec.parts.forEach((item, index) => {
       const tab = tabs[index]
       if (!tab) return
@@ -380,14 +380,17 @@ function button(action, label) {
 function start() {
   const mount = document.getElementById('desk')
   if (mount) boot(mount)
+  else mountJavaEditor(paintLists)
   paintLists()
   const sheet = document.getElementById('sheet')
-  if (!mount && sheet && sheet.textContent.includes('Loading')) {
+  if (sheet && sheet.textContent.includes('Loading')) {
     const obs = new MutationObserver(() => {
+      if (sheet.textContent.includes('Loading')) return
+      obs.disconnect()
       const el = document.getElementById('desk')
       if (el) boot(el)
+      else mountJavaEditor(paintLists)
       paintLists()
-      if (el || !sheet.textContent.includes('Loading')) obs.disconnect()
     })
     obs.observe(sheet, { childList: true, subtree: true })
   }

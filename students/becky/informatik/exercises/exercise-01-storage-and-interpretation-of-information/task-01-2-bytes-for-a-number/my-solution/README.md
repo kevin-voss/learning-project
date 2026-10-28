@@ -1,6 +1,6 @@
 # My solution · Task 01_2 ✏️
 
-This is your desk. Type one step in the editor, press Check, then Done.
+This is your desk. Type one step, press Check, then Done.
 
 Number: `48024667`
 
@@ -9,7 +9,7 @@ Number: `48024667`
 
 ## How to check
 
-The editor checks each step. You can also compare with the check rows in the [task](../README.md). In Cursor: `/check`.
+Check compares what you typed. You can also compare with the check rows in the [task](../README.md). In Cursor: `/check`.
 
 ## Next
 

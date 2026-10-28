@@ -1,6 +1,6 @@
 # My solution · Task 01_3 ✏️
 
-This is your desk. Type one step in the editor, press Check, then Done.
+This is your desk. Type one step, press Check, then Done.
 
 BCD: `0100 0010 1001`
 
@@ -9,7 +9,7 @@ BCD: `0100 0010 1001`
 
 ## How to check
 
-The editor checks each step. You can also compare with the check rows in the [task](../README.md). In Cursor: `/check`.
+Check compares what you typed. You can also compare with the check rows in the [task](../README.md). In Cursor: `/check`.
 
 ## Next
 

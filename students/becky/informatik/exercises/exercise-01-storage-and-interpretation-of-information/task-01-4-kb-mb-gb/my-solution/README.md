@@ -1,6 +1,6 @@
 # My solution · Task 01_4 ✏️
 
-This is your desk. Type one step in the editor, press Check, then Done.
+This is your desk. Type one step, press Check, then Done.
 
 Units: 1 kilobyte, 1 megabyte, 1 gigabyte. A power of two is enough.
 
@@ -9,7 +9,7 @@ Units: 1 kilobyte, 1 megabyte, 1 gigabyte. A power of two is enough.
 
 ## How to check
 
-The editor checks each step. You can also compare with the check rows in the [task](../README.md). In Cursor: `/check`.
+Check compares what you typed. You can also compare with the check rows in the [task](../README.md). In Cursor: `/check`.
 
 ## Next
 

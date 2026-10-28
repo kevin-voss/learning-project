@@ -279,6 +279,107 @@
 
 .lp-desk-banner a { font-weight: 700; }
 
+.lp-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--lp-s2);
+  margin-bottom: var(--lp-s3);
+}
+
+.lp-step {
+  padding: 6px 12px;
+  border: 1px solid var(--lp-line);
+  border-radius: 999px;
+  background: var(--lp-surface);
+  color: var(--lp-text-muted);
+  font: 700 14px / 1.2 var(--lp-font);
+  cursor: pointer;
+}
+
+.lp-step.is-active {
+  background: var(--lp-accent-soft);
+  color: var(--lp-text);
+  border-color: var(--lp-accent);
+}
+
+.lp-step.is-dirty::after {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-left: 6px;
+  border-radius: 50%;
+  background: var(--lp-text);
+  vertical-align: middle;
+}
+
+.lp-field {
+  display: grid;
+  gap: 4px;
+  margin-top: var(--lp-s3);
+}
+
+.lp-field span {
+  color: var(--lp-text-muted);
+  font: 700 13px / 1.2 var(--lp-font);
+}
+
+.lp-field input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid var(--lp-line);
+  border-radius: var(--lp-radius);
+  background: var(--lp-code-bg);
+  color: var(--lp-code-text);
+  font: 400 18px / 1.4 var(--lp-mono);
+}
+
+.lp-field.is-ok input { border-color: var(--lp-do); }
+.lp-field.is-bad input { border-color: var(--lp-warn); }
+
+.lp-field input:focus {
+  outline: 2px solid var(--lp-accent);
+  outline-offset: 2px;
+}
+
+.lp-java-note {
+  margin: 0 0 var(--lp-s3);
+  color: var(--lp-text-muted);
+}
+
+.lp-editor.is-source .lp-editor-main {
+  height: min(70vh, 640px);
+  min-height: 320px;
+}
+
+.lp-editor.is-source .lp-editor-gutter,
+.lp-editor.is-source .lp-editor-code {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.lp-editor.is-source .lp-editor-gutter { padding: 0; }
+
+.lp-editor.is-source .lp-editor-rows { padding-top: 8px; }
+
+.lp-sheet .lp-editor.is-source pre.lp-editor-hl,
+.lp-editor.is-source pre.lp-editor-hl {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: auto;
+  min-height: 100%;
+  overflow: visible;
+}
+
+.lp-editor.is-source .lp-editor-input {
+  height: 100%;
+  min-height: 0;
+  overflow: auto;
+}
+
 @media (max-width: 640px) {
   .lp-editor-status span:nth-child(4),
   .lp-editor-status span:nth-child(5) { display: none; }

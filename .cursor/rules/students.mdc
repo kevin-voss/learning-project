@@ -50,7 +50,8 @@ Every task has a `tests.json` next to its `README.md`. `students/scripts/test-ta
 - **`part`**: the sheet's part letter (`a`, `b`, `c`), or the step number for a task that grows step by step, so a student can test each part as soon as it is written.
 - Every test passes on `solution/` (`make test-task TASK=NN_k SOLUTION=1`) before it is committed. Never change a test to make a student's code pass; fix a test only when it disagrees with the task text.
 - Programs that print nothing testable (a written answer, a table of error messages) get no test for that part.
-- A written task can add `checks.json` beside `tests.json`. Each part lists answers that count (`accept`). The website desk normalizes bits, hex, and numbers, then says if the line matches. It does not open `solution/`. Put an empty `desk` code fence in `my-solution/README.md` where the editor should sit.
+- A written task can add `checks.json` beside `tests.json`. Each part lists answers that count (`accept`). The website desk shows plain inputs (not a code editor), normalizes bits, hex, and numbers, then says if the line matches. It does not open `solution/`. Put an empty `desk` code fence in `my-solution/README.md` where the inputs should sit.
+- A Programmieren task (`computer-science`) gets a Java editor on its my-solution page, for the `.java` file named in that README. The editor keeps a browser draft and does not run `make test-task`.
 
 ## Helping a student
 

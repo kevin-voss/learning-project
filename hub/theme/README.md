@@ -12,7 +12,7 @@ Every page uses these files. The build (`hub/scripts/build-site.mjs`) adds them 
 
 ## The site header
 
-Every page starts with the same header (`hub/scripts/header.mjs`): **Learning Project** (back to the start page), *The path*, *My tasks*, *Look it up*, your progress, a **Continue** button to your next unfinished step, and the light/dark toggle. The build adds it to every page; the landing page gets it from `catalog.mjs`. Generated pages also show a big **← Back** button (one folder up) and a breadcrumb (*Home › sheets › javascript › dom.md*).
+Every page starts with the same header (`hub/scripts/header.mjs`): **Learning Project** (back to the start page), *The path*, *My tasks*, *Look it up*, your progress, a **Continue** button to your next unfinished step, and the light/dark toggle. The build adds it to every page; the landing page gets it from `catalog.mjs`. Generated pages also show a **←** button (one folder up) on the same row as the breadcrumb (*Home › sheets › javascript › dom.md*).
 
 It is `--lp-header-h` (56 px) tall and sticks to the top. A track that pins its own bars, sidebars or toasts to the top offsets them by `var(--lp-header-h, 0px)`, so nothing hides behind it.
 

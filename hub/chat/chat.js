@@ -1,4 +1,6 @@
 // Floating tutor chat on student exercise / task pages and their subpages (Becky only).
+// Hidden until a 5-second press on the Test button next to "The task (from the sheet)".
+// The unlock is saved in localStorage and stays on after a reload.
 // Covers task roots, my-solution/, solution/, and code viewers under a task.
 // Several chats per page in localStorage; each chat caps at 3 messages, then a new one starts.
 // At most 10 chats kept — the 11th drops the oldest. Daily cap 50 sends.
@@ -231,6 +233,98 @@
 
   const scope = parseScope(location.pathname)
   if (!scope || scope.student !== ALLOWED_STUDENT) return
+
+  const UNLOCK_KEY = 'learning-project:chat:unlocked'
+  const HOLD_MS = 5000
+  let chatStarted = false
+
+  function isUnlocked() {
+    try {
+      return localStorage.getItem(UNLOCK_KEY) === '1'
+    } catch {
+      return false
+    }
+  }
+
+  function markUnlocked() {
+    try {
+      localStorage.setItem(UNLOCK_KEY, '1')
+    } catch {}
+  }
+
+  function whenReady(fn) {
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn)
+    else fn()
+  }
+
+  // Small "Test" control beside the task heading. A short click does nothing.
+  // Holding it for 5 seconds turns the chat on for this browser.
+  function installUnlock(onUnlock) {
+    const heading = [...document.querySelectorAll('#sheet h2, .lp-sheet h2')].find(
+      (node) => node.textContent.trim() === 'The task (from the sheet)',
+    )
+    if (!heading || heading.closest('.lp-task-head')) return
+
+    const row = document.createElement('div')
+    row.className = 'lp-task-head'
+    heading.replaceWith(row)
+    row.append(heading)
+
+    const btn = document.createElement('button')
+    btn.type = 'button'
+    btn.className = 'lp-chat-unlock'
+    btn.textContent = 'Test'
+    row.append(btn)
+
+    let timer = 0
+    let frame = 0
+    let start = 0
+
+    function stopHold() {
+      clearTimeout(timer)
+      timer = 0
+      cancelAnimationFrame(frame)
+      frame = 0
+      btn.classList.remove('is-holding')
+      btn.style.setProperty('--hold', '0')
+    }
+
+    function tick() {
+      const progress = Math.min(1, (performance.now() - start) / HOLD_MS)
+      btn.style.setProperty('--hold', String(progress))
+      if (timer) frame = requestAnimationFrame(tick)
+    }
+
+    btn.addEventListener('pointerdown', (event) => {
+      if (event.button !== 0) return
+      event.preventDefault()
+      try { btn.setPointerCapture(event.pointerId) } catch {}
+      stopHold()
+      start = performance.now()
+      btn.classList.add('is-holding')
+      timer = window.setTimeout(() => {
+        stopHold()
+        markUnlocked()
+        row.replaceWith(heading)
+        onUnlock()
+      }, HOLD_MS)
+      frame = requestAnimationFrame(tick)
+    })
+
+    function cancelHold() {
+      if (!timer) return
+      stopHold()
+    }
+
+    btn.addEventListener('pointerup', cancelHold)
+    btn.addEventListener('pointercancel', cancelHold)
+    btn.addEventListener('contextmenu', (event) => event.preventDefault())
+    btn.addEventListener('click', (event) => event.preventDefault())
+  }
+
+  function bootChat() {
+    if (chatStarted) return
+    chatStarted = true
 
   const storageKey = STORAGE_PREFIX + scope.scopeId
   let store = pruneToMaxChats(loadStore(storageKey))
@@ -970,4 +1064,8 @@
       if (root.hasAttribute('data-open')) scopeEl.textContent = title
     }, { once: true })
   }
+  }
+
+  if (isUnlocked()) bootChat()
+  else whenReady(() => installUnlock(bootChat))
 })()

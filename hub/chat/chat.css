@@ -1,4 +1,43 @@
-/* Student exercise tutor chat — floating help on task / exercise pages. */
+/* Student exercise tutor chat — floating help on task / exercise pages.
+   Hidden until the Test hold next to "The task (from the sheet)". */
+
+.lp-task-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  margin: var(--lp-s7) 0 var(--lp-s3);
+}
+
+.lp-task-head h2 { margin: 0; }
+
+.lp-chat-unlock {
+  position: relative;
+  overflow: hidden;
+  margin: 0;
+  padding: 3px 8px;
+  border: 1px solid var(--lp-line);
+  border-radius: 6px;
+  background: var(--lp-surface-2);
+  color: var(--lp-text-muted);
+  font: 600 12px / 1.2 var(--lp-font);
+  cursor: pointer;
+  user-select: none;
+  touch-action: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.lp-chat-unlock::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc(var(--hold, 0) * 100%);
+  background: color-mix(in srgb, var(--lp-accent) 28%, transparent);
+  pointer-events: none;
+}
+
+.lp-chat-unlock.is-holding { color: var(--lp-text); }
 
 .lp-chat {
   position: fixed;

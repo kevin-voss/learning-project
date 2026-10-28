@@ -14,17 +14,17 @@
 
 | Level | Stages | The student can then … |
 |-------|--------|------------------------|
-| **1 · Beginner** | Welcome · Your computer · Your first web page · First code: JavaScript · Make pages come alive · How the web works | build a small web app that saves data and talks to the internet |
-| **2 · Java** | Java 1 The language · Java 2 Everyday tools · Java 3 Smart code · Java 4 Real projects | write, test and organise real Java programs with Maven |
-| **3 · Backend** | Data and servers · Spring Boot ParcelPilot | build a web API with a database, tests and Docker |
-| **4 · Pro** | ParcelPilot at scale · Go deeper | grow it with queues, services, caching and login, and talk about system design |
+| **1 · Beginner** | Welcome · Terminal and Git · Your first web page · JavaScript basics · Clicks and the page · How the web works | build a small web app that saves data and talks to the internet |
+| **2 · Java** | Java 1 Basics · Java 2 Lists and files · Java 3 Algorithms · Java 4 Build, test and HTTP | write, test and organise real Java programs with Maven |
+| **3 · Backend** | Databases and Docker · Spring Boot ParcelPilot | build a web API with a database, tests and Docker |
+| **4 · Pro** | ParcelPilot Queues and login · Patterns, threads and design | grow it with queues, services, caching and login, and talk about system design |
 
 Why this order:
 
 - **JavaScript before Java.** The browser needs no install, so the first program runs on step 2. Web pages give instant pictures. Java is the main language and gets the most stages, but it is easier once variables, ifs and loops are not new.
 - **The web stage after the drills.** HTTP makes sense once you have written code that could send a request. The weather project comes right after it.
 - **CS lessons next to the Java they explain.** Memory and the stack/heap come after Java classes. Linked lists, stacks, queues and hash tables sit next to Java collections. Big-O, search and sort come once the student has lists to search.
-- **Data and servers before Spring.** The parcel database project runs Postgres in Docker and uses plain JDBC. Spring then hides that work, and the student knows what is hidden.
+- **Databases and Docker before Spring.** The parcel database project runs Postgres in Docker and uses plain JDBC. Spring then hides that work, and the student knows what is hidden.
 - **ParcelPilot splits in two.** Steps 00–10 build a complete, tested API. Steps 11–16 (modules, queues, services, caching, JWT) are pro topics and form their own stage.
 
 ## The project ladder

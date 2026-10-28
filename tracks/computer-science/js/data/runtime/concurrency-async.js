@@ -1,7 +1,7 @@
 window.DS = window.DS || {};
 DS.curriculum = DS.curriculum || [];
 
-// "Go deeper" stage. Picture: one cook vs. several cooks sharing one kitchen.
+// "Patterns, threads and design" stage. Picture: one cook vs. several cooks sharing one kitchen.
 DS.curriculum.push({
   id: 'concurrency-async',
   category: 'Go Deeper',

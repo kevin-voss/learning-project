@@ -7,7 +7,7 @@ This is your map. Walk it **one step at a time**, top to bottom. Each step creat
 
 ## Before you start
 
-You finished the Java stages and the **Data and servers** stage of the path. This course does not re-teach Java, SQL, HTTP or Docker. Each step links to the page that teaches an idea:
+You finished the Java stages and the **Databases and Docker** stage of the path. This course does not re-teach Java, SQL, HTTP or Docker. Each step links to the page that teaches an idea:
 
 | Idea | Home |
 |---|---|
@@ -68,7 +68,7 @@ Two rules:
 | [15](topics/15-performance-and-safety/README.md) | Stay fast and safe under pressure. | Caching, locking, rate limits. |
 | [16](topics/16-jwt-authentication/README.md) | Protect operator actions. | Login with JWT. |
 
-Steps 00–10 are the **Spring Boot · ParcelPilot** stage. Steps 11–16 are the **ParcelPilot at scale** stage. Monolith or microservices? The beginner explanation is [Monoliths and microservices](references/architecture/monolith-and-microservices.md).
+Steps 00–10 are the **Spring Boot · ParcelPilot** stage. Steps 11–16 are the **ParcelPilot · Queues and login** stage. Monolith or microservices? The beginner explanation is [Monoliths and microservices](references/architecture/monolith-and-microservices.md).
 
 ## Save your work with Git
 

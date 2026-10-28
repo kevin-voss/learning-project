@@ -76,7 +76,7 @@ function crumbs(file) {
 
 function trail(file) {
   return `<div class="lp-trail">
-  <a class="lp-back" href="${backHref(file)}">← Back</a>
+  <a class="lp-back" href="${backHref(file)}" aria-label="Back">←</a>
   ${crumbs(file)}
 </div>`
 }

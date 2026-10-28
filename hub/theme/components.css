@@ -97,26 +97,25 @@
   margin: 0 auto;
   padding: var(--lp-s4) var(--lp-s4) 0;
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--lp-s3);
+  flex-direction: row;
+  align-items: center;
+  gap: var(--lp-s2);
 }
 
 .lp-back {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--lp-s2);
-  min-height: 52px;
-  min-width: 7.5rem;
-  padding: 0 var(--lp-s6);
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  padding: 0;
   border: 1px solid var(--lp-line);
-  border-radius: var(--lp-radius);
+  border-radius: var(--lp-radius-sm);
   background: var(--lp-surface);
   color: var(--lp-text);
   font: 700 18px / 1 var(--lp-font);
   text-decoration: none;
-  box-shadow: var(--lp-shadow);
   transition: transform var(--lp-speed), border-color var(--lp-speed), color var(--lp-speed);
 }
 
@@ -128,8 +127,10 @@
 
 .lp-crumbs {
   display: flex;
+  flex: 1 1 auto;
   flex-wrap: wrap;
   align-items: center;
+  min-width: 0;
   gap: 2px 6px;
   margin: 0;
   padding: 0;

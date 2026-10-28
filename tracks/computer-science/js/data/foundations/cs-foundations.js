@@ -1,7 +1,7 @@
 window.DS = window.DS || {};
 DS.curriculum = DS.curriculum || [];
 
-// Opens the stage "Java 3 · Smart code" on the path: a friendly map, not a syllabus.
+// Opens the stage "Java 3 · Algorithms" on the path: a friendly map, not a syllabus.
 DS.curriculum.push({
   id: 'cs-foundations',
   category: 'Java 3: Smart Code',

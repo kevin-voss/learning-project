@@ -88,10 +88,10 @@ You do not need everything now. Each tool is installed on the page that first ne
 | When on the path | Install | Where |
 |------------------|---------|-------|
 | Now | An editor and Git | this page |
-| First code: JavaScript (the drills) | Bun | [How the drills work](../../drills/javascript/README.md) |
-| Java 1 · The language | Java (the JDK) | [Getting started with Java](../../tracks/java/topics/getting-started/index.html) |
-| Java 4 · Real projects | Maven | [Build tools](../../tracks/java/topics/build-tools/index.html) |
-| Data and servers | Docker | [Docker and containers](../../tracks/computer-science/index.html#docker-containers), then [Get Docker](https://docs.docker.com/get-started/get-docker/) |
+| JavaScript basics (the drills) | Bun | [How the drills work](../../drills/javascript/README.md) |
+| Java 1 · Basics | Java (the JDK) | [Getting started with Java](../../tracks/java/topics/getting-started/index.html) |
+| Java 4 · Build, test and HTTP | Maven | [Build tools](../../tracks/java/topics/build-tools/index.html) |
+| Databases and Docker | Docker | [Docker and containers](../../tracks/computer-science/index.html#docker-containers), then [Get Docker](https://docs.docker.com/get-started/get-docker/) |
 | Only for the extras | Node.js and npm | [Node.js](../nodejs/README.md) |
 
 > [!CHECK]

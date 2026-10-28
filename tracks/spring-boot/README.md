@@ -5,7 +5,7 @@
 
 ## Before you start
 
-Start here after the **Java stages** and the **Data and servers** stage of the path. You should already be able to:
+Start here after the **Java stages** and the **Databases and Docker** stage of the path. You should already be able to:
 
 - write and test Java classes with Maven ([Java hub](../java/index.html)),
 - point at controller, service and repository ([how a Java server is structured](../../sheets/java/server-layers.md)),
@@ -15,7 +15,7 @@ This is a **build course**. It does not teach Java again. When a step uses an id
 
 ## What you build
 
-**ParcelPilot** is a small parcel-tracking service. In step 01 it is one class that prints one parcel. By step 10 it is a web API with validation, error messages, logs, tests, Docker and a PostgreSQL database. Steps 11 to 16 (the "ParcelPilot at scale" stage) add modules, queues, a second service, caching and login.
+**ParcelPilot** is a small parcel-tracking service. In step 01 it is one class that prints one parcel. By step 10 it is a web API with validation, error messages, logs, tests, Docker and a PostgreSQL database. Steps 11 to 16 (the "ParcelPilot · Queues and login" stage) add modules, queues, a second service, caching and login.
 
 ## How to use it
 

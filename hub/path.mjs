@@ -34,7 +34,7 @@ export const STAGES = [
   {
     id: 'start',
     level: 'beginner',
-    title: 'Your computer',
+    title: 'Terminal and Git',
     goal: 'Learn the terminal and get this repository onto your computer.',
     steps: [
       { id: 'terminal', type: 'do', title: 'The terminal: try the first commands in the playground', href: `${CS}linux-terminal-os`, time: '1 h' },
@@ -60,7 +60,7 @@ export const STAGES = [
   {
     id: 'javascript',
     level: 'beginner',
-    title: 'First code: JavaScript',
+    title: 'JavaScript basics',
     goal: 'Variables, ifs, loops and functions, practised with small tests.',
     steps: [
       { id: 'drills-intro', type: 'read', title: 'How the drills work', href: 'drills/javascript/README.md', time: '15 min' },
@@ -80,7 +80,7 @@ export const STAGES = [
   {
     id: 'dom',
     level: 'beginner',
-    title: 'Make pages come alive',
+    title: 'Clicks and the page',
     goal: 'Your JavaScript changes the page: clicks, lists that grow, a game.',
     steps: [
       { id: 'js-dom', type: 'read', title: 'The page tree: clicks and changes', href: 'sheets/javascript/dom.md', time: '20 min' },
@@ -110,7 +110,7 @@ export const STAGES = [
   {
     id: 'java-a',
     level: 'java',
-    title: 'Java 1 · The language',
+    title: 'Java 1 · Basics',
     goal: 'Install Java, write a first program, then types, ifs, loops, methods and classes.',
     steps: [
       { id: 'java-start', type: 'do', title: 'Getting started: install Java, run your first program', href: JAVA('getting-started'), time: '1 h' },
@@ -131,8 +131,8 @@ export const STAGES = [
   {
     id: 'java-b',
     level: 'java',
-    title: 'Java 2 · Everyday tools',
-    goal: 'Lists, maps, errors and files: what real programs use every day.',
+    title: 'Java 2 · Lists and files',
+    goal: 'Lists, maps, errors and files.',
     steps: [
       { id: 'java-collections', type: 'read', title: 'Collections: ArrayList, HashMap, HashSet', href: JAVA('collections'), time: '1 h' },
       { id: 'cs-lists', type: 'read', title: 'Linked lists', href: `${CS}linked-lists`, time: '20 min' },
@@ -150,7 +150,7 @@ export const STAGES = [
   {
     id: 'java-smart',
     level: 'java',
-    title: 'Java 3 · Smart code',
+    title: 'Java 3 · Algorithms',
     goal: 'How fast is my code? Searching, sorting, and shapes for your classes.',
     steps: [
       { id: 'cs-what', type: 'read', title: 'The big map of computer science', href: `${CS}cs-foundations`, time: '15 min' },
@@ -167,7 +167,7 @@ export const STAGES = [
   {
     id: 'java-c',
     level: 'java',
-    title: 'Java 4 · Real projects',
+    title: 'Java 4 · Build, test and HTTP',
     goal: 'Maven, tests and HTTP. Then a Java program that fetches live weather.',
     steps: [
       { id: 'java-build', type: 'read', title: 'Build tools: Maven', href: JAVA('build-tools'), time: '45 min' },
@@ -182,7 +182,7 @@ export const STAGES = [
   {
     id: 'java-d',
     level: 'backend',
-    title: 'Data and servers',
+    title: 'Databases and Docker',
     goal: 'How a backend is built: layers, SQL, and a database in a container.',
     steps: [
       { id: 'server-layers', type: 'read', title: 'How a Java server is structured', href: 'sheets/java/server-layers.md', time: '20 min' },
@@ -216,7 +216,7 @@ export const STAGES = [
   {
     id: 'spring-pro',
     level: 'pro',
-    title: 'ParcelPilot at scale',
+    title: 'ParcelPilot · Queues and login',
     goal: 'The same product grows up: modules, queues, a second service, caching and login.',
     steps: [
       { id: 'spring-11', type: 'do', title: 'Step 11: the modular monolith', href: SPRING('11-monolith'), time: '3 h' },
@@ -231,7 +231,7 @@ export const STAGES = [
   {
     id: 'deeper',
     level: 'pro',
-    title: 'Go deeper',
+    title: 'Patterns, threads and design',
     goal: 'Now the advanced topics make sense: JVM, patterns, threads, system design.',
     steps: [
       { id: 'java-recursion', type: 'read', title: 'Recursion: a method that calls itself', href: JAVA('recursion'), time: '30 min' },
@@ -245,7 +245,7 @@ export const STAGES = [
   },
   {
     id: 'extras',
-    title: 'Extras (any time, optional)',
+    title: 'Optional extras',
     optional: true,
     goal: 'Not needed for the path. Pick one when you want more practice or a new topic.',
     steps: [

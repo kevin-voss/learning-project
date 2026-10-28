@@ -2,7 +2,7 @@
 
 Static interactive learner for beginner-friendly computer science. Open `index.html` in a browser (or serve the folder locally). No build step.
 
-The sidebar follows the learning path in `hub/path.mjs`: Start here, JavaScript basics, How the web works, Java 1-3, Data and servers, Go deeper. Lessons that are not on the path come after them in groups named "More: ...".
+The sidebar follows the learning path in `hub/path.mjs`: Start here, JavaScript basics, How the web works, Java 1–3, Databases and Docker, Patterns, threads and design. Lessons that are not on the path come after them in groups named "More: ...".
 
 ## Layout
 

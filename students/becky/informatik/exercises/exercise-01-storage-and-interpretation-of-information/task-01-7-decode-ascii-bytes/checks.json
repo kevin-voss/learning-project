@@ -1,0 +1,111 @@
+{
+  "nextHref": "../../",
+  "nextLabel": "Exercise 01",
+  "parts": [
+    {
+      "id": "chars",
+      "label": "Characters",
+      "file": "Characters.java",
+      "prompt": "Decode each byte. Stop at 00h — that byte is the end, not a letter. Bytes: 57 49 40 48 73 48 00h.",
+      "fields": [
+        {
+          "id": "b1",
+          "label": "57h",
+          "kind": "text",
+          "placeholder": "?",
+          "accept": ["W"],
+          "hint": "57h is an uppercase letter.",
+          "traps": [
+            { "accept": ["57", "57h"], "hint": "That is the byte. Write the character." },
+            { "accept": ["w"], "hint": "Keep the case from the table. This one is uppercase." }
+          ]
+        },
+        {
+          "id": "b2",
+          "label": "49h",
+          "kind": "text",
+          "placeholder": "?",
+          "accept": ["I"],
+          "hint": "49h is an uppercase letter.",
+          "traps": [
+            { "accept": ["49", "49h"], "hint": "That is the byte. Write the character." }
+          ]
+        },
+        {
+          "id": "b3",
+          "label": "40h",
+          "kind": "text",
+          "placeholder": "?",
+          "accept": ["@"],
+          "hint": "40h is a symbol, not a letter.",
+          "traps": [
+            { "accept": ["40", "40h"], "hint": "That is the byte. Write the symbol it stores." }
+          ]
+        },
+        {
+          "id": "b4",
+          "label": "48h",
+          "kind": "text",
+          "placeholder": "?",
+          "accept": ["H"],
+          "hint": "48h is an uppercase letter.",
+          "traps": [
+            { "accept": ["48", "48h"], "hint": "That is the byte. Write the character." },
+            { "accept": ["h"], "hint": "Keep the case. This byte is uppercase." }
+          ]
+        },
+        {
+          "id": "b5",
+          "label": "73h",
+          "kind": "text",
+          "placeholder": "?",
+          "accept": ["s"],
+          "hint": "73h is a lowercase letter.",
+          "traps": [
+            { "accept": ["73", "73h"], "hint": "That is the byte. Write the character." },
+            { "accept": ["S"], "hint": "Keep the case. This byte is lowercase." }
+          ]
+        },
+        {
+          "id": "b6",
+          "label": "48h",
+          "kind": "text",
+          "placeholder": "?",
+          "accept": ["H"],
+          "hint": "Same byte as the earlier uppercase letter.",
+          "traps": [
+            { "accept": ["48", "48h"], "hint": "That is the byte. Write the character." }
+          ]
+        },
+        {
+          "id": "end",
+          "label": "00h",
+          "kind": "word",
+          "placeholder": "?",
+          "accept": ["end", "null", "stop"],
+          "hint": "The 00 byte ends the string. It is not a visible character."
+        }
+      ]
+    },
+    {
+      "id": "string",
+      "label": "String",
+      "file": "Text.java",
+      "prompt": "Join the characters and leave the 00 byte out of the text.",
+      "fields": [
+        {
+          "id": "value",
+          "label": "string",
+          "kind": "text",
+          "placeholder": "?",
+          "accept": ["WI@HsH"],
+          "hint": "Join the characters in order and stop before the null byte.",
+          "traps": [
+            { "accept": ["wi@hsh", "WI@HSH"], "hint": "Keep the case of each byte." },
+            { "accept": ["HsH@IW"], "hint": "Keep the left-to-right order of the bytes." }
+          ]
+        }
+      ]
+    }
+  ]
+}

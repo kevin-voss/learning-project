@@ -1,0 +1,62 @@
+{
+  "nextTask": "task-01-3-bcd-to-decimal",
+  "nextLabel": "Task 01_3 · BCD to decimal",
+  "parts": [
+    {
+      "id": "binary",
+      "label": "Binary box",
+      "file": "BinaryBox.java",
+      "prompt": "48024667 stored as a binary number. How many bits does the box need, and how many bytes is that?",
+      "fields": [
+        {
+          "id": "bits",
+          "label": "bits",
+          "kind": "number",
+          "placeholder": "0",
+          "accept": ["32"],
+          "hint": "This number is bigger than 65535, so 16 bits is too small.",
+          "traps": [
+            { "accept": ["16"], "hint": "16 bits stop at 65535. This number is bigger." },
+            { "accept": ["8"], "hint": "8 bits stop at 255. This number is much bigger." },
+            { "accept": ["64"], "hint": "A wider box can hold it, but the usual box that fits is smaller." },
+            { "accept": ["4"], "hint": "That count is bytes. This line asks for bits." }
+          ]
+        },
+        {
+          "id": "bytes",
+          "label": "bytes",
+          "kind": "number",
+          "placeholder": "0",
+          "accept": ["4"],
+          "hint": "Divide the bit count by 8.",
+          "traps": [
+            { "accept": ["32"], "hint": "That is the bit count. Divide it by 8." },
+            { "accept": ["2"], "hint": "2 bytes is 16 bits. This number does not fit." },
+            { "accept": ["8"], "hint": "8 would be the character count. This line is the binary box." }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ascii",
+      "label": "ASCII string",
+      "file": "AsciiBytes.java",
+      "prompt": "The same number written as the text 48024667. How many bytes? 8 without a null, or 9 with one.",
+      "fields": [
+        {
+          "id": "bytes",
+          "label": "bytes",
+          "kind": "number",
+          "placeholder": "0",
+          "accept": ["8", "9"],
+          "hint": "Count the digits. Add one only if you store a trailing null byte.",
+          "traps": [
+            { "accept": ["4"], "hint": "That is the binary box. Text uses one byte per character." },
+            { "accept": ["32"], "hint": "That is a bit count. Count the characters instead." },
+            { "accept": ["7"], "hint": "Count every digit in 48024667." }
+          ]
+        }
+      ]
+    }
+  ]
+}

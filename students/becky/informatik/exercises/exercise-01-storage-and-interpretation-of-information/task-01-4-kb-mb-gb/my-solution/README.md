@@ -1,18 +1,19 @@
 # My solution · Task 01_4 ✏️
 
-This is your desk. Fill the size table. The [exercise page](../../README.md) explains every idea you need.
+This is your desk. Type one step in the editor, press Check, then Done.
 
-## Answers
+Units: 1 kilobyte, 1 megabyte, 1 gigabyte. A power of two is enough.
 
-| Unit | Bytes (power of two is enough) | Decimal (optional) |
-|------|--------------------------------|--------------------|
-| 1 Kilobyte (KByte) | | |
-| 1 Megabyte (MByte) | | |
-| 1 Gigabyte (GByte) | | |
+```desk
+```
 
 ## How to check
 
-There is no program to run. Compare your powers to the check table in the [task](../README.md). In Cursor: `/check`.
+The editor checks each step. You can also compare with the check rows in the [task](../README.md). In Cursor: `/check`.
+
+## Next
+
+[Task 01_5 · Hex bytes as string](../../task-01-5-hex-bytes-as-string/my-solution/README.md)
 
 ## Rules for this desk
 

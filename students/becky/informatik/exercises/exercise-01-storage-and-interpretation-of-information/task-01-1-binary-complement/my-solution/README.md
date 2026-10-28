@@ -1,21 +1,19 @@
 # My solution · Task 01_1 ✏️
 
-This is your desk. Fill in the steps below. The [exercise page](../../README.md) explains every idea you need.
-
-## Answers
+This is your desk. Type one step in the editor, press Check, then Done.
 
 Given: `01011001b`
 
-| Step | Your bits |
-|------|-----------|
-| Invert | |
-| After +1 (binary complement) | |
-
-Optional: decimal value of the given number = ______
+```desk
+```
 
 ## How to check
 
-There is no program to run. Compare your bits to the check rows in the [task](../README.md). In Cursor: `/check`.
+The editor checks each step. You can also compare with the check rows in the [task](../README.md). In Cursor: `/check`.
+
+## Next
+
+[Task 01_2 · Bytes for a number](../../task-01-2-bytes-for-a-number/my-solution/README.md)
 
 ## Rules for this desk
 

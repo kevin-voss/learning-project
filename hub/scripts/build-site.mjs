@@ -43,9 +43,11 @@ const THEME_HEAD = [
   THEME_INIT,
   ...['tokens.css', 'components.css', 'anim/anim.css'].map((file) => `<link rel="stylesheet" href="/hub/theme/${file}">`),
   '<link rel="stylesheet" href="/hub/chat/chat.css">',
+  '<link rel="stylesheet" href="/hub/desk/desk.css">',
 ].join('\n  ')
 const THEME_BODY = ['/hub/theme/anim/scenes.js', '/hub/theme/anim/player.js', '/hub/progress.js', '/hub/chat/chat.js']
   .map((src) => `<script src="${src}" defer></script>`).join('\n  ')
+  + '\n  <script type="module" src="/hub/desk/desk.js"></script>'
 
 // Parent page one level up (or /hub/ if nothing above has a page).
 function backHref(file) {

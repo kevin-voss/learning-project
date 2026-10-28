@@ -1,22 +1,19 @@
 # My solution · Task 01_3 ✏️
 
-This is your desk. Decode the BCD value below. The [exercise page](../../README.md) explains every idea you need.
-
-## Answers
+This is your desk. Type one step in the editor, press Check, then Done.
 
 BCD: `0100 0010 1001`
 
-| Nibble | Digit |
-|--------|-------|
-| `0100` | |
-| `0010` | |
-| `1001` | |
-
-Decimal number: ______
+```desk
+```
 
 ## How to check
 
-There is no program to run. Compare your digits to the check table in the [task](../README.md). In Cursor: `/check`.
+The editor checks each step. You can also compare with the check rows in the [task](../README.md). In Cursor: `/check`.
+
+## Next
+
+[Task 01_4 · KB MB GB](../../task-01-4-kb-mb-gb/my-solution/README.md)
 
 ## Rules for this desk
 

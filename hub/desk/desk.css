@@ -1,0 +1,285 @@
+/* Written-answer desk. The editor uses the same code colours as Java blocks. */
+
+.lp-desk-loading,
+.lp-desk-prompt {
+  margin: 0 0 var(--lp-s3);
+}
+
+.lp-desk-loading { color: var(--lp-text-muted); }
+
+.lp-editor {
+  --lp-editor-lh: 24px;
+  border: 1px solid var(--lp-line);
+  border-radius: var(--lp-radius);
+  background: var(--lp-code-bg);
+  color: var(--lp-code-text);
+  box-shadow: var(--lp-shadow);
+  overflow: hidden;
+}
+
+.lp-editor:focus-within { border-color: var(--lp-accent); }
+
+.lp-editor-tabs {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  min-height: 36px;
+  background: var(--lp-surface-2);
+  border-bottom: 1px solid var(--lp-line);
+  overflow-x: auto;
+}
+
+.lp-editor-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 0 12px;
+  border: 0;
+  border-right: 1px solid var(--lp-line);
+  border-top: 2px solid transparent;
+  background: transparent;
+  color: var(--lp-text-muted);
+  font: 600 13px / 34px var(--lp-font);
+  cursor: pointer;
+}
+
+.lp-editor-tab.is-active {
+  background: var(--lp-code-bg);
+  color: var(--lp-text);
+  border-top-color: var(--lp-accent);
+}
+
+.lp-editor-tab.is-dirty::after {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--lp-text);
+}
+
+.lp-editor-j {
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  background: var(--lp-code-keyword);
+  color: var(--lp-bg);
+  font: 700 12px / 1 var(--lp-font);
+}
+
+.lp-editor-saved {
+  color: var(--lp-do);
+  font: 700 12px / 1 var(--lp-font);
+}
+
+.lp-editor-copy {
+  margin-left: auto;
+  align-self: center;
+  margin-right: var(--lp-s2);
+  padding: 2px 10px;
+  border: 1px solid var(--lp-line);
+  border-radius: 999px;
+  background: var(--lp-surface);
+  color: var(--lp-text-muted);
+  font: 700 12px / 1.6 var(--lp-font);
+  cursor: pointer;
+}
+
+.lp-editor-main {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  min-height: 220px;
+}
+
+.lp-editor-gutter {
+  padding: 8px 0;
+  background: var(--lp-surface-2);
+  border-right: 1px solid var(--lp-line);
+  user-select: none;
+}
+
+.lp-editor-line {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  height: var(--lp-editor-lh);
+  padding: 0 10px 0 12px;
+  color: var(--lp-code-comment);
+  font: 400 16px / var(--lp-editor-lh) var(--lp-mono);
+}
+
+.lp-editor-name {
+  max-width: 9ch;
+  overflow: hidden;
+  color: var(--lp-text-muted);
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lp-editor-line.is-active { background: var(--lp-accent-soft); }
+.lp-editor-line.is-active .lp-editor-num { color: var(--lp-accent); }
+.lp-editor-line.is-ok .lp-editor-num { color: var(--lp-do); }
+.lp-editor-line.is-bad .lp-editor-num { color: var(--lp-warn); }
+
+.lp-editor-code {
+  position: relative;
+  overflow-x: auto;
+  background: var(--lp-code-bg);
+}
+
+.lp-editor-active {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: var(--lp-editor-lh);
+  top: calc(8px + var(--row, 0) * var(--lp-editor-lh));
+  background: var(--lp-accent-soft);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.lp-sheet .lp-editor pre.lp-editor-hl,
+.lp-editor pre.lp-editor-hl {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  padding: 8px 12px;
+  min-height: 220px;
+  width: max(100%, calc(var(--cols, 16) * 1ch));
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--lp-code-text);
+  font: 400 16px / 24px var(--lp-mono);
+  letter-spacing: 0;
+  tab-size: 2;
+  white-space: pre;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.lp-editor-input {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  height: 100%;
+  min-height: 220px;
+  width: max(100%, calc(var(--cols, 16) * 1ch));
+  margin: 0;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 0;
+  resize: none;
+  overflow: hidden;
+  background: transparent;
+  color: transparent;
+  caret-color: var(--lp-code-text);
+  font: 400 16px / 24px var(--lp-mono);
+  letter-spacing: 0;
+  tab-size: 2;
+  white-space: pre;
+  box-sizing: border-box;
+}
+
+.lp-editor .hljs-comment,
+.lp-editor .hljs-quote,
+.lp-editor .hljs-meta { font-style: normal; }
+
+.lp-editor-input:focus { outline: none; }
+
+.lp-editor-input::selection {
+  background: var(--lp-accent-soft);
+  color: transparent;
+}
+
+.lp-editor-status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 28px;
+  padding: 0 12px;
+  border-top: 1px solid var(--lp-line);
+  background: var(--lp-surface-2);
+  color: var(--lp-text-muted);
+  font: 600 12px / 1 var(--lp-font);
+}
+
+.lp-editor-spacer { flex: 1; }
+.lp-editor-problems.is-ok { color: var(--lp-do); }
+.lp-editor-problems.is-bad { color: var(--lp-warn); }
+.lp-editor-mode { color: var(--lp-code-keyword); }
+
+.lp-desk-feedback {
+  min-height: 1.5em;
+  margin: var(--lp-s3) 0 0;
+}
+
+.lp-desk-feedback.is-ok { color: var(--lp-do); font-weight: 700; }
+.lp-desk-feedback.is-bad { color: var(--lp-warn); }
+.lp-desk-feedback a { margin-left: var(--lp-s2); }
+
+.lp-desk-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--lp-s2);
+  margin-top: var(--lp-s3);
+}
+
+.lp-desk-actions button {
+  padding: 8px 16px;
+  border: 1px solid var(--lp-line);
+  border-radius: 999px;
+  background: var(--lp-surface);
+  color: var(--lp-text);
+  font: 700 16px / 1.2 var(--lp-font);
+  cursor: pointer;
+}
+
+.lp-desk-actions button:focus-visible {
+  outline: 2px solid var(--lp-accent);
+  outline-offset: 2px;
+}
+
+.lp-desk-actions [data-action='check'] {
+  background: var(--lp-accent);
+  border-color: var(--lp-accent);
+  color: var(--lp-on-accent);
+}
+
+.lp-desk-actions [data-action='done']:not(:disabled) {
+  background: var(--lp-do);
+  border-color: var(--lp-do);
+  color: var(--lp-on-accent);
+}
+
+.lp-desk-actions button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.lp-desk-banner {
+  margin-top: var(--lp-s4);
+  padding: var(--lp-s4);
+  border: 1px solid var(--lp-do);
+  border-radius: var(--lp-radius);
+  background: var(--lp-try-bg);
+}
+
+.lp-desk-banner-title {
+  margin: 0 0 var(--lp-s2);
+  font-weight: 700;
+}
+
+.lp-desk-banner a { font-weight: 700; }
+
+@media (max-width: 640px) {
+  .lp-editor-status span:nth-child(4),
+  .lp-editor-status span:nth-child(5) { display: none; }
+}

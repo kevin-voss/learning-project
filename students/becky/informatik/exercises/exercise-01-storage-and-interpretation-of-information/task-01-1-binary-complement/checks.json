@@ -1,0 +1,64 @@
+{
+  "nextTask": "task-01-2-bytes-for-a-number",
+  "nextLabel": "Task 01_2 · Bytes for a number",
+  "parts": [
+    {
+      "id": "invert",
+      "label": "Invert",
+      "file": "Invert.java",
+      "prompt": "Flip every bit of 01011001. Keep each bit in its place.",
+      "fields": [
+        {
+          "id": "bits",
+          "label": "bits",
+          "kind": "bits",
+          "placeholder": "00000000b",
+          "accept": ["10100110", "10100110b"],
+          "hint": "Flip each lamp where it sits. Do not reverse the row.",
+          "traps": [
+            { "accept": ["10011010", "10011010b"], "hint": "That row is mirrored. Flip each bit where it sits." },
+            { "accept": ["01011001", "01011001b"], "hint": "Those are the starting bits. Flip each one." },
+            { "accept": ["10100111", "10100111b"], "hint": "That already has +1. This step is only the flip." }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "plus-one",
+      "label": "After +1",
+      "file": "PlusOne.java",
+      "prompt": "Add 1 to the flipped bits. Keep all 8 bits.",
+      "fields": [
+        {
+          "id": "bits",
+          "label": "bits",
+          "kind": "bits",
+          "placeholder": "00000000b",
+          "accept": ["10100111", "10100111b"],
+          "hint": "Add 1 on the right. A 1 becomes 0 and the carry moves left.",
+          "traps": [
+            { "accept": ["10100110", "10100110b"], "hint": "That is only the flip. Add 1 on the right." },
+            { "accept": ["01011001", "01011001b"], "hint": "Start from the flipped bits, then add 1." }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "decimal",
+      "label": "Decimal",
+      "file": "Decimal.java",
+      "prompt": "Optional. What is 01011001 as a decimal number?",
+      "required": false,
+      "fields": [
+        {
+          "id": "value",
+          "label": "decimal",
+          "kind": "number",
+          "placeholder": "0",
+          "accept": ["89"],
+          "hint": "The rightmost bit is worth 1. Add the place values that are on."
+        }
+      ]
+    }
+  ]
+}

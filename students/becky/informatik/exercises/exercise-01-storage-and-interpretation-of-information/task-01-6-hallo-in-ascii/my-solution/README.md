@@ -1,25 +1,19 @@
 # My solution · Task 01_6 ✏️
 
-This is your desk. Encode the string below. The [exercise page](../../README.md) explains every idea you need.
-
-## Answers
+This is your desk. Type one step in the editor, press Check, then Done.
 
 String: `"Hallo"` (null-terminated)
 
-| Character | Hex byte |
-|-----------|----------|
-| `'H'` | |
-| `'a'` | |
-| `'l'` | |
-| `'l'` | |
-| `'o'` | |
-| null | |
-
-Full sequence: ______________________________
+```desk
+```
 
 ## How to check
 
-There is no program to run. Compare your bytes to the check table in the [task](../README.md). In Cursor: `/check`.
+The editor checks each step. You can also compare with the check rows in the [task](../README.md). In Cursor: `/check`.
+
+## Next
+
+[Task 01_7 · Decode ASCII bytes](../../task-01-7-decode-ascii-bytes/my-solution/README.md)
 
 ## Rules for this desk
 

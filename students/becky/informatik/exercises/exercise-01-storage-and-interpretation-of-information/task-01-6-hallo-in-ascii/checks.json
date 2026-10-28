@@ -1,0 +1,84 @@
+{
+  "nextTask": "task-01-7-decode-ascii-bytes",
+  "nextLabel": "Task 01_7 · Decode ASCII bytes",
+  "parts": [
+    {
+      "id": "letters",
+      "label": "Letters",
+      "file": "Letters.java",
+      "prompt": "Encode \"Hallo\" and the null at the end. One hex byte per line.",
+      "fields": [
+        {
+          "id": "h",
+          "label": "H",
+          "kind": "hex",
+          "placeholder": "??h",
+          "accept": ["48", "48h"],
+          "hint": "Uppercase H is not the same byte as lowercase h.",
+          "traps": [
+            { "accept": ["68", "68h"], "hint": "That is lowercase h. This letter is uppercase." }
+          ]
+        },
+        {
+          "id": "a",
+          "label": "a",
+          "kind": "hex",
+          "placeholder": "??h",
+          "accept": ["61", "61h"],
+          "hint": "Lowercase letters sit after the uppercase block."
+        },
+        {
+          "id": "l1",
+          "label": "l",
+          "kind": "hex",
+          "placeholder": "??h",
+          "accept": ["6C", "6Ch"],
+          "hint": "The word has this letter twice. Same character, same byte."
+        },
+        {
+          "id": "l2",
+          "label": "l",
+          "kind": "hex",
+          "placeholder": "??h",
+          "accept": ["6C", "6Ch"],
+          "hint": "The second l uses the same byte as the first l."
+        },
+        {
+          "id": "o",
+          "label": "o",
+          "kind": "hex",
+          "placeholder": "??h",
+          "accept": ["6F", "6Fh"],
+          "hint": "Look up lowercase o. Do not reverse the word."
+        },
+        {
+          "id": "end",
+          "label": "end",
+          "kind": "hex",
+          "placeholder": "??h",
+          "accept": ["00", "00h"],
+          "hint": "A C string ends with a null byte."
+        }
+      ]
+    },
+    {
+      "id": "sequence",
+      "label": "Sequence",
+      "file": "Sequence.java",
+      "prompt": "Write the whole byte sequence in order, including the null at the end.",
+      "fields": [
+        {
+          "id": "bytes",
+          "label": "bytes",
+          "kind": "hex",
+          "placeholder": "00 00h",
+          "accept": ["48 61 6C 6C 6F 00", "48616C6C6F00h"],
+          "hint": "Keep Hallo in order and end with the null byte.",
+          "traps": [
+            { "accept": ["48 61 6C 6C 6F", "48616C6C6F"], "hint": "The letters are there. Add the null byte at the end." }
+          ]
+        }
+      ]
+    }
+  ]
+}

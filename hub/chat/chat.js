@@ -571,6 +571,15 @@
     input.focus()
   }
 
+  window.LpChat.review = (body) => {
+    const text = String(body || '').trim().slice(0, MAX_INPUT)
+    if (!text) return false
+    openDraft(text)
+    window.dispatchEvent(new CustomEvent('lp-chat-ready'))
+    return true
+  }
+  window.dispatchEvent(new CustomEvent('lp-chat-ready'))
+
   function renderHistory() {
     const past = listedChats()
     // Never leave an empty sidebar open.
@@ -1064,6 +1073,13 @@
       if (root.hasAttribute('data-open')) scopeEl.textContent = title
     }, { once: true })
   }
+  }
+
+  window.LpChat = {
+    isUnlocked,
+    review() {
+      return false
+    },
   }
 
   if (isUnlocked()) bootChat()

@@ -1,26 +1,19 @@
 # My solution · Task 01_7 ✏️
 
-This is your desk. Decode the bytes below. The [exercise page](../../README.md) explains every idea you need.
-
-## Answers
+This is your desk. Type one step in the editor, press Check, then Done.
 
 Bytes: `57 49 40 48 73 48 00h`
 
-| Byte | Character (or “end”) |
-|------|----------------------|
-| `57` | |
-| `49` | |
-| `40` | |
-| `48` | |
-| `73` | |
-| `48` | |
-| `00` | |
-
-String: "______"
+```desk
+```
 
 ## How to check
 
-There is no program to run. Compare your string to the check table in the [task](../README.md). In Cursor: `/check`.
+The editor checks each step. You can also compare with the check rows in the [task](../README.md). In Cursor: `/check`.
+
+## Next
+
+Back to [Exercise 01](../../README.md).
 
 ## Rules for this desk
 

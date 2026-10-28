@@ -1,0 +1,78 @@
+{
+  "nextTask": "task-01-6-hallo-in-ascii",
+  "nextLabel": "Task 01_6 · Hallo in ASCII",
+  "parts": [
+    {
+      "id": "chars",
+      "label": "Characters",
+      "file": "Characters.java",
+      "prompt": "Each byte is one character. Bytes: 37h, 30h, 35h, 39h.",
+      "fields": [
+        {
+          "id": "b1",
+          "label": "37h",
+          "kind": "text",
+          "placeholder": "?",
+          "accept": ["7"],
+          "hint": "3xh is the digit character x.",
+          "traps": [
+            { "accept": ["37", "37h"], "hint": "That is the byte. Write the character it stores." }
+          ]
+        },
+        {
+          "id": "b2",
+          "label": "30h",
+          "kind": "text",
+          "placeholder": "?",
+          "accept": ["0"],
+          "hint": "3xh is the digit character x.",
+          "traps": [
+            { "accept": ["30", "30h"], "hint": "That is the byte. Write the character it stores." }
+          ]
+        },
+        {
+          "id": "b3",
+          "label": "35h",
+          "kind": "text",
+          "placeholder": "?",
+          "accept": ["5"],
+          "hint": "3xh is the digit character x.",
+          "traps": [
+            { "accept": ["35", "35h"], "hint": "That is the byte. Write the character it stores." }
+          ]
+        },
+        {
+          "id": "b4",
+          "label": "39h",
+          "kind": "text",
+          "placeholder": "?",
+          "accept": ["9"],
+          "hint": "3xh is the digit character x.",
+          "traps": [
+            { "accept": ["39", "39h"], "hint": "That is the byte. Write the character it stores." }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "string",
+      "label": "String",
+      "file": "Text.java",
+      "prompt": "Write the four characters as one string, in the same order.",
+      "fields": [
+        {
+          "id": "value",
+          "label": "string",
+          "kind": "text",
+          "placeholder": "?",
+          "accept": ["7059"],
+          "hint": "Join the characters. Do not add them as a binary number.",
+          "traps": [
+            { "accept": ["9507"], "hint": "Keep the left-to-right order of the bytes." },
+            { "accept": ["37 30 35 39", "37303539"], "hint": "Write the characters, not the hex bytes." }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "nextTask": "task-01-4-kb-mb-gb",
+  "nextLabel": "Task 01_4 · KB MB GB",
+  "parts": [
+    {
+      "id": "nibbles",
+      "label": "Nibbles",
+      "file": "Nibbles.java",
+      "prompt": "BCD keeps each group of 4 bits as its own digit. The bits are 0100 0010 1001.",
+      "fields": [
+        {
+          "id": "n1",
+          "label": "0100",
+          "kind": "number",
+          "placeholder": "0",
+          "accept": ["4"],
+          "hint": "Read these four bits as one digit from 0 to 9.",
+          "traps": [
+            { "accept": ["0100", "100"], "hint": "Those are the bits. Write the digit they stand for." }
+          ]
+        },
+        {
+          "id": "n2",
+          "label": "0010",
+          "kind": "number",
+          "placeholder": "0",
+          "accept": ["2"],
+          "hint": "Read these four bits as one digit from 0 to 9.",
+          "traps": [
+            { "accept": ["0010", "10"], "hint": "Those are the bits. Write the digit they stand for." }
+          ]
+        },
+        {
+          "id": "n3",
+          "label": "1001",
+          "kind": "number",
+          "placeholder": "0",
+          "accept": ["9"],
+          "hint": "Read these four bits as one digit from 0 to 9.",
+          "traps": [
+            { "accept": ["1001"], "hint": "Those are the bits. Write the digit they stand for." }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "decimal",
+      "label": "Decimal",
+      "file": "Decimal.java",
+      "prompt": "Glue the three digits into one number. Keep their left-to-right order.",
+      "fields": [
+        {
+          "id": "value",
+          "label": "number",
+          "kind": "number",
+          "placeholder": "0",
+          "accept": ["429"],
+          "hint": "Write the three digits in the same order as the groups.",
+          "traps": [
+            { "accept": ["1065"], "hint": "That treats all 12 bits as one binary number. Keep each group as its own digit." },
+            { "accept": ["924"], "hint": "Keep the left-to-right order of the groups." },
+            { "accept": ["4", "2", "9"], "hint": "Glue the digits into one number." }
+          ]
+        }
+      ]
+    }
+  ]
+}

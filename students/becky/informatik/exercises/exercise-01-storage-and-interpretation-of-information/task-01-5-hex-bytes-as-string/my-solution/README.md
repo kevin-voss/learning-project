@@ -1,23 +1,19 @@
 # My solution · Task 01_5 ✏️
 
-This is your desk. Decode the bytes below. The [exercise page](../../README.md) explains every idea you need.
-
-## Answers
+This is your desk. Type one step in the editor, press Check, then Done.
 
 Bytes: `37h`, `30h`, `35h`, `39h`
 
-| Byte | Character |
-|------|-----------|
-| `37h` | |
-| `30h` | |
-| `35h` | |
-| `39h` | |
-
-String: "______"
+```desk
+```
 
 ## How to check
 
-There is no program to run. Compare your string to the check table in the [task](../README.md). In Cursor: `/check`.
+The editor checks each step. You can also compare with the check rows in the [task](../README.md). In Cursor: `/check`.
+
+## Next
+
+[Task 01_6 · Hallo in ASCII](../../task-01-6-hallo-in-ascii/my-solution/README.md)
 
 ## Rules for this desk
 

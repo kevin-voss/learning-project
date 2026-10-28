@@ -1,0 +1,65 @@
+{
+  "nextTask": "task-01-5-hex-bytes-as-string",
+  "nextLabel": "Task 01_5 · Hex bytes as string",
+  "parts": [
+    {
+      "id": "kilo",
+      "label": "Kilobyte",
+      "file": "Kilobyte.java",
+      "prompt": "How many bytes is 1 kilobyte on this sheet? A power of two is enough.",
+      "fields": [
+        {
+          "id": "bytes",
+          "label": "bytes",
+          "kind": "number",
+          "placeholder": "2^?",
+          "accept": ["2^10", "2¹⁰", "2**10", "1024"],
+          "hint": "One step of the binary group. Not 1000.",
+          "traps": [
+            { "accept": ["1000", "10^3", "2^3"], "hint": "This sheet uses a power of two, not 1000." }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mega",
+      "label": "Megabyte",
+      "file": "Megabyte.java",
+      "prompt": "How many bytes is 1 megabyte? Stack another binary group on the kilobyte.",
+      "fields": [
+        {
+          "id": "bytes",
+          "label": "bytes",
+          "kind": "number",
+          "placeholder": "2^?",
+          "accept": ["2^20", "2²⁰", "2**20", "1048576", "1 048 576"],
+          "hint": "A megabyte stacks the binary group a second time.",
+          "traps": [
+            { "accept": ["2^10", "1024"], "hint": "That is one kilobyte. Mega stacks that group again." },
+            { "accept": ["1000000", "10^6", "1 000 000"], "hint": "This sheet uses powers of two, not powers of 10." }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "giga",
+      "label": "Gigabyte",
+      "file": "Gigabyte.java",
+      "prompt": "How many bytes is 1 gigabyte? One more binary group.",
+      "fields": [
+        {
+          "id": "bytes",
+          "label": "bytes",
+          "kind": "number",
+          "placeholder": "2^?",
+          "accept": ["2^30", "2³⁰", "2**30", "1073741824", "1 073 741 824"],
+          "hint": "A gigabyte stacks the binary group a third time.",
+          "traps": [
+            { "accept": ["2^20", "1048576", "1 048 576"], "hint": "That is a megabyte. Giga stacks one more group." },
+            { "accept": ["1000000000", "10^9", "1 000 000 000"], "hint": "This sheet uses powers of two, not powers of 10." }
+          ]
+        }
+      ]
+    }
+  ]
+}

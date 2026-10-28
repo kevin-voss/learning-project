@@ -3,6 +3,7 @@
 //   > [!PICTURE] / [!TRY] / [!CHECK] / [!NOTE] / [!WARN] quotes become boxes (docs/STYLE.md),
 //   ```mermaid blocks become diagrams (theme colours from --lp-*),
 //   .md links point to the built .html pages, headings get GitHub-style ids for #links,
+//   ```desk fences become the my-solution editor mount,
 //   code blocks get syntax colours and a Copy button.
 (function () {
   const LABELS = { PICTURE: 'Picture this', TRY: 'Try it', CHECK: 'Check yourself', NOTE: 'Good to know', WARN: 'Watch out' }
@@ -104,11 +105,21 @@
     }
   }
 
+  // ```desk on a my-solution page. Replaced before code blocks get Copy buttons.
+  function desks(root) {
+    for (const block of root.querySelectorAll('pre > code.language-desk')) {
+      const div = document.createElement('div')
+      div.id = 'desk'
+      block.parentElement.replaceWith(div)
+    }
+  }
+
   function render() {
     const source = document.getElementById('sheet-md')
     const article = document.getElementById('sheet')
     if (source && article && window.marked) {
       article.innerHTML = window.marked.parse(JSON.parse(source.textContent))
+      desks(article)
       boxes(article)
       links(article)
       anchors(article)

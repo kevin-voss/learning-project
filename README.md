@@ -1,4 +1,4 @@
-# learning-project hello
+# learning-project
 
 **Students: open the website and start at step 1.** One numbered list takes you from zero (what is a program?) to a real Java backend, in four levels: Beginner, Java, Backend, Pro. Every step says what to do:
 

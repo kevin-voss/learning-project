@@ -11,7 +11,7 @@ becky/
 ├── computer-science/              Programmieren 1 (Java)
 ├── informatik/                    Einführung in die Informatik (gates, flip-flops, …)
 ├── mathematical-foundations/      Mathematische Grundlagen der Informatik
-├── statsrecht/                    Statsrecht — lecture quizzes
+├── staatsrecht/                   Staatsrecht — lecture quizzes, in German
 └── verwaltungshandeln/            Verwaltungshandeln — lecture quizzes
 ```
 
@@ -21,7 +21,7 @@ becky/
 - [Computer Science](computer-science/README.md)
 - [Informatik](informatik/README.md)
 - [Mathematical Foundations](mathematical-foundations/README.md)
-- [Statsrecht](statsrecht/README.md)
+- [Staatsrecht](staatsrecht/README.md)
 - [Verwaltungshandeln](verwaltungshandeln/README.md)
 <!-- index:end -->
 

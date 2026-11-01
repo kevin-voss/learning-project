@@ -83,14 +83,14 @@ function trail(file) {
 </div>`
 }
 
-function shell(title, file, body) {
+function shell(title, file, body, extraHead = '') {
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${escape(title)} · Learning Project</title>
-  ${THEME_HEAD}
+  ${THEME_HEAD}${extraHead}
 </head>
 <body class="lp-page">
   ${HEADER}
@@ -107,12 +107,38 @@ ${body}
 `
 }
 
+// A lecture folder is students/<student>/<subject>/quizzes/quiz-NN-…/ with quiz.json
+// beside the README. The built page plays that quiz; the home page only links here.
+function lectureQuiz(file) {
+  if (basename(file) !== 'README.md') return null
+  const dir = dirname(file)
+  if (!existsSync(join(ROOT, dir, 'quiz.json'))) return null
+  const parts = dir.split('/')
+  if (parts.length !== 5 || parts[0] !== 'students' || parts[3] !== 'quizzes' || !parts[4].startsWith('quiz-')) return null
+  const [, student, subject, , folder] = parts
+  const number = folder.split('-')[1]
+  if (!number) return null
+  const subjectFile = join(ROOT, 'students', student, subject, 'README.md')
+  let subjectTitle = subject
+  if (existsSync(subjectFile)) {
+    const heading = readFileSync(subjectFile, 'utf8').match(/^#\s+(.+)$/m)?.[1]
+    if (heading) subjectTitle = heading.split(' · ').pop().trim()
+  }
+  const attr = (text) => escape(text).replace(/"/g, '&quot;')
+  return { anchor: attr(`quiz-${student}-${subject}-${number}`), subject: attr(subjectTitle) }
+}
+
 // The markdown is rendered in the browser by hub/sheet.js (boxes, mermaid, code, links).
 function sheetPage(markdown, title, file) {
   const data = JSON.stringify(markdown).replace(/</g, '\\u003c')
+  const quiz = lectureQuiz(file)
+  const player = quiz
+    ? `\n    <div id="quiz-player" class="quiz-player" data-src="quiz.json" data-anchor="${quiz.anchor}" data-subject="${quiz.subject}" aria-live="polite">Vorlesung wird geladen…</div>\n  <script type="module" src="/hub/quiz/quiz.js"></script>`
+    : ''
+  const extraHead = quiz ? '\n  <link rel="stylesheet" href="/hub/quiz/quiz.css">' : ''
   return shell(title, file, `    <article id="sheet">Loading…</article>
   <script type="application/json" id="sheet-md">${data}</script>
-  <script src="${MARKED}"></script>`)
+  <script src="${MARKED}"></script>${player}`, extraHead)
 }
 
 function codePage(source, file) {

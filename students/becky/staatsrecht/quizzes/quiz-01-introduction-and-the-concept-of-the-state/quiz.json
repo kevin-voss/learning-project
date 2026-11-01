@@ -1,0 +1,138 @@
+{
+  "id": "staatsrecht-01",
+  "title": "Einführung und der Begriff des Staates",
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "Was darfst du in der Staatsrecht-Klausur als Hilfe benutzen, und was darf auf einem Klebezettel in diesem Buch stehen?",
+      "options": [
+        { "id": "a", "text": "Einen Kommentar. Auf den Klebezetteln ausformulierte Definitionen.", "correct": false, "why": "Kommentare sind nicht zugelassen. Auf dem Zettel darf kein ausformulierter Text stehen." },
+        { "id": "b", "text": "Basistexte Öffentliches Recht, Beck-Texte im dtv, 37. Auflage 2025. Unterstreichen ist erlaubt. Auf dem Klebezettel nur eine Gesetzesangabe oder ein Schlagwort.", "correct": true, "why": "Die Klausur lässt genau diesen Band zu. Der Zettel darf die Stelle finden helfen, nicht die Antwort schon enthalten." },
+        { "id": "c", "text": "Ausdrucke der Moodle-Folien, weil die Klausur nur den Vorlesungsstoff fragt.", "correct": false, "why": "Die Folien sind der Lernstoff. Sie sind nicht die erlaubte Hilfe in der Klausur." },
+        { "id": "d", "text": "Irgendeine Gesetzessammlung, solange das Grundgesetz darin steht.", "correct": false, "why": "Eine andere Ausgabe ist nicht die zugelassene Hilfe." }
+      ],
+      "explain": "Ein Buch für alle: Basistexte Öffentliches Recht, Beck-Texte im dtv, 37. Auflage 2025. Unterstreichen und Markieren ist erlaubt. Ein Klebezettel darf „Art. 20 GG“ oder „Staatsgebiet“ sagen. Er darf die Definition nicht abschreiben. Die Klausur fragt nur, was die Vorlesung behandelt hat."
+    },
+    {
+      "id": "q2",
+      "prompt": "Die Pressefreiheit steht im zweiten Satz von Absatz 1 des Artikels 5 im Grundgesetz. Wie zitierst du diese Stelle?",
+      "options": [
+        { "id": "a", "text": "§ 5 Abs. 1 Satz 2 GG", "correct": false, "why": "Das Grundgesetz zitierst du mit Art., nicht mit §." },
+        { "id": "b", "text": "Art. 5 Abs. 1 Satz 2 GG", "correct": true, "why": "Art. nennt das Gesetz, Abs. 1 den Absatz in der Klammer (1), Satz 2 den zweiten Satz nach dem Punkt." },
+        { "id": "c", "text": "Art. 5 Abs. 1 Nr. 2 GG", "correct": false, "why": "Eine Nummer ist eine Aufzählung mit „1.“. Hier folgt ein zweiter Satz, keine Nummer." },
+        { "id": "d", "text": "Art. 5 Satz 2 GG, ohne den Absatz", "correct": false, "why": "Ohne den Absatz ist unklar, in welchem Stück von Art. 5 der Satz steht." }
+      ],
+      "explain": "Grundgesetz und EU-Recht zitierst du mit Art. Andere Gesetze zitierst du mit §. „(1)“ ist der Absatz, vorzugswürdig „Abs. 1“. Ein Punkt beendet einen Satz, also „Satz 2“. Eine „1.“ ist eine Nummer (Nr.). Ein „a)“ ist ein Buchstabe (lit.). In der Klausur kostet die falsche Stufe Punkte, auch wenn der Artikel stimmt."
+    },
+    {
+      "id": "q3",
+      "prompt": "Die Klausur fragt, wo die Anforderungen an den Namen einer Partei stehen. Der Wortlaut steht im ersten Absatz. Welche Antwort ist genau genug?",
+      "options": [
+        { "id": "a", "text": "§ 4 PartG", "correct": false, "why": "Das ist zu grob. Absatz 2 und 3 können etwas anderes regeln. Die Vorlesung verlangt den Absatz." },
+        { "id": "b", "text": "§ 4 Abs. 1 PartG", "correct": true, "why": "Gesetz, Paragraph und Absatz treffen die Stelle, die der Wortlaut meint." },
+        { "id": "c", "text": "Art. 4 Abs. 1 PartG", "correct": false, "why": "Das Parteiengesetz ist ein einfaches Gesetz. Seine Normen sind Paragraphen, keine Artikel." },
+        { "id": "d", "text": "§ 4 Abs. 1 Nr. 1 PartG", "correct": false, "why": "Eine Nummer wäre nur richtig, wenn die Regel ein einzelner Aufzählungspunkt wäre. Hier trägt der ganze Absatz." }
+      ],
+      "explain": "Merke dir das Beispiel aus der Vorlesung. Die Frage „In welcher Regelung stehen die Anforderungen an den Namen?“ antwortest du mit § 4 Abs. 1 PartG, nicht mit „irgendwo im PartG“. Dieselbe Sorgfalt gilt bei § 6 PartG: eine Pflicht in Abs. 2 Nr. 1 zitierst du bis zur Nummer, nicht nur als § 6."
+    },
+    {
+      "id": "q4",
+      "prompt": "Gerichte und das Schrifttum verstehen einen Rechtsbegriff verschieden. Es gibt schon eine Entscheidung. Wer gibt den Inhalt vor, solange der Gesetzgeber das Gesetz nicht ändert?",
+      "options": [
+        { "id": "a", "text": "Die herrschende Meinung im Schrifttum, weil die meisten Autoren sie teilen.", "correct": false, "why": "Die herrschende Meinung füllt die Lücke nur, wenn noch keine Rechtsprechung da ist." },
+        { "id": "b", "text": "Das Gericht. Die herrschende Meinung gilt erst, wenn noch keine Rechtsprechung vorliegt.", "correct": true, "why": "Das letzte Wort hat das Gericht, bis der Gesetzgeber die Norm ändert." },
+        { "id": "c", "text": "Der Alltagsgebrauch des Wortes, weil jeder ihn kennt.", "correct": false, "why": "Derselbe Begriff kann in einer anderen Norm etwas anderes meinen. Der Zusammenhang entscheidet." },
+        { "id": "d", "text": "Ein kürzeres Synonym, zum Beispiel „Ding“ statt „Sache“ in § 90 BGB.", "correct": false, "why": "Synonyme sind verpönt. Du schreibst den Ausdruck, den das Gesetz benutzt." }
+      ],
+      "explain": "In der Klausur darfst du einen umstrittenen Begriff nicht frei definieren. Liegt eine Entscheidung vor, folgst du ihr. Fehlt sie, nimmst du die herrschende Meinung im Schrifttum. Übertrage die Bedeutung nicht aus einer anderen Norm und nicht aus der Umgangssprache. „Sache“ in § 90 BGB bleibt „Sache“, nicht „Ding“ und nicht „Objekt“."
+    },
+    {
+      "id": "q5",
+      "prompt": "Welche Aussage trifft das Staatsrecht dieser Vorlesung?",
+      "options": [
+        { "id": "a", "text": "Es regelt Verträge zwischen Privatleuten nach dem BGB.", "correct": false, "why": "Das ist Zivilrecht: Bürger und Bürger, nicht der Aufbau des Staates." },
+        { "id": "b", "text": "Es regelt, wie der Staat organisiert ist, wer für ihn handelt und wie Bürger und Staat zueinander stehen. Es liegt im öffentlichen Recht. Das Verfassungsrecht (Grundgesetz und Landesverfassungen) liegt darin.", "correct": true, "why": "Das sind die drei Inhalte, und das ist der Ort im System: öffentliches Recht, darin Staatsrecht, darin Verfassungsrecht." },
+        { "id": "c", "text": "Es ist dasselbe wie das ganze öffentliche Recht, also auch Bauordnung und BAföG.", "correct": false, "why": "Das öffentliche Recht ist der größere Kreis. Bauordnungsrecht ist Verwaltung, nicht schon Staatsrecht." },
+        { "id": "d", "text": "Es steht nur im Grundgesetz. BWahlG, StAG und BVerfGG sind Verwaltungsrecht.", "correct": false, "why": "Das Grundgesetz ist die Mitte, aber Wahl, Staatsangehörigkeit und das BVerfGG gehören ebenfalls zum Staatsrecht." }
+      ],
+      "explain": "Drei Kreise, von außen nach innen: öffentliches Recht (Staat und Bürger), Staatsrecht (Organisation, Handelnde, Grundverhältnis), Verfassungsrecht (Grundgesetz und Landesverfassungen, etwa die Niedersächsische Verfassung). Das Strafrecht gehört materiell zum öffentlichen Recht, wird aber meist als eigenes Gebiet behandelt. Das Zivilrecht bleibt daneben: Bürger und Bürger."
+    },
+    {
+      "id": "q6",
+      "prompt": "Eine Stadt kauft Papier bei einer Firma. Eine Ordnungsbehörde weist eine Gefahr ab. Was stimmt?",
+      "options": [
+        { "id": "a", "text": "Beides ist immer öffentliches Recht, weil der Staat handelt.", "correct": false, "why": "Die Verwaltung handelt fast immer öffentlich-rechtlich. Beschaffung ist eine der genannten Ausnahmen." },
+        { "id": "b", "text": "Der Kauf kann als Beschaffung zivilrechtlich sein. Die Gefahrenabwehr stützt sich auf öffentliches Recht, in Niedersachsen vor allem auf das NPOG.", "correct": true, "why": "Beschaffung steht auf der Ausnahmenliste. Gefahrenabwehr ist die öffentlich-rechtliche Regel, mit dem NPOG als Anker." },
+        { "id": "c", "text": "Beides ist Zivilrecht, weil Kaufen und Gefahren private Dinge sind.", "correct": false, "why": "Eine Gefahr abzuwehren ist keine privatwirtschaftliche Betätigung." },
+        { "id": "d", "text": "Der Kauf folgt dem NPOG, die Gefahr dem BGB.", "correct": false, "why": "Die Gesetze sind vertauscht. Das NPOG trägt die Gefahrenabwehr, nicht den Einkauf." }
+      ],
+      "explain": "Die allgemeine Verwaltung arbeitet fast ausnahmslos auf öffentlichem Recht. Beispiele der Vorlesung: BAföG, IfSG, NHG, NKomVG, NBauO, NPOG. Drei Ausnahmen merkst du dir als Trio: Arbeitsverträge, Beschaffung, privatwirtschaftliche Betätigung. Die Polizei ist kein Stück der „allgemeinen“ Verwaltung. Ihre vorbeugende Arbeit bleibt trotzdem öffentliches Recht."
+    },
+    {
+      "id": "q7",
+      "prompt": "Die Polizei klärt einen Diebstahl auf, verfolgt eine Ordnungswidrigkeit und hält eine Gefahr auf, bevor eine Straftat da ist. Welche Zuordnung stimmt?",
+      "options": [
+        { "id": "a", "text": "Diebstahl: StPO und Strafrecht. Ordnungswidrigkeit: OWiG und öffentliches Recht. Gefahr: NPOG und öffentliches Recht.", "correct": true, "why": "Verfolgen und Vorbeugen sind verschiedene Aufgaben, und die Ordnungswidrigkeit ist keine kleine Straftat nach der StPO." },
+        { "id": "b", "text": "Alles drei nach der StPO, weil jedes Mal die Polizei handelt.", "correct": false, "why": "Dieselbe Behörde kann auf verschiedenen Gesetzen arbeiten. Die Aufgabe bestimmt das Gesetz." },
+        { "id": "c", "text": "Die Gefahr nach der StPO, der Diebstahl nach dem NPOG.", "correct": false, "why": "Das dreht die Richtung um. Die StPO gehört zur Verfolgung, das NPOG zur Abwehr." },
+        { "id": "d", "text": "Die Ordnungswidrigkeit nach der StPO, weil sie eine kleine Straftat ist.", "correct": false, "why": "Ordnungswidrigkeiten bleiben öffentliches Recht. Das Leitgesetz ist das OWiG." }
+      ],
+      "explain": "Repressiv heißt: etwas ist geschehen und wird verfolgt. Straftaten führen ins Strafrecht und zur StPO. Ordnungswidrigkeiten führen ins öffentliche Recht und zum OWiG. Präventiv heißt: die Gefahr wird gestoppt, bevor sie zur Tat wird. Das ist Gefahrenabwehr. In diesem Kurs ist das NPOG der Anker. In der Klausur benennst du zuerst die Aufgabe, dann das Gesetz."
+    },
+    {
+      "id": "q8",
+      "prompt": "Nach Jellinek und der Drei-Elemente-Lehre dieser Vorlesung: Wann liegt ein Staat vor?",
+      "options": [
+        { "id": "a", "text": "Wenn Staatsgebiet, Staatsvolk und originäre, effektive Staatsgewalt zusammen vorliegen. Fehlt eines, liegt nach diesem Begriff kein Staat vor.", "correct": true, "why": "Alle drei müssen da sein. Die Gewalt muss ursprünglich sein, nicht von einem anderen verliehen, und sie muss wirklich wirken." },
+        { "id": "b", "text": "Wenn Demokratie, Rechtsstaat und Sozialstaat im Grundgesetz stehen.", "correct": false, "why": "Das sind Staatsstrukturprinzipien zu Art. 20 I GG, nicht Jellineks drei Elemente." },
+        { "id": "c", "text": "Wenn das Grundgesetz den Staat definiert. Das tut es in Art. 20.", "correct": false, "why": "Das Grundgesetz nennt die Bundesrepublik nirgends ausdrücklich „Staat“. Es setzt den Begriff voraus." },
+        { "id": "d", "text": "Wenn zwei der drei Elemente vorliegen.", "correct": false, "why": "Zwei reichen nicht. Fehlt das dritte, ist es nach diesem Begriff kein Staat." }
+      ],
+      "explain": "Jellinek: Der Staat ist die mit ursprünglicher Herrschermacht ausgerüstete Körperschaft eines sesshaften Volkes (Allgemeine Staatslehre, 3. Auflage 1914). Gebiet ist ein umgrenzter Teil der Erdoberfläche, der Menschen dauerhaft tragen kann. Volk sind Menschen, die dauerhaft miteinander verbunden sind. Gewalt ist originär und effektiv, über das Gebiet (Territorialhoheit) und über das Volk (Personalhoheit). Im Völkerrecht ist diese Lehre anerkannt. Andere Fächer können „Staat“ anders meinen."
+    },
+    {
+      "id": "q9",
+      "prompt": "Was gehört völkerrechtlich zum Staatsgebiet, so wie die Vorlesung es abgrenzt?",
+      "options": [
+        { "id": "a", "text": "Nur das trockene Land innerhalb der Grenze.", "correct": false, "why": "Die Hoheit umfasst auch den Raum darüber, die Erde darunter und einen Streifen Meer." },
+        { "id": "b", "text": "Auch der Luftraum bis zum Weltraum (etwa 100 km), die Erde darunter bis zum Erdmittelpunkt und die Küstengewässer bis zu 12 Seemeilen.", "correct": true, "why": "Das sind die drei Erweiterungen, die die Vorlesung zum Land hinzunimmt." },
+        { "id": "c", "text": "Alle Gewässer bis 15 Seemeilen. Eine Bohrinsel in diesem Abstand gehört noch zum Küstenmeer.", "correct": false, "why": "Die Grenze der Küstengewässer liegt bei 12 Seemeilen, nicht bei 15." },
+        { "id": "d", "text": "Jede Plattform, sobald jemand darauf steht.", "correct": false, "why": "Das Gebiet muss sich für den dauernden Aufenthalt von Menschen eignen. Nicht jede Struktur tut das." }
+      ],
+      "explain": "Prüf das Gebiet in vier Blicken: die Oberfläche, der Luftraum bis etwa 100 km, der Untergrund bis zum Erdmittelpunkt, das Küstenmeer bis 12 Seemeilen. Fünfzehn Seemeilen vor Sylt liegen außerhalb dieses Streifens. Eine künstliche Insel oder eine Plattform wird nicht dadurch Gebiet, dass jemand sie besetzt."
+    },
+    {
+      "id": "q10",
+      "prompt": "Neptun-Land: K nennt sich König. Das „Reich“ ist eine ehemalige Bohrinsel, 15 Seemeilen vor Sylt. Wer 20.000 Euro zahlt und sich schriftlich seinen Regeln unterwirft, darf kommen. Ist das ein Staat?",
+      "options": [
+        { "id": "a", "text": "Ja. Ein König, zahlende Bürger und eigene Regeln reichen.", "correct": false, "why": "Titel, Geld und eine Unterwerfung ersetzen keines der drei Elemente." },
+        { "id": "b", "text": "Nein. Die Bohrinsel ist kein geeignetes Staatsgebiet, die zahlende Gruppe ist kein dauerhaft verbundenes Staatsvolk, und der ausgerufene Titel ist keine originäre, effektive Staatsgewalt.", "correct": true, "why": "Jedes Element scheitert für sich. Schon ein Fehlendes würde reichen." },
+        { "id": "c", "text": "Ja, weil 15 Seemeilen außerhalb Deutschlands liegen und dort jeder einen Staat gründen darf.", "correct": false, "why": "Außerhalb des 12-Seemeilen-Streifens zu liegen schafft kein Staatsgebiet." },
+        { "id": "d", "text": "Ja, sobald andere Staaten ihn anerkennen. Die drei Elemente prüfst du erst danach.", "correct": false, "why": "Die Anerkennung ist eine eigene, politische Frage. Sie ersetzt die drei Elemente nicht." }
+      ],
+      "explain": "Schreib die Prüfung in dieser Reihenfolge. Gebiet: eine Bohrinsel ist keine für den dauernden Aufenthalt geeignete Erdoberfläche, und 15 Seemeilen sind nicht das deutsche Küstenmeer. Volk: 20.000 Euro und eine Unterschrift schaffen keine dauerhafte Verbundenheit. Gewalt: ein selbst gegebener Titel ist nicht ursprüngliche und wirksame Herrschaft über Gebiet und Volk. Fehlt eines, ist es nach diesem Begriff kein Staat."
+    },
+    {
+      "id": "q11",
+      "prompt": "Ein Fall spricht von einem „europäischen Gericht“ und von Menschenrechten. Welche Zuordnung stimmt?",
+      "options": [
+        { "id": "a", "text": "Der EGMR entscheidet Unionsrecht, der EUGH wendet die EMRK an.", "correct": false, "why": "Die Gerichte sind vertauscht. Der EUGH gehört zur Union, der EGMR zur Menschenrechtskonvention." },
+        { "id": "b", "text": "Der EUGH entscheidet über Unionsrecht der Europäischen Union. Der EGMR wendet die EMRK im System des Europarats an. Die Grundrechtecharta der Union ist nicht die EMRK.", "correct": true, "why": "Zwei Organisationen, zwei Gerichte, zwei Grundrechtsquellen." },
+        { "id": "c", "text": "EUGH und EGMR sind dasselbe Gericht der EU.", "correct": false, "why": "Der Europarat ist nicht die Europäische Union. Sein Gericht ist ein anderes." },
+        { "id": "d", "text": "Europarat ist nur ein anderer Name für die Europäische Union.", "correct": false, "why": "Wer die Namen gleichsetzt, zitiert EMRK und Unionsrecht durcheinander." }
+      ],
+      "explain": "Zwei Häuser, die man in Klausuren oft in eins wirft. Die Europäische Union hat den EUGH und die Charta der Grundrechte (GRCh). Der Europarat hat die Europäische Menschenrechtskonvention (EMRK) und den EGMR. Unionsrecht führt nach Luxemburg. Konventionsrechte führen nach Straßburg. Der Vertrag über die Europäische Union heißt EUV. Die Mitwirkung von Bund und Ländern in Unionsangelegenheiten regelt das EUZBLG, nicht der EUV allein."
+    },
+    {
+      "id": "q12",
+      "prompt": "Wie hängen der völkerrechtliche Staatsbegriff und die Anerkennung zusammen?",
+      "options": [
+        { "id": "a", "text": "Wer den Begriff erfüllt, wird immer anerkannt. Wer anerkannt wird, erfüllt ihn immer.", "correct": false, "why": "Beides sind politische und rechtliche Schritte, die auseinanderfallen können." },
+        { "id": "b", "text": "Anerkennung ist auch ein politischer Akt. Sie kann fehlen, obwohl der Begriff erfüllt ist, und sie kann da sein, obwohl er nicht erfüllt ist.", "correct": true, "why": "Die Vorlesung trennt die rechtliche Prüfung von der politischen Entscheidung anderer Staaten." },
+        { "id": "c", "text": "Die 193 Mitglieder der Vereinten Nationen sind die Definition des Staates.", "correct": false, "why": "193 ist eine Zahl, von der die Vereinten Nationen ausgehen. Sie ist nicht der Staatsbegriff." },
+        { "id": "d", "text": "Eine Gruppe, die sich innerhalb eines Staates zum eigenen Staat ausruft, ist damit völkerrechtlich ein Staat.", "correct": false, "why": "Die Ausrufung allein macht keine Staatlichkeit. Gebiet, Volk und Gewalt bleiben zu prüfen." }
+      ],
+      "explain": "Völkerrecht gilt grundsätzlich für Völkerrechtssubjekte. Staaten sind die wichtigsten. Ob jemand ein Staat ist, prüfst du an Gebiet, Volk und Gewalt. Ob andere ihn anerkennen, ist ein weiterer Schritt und kann in beide Richtungen abweichen. Sealand, eine Seefestung auf Pfählen, 1967 ausgerufen, mit verkauften Titeln und Pässen, ist in der Vorlesung ein Schein-Staat: Titel und Pässe ersetzen den Begriff nicht. Ein Rechtssubjekt ist jemand, den das Recht mit Rechten und Pflichten anspricht. Ein Völkerrechtssubjekt ist dasselbe im Völkerrecht. Die Wörter sind nicht austauschbar."
+    }
+  ]
+}

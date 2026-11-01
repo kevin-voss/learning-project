@@ -23,7 +23,7 @@ help:
 	@echo "make variables         — only variables/ (same for math, strings, …)"
 	@echo "make variables-task-03 — one task (01–11) of a topic"
 	@echo "make new-exercise STUDENT=becky SUBJECT=computer-science NUMBER=05 TITLE=\"Loops\" TASKS=\"Times table, Guess the number\" [LANGUAGE=Java]"
-	@echo "make new-quiz STUDENT=becky SUBJECT=statsrecht [NUMBER=01 TITLE=\"The state and the law\"]"
+	@echo "make new-quiz STUDENT=becky SUBJECT=staatsrecht [NUMBER=01 TITLE=\"Einführung und der Begriff des Staates\"]"
 	@echo "make test-task TASK=04_2 [PART=a] [STUDENT=becky] [SUBJECT=java] [SOLUTION=1] — run a student task's tests.json"
 	@echo "make test-sql TASK=01_1 [STUDENT=kevin] [SUBJECT=sql] [SOLUTION=1] — run a student SQL task (answer.sql)"
 	@echo "make catalog           — rewrite the generated parts of hub/index.html"

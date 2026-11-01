@@ -95,11 +95,11 @@ Run it again with the same `NUMBER` to add more tasks to that exercise. New stud
 
 ## Add a lecture quiz (teacher)
 
-Some subjects have no exercise sheet. Each lecture PDF becomes a multiple-choice quiz. In Cursor: **`/new-quiz`**, with the PDF attached. The agent reads the PDF in small pieces (Composer 2.5 sub-agents, a few pages each, including figures). You answer on the home page, under your name. After each question you see what was right, what was wrong, and a little more. This browser remembers your answers.
+Some subjects have no exercise sheet. Each lecture PDF becomes a multiple-choice quiz in German. In Cursor: **`/new-quiz`**, with the PDF attached. The agent reads the PDF in small pieces (Composer 2.5 sub-agents, a few pages each, including figures). The home page links to the subject. You open a lecture and answer on that page. After each question you see what was right, what was wrong, and a little more. This browser remembers your answers.
 
 ```bash
-make new-quiz STUDENT=becky SUBJECT=statsrecht
-make new-quiz STUDENT=becky SUBJECT=statsrecht NUMBER=01 TITLE="The state and the law"
+make new-quiz STUDENT=becky SUBJECT=staatsrecht
+make new-quiz STUDENT=becky SUBJECT=staatsrecht NUMBER=01 TITLE="Einführung und der Begriff des Staates"
 ```
 
 The first command only builds the subject shelf. The second adds one lecture. Questions are filled by `/new-quiz`, not by the command alone.

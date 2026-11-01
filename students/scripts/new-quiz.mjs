@@ -5,9 +5,9 @@
 // The same --number again refreshes the question count and checks quiz.json.
 // It does not wipe the README or the questions.
 //
-//   node students/scripts/new-quiz.mjs --student becky --subject statsrecht
-//   node students/scripts/new-quiz.mjs --student becky --subject statsrecht \
-//     --number 01 --title "The state and the law"
+//   node students/scripts/new-quiz.mjs --student becky --subject staatsrecht
+//   node students/scripts/new-quiz.mjs --student becky --subject staatsrecht \
+//     --number 01 --title "Einführung und der Begriff des Staates"
 
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join, relative, resolve } from 'node:path'
@@ -25,9 +25,9 @@ const USAGE = `Usage:
                                      [--number <NN> --title "<lecture title>"]
 
 Examples:
-  node students/scripts/new-quiz.mjs --student becky --subject statsrecht
-  node students/scripts/new-quiz.mjs --student becky --subject statsrecht \\
-    --number 01 --title "The state and the law"`
+  node students/scripts/new-quiz.mjs --student becky --subject staatsrecht
+  node students/scripts/new-quiz.mjs --student becky --subject staatsrecht \\
+    --number 01 --title "Einführung und der Begriff des Staates"`
 
 function fail(message, code = 1) {
   console.error(`Error: ${message}\n\n${USAGE}`)
@@ -139,8 +139,7 @@ if (hasLecture) {
   const existing = folders(quizzesDir, `quiz-${number}-`)[0]
   const folder = existing ?? `quiz-${number}-${slugify(title)}`
   const quizDir = join(quizzesDir, folder)
-  const anchor = `quiz-${student}-${subject}-${number}`
-  const lectureValues = { ...values, NUMBER: number, QUIZ_TITLE: title, ANCHOR: anchor }
+  const lectureValues = { ...values, NUMBER: number, QUIZ_TITLE: title }
   const newReadme = writeFromTemplate(join(quizDir, 'README.md'), 'quiz/README.md', lectureValues)
   const quizFile = join(quizDir, 'quiz.json')
   if (!existsSync(quizFile)) {
@@ -159,7 +158,7 @@ if (hasLecture) {
   const safeTitle = title.replace(/\|/g, '·')
   upsertIndex(join(quizzesDir, 'README.md'), `| ${number} | [${safeTitle}](${folder}/README.md) | ${count} |`, {
     key: `| ${number} |`,
-    header: ['| Lecture | Topic | Questions |', '|---------|-------|-----------|'],
+    header: ['| Vorlesung | Thema | Fragen |', '|-----------|-------|--------|'],
   })
   writeCatalog()
   console.log(`${newReadme ? 'Created' : 'Updated'} ${relative(process.cwd(), quizDir)}/`)

@@ -426,22 +426,7 @@
 .lp-tasks .tasks-title { flex: 1; min-width: 0; }
 .lp-tasks .tasks-title a { color: var(--lp-text); text-decoration: none; }
 .lp-tasks .tasks-title a:hover { color: var(--lp-accent); }
-.lp-tasks .tasks-exercise .task-list { padding: 0 var(--lp-s4) var(--lp-s3); }
+.lp-tasks .tasks-exercise .task-list,
+.lp-tasks .tasks-subject > .task-list { padding: 0 var(--lp-s4) var(--lp-s3); }
+.lp-tasks .tasks-subject > p { margin: 0; padding: 0 var(--lp-s4) var(--lp-s3); color: var(--lp-text-muted); }
 .lp-tasks .student-room { margin-top: var(--lp-s6); color: var(--lp-text-muted); }
-
-.student-quiz-title { margin: var(--lp-s4) 0 var(--lp-s2); font-size: 16px; }
-.student-quiz-note { margin: var(--lp-s2) 0 0; color: var(--lp-text-muted); font-size: 15px; }
-.student-subjects li.quiz-subject { display: block; }
-.quiz-lectures { margin: var(--lp-s1) 0 0; padding: 0 0 0 var(--lp-s3); list-style: none; }
-.quiz-lectures li { border-top: 0; padding: var(--lp-s1) 0; }
-.quiz-open {
-  border: 0;
-  background: none;
-  padding: 0;
-  color: var(--lp-accent);
-  font: inherit;
-  font-weight: 700;
-  text-align: left;
-  cursor: pointer;
-}
-.quiz-open:hover { text-decoration: underline; }

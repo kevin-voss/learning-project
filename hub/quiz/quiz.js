@@ -1,8 +1,8 @@
-// Lecture quizzes on the landing page (My tasks).
-// Questions come from students/<student>/<subject>/quizzes/quiz-NN-…/quiz.json.
+// Lecture quizzes on the lecture page (students/<student>/<subject>/quizzes/quiz-NN-…/).
+// That page has <div id="quiz-player" data-src="quiz.json" data-anchor="…" data-subject="…">.
 // Answers stay in this browser under learning-project:quiz:
 //   { [anchor]: { picks: { [questionId]: [optionId] }, checked: { [questionId]: true } } }
-// anchor is quiz-<student>-<subject>-<NN>, listed in #quiz-index.
+// anchor is quiz-<student>-<subject>-<NN>.
 
 const KEY = 'learning-project:quiz'
 
@@ -85,63 +85,23 @@ function button(label, className, onClick) {
 function boot() {
   if (typeof document === 'undefined') return
   const player = document.getElementById('quiz-player')
-  const indexNode = document.getElementById('quiz-index')
-  if (!player || !indexNode) return
+  if (!player?.dataset.src) return
 
-  let catalog = []
-  try {
-    catalog = JSON.parse(indexNode.textContent)
-  } catch {
-    catalog = []
+  const item = {
+    anchor: player.dataset.anchor || 'quiz',
+    subject: player.dataset.subject || '',
+    src: player.dataset.src,
   }
-  const byAnchor = new Map((Array.isArray(catalog) ? catalog : []).map((item) => [item.anchor, item]))
 
   let request = 0
   let current = null
 
-  document.addEventListener('click', (event) => {
-    const opener = event.target.closest?.('[data-quiz-open]')
-    if (!opener) return
-    const item = byAnchor.get(opener.dataset.quizOpen)
-    if (item) open(item)
-  })
+  open()
 
-  const select = document.getElementById('student-select')
-  if (select) {
-    select.addEventListener('change', () => {
-      if (select.value && player.dataset.student && player.dataset.student !== select.value) close()
-    })
-  }
-
-  window.addEventListener('hashchange', openFromHash)
-  openFromHash()
-
-  function openFromHash() {
-    const item = byAnchor.get(location.hash.slice(1))
-    if (item) open(item)
-  }
-
-  function close() {
-    request += 1
-    current = null
-    player.hidden = true
-    delete player.dataset.student
-    player.replaceChildren()
-  }
-
-  async function open(item) {
+  async function open() {
     const ticket = ++request
     current = null
-    player.hidden = false
-    player.dataset.student = item.student
-    player.replaceChildren(el('p', null, 'Loading this lecture…'))
-    if (select && select.value !== item.student) {
-      select.value = item.student
-      select.dispatchEvent(new Event('change'))
-    }
-    if (location.hash.slice(1) !== item.anchor) {
-      history.replaceState(null, '', `${location.pathname}${location.search}#${item.anchor}`)
-    }
+    player.replaceChildren(el('p', null, 'Vorlesung wird geladen…'))
 
     let quiz
     try {
@@ -150,23 +110,23 @@ function boot() {
       quiz = await response.json()
     } catch {
       if (ticket !== request) return
-      player.replaceChildren(el('p', null, 'This lecture could not be loaded.'))
+      player.replaceChildren(el('p', null, 'Diese Vorlesung konnte nicht geladen werden.'))
       return
     }
     if (ticket !== request) return
 
     const raw = Array.isArray(quiz?.questions) ? quiz.questions : []
     if (!raw.length) {
-      player.replaceChildren(el('p', null, 'This lecture has no questions yet.'))
+      player.replaceChildren(el('p', null, 'Diese Vorlesung hat noch keine Fragen.'))
       return
     }
     const problems = raw.flatMap((question, index) => {
       const problem = questionProblem(question)
-      return problem ? [`Question ${index + 1}: ${problem}`] : []
+      return problem ? [`Frage ${index + 1}: ${problem}`] : []
     })
     if (problems.length) {
       player.replaceChildren(
-        el('p', null, 'This lecture quiz needs a fix before it can be played.'),
+        el('p', null, 'Dieses Quiz muss noch korrigiert werden, bevor du es spielen kannst.'),
         ...problems.map((text) => el('p', null, text)),
       )
       return
@@ -184,8 +144,6 @@ function boot() {
     }
     if (current.cursor === questions.length) renderSummary()
     else renderQuestion()
-    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
-    player.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' })
   }
 
   function storedSlot() {
@@ -209,16 +167,16 @@ function boot() {
     player.replaceChildren()
     player.append(el('p', 'quiz-kicker', item.subject))
     player.append(el('h3', null, title))
-    player.append(el('p', 'quiz-progress', `Question ${cursor + 1} of ${questions.length} · ${rightCount(slot)} right so far`))
+    player.append(el('p', 'quiz-progress', `Frage ${cursor + 1} von ${questions.length} · bisher ${rightCount(slot)} richtig`))
 
     if (checked) {
-      const banner = el('p', `quiz-banner ${result.right ? 'is-right' : 'is-wrong'}`, result.right ? 'Right.' : 'Not yet.')
+      const banner = el('p', `quiz-banner ${result.right ? 'is-right' : 'is-wrong'}`, result.right ? 'Richtig.' : 'Noch nicht.')
       player.append(banner)
     }
 
     const field = el('fieldset', 'quiz-options')
     field.append(el('legend', 'quiz-prompt', question.prompt))
-    field.append(el('p', 'quiz-hint', multiple ? 'Pick every right answer.' : 'Pick one answer.'))
+    field.append(el('p', 'quiz-hint', multiple ? 'Wähle jede richtige Antwort.' : 'Wähle eine Antwort.'))
 
     for (const option of question.options) {
       const picked = picks.includes(option.id)
@@ -242,13 +200,13 @@ function boot() {
 
     if (checked) {
       const more = el('div', 'quiz-explain')
-      more.append(el('h4', null, 'More about this'), el('p', null, question.explain))
+      more.append(el('h4', null, 'Mehr dazu'), el('p', null, question.explain))
       player.append(more)
     }
 
     const actions = el('div', 'quiz-actions')
     if (!checked) {
-      const check = button('Check', null, () => {
+      const check = button('Prüfen', null, () => {
         const chosen = [...field.querySelectorAll('input:checked')].map((input) => input.value)
         if (!chosen.length) return
         const next = storedSlot()
@@ -267,10 +225,10 @@ function boot() {
       })
       actions.append(check)
     }
-    if (cursor > 0) actions.append(button('Previous', 'quiz-quiet', () => go(-1)))
-    if (checked && cursor < questions.length - 1) actions.append(button('Next question', null, () => go(1)))
-    if (checked && cursor === questions.length - 1 && !current.fromSummary) actions.append(button('See your score', null, renderSummary))
-    if (current.fromSummary) actions.append(button('Back to score', 'quiz-quiet', renderSummary))
+    if (cursor > 0) actions.append(button('Zurück', 'quiz-quiet', () => go(-1)))
+    if (checked && cursor < questions.length - 1) actions.append(button('Nächste Frage', null, () => go(1)))
+    if (checked && cursor === questions.length - 1 && !current.fromSummary) actions.append(button('Zum Ergebnis', null, renderSummary))
+    if (current.fromSummary) actions.append(button('Zurück zum Ergebnis', 'quiz-quiet', renderSummary))
     if (actions.childElementCount) player.append(actions)
   }
 
@@ -289,33 +247,29 @@ function boot() {
     player.replaceChildren()
     player.append(el('p', 'quiz-kicker', current.item.subject))
     player.append(el('h3', null, current.title))
-    player.append(el('p', 'quiz-banner', `${right} of ${total} right.`))
+    player.append(el('p', 'quiz-banner', `${right} von ${total} richtig.`))
     const list = el('ul', 'quiz-summary')
     current.questions.forEach((question, index) => {
       const row = el('li')
       const result = grade(question, picksOf(slot, question.id))
-      row.append(button(`Question ${index + 1}`, null, () => {
+      row.append(button(`Frage ${index + 1}`, null, () => {
         current.cursor = index
         current.fromSummary = true
         renderQuestion()
       }))
-      row.append(el('span', result.right ? 'status done' : 'status', result.right ? 'Right' : 'Not yet'))
+      row.append(el('span', result.right ? 'status done' : 'status', result.right ? 'Richtig' : 'Noch nicht'))
       list.append(row)
     })
     player.append(list)
     const actions = el('div', 'quiz-actions')
-    actions.append(button('Try this lecture again', 'quiz-quiet', () => {
-      if (!confirm('Clear your answers for this lecture and start again?')) return
+    actions.append(button('Diese Vorlesung noch einmal', 'quiz-quiet', () => {
+      if (!confirm('Antworten für diese Vorlesung löschen und von vorn beginnen?')) return
       const all = loadAll()
       delete all[current.item.anchor]
       saveAll(all)
       current.cursor = 0
       current.fromSummary = false
       renderQuestion()
-    }))
-    actions.append(button('Close', 'quiz-quiet', () => {
-      close()
-      if (location.hash) history.replaceState(null, '', location.pathname + location.search)
     }))
     player.append(actions)
   }

@@ -1,4 +1,4 @@
-/* Lecture quiz player on the landing page. List styles live in components.css. */
+/* Lecture quiz player. It sits on the lecture page, under the short introduction. */
 
 .quiz-player {
   margin-top: var(--lp-s5);

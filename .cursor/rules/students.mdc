@@ -33,14 +33,14 @@ students/<student>/tasks.html                         generated task browser (su
     quiz.json                    multiple choice only
 ```
 
-  Create them only with `/new-quiz` or `make new-quiz` (`students/scripts/new-quiz.mjs`). One lecture PDF is read in 4-page chunks by Composer 2.5 sub-agents (the parent does not read the PDF). The quiz is played on the landing page, on that student's card. After an answer, the page shows which options were right, which were wrong, and a longer explanation. Answers stay in this browser (`localStorage` key `learning-project:quiz`). Full steps: `/new-quiz`.
+  Create them only with `/new-quiz` or `make new-quiz` (`students/scripts/new-quiz.mjs`). One lecture PDF is read in 4-page chunks by Composer 2.5 sub-agents (the parent does not read the PDF). The quiz is German: questions, options, explanations, and the lecture README. Each question teaches one rule and asks it the way the exam would, so the student can use it in the Klausur. The home page only links to the subject folder. The quiz plays on that lecture's page. After an answer, the page shows which options were right, which were wrong, and a longer explanation. Answers stay in this browser (`localStorage` key `learning-project:quiz`). Full steps: `/new-quiz`.
 - Templates: `students/_template/`. Change the template, not every task, when the format changes.
 - `my-solution/` holds no code at all: the student starts alone, from an empty file. Only its `README.md` (file and class name to create, run commands, a place for written answers). `solution/` is the only place for code.
 - Every folder has a `README.md`.
 
 ## Writing style
 
-- English only: text, folder names, code identifiers, comments and program output.
+- English only: text, folder names, code identifiers, comments and program output. Lecture quizzes are the exception: the quiz and its lecture README are German. Folder slugs stay plain ASCII.
 - Explain like for a 6-year-old: short sentences, one idea per paragraph, real-life picture first, code second.
 - A sheet in another language is translated into English faithfully: same meaning, every number and value unchanged. "Words to know" explains the English terms; list a term from the paper sheet next to its English meaning only when it really helps the student match the paper (prefer English only).
 - Solutions use only what the exercise teaches. No clever tricks a beginner has not seen.

@@ -4,7 +4,8 @@
 //   students  short cards per student (full lists live on students/<name>/tasks.html)
 //   catalog   "look it up": every course, sheet, project, practice set and doc on disk
 // Also writes students/<name>/tasks.html: subjects → exercises → tasks, each toggleable.
-// A subject with quizzes/ is a lecture quiz. The card lists it; hub/quiz/quiz.js plays it.
+// A subject with quizzes/ is a lecture quiz. The card links to that folder.
+// The quiz itself plays on the lecture page (built from its README).
 // Only the path order is written by hand; new folders show up by themselves.
 //
 // Runs inside build-site.mjs and students/scripts/new-exercise.mjs. By hand, from anywhere:
@@ -204,7 +205,7 @@ function formatCounts(counts) {
 }
 
 // students/<student>/<subject>/quizzes/quiz-NN-…/quiz.json
-function lectureQuiz(studentId, subjectId, quizzesDir, folder) {
+function lectureQuiz(quizzesDir, folder) {
   const file = join(quizzesDir, folder, 'quiz.json')
   if (!existsSync(join(ROOT, file))) return null
   let data
@@ -213,17 +214,14 @@ function lectureQuiz(studentId, subjectId, quizzesDir, folder) {
   } catch {
     throw new Error(`${file} is not valid JSON`)
   }
-  const number = folder.split('-')[1]
   const readme = join(quizzesDir, folder, 'README.md')
   const title = typeof data.title === 'string' && data.title.trim()
     ? data.title.trim()
     : (existsSync(join(ROOT, readme)) ? pageTitle(readme) : folder)
   return {
-    number,
     title,
     questions: Array.isArray(data.questions) ? data.questions.length : 0,
-    file,
-    anchor: `quiz-${studentId}-${subjectId}-${number}`,
+    readme,
   }
 }
 
@@ -260,7 +258,7 @@ function studentData(studentDir) {
     const quizzesDir = join(subjectDir, 'quizzes')
     const quizzes = isDir(quizzesDir)
       ? subfolders(quizzesDir, 'quiz-').flatMap((folder) => {
-          const quiz = lectureQuiz(basename(studentDir), basename(subjectDir), quizzesDir, folder)
+          const quiz = lectureQuiz(quizzesDir, folder)
           return quiz ? [quiz] : []
         })
       : null
@@ -289,31 +287,14 @@ function renderTaskRow(task, fromDir) {
   return `<li><span class="task-num">${escape(task.id)}</span><a class="task-title" href="${hrefFrom(fromDir, task.path)}">${escape(task.title)}</a><span class="status ${escape(task.state.replace(/\s+/g, '-'))}">${escape(task.state)}</span><span class="task-links">${links}</span></li>`
 }
 
-function quizSubjectList(student, link, play) {
-  const subjects = student.subjects.filter((subject) => Array.isArray(subject.quizzes))
-  if (!subjects.length) return ''
-  const items = subjects.map((subject) => {
-    const name = `<a href="${link(subject.path)}">${escape(subject.title)}</a>`
-    if (!subject.quizzes.length) {
-      return `<li>${name}<span class="student-count">No lectures yet</span></li>`
-    }
-    const lectures = subject.quizzes.map((quiz) => {
-      const label = play
-        ? `<button type="button" class="quiz-open" data-quiz-open="${escape(quiz.anchor)}">${escape(quiz.title)}</button>`
-        : `<a href="/hub/#${escape(quiz.anchor)}">${escape(quiz.title)}</a>`
-      const count = quiz.questions === 1 ? '1 question' : quiz.questions ? `${quiz.questions} questions` : 'No questions yet'
-      return `<li>${label}<span class="student-count">${escape(count)}</span></li>`
-    }).join('')
-    return `<li class="quiz-subject">${name}<ul class="quiz-lectures">${lectures}</ul></li>`
-  }).join('')
-  const anyLecture = subjects.some((subject) => subject.quizzes.length)
-  const note = !anyLecture
-    ? 'Lectures will show up here. This browser will remember your answers.'
-    : play
-      ? 'Answer here. After each question you see what was right, what was wrong, and a little more. This browser remembers your answers.'
-      : 'Answer on the home page. After each question you see what was right, what was wrong, and a little more. This browser remembers your answers.'
-  const heading = play ? 'h4' : 'h2'
-  return `<${heading} class="student-quiz-title">Lecture quizzes</${heading}><ul class="student-subjects">${items}</ul><p class="student-quiz-note">${escape(note)}</p>`
+function lectureLabel(quizzes) {
+  if (!quizzes.length) return 'No lectures yet'
+  return quizzes.length === 1 ? '1 lecture' : `${quizzes.length} lectures`
+}
+
+function questionLabel(count) {
+  if (count === 1) return '1 question'
+  return count ? `${count} questions` : 'No questions yet'
 }
 
 function studentSummaryCard(student) {
@@ -323,15 +304,19 @@ function studentSummaryCard(student) {
     : student.counts.total
       ? '<p class="student-next">All tasks done.</p>'
       : ''
-  const subjects = student.subjects.filter((subject) => subject.exercises.length).map((subject) => {
-    return `<li><a href="${href(subject.path)}">${escape(subject.title)}</a><span class="student-count">${subject.counts.done}/${subject.counts.total}</span></li>`
+  const subjects = student.subjects.flatMap((subject) => {
+    if (subject.exercises.length) {
+      return [`<li><a href="${href(subject.path)}">${escape(subject.title)}</a><span class="student-count">${subject.counts.done}/${subject.counts.total}</span></li>`]
+    }
+    if (Array.isArray(subject.quizzes)) {
+      return [`<li><a href="${href(subject.path)}">${escape(subject.title)}</a><span class="student-count">${escape(lectureLabel(subject.quizzes))}</span></li>`]
+    }
+    return []
   }).join('')
-  const quizzes = quizSubjectList(student, href, true)
   const body = [
-    subjects ? `<ul class="student-subjects">${subjects}</ul>` : (quizzes ? '' : '<p>No subjects yet.</p>'),
-    quizzes,
+    subjects ? `<ul class="student-subjects">${subjects}</ul>` : '<p>No subjects yet.</p>',
     `<p class="student-open"><a href="${href(tasksPage)}">Open all tasks →</a></p>`,
-  ].filter(Boolean).join('\n            ')
+  ].join('\n            ')
   return `<article class="card student" data-student="${escape(student.id)}">
             <div class="card-path">${escape(student.dir)}/</div>
             <h3><a href="${href(join(student.dir, 'README.md'))}">${escape(student.title)}</a></h3>
@@ -349,23 +334,32 @@ function studentTasksPage(student) {
       ? '<p class="student-next">All tasks done.</p>'
       : '<p class="student-next">No tasks yet.</p>'
   const nextPath = student.next?.path
-  const quizBlock = quizSubjectList(student, (path) => hrefFrom(fromDir, path), false)
-  const afterNext = quizBlock ? `${next}\n    ${quizBlock}` : next
-  const subjects = student.subjects.filter((subject) => subject.exercises.length).map((subject) => {
-    const hasOpen = subject.exercises.some((exercise) =>
-      exercise.tasks.some((task) => task.path === nextPath || task.state === 'in progress'))
-    const exercises = subject.exercises.map((exercise) => {
-      const open = exercise.tasks.some((task) => task.path === nextPath || task.state === 'in progress')
-      const rows = exercise.tasks.map((task) => renderTaskRow(task, fromDir)).join('')
-      return `<details class="tasks-exercise"${open ? ' open' : ''}>
+  const subjects = student.subjects.flatMap((subject) => {
+    const blocks = []
+    if (subject.exercises.length) {
+      const hasOpen = subject.exercises.some((exercise) =>
+        exercise.tasks.some((task) => task.path === nextPath || task.state === 'in progress'))
+      const exercises = subject.exercises.map((exercise) => {
+        const open = exercise.tasks.some((task) => task.path === nextPath || task.state === 'in progress')
+        const rows = exercise.tasks.map((task) => renderTaskRow(task, fromDir)).join('')
+        return `<details class="tasks-exercise"${open ? ' open' : ''}>
           <summary><span class="tasks-title"><a href="${hrefFrom(fromDir, exercise.path)}">${escape(exercise.title)}</a></span><span class="student-count">${exercise.counts.done}/${exercise.counts.total}</span></summary>
           <ul class="task-list">${rows || '<li>No tasks yet.</li>'}</ul>
         </details>`
-    }).join('\n        ')
-    return `<details class="tasks-subject"${hasOpen ? ' open' : ''}>
+      }).join('\n        ')
+      blocks.push(`<details class="tasks-subject"${hasOpen ? ' open' : ''}>
         <summary><span class="tasks-title"><a href="${hrefFrom(fromDir, subject.path)}">${escape(subject.title)}</a></span><span class="student-count">${subject.counts.done}/${subject.counts.total}</span></summary>
-        ${exercises || '<p>No exercises yet.</p>'}
-      </details>`
+        ${exercises}
+      </details>`)
+    }
+    if (Array.isArray(subject.quizzes)) {
+      const lectures = subject.quizzes.map((quiz) => `<li><a class="task-title" href="${hrefFrom(fromDir, quiz.readme)}">${escape(quiz.title)}</a><span class="student-count">${escape(questionLabel(quiz.questions))}</span></li>`).join('')
+      blocks.push(`<details class="tasks-subject">
+        <summary><span class="tasks-title"><a href="${hrefFrom(fromDir, subject.path)}">${escape(subject.title)}</a></span><span class="student-count">${escape(lectureLabel(subject.quizzes))}</span></summary>
+        ${lectures ? `<ul class="task-list">${lectures}</ul>` : '<p>No lectures yet.</p>'}
+      </details>`)
+    }
+    return blocks
   }).join('\n      ')
   return `<!DOCTYPE html>
 <html lang="en">
@@ -383,9 +377,9 @@ function studentTasksPage(student) {
   </div>
   <main class="lp-sheet lp-tasks">
     <h1>${escape(student.title)} · My tasks</h1>
-    <p>${escape(formatCounts(student.counts))}. Open a subject or exercise to see its tasks. Status comes from each exercise README.</p>
-    ${afterNext}
-    ${subjects || (quizBlock ? '' : '<p>No subjects yet.</p>')}
+    <p>${escape(formatCounts(student.counts))}. Open a subject to see its tasks or lectures. A lecture quiz opens on its own page. Status comes from each exercise README.</p>
+    ${next}
+    ${subjects || '<p>No subjects yet.</p>'}
     <p class="student-room"><a href="./">← Back to ${escape(student.title)}'s room</a> · <a href="/hub/#tasks">All students</a></p>
   </main>
   ${THEME_BODY}
@@ -476,27 +470,13 @@ function renderPath() {
   return [...levels, ...extras].join('\n      ')
 }
 
-function quizIndex(students) {
-  return students.flatMap((student) => student.subjects.flatMap((subject) => (subject.quizzes ?? []).map((quiz) => ({
-    anchor: quiz.anchor,
-    student: student.id,
-    subject: subject.title,
-    title: quiz.title,
-    src: href(quiz.file),
-  }))))
-}
-
 function renderStudents() {
   const students = cardDirs('students').filter((dir) => existsSync(join(ROOT, dir, 'README.md'))).map(studentData)
-  const hasQuizzes = students.some((student) => student.subjects.some((subject) => Array.isArray(subject.quizzes)))
-  const mount = hasQuizzes
-    ? `\n        <div id="quiz-player" class="quiz-player" hidden aria-live="polite"></div>\n        <script type="application/json" id="quiz-index">${JSON.stringify(quizIndex(students)).replace(/</g, '\\u003c')}</script>`
-    : ''
   const options = students.map((student) => `<option value="${escape(student.id)}">${escape(student.title)}</option>`)
   return `<label class="student-pick">I am <select id="student-select"><option value="">pick your name</option>${options.join('')}</select></label>
         <div class="card-grid">
           ${students.map(studentSummaryCard).join('\n          ')}
-        </div>${mount}`
+        </div>`
 }
 
 function renderLibrary() {

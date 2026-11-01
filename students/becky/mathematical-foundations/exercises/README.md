@@ -7,6 +7,7 @@ One folder = one exercise (one exercise sheet). Inside: one folder per task, eac
 |----------|-------|-------|
 | 04 | [Logic II](exercise-04-logic-ii/README.md) | 04_1 · 04_2 · 04_3 · 04_4 |
 | 05 | [Logic III](exercise-05-logic-iii/README.md) | 05_1 · 05_2 · 05_3 |
+| 06 | [Logic IV](exercise-06-logic-iv/README.md) | 06_1 · 06_2 · 06_3 |
 <!-- index:end -->
 
 Back to [Mathematical Foundations](../README.md).

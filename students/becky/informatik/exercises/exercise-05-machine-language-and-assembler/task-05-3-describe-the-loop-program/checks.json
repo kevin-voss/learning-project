@@ -1,0 +1,58 @@
+{
+  "nextTask": null,
+  "nextLabel": null,
+  "parts": [
+    {
+      "id": "input-8",
+      "label": "Input 8",
+      "file": "Input8.java",
+      "prompt": "If the user types 8 at line 00, what does OUT [1] print?",
+      "fields": [
+        {
+          "id": "out",
+          "label": "printed",
+          "kind": "number",
+          "placeholder": "0",
+          "accept": ["3"],
+          "hint": "Trace: 8→4→2→1→0. Count how many times you passed line 09.",
+          "traps": [
+            { "accept": ["4"], "hint": "Four halvings of 8 would mean counting wrong; 8→4→2→1→0 is three successful loop bodies." },
+            { "accept": ["8"], "hint": "The program prints the counter in [1], not the original input." }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "input-10",
+      "label": "Input 10",
+      "file": "Input10.java",
+      "prompt": "If the user types 10, what is printed?",
+      "fields": [
+        {
+          "id": "out",
+          "label": "printed",
+          "kind": "number",
+          "placeholder": "0",
+          "accept": ["3"],
+          "hint": "10→5→2→1→0 with integer DIV 2."
+        }
+      ]
+    },
+    {
+      "id": "summary",
+      "label": "Summary",
+      "file": "Summary.java",
+      "prompt": "How many successful loop rounds (lines 06–09) run for input 8?",
+      "fields": [
+        {
+          "id": "rounds",
+          "label": "rounds",
+          "kind": "number",
+          "placeholder": "0",
+          "accept": ["3"],
+          "hint": "Each round stores a new halved value in [0] and adds 1 to [1]."
+        }
+      ]
+    }
+  ]
+}

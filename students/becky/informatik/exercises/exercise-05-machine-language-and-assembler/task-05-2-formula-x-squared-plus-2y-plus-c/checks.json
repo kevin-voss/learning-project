@@ -1,0 +1,58 @@
+{
+  "nextTask": "task-05-3-describe-the-loop-program",
+  "nextLabel": "Task 05_3 · Describe the loop program",
+  "parts": [
+    {
+      "id": "example-22",
+      "label": "Check row 1",
+      "file": "Example22.java",
+      "prompt": "If x=3, y=4, c=5, what z should your program store in [0]?",
+      "fields": [
+        {
+          "id": "z",
+          "label": "z",
+          "kind": "number",
+          "placeholder": "0",
+          "accept": ["22"],
+          "hint": "3² + 2·4 + 5 = 9 + 8 + 5.",
+          "traps": [
+            { "accept": ["17"], "hint": "That might be x² + y + c. Remember 2y." },
+            { "accept": ["29"], "hint": "Check the order: square x first, then add twice y, then c." }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "example-6",
+      "label": "Check row 2",
+      "file": "Example6.java",
+      "prompt": "If x=2, y=1, c=0, what is z?",
+      "fields": [
+        {
+          "id": "z",
+          "label": "z",
+          "kind": "number",
+          "placeholder": "0",
+          "accept": ["6"],
+          "hint": "2² + 2·1 + 0."
+        }
+      ]
+    },
+    {
+      "id": "example-11",
+      "label": "Check row 3",
+      "file": "Example11.java",
+      "prompt": "If x=0, y=5, c=1, what is z?",
+      "fields": [
+        {
+          "id": "z",
+          "label": "z",
+          "kind": "number",
+          "placeholder": "0",
+          "accept": ["11"],
+          "hint": "0² + 2·5 + 1."
+        }
+      ]
+    }
+  ]
+}

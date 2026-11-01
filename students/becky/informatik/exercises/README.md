@@ -9,6 +9,7 @@ Weekly sheets for *Einführung in die Informatik*. Programming exercises are und
 | 02 | [Combinational circuits](exercise-02-combinational-circuits/README.md) | 02_1 · 02_2 |
 | 03 | [CMOS and building blocks](exercise-03-combinational-circuits/README.md) | 03_1 · 03_2 · 03_3 · 03_4 |
 | 04 | [Switching circuits](exercise-04-switching-circuits/README.md) | 04_1 · 04_2 · 04_3 · 04_4 · 04_5 |
+| 05 | [Machine language and assembler](exercise-05-machine-language-and-assembler/README.md) | 05_1 · 05_2 · 05_3 |
 <!-- index:end -->
 
 Back to [Informatik](../README.md).

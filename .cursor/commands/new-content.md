@@ -1,6 +1,6 @@
 # /new-content
 
-For teachers: add a lesson, sheet, project or drill in the right place, without copying what already exists. (A personal exercise sheet for one student is `/new-exercise` instead.)
+For teachers: add a lesson, sheet, project or drill in the right place, without copying what already exists. (A personal exercise sheet for one student is `/new-exercise`. A lecture quiz from a PDF is `/new-quiz`.)
 
 ## 1. Find its home
 

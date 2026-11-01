@@ -10,7 +10,9 @@ How it is sorted:
 becky/
 ├── computer-science/              Programmieren 1 (Java)
 ├── informatik/                    Einführung in die Informatik (gates, flip-flops, …)
-└── mathematical-foundations/      Mathematische Grundlagen der Informatik
+├── mathematical-foundations/      Mathematische Grundlagen der Informatik
+├── statsrecht/                    Statsrecht — lecture quizzes
+└── verwaltungshandeln/            Verwaltungshandeln — lecture quizzes
 ```
 
 ## Subjects
@@ -19,6 +21,8 @@ becky/
 - [Computer Science](computer-science/README.md)
 - [Informatik](informatik/README.md)
 - [Mathematical Foundations](mathematical-foundations/README.md)
+- [Statsrecht](statsrecht/README.md)
+- [Verwaltungshandeln](verwaltungshandeln/README.md)
 <!-- index:end -->
 
 Back to [all students](../README.md).

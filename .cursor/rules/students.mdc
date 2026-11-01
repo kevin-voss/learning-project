@@ -25,6 +25,15 @@ students/<student>/tasks.html                         generated task browser (su
 
 - Task ids are written `04_1`, folders `task-04-1-<slug>`. Status lives in the exercise README table: `todo` → `in progress` → `done`.
 - Create exercises and tasks only with `/new-exercise` or `make new-exercise` (`students/scripts/new-exercise.mjs`) so every index page and the landing page stay in sync.
+- A subject with no coding sheet uses lecture quizzes instead of `exercises/`:
+
+```text
+<subject>/quizzes/README.md
+  quiz-<NN>-<slug>/README.md     picture and what the lecture is about
+    quiz.json                    multiple choice only
+```
+
+  Create them only with `/new-quiz` or `make new-quiz` (`students/scripts/new-quiz.mjs`). One lecture PDF is read in 4-page chunks by Composer 2.5 sub-agents (the parent does not read the PDF). The quiz is played on the landing page, on that student's card. After an answer, the page shows which options were right, which were wrong, and a longer explanation. Answers stay in this browser (`localStorage` key `learning-project:quiz`). Full steps: `/new-quiz`.
 - Templates: `students/_template/`. Change the template, not every task, when the format changes.
 - `my-solution/` holds no code at all: the student starts alone, from an empty file. Only its `README.md` (file and class name to create, run commands, a place for written answers). `solution/` is the only place for code.
 - Every folder has a `README.md`.

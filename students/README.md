@@ -93,7 +93,18 @@ node students/scripts/new-exercise.mjs --student becky --subject computer-scienc
 
 Run it again with the same `NUMBER` to add more tasks to that exercise. New students and subjects are created on the fly, every index page gets a new line, and the landing page lists the exercise under **My tasks**.
 
-Templates for every generated file live in `_template/` (not on the website). Change them there and every **new** exercise uses the change.
+## Add a lecture quiz (teacher)
+
+Some subjects have no exercise sheet. Each lecture PDF becomes a multiple-choice quiz. In Cursor: **`/new-quiz`**, with the PDF attached. The agent reads the PDF in small pieces (Composer 2.5 sub-agents, a few pages each, including figures). You answer on the home page, under your name. After each question you see what was right, what was wrong, and a little more. This browser remembers your answers.
+
+```bash
+make new-quiz STUDENT=becky SUBJECT=statsrecht
+make new-quiz STUDENT=becky SUBJECT=statsrecht NUMBER=01 TITLE="The state and the law"
+```
+
+The first command only builds the subject shelf. The second adds one lecture. Questions are filled by `/new-quiz`, not by the command alone.
+
+Templates for every generated file live in `_template/` (not on the website). Change them there and every **new** exercise or quiz uses the change.
 
 ## All students
 

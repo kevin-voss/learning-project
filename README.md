@@ -83,6 +83,10 @@ make site
 # New exercise sheet with its tasks for a student (or /new-exercise in Cursor); also updates the landing page
 make new-exercise STUDENT=becky SUBJECT=computer-science NUMBER=05 TITLE="Loops" TASKS="Times table, Guess the number"
 
+# New lecture quiz shelf, or one lecture, for a student (or /new-quiz in Cursor)
+make new-quiz STUDENT=becky SUBJECT=statsrecht
+make new-quiz STUDENT=becky SUBJECT=statsrecht NUMBER=01 TITLE="The state and the law"
+
 # CS demos after edits
 node tracks/computer-science/scripts/verify-demos.mjs
 ```
@@ -99,6 +103,6 @@ Type `/` in the Cursor chat. Five commands for students, in the order you need t
 | `/check` | You think it works: it runs your examples and tells you what is good and what to improve |
 | `/done` | You are finished: last check, three questions, then what comes next |
 
-For teachers: `/new-exercise` (an exercise sheet for one student) and `/new-content` (a lesson, sheet, project or drill, in its one home). Rules: [`.cursor/rules/`](.cursor/rules/) (`tutor.mdc` for the student commands). Skills: `learner-memory`, `caveman`.
+For teachers: `/new-exercise` (an exercise sheet for one student), `/new-quiz` (a lecture PDF becomes a multiple-choice quiz on the landing page), and `/new-content` (a lesson, sheet, project or drill, in its one home). Rules: [`.cursor/rules/`](.cursor/rules/) (`tutor.mdc` for the student commands). Skills: `learner-memory`, `caveman`.
 
 Agents: [`AGENTS.md`](AGENTS.md).

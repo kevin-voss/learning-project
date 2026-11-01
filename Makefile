@@ -16,13 +16,14 @@
 
 TOPICS := variables math strings arrays conditionals loops functions objects
 
-.PHONY: test help new-exercise test-task test-sql site catalog check-path $(TOPICS)
+.PHONY: test help new-exercise new-quiz test-task test-sql site catalog check-path $(TOPICS)
 
 help:
 	@echo "make test              — every drill topic"
 	@echo "make variables         — only variables/ (same for math, strings, …)"
 	@echo "make variables-task-03 — one task (01–11) of a topic"
 	@echo "make new-exercise STUDENT=becky SUBJECT=computer-science NUMBER=05 TITLE=\"Loops\" TASKS=\"Times table, Guess the number\" [LANGUAGE=Java]"
+	@echo "make new-quiz STUDENT=becky SUBJECT=statsrecht [NUMBER=01 TITLE=\"The state and the law\"]"
 	@echo "make test-task TASK=04_2 [PART=a] [STUDENT=becky] [SUBJECT=java] [SOLUTION=1] — run a student task's tests.json"
 	@echo "make test-sql TASK=01_1 [STUDENT=kevin] [SUBJECT=sql] [SOLUTION=1] — run a student SQL task (answer.sql)"
 	@echo "make catalog           — rewrite the generated parts of hub/index.html"
@@ -65,6 +66,12 @@ objects-task-%:
 new-exercise:
 	node students/scripts/new-exercise.mjs --student "$(STUDENT)" --subject "$(SUBJECT)" --number "$(NUMBER)" \
 		--title "$(TITLE)" --tasks "$(TASKS)" $(if $(SLUG),--slug "$(SLUG)") $(if $(LANGUAGE),--language "$(LANGUAGE)")
+
+# Lecture quiz shelf, or one lecture, for a student
+# (students/<name>/<subject>/quizzes/quiz-<NN>-<title>/quiz.json)
+new-quiz:
+	node students/scripts/new-quiz.mjs --student "$(STUDENT)" --subject "$(SUBJECT)" \
+		$(if $(NUMBER),--number "$(NUMBER)") $(if $(TITLE),--title "$(TITLE)")
 
 # Tests of one student task (its tests.json) on my-solution/, or on solution/ with SOLUTION=1
 test-task:

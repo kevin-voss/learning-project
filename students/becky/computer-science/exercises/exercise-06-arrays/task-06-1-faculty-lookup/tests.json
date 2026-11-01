@@ -1,0 +1,38 @@
+{
+  "task": "06_1",
+  "tests": [
+    {
+      "name": "sheet example: faculty 4 is Business and Computer Science",
+      "input": ["4"],
+      "expect": ["Faculty name: Business and Computer Science"]
+    },
+    {
+      "name": "faculty 1: first name in the array",
+      "input": ["1"],
+      "expect": ["Faculty name: Electrical Engineering and Information Technology"]
+    },
+    {
+      "name": "faculty 5: last valid number",
+      "input": ["5"],
+      "expect": ["Faculty name: Diaconia, Health and Social Affairs"]
+    },
+    {
+      "name": "zero is not a faculty number",
+      "input": ["0"],
+      "expect": ["Invalid faculty number."],
+      "reject": ["Faculty name:"]
+    },
+    {
+      "name": "six is too high",
+      "input": ["6"],
+      "expect": ["Invalid faculty number."],
+      "reject": ["Faculty name:"]
+    },
+    {
+      "name": "negative number is invalid",
+      "input": ["-3"],
+      "expect": ["Invalid faculty number."],
+      "reject": ["Faculty name:"]
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "task": "06_3",
+  "tests": [
+    {
+      "name": "fresh day 3: night Sleeping, hour 7 blank, hour 23 Sleeping",
+      "part": "b",
+      "input": ["A", "3", "Q"],
+      "expect": ["Hour 0: Sleeping", "Hour 6: Sleeping", "Hour 7:", "Hour 22:", "Hour 23: Sleeping"],
+      "reject": ["Hour 7: Sleeping", "Hour 12: Sleeping"]
+    },
+    {
+      "name": "enter Exam on day 5 hour 10 then show that hour",
+      "part": "b",
+      "input": ["E", "5", "10", "Exam", "A", "5", "Q"],
+      "expect": ["Hour 10: Exam"]
+    },
+    {
+      "name": "day 0 on enter: invalid day or hour",
+      "part": "b",
+      "input": ["E", "0", "8", "Oops", "Q"],
+      "expect": ["Invalid day or hour."],
+      "reject": ["Hour 10: Oops"]
+    },
+    {
+      "name": "day 40 on show: invalid day",
+      "part": "b",
+      "input": ["A", "40", "Q"],
+      "expect": ["Invalid day."],
+      "reject": ["Hour 0:"]
+    },
+    {
+      "name": "unknown menu letter",
+      "part": "b",
+      "input": ["X", "Q"],
+      "expect": ["Unknown action."]
+    },
+    {
+      "name": "hour 24 on enter: invalid day or hour",
+      "part": "b",
+      "input": ["E", "5", "24", "Late", "Q"],
+      "expect": ["Invalid day or hour."]
+    }
+  ]
+}

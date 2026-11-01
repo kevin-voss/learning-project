@@ -11,6 +11,7 @@ One folder = one exercise (one exercise sheet). Inside: one folder per task, eac
 | 04 | [Branching](exercise-04-branching/README.md) | 04_1 · 04_2 · 04_3 |
 | 90 | [Project: Connect Four](exercise-90-project-connect-four/README.md) | 90_1 · 90_2 · 90_3 · 90_4 |
 | 05 | [Loops](exercise-05-loops/README.md) | 05_1 · 05_2 · 05_3 · 05_4 |
+| 06 | [Arrays](exercise-06-arrays/README.md) | 06_1 · 06_2 · 06_3 |
 <!-- index:end -->
 
 Back to [Computer Science](../README.md).

@@ -1,0 +1,48 @@
+{
+  "task": "06_2",
+  "tests": [
+    {
+      "name": "three months: sum, min, max and average from the task table",
+      "input": ["3", "1000", "1500", "800"],
+      "expect": [
+        "Period size: 3",
+        "Total revenue: 3300.0",
+        "Minimum monthly revenue: 800.0",
+        "Maximum monthly revenue: 1500.0",
+        "Average monthly revenue: 1100.0"
+      ]
+    },
+    {
+      "name": "one month: min, max and average all match that month",
+      "input": ["1", "500"],
+      "expect": [
+        "Period size: 1",
+        "Total revenue: 500.0",
+        "Minimum monthly revenue: 500.0",
+        "Maximum monthly revenue: 500.0",
+        "Average monthly revenue: 500.0"
+      ]
+    },
+    {
+      "name": "zero months: invalid count, no statistics",
+      "input": ["0"],
+      "expect": ["Invalid month count."],
+      "reject": ["Period size:", "Total revenue:"]
+    },
+    {
+      "name": "negative month count is invalid",
+      "input": ["-2"],
+      "expect": ["Invalid month count."],
+      "reject": ["Period size:"]
+    },
+    {
+      "name": "two equal months: average equals the value",
+      "input": ["2", "42", "42"],
+      "expect": [
+        "Period size: 2",
+        "Total revenue: 84.0",
+        "Average monthly revenue: 42.0"
+      ]
+    }
+  ]
+}

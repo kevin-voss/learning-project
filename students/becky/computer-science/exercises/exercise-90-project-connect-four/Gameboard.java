@@ -1,7 +1,7 @@
 public class Gameboard {
     public static void initialiseGameboard() {
-        int rows = 6;
-        int columns = 6;
+        int rows = 7;
+        int columns = 4;
         String[][] gameboard = new String[rows][columns];
 
         //the Gameboard

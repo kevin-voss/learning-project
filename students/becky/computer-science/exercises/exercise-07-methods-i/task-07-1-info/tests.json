@@ -1,0 +1,30 @@
+{
+  "task": "07_1",
+  "tests": [
+    {
+      "name": "info(1), info(2), info(3): the sheet's example lines",
+      "input": [],
+      "expect": [
+        "Number = 1",
+        "Square = 1",
+        "Cube = 1",
+        "Number = 2",
+        "Square = 4",
+        "Cube = 8",
+        "Number = 3",
+        "Square = 9",
+        "Cube = 27"
+      ]
+    },
+    {
+      "name": "info(0): square and cube are zero too",
+      "input": [],
+      "expect": ["Number = 0", "Square = 0", "Cube = 0"]
+    },
+    {
+      "name": "negative x still prints (sheet allows any int)",
+      "input": [],
+      "expect": ["Number = -2", "Square = 4", "Cube = -8"]
+    }
+  ]
+}

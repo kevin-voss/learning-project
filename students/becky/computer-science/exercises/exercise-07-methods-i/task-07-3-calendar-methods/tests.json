@@ -1,0 +1,42 @@
+{
+  "task": "07_3",
+  "tests": [
+    {
+      "name": "31 Dec 2024: next day is New Year",
+      "part": "e",
+      "input": ["31", "12", "2024"],
+      "expect": ["1.1.2025"]
+    },
+    {
+      "name": "28 Feb 2024 leap: next is 29 Feb",
+      "part": "e",
+      "input": ["28", "2", "2024"],
+      "expect": ["29.2.2024"]
+    },
+    {
+      "name": "31 Jan 2025: roll to February",
+      "part": "e",
+      "input": ["31", "1", "2025"],
+      "expect": ["1.2.2025"]
+    },
+    {
+      "name": "29 Feb 2023: not a valid date",
+      "part": "e",
+      "input": ["29", "2", "2023"],
+      "expect": ["Invalid date."],
+      "reject": ["29.2.2024"]
+    },
+    {
+      "name": "31 Apr 2025: April has 30 days",
+      "part": "e",
+      "input": ["31", "4", "2025"],
+      "expect": ["Invalid date."]
+    },
+    {
+      "name": "month 13 does not exist",
+      "part": "e",
+      "input": ["15", "13", "2025"],
+      "expect": ["Invalid date."]
+    }
+  ]
+}

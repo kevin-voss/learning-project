@@ -1,0 +1,25 @@
+{
+  "task": "07_2",
+  "tests": [
+    {
+      "name": "1000 EUR, 5 %, 1 year: only one interest step",
+      "input": [],
+      "expect": ["1050.0"]
+    },
+    {
+      "name": "1000 EUR, 5 %, 2 years: second year uses 5.01 %",
+      "input": [],
+      "expect": ["1102.605"]
+    },
+    {
+      "name": "500 EUR, 2.5 %, 3 years: rate rises three times",
+      "input": [],
+      "expect": ["538.603"]
+    },
+    {
+      "name": "0 years: capital unchanged",
+      "input": [],
+      "expect": ["End capital: 200.0"]
+    }
+  ]
+}

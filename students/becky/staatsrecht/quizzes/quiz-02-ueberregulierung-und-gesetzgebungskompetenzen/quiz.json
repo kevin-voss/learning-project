@@ -1,0 +1,378 @@
+{
+  "id": "staatsrecht-02",
+  "title": "Überregulierung und Gesetzgebungskompetenzen",
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "In einer Behörde dauert jede Entscheidung Monate, weil sie mehrere Hierarchiestufen durchläuft. Welche Dimension der Bürokratiekritik trifft das?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Zu viel Staat. Die Staatsquote ist zu hoch.",
+          "correct": false,
+          "why": "Die Staatsquote meint den Umfang staatlicher Aufgaben. Eine langsame Hierarchie ist etwas anderes."
+        },
+        {
+          "id": "b",
+          "text": "Zu viel Regulierung. Materielle Standards oder Dokumentationspflichten sind zu hoch.",
+          "correct": false,
+          "why": "Das wäre die zweite Dimension, etwa ein strengerer Umweltstandard oder eine neue Informationspflicht."
+        },
+        {
+          "id": "c",
+          "text": "Zu viel bürokratische Organisation. Hierarchie und langsame Bearbeitung sind genau diese Dimension.",
+          "correct": true,
+          "why": "Die Vorlesung zählt übertriebene Hierarchie, Unpersönlichkeit und fehlende Dienstleistungsorientierung hierher."
+        },
+        {
+          "id": "d",
+          "text": "Einfluss des EU-Rechts. Jede langsame Behörde geht auf eine Richtlinie zurück.",
+          "correct": false,
+          "why": "EU-Recht ist ein Regulierungstreiber, keine der drei Dimensionen der Bürokratiekritik."
+        }
+      ],
+      "explain": "Die Kritik an Gesetzen und ihrem Vollzug teilt die Vorlesung in drei Dimensionen. Zu viel Staat meint den Umfang der Aufgaben und die Staatsquote. Zu viel Regulierung meint materielle Standards, etwa Umwelt- oder Verbraucherschutz, und die administrative Ebene mit Dokumentations- und Informationspflichten. Zu viel bürokratische Organisation meint die Arbeitsweise: Hierarchie, Tempo, Unpersönlichkeit. In der Klausur ordnest du das Beispiel zuerst einer Dimension zu."
+    },
+    {
+      "id": "q2",
+      "prompt": "Ein Bundesland hat keine Seilbahn. Trotzdem braucht es ein Seilbahngesetz. Welcher Regulierungstreiber erklärt das?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Wohlstand und Komplexität. Neue Themen wie Stallbrände oder das SGB XIV erzeugen das Gesetz.",
+          "correct": false,
+          "why": "Wohlstand erklärt neue Schutzgesetze aus dem eigenen Bedarf. Hier zwingt eine EU-Richtlinie jedes Land, auch ohne Seilbahn."
+        },
+        {
+          "id": "b",
+          "text": "Einfluss des EU-Rechts. Die Richtlinie 2000/9/EG verlangt ein Seilbahngesetz in jedem Land, unabhängig vom lokalen Bedarf.",
+          "correct": true,
+          "why": "Die Richtlinie über Seilbahnen für den Personenverkehr verpflichtet alle Länder, auch wo keine Seilbahn steht."
+        },
+        {
+          "id": "c",
+          "text": "Spezialisten gegen Generalisten. Verbände verhindern eine Liberalisierung, wie bei der Handwerksordnung.",
+          "correct": false,
+          "why": "Das ist der Treiber bei der Handwerksordnung und den Architektenverbänden, nicht bei der Seilbahn-Richtlinie."
+        },
+        {
+          "id": "d",
+          "text": "Die One in One out-Regel. Eine neue Belastung verlangt bis zum Ende der Legislatur eine Entlastung.",
+          "correct": false,
+          "why": "One in One out ist ein Werkzeug gegen neue Belastung. Es erklärt nicht, warum das Seilbahngesetz entsteht."
+        }
+      ],
+      "explain": "Regulierung wächst aus mehreren Treibern. Komplexität und Wohlstand bringen neue Themen, in der Vorlesung etwa Stallbrände oder das Recht der Sozialen Entschädigung (SGB XIV). EU-Recht zwingt dazu, bisher freie Felder zu regeln: die Richtlinie 2000/9/EG führt in jedem Land zu einem Seilbahngesetz. Ein dritter Treiber ist die Überlegenheit der Spezialisten, sichtbar an der Handwerksordnung. In der Klausur nennst du den Treiber, der zum Beispiel passt."
+    },
+    {
+      "id": "q3",
+      "prompt": "Eine neue Regelung bringt eine Zusatzbelastung. Was verlangt die One in One out-Regel?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Das Gesetz tritt von selbst außer Kraft. So endet § 9 Dopinghilfegesetz mit Ablauf des Jahres 2007.",
+          "correct": false,
+          "why": "Das ist die Befristung von Gesetzen. One in One out hebt das neue Gesetz nicht nach einem festen Datum auf."
+        },
+        {
+          "id": "b",
+          "text": "Bis zum Ende der Legislaturperiode muss eine gleichwertige Entlastung folgen, durch Streichung einer Regelung.",
+          "correct": true,
+          "why": "Jede Zusatzbelastung braucht bis zum Ende der Legislatur einen Ausgleich in gleicher Höhe."
+        },
+        {
+          "id": "c",
+          "text": "Bestehende Gesetze werden auf Aufhebung durchgesehen. Eine neue Belastung braucht dann keinen Ausgleich.",
+          "correct": false,
+          "why": "Das ist das Normen-Screening. Es prüft den Bestand. Es ersetzt nicht den Ausgleich für eine neue Belastung."
+        },
+        {
+          "id": "d",
+          "text": "Der Bundestag erhält nur eine Schätzung des Erfüllungsaufwands. Eine Gegenbelastung ist nicht nötig.",
+          "correct": false,
+          "why": "Die Schätzung macht den Aufwand sichtbar. Die Bürokratiebremse verlangt zusätzlich die Entlastung."
+        }
+      ],
+      "explain": "Vier Werkzeuge stellt die Vorlesung nebeneinander. Die Befristung lässt ein Gesetz von selbst enden, Beispiel § 9 Dopinghilfegesetz mit Ablauf des Jahres 2007. One in One out knüpft an den Erfüllungsaufwand an: neue Belastung, gleichwertige Streichung bis zum Ende der Legislaturperiode. Den Aufwand zu schätzen informiert den Bundestag, setzt aber keine Obergrenze. Normen-Screening durchsucht alte Gesetze auf Streichung, etwa im Entwurf des Dritten Bürokratieentlastungsgesetzes. In der Klausur beschreibst du den Mechanismus, nicht nur das Ziel „weniger Bürokratie“."
+    },
+    {
+      "id": "q4",
+      "prompt": "Was ist Erfüllungsaufwand nach § 2 Abs. 1 des Normenkontrollratsgesetzes (NKRG)?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Nur die Geldstrafe, die ein Unternehmen zahlt, wenn es eine Vorschrift missachtet.",
+          "correct": false,
+          "why": "Gemeint ist der Aufwand der Befolgung, nicht die Sanktion für einen Verstoß."
+        },
+        {
+          "id": "b",
+          "text": "Nur Zeit und Kosten der Wirtschaft. Bürger und Behörden bleiben außen vor.",
+          "correct": false,
+          "why": "Die Wirtschaft ist ein Adressat. § 2 Abs. 1 NKRG nennt daneben Bürgerinnen und Bürger und die öffentliche Verwaltung."
+        },
+        {
+          "id": "c",
+          "text": "Der gesamte messbare Zeitaufwand und die Kosten, die Bürgerinnen und Bürgern, der Wirtschaft und der öffentlichen Verwaltung durch die Befolgung einer bundesrechtlichen Vorschrift entstehen.",
+          "correct": true,
+          "why": "Die Legaldefinition umfasst alle drei Adressaten und sowohl Zeit als auch Kosten."
+        },
+        {
+          "id": "d",
+          "text": "Die Einsparung an Betriebskosten über die Lebensdauer einer Anlage, wie in der Begründung zum Gebäudeenergiegesetz.",
+          "correct": false,
+          "why": "Das GEG stellt solchen Einsparungen den Aufwand gegenüber. Die Einsparung selbst ist nicht der Erfüllungsaufwand."
+        }
+      ],
+      "explain": "§ 2 Abs. 1 NKRG definiert den Erfüllungsaufwand als den gesamten messbaren Zeitaufwand und die Kosten aus der Befolgung einer bundesrechtlichen Vorschrift. Die Adressaten sind Bürgerinnen und Bürger, die Wirtschaft und die öffentliche Verwaltung. Die One in One out-Regel hängt an diesem Aufwand. Schätzungen dazu legt die Regierung dem Bundestag vor. Am Gebäudeenergiegesetz zeigt die Vorlesung, dass die Zahlen stark von Annahmen abhängen, besonders bei den behaupteten Einsparungen. Wer nur die Wirtschaft nennt, lässt zwei Adressaten weg."
+    },
+    {
+      "id": "q5",
+      "prompt": "Ein Land erlässt ein Gesetz ohne Gesetzgebungskompetenz. Inhaltlich verstößt es nicht gegen Grundrechte. Was folgt?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Das Gesetz ist materiell verfassungswidrig. Die falsche Ebene ist ein Inhaltsfehler.",
+          "correct": false,
+          "why": "Materiell ist die sachlich-inhaltliche Zulässigkeit. Die fehlende Zuständigkeit gehört zu den formellen Voraussetzungen."
+        },
+        {
+          "id": "b",
+          "text": "Das Gesetz ist schon aus formellen Gründen verfassungswidrig und nichtig. Zuständigkeit ist eine formelle Voraussetzung.",
+          "correct": true,
+          "why": "Formell sind Verfahren, Zuständigkeit und Form. Ein verfassungswidriges Gesetz ist nichtig."
+        },
+        {
+          "id": "c",
+          "text": "Die Behörde wendet das Gesetz an. Die Kompetenz wird erst geprüft, wenn der Bund klagt.",
+          "correct": false,
+          "why": "Klagt ein Bürger gegen eine Maßnahme auf dieser Norm, kann die Kompetenzfrage schon im Vollzug relevant werden."
+        },
+        {
+          "id": "d",
+          "text": "Das Gesetz gilt, bis der Landtag es aufhebt. Nichtigkeit gibt es nur bei einem Grundrechtsverstoß.",
+          "correct": false,
+          "why": "Die Vorlesung nennt das verfassungswidrige Gesetz nichtig. Der Grundrechtsverstoß ist der materielle Fall, nicht der einzige."
+        }
+      ],
+      "explain": "Formelle Voraussetzungen sind Verfahren, Zuständigkeit und Form. Materielle Voraussetzungen sind die sachlich-inhaltliche Zulässigkeit, etwa ein Grundrecht. Fehlt die Gesetzgebungskompetenz, ist das Gesetz formell verfassungswidrig, auch wenn der Inhalt sonst hält. Ein verfassungswidriges Gesetz ist nichtig. Im Vollzug wird das praktisch, wenn jemand gegen eine behördliche Maßnahme klagt, die auf dieser Norm beruht. Gesetzgebungskompetenz heißt hier Verbandskompetenz: welche Ebene mit Staatsqualität das Gesetz erlassen, ändern oder aufheben darf."
+    },
+    {
+      "id": "q6",
+      "prompt": "Womit beginnt die Prüfung, wer ein Gesetz erlassen darf?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Mit dem Bund als Regel. Die meisten Gesetze sind Bundesgesetze, also ist der Bund der Ausgangspunkt.",
+          "correct": false,
+          "why": "Dass die Praxis meist den Bund zeigt, folgt aus den Ausnahmen. Die rechtliche Grundregel bleibt Art. 70 Abs. 1 GG."
+        },
+        {
+          "id": "b",
+          "text": "Mit Art. 70 Abs. 1 GG: Die Länder haben das Recht der Gesetzgebung, soweit das Grundgesetz dem Bund die Befugnis nicht verleiht.",
+          "correct": true,
+          "why": "Das ist die Grundregel der Kompetenzverteilung. Bund und Ausnahmen prüfst du danach."
+        },
+        {
+          "id": "c",
+          "text": "Mit Art. 72 Abs. 2 GG. Jede Materie braucht eine Erforderlichkeit für gleichwertige Lebensverhältnisse.",
+          "correct": false,
+          "why": "Art. 72 Abs. 2 GG gilt nur in der Bedingungs-Kompetenz, nicht als Start jeder Prüfung."
+        },
+        {
+          "id": "d",
+          "text": "Mit Art. 73 GG als Liste der Länderkompetenzen.",
+          "correct": false,
+          "why": "Art. 73 GG ist ein Katalog der ausschließlichen Gesetzgebung des Bundes, nicht der Länder."
+        }
+      ],
+      "explain": "Art. 70 Abs. 1 GG ist der Start: die Länder sind zuständig, soweit das Grundgesetz dem Bund nichts verleiht. Die Antwort steht oft in Art. 70 bis 74 GG, aber nicht immer. Daneben gibt es Sonderregeln, etwa Art. 21 Abs. 5 GG zum Parteienrecht und Art. 105 GG zu Finanzmonopolen, Zöllen und Steuern, und ungeschriebene Kompetenzen. Dass die meisten Gesetze trotzdem vom Bund kommen, liegt an den Ausnahmen in Art. 71, 73 GG und Art. 72, 74 GG."
+    },
+    {
+      "id": "q7",
+      "prompt": "Die Staatsangehörigkeit steht im Katalog der ausschließlichen Gesetzgebung (Art. 73 GG). Ein Land erlässt dazu ein Gesetz. Ein Bundesgesetz ermächtigt das Land nicht. Was gilt?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Das Land darf regeln, solange der Bund noch kein Gesetz erlassen hat.",
+          "correct": false,
+          "why": "Soweit und solange ist die konkurrierende Gesetzgebung. Bei der ausschließlichen Kompetenz ist von vornherein nur der Bund zuständig."
+        },
+        {
+          "id": "b",
+          "text": "Nur der Bund ist zuständig (Art. 71 und Art. 73 GG). Die Länder dürfen nur gesetzgeben, wenn ein Bundesgesetz sie ausdrücklich ermächtigt (Art. 71 Abs. 1 GG).",
+          "correct": true,
+          "why": "Ausschließlich heißt Allein-Kompetenz des Bundes. Ohne ausdrückliche Ermächtigung bleibt das Land draußen."
+        },
+        {
+          "id": "c",
+          "text": "Art. 72 Abs. 3 GG gibt den Ländern eine Abweichungskompetenz für jede Materie des Art. 73 GG.",
+          "correct": false,
+          "why": "Die Abweichung steht in Art. 72 Abs. 3 GG und gilt für bestimmte konkurrierende Materien, nicht für den Katalog des Art. 73 GG."
+        },
+        {
+          "id": "d",
+          "text": "Art. 70 GG macht die Staatsangehörigkeit zu Länderrecht, weil sie nicht in Art. 74 GG steht.",
+          "correct": false,
+          "why": "Art. 73 GG verleiht die Materie dem Bund. Dann greift die Grundregel des Art. 70 GG nicht mehr zugunsten des Landes."
+        }
+      ],
+      "explain": "Bei der ausschließlichen Gesetzgebung (Art. 71 und Art. 73 GG) ist allein der Bund zuständig. Er kann die Länder im Bundesgesetz ermächtigen. Die Folie zum Prüfungsweg nennt diese Ermächtigung Art. 71 Abs. 1 GG. Ohne sie ist ein Landesgesetz kompetenzwidrig. Im Auszug des Art. 73 GG stehen unter anderem die auswärtigen Angelegenheiten, die Staatsangehörigkeit, Pass-, Melde- und Ausweiswesen, die Währung und das Atomrecht. Straßenverkehr und Jagdwesen stehen nicht in diesem Katalog."
+    },
+    {
+      "id": "q8",
+      "prompt": "Der Bund will das Straßenverkehrsrecht regeln. Die Vorlesung nennt das eine Bedingungs-Kompetenz. Was muss zusätzlich vorliegen?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Nichts weiter. Wie beim Bürgerlichen Recht darf der Bund ohne zusätzliche Voraussetzung gesetzgeben.",
+          "correct": false,
+          "why": "Bürgerliches Recht, Arbeitsrecht und Flüchtlingsrecht sind die bedingungslose Kompetenz (Art. 72 Abs. 1, Art. 74 GG). Straßenverkehr ist es nicht."
+        },
+        {
+          "id": "b",
+          "text": "Eine bundesgesetzliche Regelung muss erforderlich sein, um gleichwertige Lebensverhältnisse herzustellen oder die Rechts- oder Wirtschaftseinheit zu wahren (Art. 72 Abs. 2 GG).",
+          "correct": true,
+          "why": "Das ist die Bedingungs-Kompetenz nach Art. 72 Abs. 2 und Art. 74 GG. Straßenverkehr steht in dieser Gruppe."
+        },
+        {
+          "id": "c",
+          "text": "Die Länder müssen den Bund vorher ermächtigen.",
+          "correct": false,
+          "why": "Eine Ermächtigung der Länder durch den Bund gibt es bei der ausschließlichen Kompetenz, und sie läuft in die andere Richtung."
+        },
+        {
+          "id": "d",
+          "text": "Straßenverkehr ist ausschließliche Bundeskompetenz nach Art. 73 GG. Eine Erforderlichkeit gibt es dort nicht.",
+          "correct": false,
+          "why": "Die Vorlesung stellt Straßenverkehr zur konkurrierenden Bedingungs-Kompetenz, nicht in den Allein-Katalog des Art. 73 GG."
+        }
+      ],
+      "explain": "Die konkurrierende Gesetzgebung hat in der Vorlesung drei Varianten. Die Bedingungs-Kompetenz (Art. 72 Abs. 2, Art. 74 GG) erlaubt dem Bund ein Gesetz nur, soweit es für gleichwertige Lebensverhältnisse oder für die Rechts- oder Wirtschaftseinheit erforderlich ist. Beispiele: Teile des Ausländer- und Wirtschaftsrechts, Krankenhaus-, Lebensmittel-, Tierschutz- und Straßenverkehrsrecht. Die bedingungslose Kompetenz (Art. 72 Abs. 1, Art. 74 GG) braucht diese Hürde nicht, etwa beim Bürgerlichen Recht. Die Abweichungs-Kompetenz (Art. 72 Abs. 3 GG) ist die dritte Variante."
+    },
+    {
+      "id": "q9",
+      "prompt": "§ 33a Abs. 1 Nr. 2 und 3 Nds. SOG in der Fassung vom 11.12.2003 erlaubte Telekommunikationsüberwachung zur Verfolgung von Straftaten. Das BVerfG hielt das für kompetenzwidrig (Urt. v. 27.07.2005 – 1 BvR 668/04). Warum?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Schon das Bestehen der StPO sperrt jedes Landesrecht zur Überwachung, auch wo die StPO die Frage nicht abschließend regelt.",
+          "correct": false,
+          "why": "Eine sachliche Sperre braucht die abschließende Reichweite. Nicht jedes Bundesgesetz verdrängt jede Landesregel zum selben Wort."
+        },
+        {
+          "id": "b",
+          "text": "Die StPO regelt die Telekommunikationsüberwachung zur Strafverfolgung abschließend. Das ist eine sachliche Kompetenzsperre.",
+          "correct": true,
+          "why": "Das Bundesrecht deckt diese Materie abschließend. Das Land durfte daneben keine eigene Verfolgungsbefugnis schaffen."
+        },
+        {
+          "id": "c",
+          "text": "Landespolizeirecht ist ausschließliche Bundeskompetenz nach Art. 73 GG. Das Nds. SOG war deshalb von Anfang an unzulässig.",
+          "correct": false,
+          "why": "Die Länder haben die Polizei nach Art. 70 GG, Gesetz ist das NPOG. Der Bund hat dazu nur einzelne Titel, etwa Art. 73 Abs. 1 Nr. 10 GG."
+        },
+        {
+          "id": "d",
+          "text": "Das Gesetz ist materiell verfassungswidrig, weil Überwachung immer ein Grundrecht bricht. Die Kompetenz ist egal.",
+          "correct": false,
+          "why": "Das BVerfG stützt dieses Beispiel auf die abschließende StPO, also auf die Kompetenz, nicht auf einen pauschalen Grundrechtsverstoß."
+        }
+      ],
+      "explain": "Hat der Bund ein Gesetz erlassen, liest du das Wort „soweit“. Ist das Bundesrecht nicht abschließend, darf das Land noch ergänzen. Ist es abschließend, liegt eine sachliche Kompetenzsperre vor. So beim Nds. SOG: die StPO regelt die Telekommunikationsüberwachung zur Strafverfolgung abschließend. „Solange“ in Art. 72 Abs. 1 GG ist die andere Sperre, die zeitliche: sie dauert, solange das Bundesgesetz besteht. Die beiden Sperren tauschst du in der Klausur nicht."
+    },
+    {
+      "id": "q10",
+      "prompt": "Ein Land will die Nationalhymne durch Landesgesetz festlegen. Welche Kompetenz nennt die Vorlesung?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Annexkompetenz des Bundes, weil die Hymne eine Nebenfrage des Straßenverkehrsrechts ist.",
+          "correct": false,
+          "why": "Annex heißt: eine schon bestehende Bundeskompetenz zieht eine sachlich dazugehörige Materie mit. Die Hymne hängt nicht am Straßenverkehr."
+        },
+        {
+          "id": "b",
+          "text": "Kompetenz kraft Natur der Sache beim Bund. Für Bundesflagge, Bundeswappen und Nationalhymne ist nur ein Bundesgesetz sinnvoll.",
+          "correct": true,
+          "why": "Das ist die ungeschriebene Bundeskompetenz, wenn die Sache ein einheitliches Bundesgesetz verlangt."
+        },
+        {
+          "id": "c",
+          "text": "Art. 70 GG gibt das Recht dem Land, weil Art. 73 GG die Hymne nicht auflistet.",
+          "correct": false,
+          "why": "Fehlt ein Katalogtitel, prüfst du noch die ungeschriebenen Kompetenzen. Hier ist ein Landesgesetz gerade nicht sinnvoll."
+        },
+        {
+          "id": "d",
+          "text": "Abweichungskompetenz nach Art. 72 Abs. 3 GG. Das spätere Landesgesetz geht vor.",
+          "correct": false,
+          "why": "Abweichen darf das Land nur in den Bereichen des Art. 72 Abs. 3 GG. Die Nationalhymne steht dort nicht."
+        }
+      ],
+      "explain": "Ungeschriebene Gesetzgebungskompetenz des Bundes hat zwei Gestalten. Kraft Natur der Sache, wenn nur ein Bundesgesetz sinnvoll ist: Flagge, Wappen, Hymne. Als Annex oder wegen Sachzusammenhangs, wenn der Bund eine Materie schon regeln darf und eine andere Frage sachlich dazugehört, etwa Wahlwerbung im Rundfunk wegen des Parteienrechts oder Werbeanlagen an Straßen wegen des Straßenverkehrsrechts. Trifft keines von beiden zu, bleibt es beim Land. Die Mitregelung muss sachlich dazugehören."
+    },
+    {
+      "id": "q11",
+      "prompt": "Der Bundestag erlässt ein Vereinsgesetz. Ein Land hält es für verfassungswidrig, weil nicht dargelegt wurde, dass die Herstellung gleichwertiger Lebensverhältnisse im Bundesgebiet oder die Wahrung der Rechts- oder Wirtschaftseinheit im gesamtstaatlichen Interesse eine bundesgesetzliche Regelung erforderlich macht. Welche Norm trifft diese Rüge?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Art. 71 GG. Vereinsrecht ist ausschließliche Bundeskompetenz und braucht keine Erforderlichkeit.",
+          "correct": false,
+          "why": "Die Rüge benutzt die Formel der Erforderlichkeit. Die steht nicht bei der Allein-Kompetenz des Art. 71 GG."
+        },
+        {
+          "id": "b",
+          "text": "Art. 72 Abs. 2 GG. Das ist die Erforderlichkeit der Bedingungs-Kompetenz.",
+          "correct": true,
+          "why": "Gleichwertige Lebensverhältnisse und Rechts- oder Wirtschaftseinheit sind die Gründe, unter denen der Bund in dieser Variante gesetzgeben darf."
+        },
+        {
+          "id": "c",
+          "text": "Art. 70 Abs. 1 GG. Das Land rügt, dass der Bund überhaupt ein Gesetz erlassen hat.",
+          "correct": false,
+          "why": "Art. 70 Abs. 1 GG ist die Grundregel. Die Rüge setzt voraus, dass eine Bundeskompetenz nur bei Erforderlichkeit besteht."
+        },
+        {
+          "id": "d",
+          "text": "Art. 72 Abs. 3 GG. Das Land will vom Vereinsgesetz abweichen.",
+          "correct": false,
+          "why": "Abweichung ist eine andere Variante. Der Text des Landes spricht von Erforderlichkeit, nicht von einem späteren Landesgesetz."
+        }
+      ],
+      "explain": "Aufgabe 11 legt die Formel auf den Tisch, ohne den Artikel zu nennen. Du erkennst sie aus der Bedingungs-Kompetenz: Art. 72 Abs. 2 GG. Der Bund darf dort nur gesetzgeben, wenn und soweit die Herstellung gleichwertiger Lebensverhältnisse oder die Wahrung der Rechts- oder Wirtschaftseinheit eine bundesgesetzliche Regelung erforderlich macht. Die Rüge des Landes zielt darauf, dass diese Erforderlichkeit im Zusammenhang mit dem Erlass nicht dargelegt wurde. Beim Bürgerlichen Recht wäre das die falsche Hürde, weil dort die bedingungslose Kompetenz gilt."
+    },
+    {
+      "id": "q12",
+      "prompt": "Der Landtag erlässt ein Jagdgesetz. Ein Jäger hält es für verfassungswidrig, weil der Bund von seiner Kompetenz für das Jagdwesen aus Art. 74 Abs. 1 Nr. 28 GG abschließend Gebrauch gemacht habe. Was gilt für die Abweichung?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Der Jäger hat in jedem Fall recht. Abschließendes Bundesrecht sperrt das Land. Art. 31 GG kennt hier keine Ausnahme.",
+          "correct": false,
+          "why": "Bei der Abweichungskompetenz gilt nicht pauschal „Bundesrecht bricht Landesrecht“. Art. 72 Abs. 3 S. 3 GG stellt auf das spätere Gesetz ab."
+        },
+        {
+          "id": "b",
+          "text": "Für das Jagdwesen, ausgenommen das Recht der Jagdscheine, dürfen die Länder nach Art. 72 Abs. 3 S. 1 Nr. 1 GG vom Bundesjagdgesetz abweichen. Es gilt das spätere Gesetz (Art. 72 Abs. 3 S. 3 GG).",
+          "correct": true,
+          "why": "Jagdwesen ist konkurrierend und abweichungsfähig. Die Jagdscheine nimmt die Norm von der Abweichung aus."
+        },
+        {
+          "id": "c",
+          "text": "Jagdwesen ist ausschließliche Bundeskompetenz. Jedes Landes-Jagdgesetz ist kompetenzwidrig.",
+          "correct": false,
+          "why": "Art. 74 Abs. 1 Nr. 28 GG ist konkurrierende Gesetzgebung. Ausschließlich wäre ein Titel des Art. 73 GG."
+        },
+        {
+          "id": "d",
+          "text": "Die Länder dürfen auch das Recht der Jagdscheine abweichend regeln. Die Ausnahme betrifft nur die Raumordnung.",
+          "correct": false,
+          "why": "Art. 72 Abs. 3 S. 1 Nr. 1 GG nimmt das Recht der Jagdscheine ausdrücklich aus. Raumordnung ist ein weiteres Beispiel, keine Ersatzausnahme."
+        }
+      ],
+      "explain": "Das Jagdwesen fällt unter Art. 74 Abs. 1 Nr. 28 GG, also unter die konkurrierende Gesetzgebung. Hat der Bund abschließend geregelt, scheitert ein widersprechendes Landesgesetz sonst an der sachlichen Kompetenzsperre. Beim Jagdwesen kommt Art. 72 Abs. 3 S. 1 Nr. 1 GG dazu: die Länder dürfen abweichen, das Recht der Jagdscheine aber nicht. Erlassen Bund und Land nacheinander Regeln, gilt nach Art. 72 Abs. 3 S. 3 GG das spätere Gesetz. Dieselbe Abweichungsgruppe nennt die Vorlesung noch für Raumordnung sowie für Hochschulzulassung und Hochschulabschlüsse. Den Jäger prüfst du also nicht mit Art. 31 GG als automatischem Vorrang des Bundes."
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "task": "07_4",
+  "tests": [
+    {
+      "name": "pad 7 to width 3",
+      "part": "a",
+      "input": [],
+      "expect": ["007"]
+    },
+    {
+      "name": "pad 42 to width 5",
+      "part": "a",
+      "input": [],
+      "expect": ["00042"]
+    },
+    {
+      "name": "sum of 1 2 3",
+      "part": "b",
+      "input": [],
+      "expect": ["sum: 6"]
+    },
+    {
+      "name": "count three twos",
+      "part": "c",
+      "input": [],
+      "expect": ["count 2: 3"]
+    },
+    {
+      "name": "same double arrays in order",
+      "part": "d",
+      "input": [],
+      "expect": ["equal: true"]
+    },
+    {
+      "name": "same values wrong order",
+      "part": "d",
+      "input": [],
+      "expect": ["equal: false"]
+    },
+    {
+      "name": "closed interval 2 through 5",
+      "part": "e",
+      "input": [],
+      "expect": ["range: 2 3 4 5"]
+    },
+    {
+      "name": "empty interval when from equals to",
+      "part": "e",
+      "input": [],
+      "expect": ["range: 7"]
+    }
+  ]
+}

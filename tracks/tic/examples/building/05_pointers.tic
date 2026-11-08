@@ -1,0 +1,39 @@
+// 05 — pointers: explicit addresses, zero nasty surprises.
+//
+// & takes an address. * follows it. null points nowhere, on purpose.
+// The last line fails ON PURPOSE — that failure is the lesson.
+
+// ---- read and write through a pointer ----
+i32 x = 42;
+i32* p = &x;                          // p holds the ADDRESS of x's slot
+print(*p);                            // 42 — read x through the pointer
+*p = 99;                              // write into that slot through the pointer
+print(x);                             // 99 — x changed, and we never typed "x ="
+
+// ---- two pointers can watch the same box ----
+i32* q = &x;                          // q points at the very same slot as p
+*q += 1;
+print(*p, *q, x);                     // 100 100 100 — three names, one box
+
+// ---- a function can return a pointer to its own local ----
+// In C this is THE classic bug: the local dies when the function returns,
+// and the pointer dangles. In Tic the slot is kept alive automatically,
+// so the pointer stays valid. No undefined behavior, ever.
+function make_number() -> i32* {
+    i32 n = 7;
+    return &n;                        // the slot survives the return
+}
+
+i32* r = make_number();
+print(*r);                            // 7
+*r += 1;
+print(*r);                            // 8 — we own that slot now
+
+// ---- null: a pointer that points nowhere on purpose ----
+i32* p2 = null;                       // making one is fine, checking one is fine...
+print(p2 == null);                    // true — comparing pointers is always safe
+
+// ...but FOLLOWING a null pointer always stops the program.
+// This is the last line on purpose: instead of crashing the process like C,
+// Tic stops with a friendly error naming the line. Exit code 2.
+print(*p2);                           // runtime error: null pointer dereference

@@ -1,0 +1,43 @@
+// 08 — enums and obj: two ways to bundle values.
+//
+// An enum is a CLOSED set of named choices: exactly one is picked.
+// An obj is a bag of named fields, built on the spot.
+
+// ---- enum: pick one from a fixed menu ----
+enum Light { Red, Yellow, Green }
+
+// a function can take an enum and branch on it
+function action(Light l) -> str {
+    if (l == Light.Red) {
+        return "stop";
+    } else if (l == Light.Yellow) {
+        return "hurry... or stop";
+    }
+    return "go";
+}
+
+Light signal = Light.Green;           // signal is one of the three, forever
+print(signal);                        // Green
+print(signal == Light.Green);         // true  — enums compare with ==
+print(signal == Light.Red);           // false — never mixes with other enums
+print(action(Light.Red));             // stop
+print(action(signal));                // go
+
+// ---- obj: a bag of named fields ----
+obj user = { name: "Ada", level: 3, active: true };
+print(user.name);                     // Ada   — read a field with a dot
+print(user.level, user.active);       // 3 true
+user.level = 4;                       // update an EXISTING field is fine
+print(user.level);                    // 4    — adding a new field is a compile error
+
+// a function whose parameter type is just `obj`:
+// the fields it touches are checked at RUNTIME, with a friendly error if missing
+function greet_user(obj u) -> str {
+    return "hello, " + u.name;
+}
+print(greet_user(user));              // hello, Ada
+
+// two objs with the same fields (names + types) have the same shape —
+// field ORDER does not matter
+obj also_user = { active: true, level: 9, name: "Grace" };
+print(also_user.name, also_user.level);   // Grace 9

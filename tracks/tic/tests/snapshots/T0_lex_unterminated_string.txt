@@ -1,0 +1,9 @@
+T0001
+
+  x unterminated string literal
+   ,-[unterminated.tic:1:9]
+ 1 | str s = "oops
+   :         ^^|^^
+   :           `-- the string starts here and never ends
+   `----
+  help: add a closing `"` — Tic strings cannot span lines

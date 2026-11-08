@@ -1,0 +1,10 @@
+T1001
+
+  x expected a name, found `=`
+   ,-[unexpected.tic:3:5]
+ 2 | print(x);
+ 3 | i32 = 3;
+   :     |
+   :     `-- expected a name here
+   `----
+  help: compare with the statement forms in README.md — Tic is strict about `;`, parentheses and braces

@@ -1,0 +1,9 @@
+T2003
+
+  x the initializer of `x`: this is str, but i32 was expected
+   ,-[counter.tic:1:9]
+ 1 | i32 x = "hello";
+   :         ^^^|^^^
+   :            `-- this is where i32 was expected
+   `----
+  help: `i32("123")` parses at runtime — it fails unless the text is a number

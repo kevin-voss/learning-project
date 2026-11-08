@@ -1,0 +1,40 @@
+final i32 MAX = 3;
+
+enum State { Idle, Running, Done }
+
+class Counter {
+    i32 count;
+    State state;
+
+    function init() {
+        this.count = 0;
+        this.state = State.Idle;
+    }
+
+    function bump() -> bool {
+        if (this.count >= MAX) {
+            this.state = State.Done;
+            return false;
+        }
+        this.count += 1;
+        this.state = State.Running;
+        return true;
+    }
+}
+
+function double(i32 x) -> i32 {
+    return x * 2;
+}
+
+// ---- top-level code: runs top to bottom ----
+print("start");
+print(double(21));                    // 42
+
+Counter c = new Counter();
+while (c.bump()) {
+    print(c.count);                   // 1 2 3
+}
+print(c.state == State.Done);         // true
+
+obj config = { retries: 3, enabled: true };
+print(config.retries);                // 3

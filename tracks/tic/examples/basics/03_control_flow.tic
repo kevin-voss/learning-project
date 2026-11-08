@@ -1,0 +1,59 @@
+// 03 — control flow: if, while, for.
+//
+// Rule number one: every condition must be a bool.
+// Tic checks that BEFORE the program runs, so "if (1)" never surprises you.
+
+// ---- if / else if / else — braces are required, every time ----
+i32 score = 87;
+if (score >= 90) {
+    print("grade: A");
+} else if (score >= 80) {
+    print("grade: B");                // <- this branch runs, because 87 >= 80
+} else {
+    print("grade: keep practicing");
+}
+
+// ---- while: loop as long as the condition stays true ----
+i32 countdown = 3;
+while (countdown > 0) {
+    print("tick", countdown);
+    countdown -= 1;
+}
+print("liftoff");
+
+// ---- for: init; condition; update — the classic counting loop ----
+for (i32 i = 0; i < 3; i += 1) {
+    print("i =", i);
+}
+
+// ---- && and || read left to right and STOP as soon as they know ----
+// The left side is false, so Tic never even looks at (1 / 0) on the right.
+// If both sides were always evaluated, these two lines would crash
+// with "division by zero". Short-circuiting saves us.
+print(false && (1 / 0 > 0));          // false — the right side never ran
+print(true || (1 / 0 > 0));           // true  — same trick with ||
+
+bool awake = true;
+bool busy = false;
+if (awake && !busy) {
+    print("state: ready to learn");
+}
+if (!awake || busy) {
+    print("state: distracted");
+} else {
+    print("state: focused");         // <- runs: both sides were false
+}
+
+// ---- chars compare by their code points ----
+print('a' < 'b');                     // true — underneath it is 97 < 98
+char grade = 'B';
+if (grade >= 'A' && grade <= 'Z') {
+    print(grade, "is uppercase");
+}
+
+// ---- put it together: print a..e with a while loop and casts ----
+i32 code = i32('a');                  // 97
+while (code <= i32('e')) {            // up to 101
+    print(char(code));
+    code += 1;
+}

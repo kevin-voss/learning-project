@@ -1,0 +1,47 @@
+// 06 — arrays: fixed boxes, growable lists, and a real sort.
+
+// ---- fixed array: the size is part of the type, locked forever ----
+i32[5] scores = [80, 90, 70, 100, 60];
+print(len(scores));                   // 5
+
+i32 total = 0;
+for (i32 i = 0; i < len(scores); i += 1) {
+    total += scores[i];               // every read is bounds-checked
+}
+print("total:", total);               // total: 400
+
+// ---- dynamic array: grows and shrinks while the program runs ----
+i32[] nums = [8, 3, 5];               // start:  [8, 3, 5]
+push(nums, 1);                        // append 1         -> [8, 3, 5, 1]
+insert(nums, 0, 9);                   // 9 goes to index 0 -> [9, 8, 3, 5, 1]
+pop(nums);                            // drop the last    -> [9, 8, 3, 5]
+remove(nums, 0);                      // drop index 0     -> [8, 3, 5]
+print(len(nums), nums[0]);            // 3 8
+
+// ---- range(): a ready-made dynamic i32 array ----
+i32[] up = range(2, 5);               // [2, 3, 4] — start at 2, stop BEFORE 5
+print(len(up), up[0], up[2]);         // 3 2 4
+
+// ---- selection sort: repeatedly move the smallest value to the front ----
+i32[] data = [33, 10, 55, 21, 4];
+for (i32 i = 0; i < len(data) - 1; i += 1) {
+    i32 smallest = i;                 // best index found so far
+    for (i32 j = i + 1; j < len(data); j += 1) {
+        if (data[j] < data[smallest]) {
+            smallest = j;
+        }
+    }
+    i32 tmp = data[i];                // the classic three-line swap
+    data[i] = data[smallest];
+    data[smallest] = tmp;
+}
+print("sorted:", data[0], data[1], data[2], data[3], data[4]);
+
+// ---- assignment shares, copy() copies ----
+i32[] alias = data;                   // NOT a copy: a second name for the SAME array
+alias[0] = 999;
+print(data[0]);                       // 999 — alias wrote, data saw it
+
+i32[] snapshot = copy(data);          // copy() builds a brand-new array
+snapshot[0] = -1;
+print(data[0], snapshot[0]);          // 999 -1 — snapshot lives its own life

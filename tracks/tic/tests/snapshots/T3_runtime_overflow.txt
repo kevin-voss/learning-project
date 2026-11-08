@@ -1,0 +1,10 @@
+T3001
+
+  x runtime overflow: i8 overflow (127 + 1)
+   ,-[overflow.tic:2:7]
+ 1 | i8 big = 127;
+ 2 | print(big + 1);
+   :       ^^^|^^^
+   :          `-- the math stops here
+   `----
+  help: every integer width has a largest value — use a wider type or fix the math (i8 overflow (127 + 1))

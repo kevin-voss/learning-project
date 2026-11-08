@@ -1,0 +1,41 @@
+// 07 — classes: data and the functions that belong to it, in one box.
+//
+// A class instance lives behind a reference. Two names can share one box —
+// and the output below proves it.
+
+class Counter {
+    i32 count;                        // fields: the data inside the box
+    str label;
+
+    function init(str name) {         // runs on `new`; fills in the fields
+        this.count = 0;
+        this.label = name;
+    }
+
+    function bump(i32 by) -> i32 {    // method: a function that runs ON an instance
+        this.count += by;
+        return this.count;
+    }
+
+    function describe() -> str {
+        return this.label + " is at " + this.count;
+    }
+}
+
+// ---- make one box and use it ----
+Counter c = new Counter("clicks");    // `new` builds the box, init fills it in
+print(c.describe());                  // clicks is at 0
+print(c.bump(2));                     // 2
+print(c.bump(3));                     // 5
+print(c.count);                       // 5 — fields are readable from outside
+
+// ---- aliasing: two names, ONE box ----
+Counter same = c;                     // no copy — a second sticker on the same box
+same.bump(100);
+print(c.describe());                  // clicks is at 105 — c saw same's change!
+print(c == same);                     // true — identity: they ARE the same instance
+
+Counter other = new Counter("keys");  // a second, separate box
+other.bump(1);
+print(other.describe());              // keys is at 1
+print(c == other);                    // false — different boxes

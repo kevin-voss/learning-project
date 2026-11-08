@@ -17,6 +17,10 @@ kevin/
                 └── solution/      the sample solution (peek only when done)
 ```
 
+## Later, when this room is in hand
+
+The AWS Generative AI certificate and the six projects live in one advanced app: [AIP-C01](../../tracks/certifications/aws-genai-pro/index.html). Read the chapters, answer the study questions, then walk each project. You enroll for the labs and the exam yourself, afterwards. That app is not on a beginner's path.
+
 ## Subjects
 
 <!-- index:start -->

@@ -43,6 +43,7 @@ AIP.quiz = (function () {
     var id = AIP.padChapterId(filter);
     var bank = AIP.questions || [];
     var items = bank.filter(function (q) {
+      if (AIP.isStudyQuestion && !AIP.isStudyQuestion(q)) return false;
       return AIP.chapterTags(q).indexOf(id) !== -1;
     });
     return AIP.sortQuestions ? AIP.sortQuestions(items) : items;

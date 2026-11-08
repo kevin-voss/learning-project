@@ -3,13 +3,13 @@ window.AIP = window.AIP || {};
 /* Question list and mock-exam setup screens. Data helpers live in question-bank.js. */
 (function () {
   AIP.renderBank = function (filter) {
-    filter = filter || {};
-    var full = AIP.sortQuestions(AIP.questions || []);
-    var hasFilter = Object.keys(filter).some(function (key) { return filter[key] != null && filter[key] !== "" && filter[key] !== "all"; });
-    var all = hasFilter ? AIP.filterQuestions(filter) : full;
-    var summary = { total: all.length, certsafari: 0, practice: 0, domainCounts: AIP.domainCounts(all) };
+    filter = Object.assign({ study: true }, filter || {});
+    if (filter.source) delete filter.study;
+    var full = AIP.studyPool ? AIP.studyPool({}) : AIP.sortQuestions(AIP.questions || []);
+    var all = AIP.filterQuestions(filter);
+    var summary = { total: all.length, drafts: 0, practice: 0, domainCounts: AIP.domainCounts(all) };
     all.forEach(function (q) {
-      if (q.source === "certsafari") summary.certsafari += 1;
+      if (q.review === "draft") summary.drafts += 1;
       if (q.source === "practice") summary.practice += 1;
     });
     var serviceCounts = AIP.serviceCounts(full);
@@ -19,11 +19,11 @@ window.AIP = window.AIP || {};
       return (Number(s.correct) || 0) + (Number(s.wrong) || 0) > 0;
     }).length;
     var html = '<div class="hero"><h1>Question list</h1>';
-    html += '<p class="lede">Browse every question without a fixed exam size. Filter by domain, AWS service, source, or answer history, then practice the matching list.</p></div>';
+    html += '<p class="lede">These are the study questions for the certificate. A draft stays labelled until you know it. Copied question lists stay off this page.</p></div>';
     html += '<div class="stats-grid">';
     html += '<div class="stat"><div class="n">' + summary.total + '</div><div class="l">Questions shown</div></div>';
-    html += '<div class="stat"><div class="n">' + summary.certsafari + '</div><div class="l">CertSafari</div></div>';
-    html += '<div class="stat"><div class="n">' + summary.practice + '</div><div class="l">Practice</div></div>';
+    html += '<div class="stat"><div class="n">' + summary.drafts + '</div><div class="l">Drafts</div></div>';
+    html += '<div class="stat"><div class="n">' + summary.practice + '</div><div class="l">Kept questions</div></div>';
     html += '<div class="stat"><div class="n">' + attempted + '</div><div class="l">Attempted</div></div>';
     html += '</div>';
     html += '</div>';
@@ -74,14 +74,13 @@ window.AIP = window.AIP || {};
   };
 
   AIP.renderExamSetup = function (initial) {
-    var all = AIP.questions || [];
+    var all = AIP.studyPool ? AIP.studyPool({}) : (AIP.questions || []);
     var prefs = AIP.storage.examPrefs();
     initial = initial || {};
     var selected = {
       count: prefs.count,
       strategy: prefs.strategy,
       status: initial.status || prefs.status,
-      source: initial.source || prefs.source,
       domain: initial.domain != null ? initial.domain : prefs.domain,
       service: initial.service || prefs.service
     };
@@ -110,13 +109,12 @@ window.AIP = window.AIP || {};
       });
     }
     html += '</section>';
-    html += '<section class="card exam-setup"><h2>Build a question set</h2><div class="exam-controls">';
+    html += '<section class="card exam-setup"><h2>Build a question set</h2><p>This set uses the study questions.</p><div class="exam-controls">';
     html += '<label class="exam-control"><span>Study mode</span><select data-exam-field="strategy"><option value="adaptive"' + (selected.strategy !== "exam" ? " selected" : "") + '>Smart practice (recommended)</option><option value="exam"' + (selected.strategy === "exam" ? " selected" : "") + '>Exam mode (random)</option></select><small>Smart practice uses new questions first, then missed questions.</small></label>';
     var standardCounts = ["10", "20", "50", "80"];
     var customCount = standardCounts.indexOf(selectedCount) === -1;
     html += '<label class="exam-control"><span>Question count</span><select data-exam-field="count"><option value="10"' + (selectedCount === "10" ? " selected" : "") + '>10</option><option value="20"' + (selectedCount === "20" ? " selected" : "") + '>20</option><option value="50"' + (selectedCount === "50" ? " selected" : "") + '>50</option><option value="80"' + (selectedCount === "80" ? " selected" : "") + '>80</option><option value="custom"' + (customCount ? " selected" : "") + '>Custom</option></select><input type="number" min="1" max="' + all.length + '" inputmode="numeric" data-exam-custom value="' + (customCount ? AIP.escape(selectedCount) : '') + '" placeholder="Custom count, 1–' + all.length + '"><small>Choose 10, 20, 50, 80, or enter your own count.</small></label>';
     html += '<label class="exam-control"><span>Question status</span><select data-exam-field="status"><option value="all">Any status</option><option value="unseen"' + (selected.status === "unseen" ? " selected" : "") + '>Only new questions</option><option value="wrong"' + (selected.status === "wrong" ? " selected" : "") + '>Only failed / needs review</option><option value="correct"' + (selected.status === "correct" ? " selected" : "") + '>Currently correct</option></select><small>Use this to focus a set before you start.</small></label>';
-    html += '<label class="exam-control"><span>Source</span><select data-exam-field="source"><option value="all">All sources</option><option value="certsafari"' + (selected.source === "certsafari" ? " selected" : "") + '>CertSafari</option><option value="practice"' + (selected.source === "practice" ? " selected" : "") + '>Practice questions</option><option value="examtopics"' + (selected.source === "examtopics" ? " selected" : "") + '>ExamTopics</option></select></label>';
     html += '<label class="exam-control"><span>Domain</span><select data-exam-field="domain"><option value="all">All domains</option>';
     (AIP.DOMAINS || []).forEach(function (d) {
       html += '<option value="' + d.id + '"' + (String(selected.domain) === String(d.id) ? " selected" : "") + '>Domain ' + d.id + ' · ' + AIP.escape(d.short) + '</option>';

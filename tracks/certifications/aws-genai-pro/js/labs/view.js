@@ -9,7 +9,7 @@ AIP.renderLabs = function () {
       html += '<a class="btn" href="#/labs/' + AIP.escape(lab.id) + '">Open</a></div>';
     });
   });
-  html += '<p><a href="#/capstones">Capstone projects</a></p>';
+  html += '<p><a href="#/micro">Back to the six projects</a></p>';
   return html;
 };
 

@@ -82,7 +82,7 @@ test("new questions do not repeat a quarantined phrase", () => {
 test("service worker lists every script the page loads", () => {
   const index = readFileSync(join(root, "index.html"), "utf8");
   const sw = readFileSync(join(root, "sw.js"), "utf8");
-  const tags = [...index.matchAll(/src="(js\/[^"]+)"/g)].map((match) => match[1]);
+  const tags = [...index.matchAll(/src="(js\/[^"?]+)/g)].map((match) => match[1]);
   for (const tag of tags) assert.match(sw, new RegExp(tag.replace(/[.]/g, "\\.")));
   assert.match(sw, /registration\.scope/);
 });

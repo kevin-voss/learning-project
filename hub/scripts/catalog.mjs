@@ -31,7 +31,7 @@ const META = {
   'tracks/spring-boot': { tag: 'java', title: 'Spring Boot · ParcelPilot', blurb: 'Build one backend product step by step, from a first API to queues, services and JWT.' },
   'tracks/architecture': { tag: 'systems', title: 'Architecture & system design', blurb: 'Load balancing, caches, layers, data and messaging trade-offs, with diagrams.' },
   'tracks/ai': { tag: 'systems', title: 'AI engineering field guide', blurb: '31 chapters: LLM internals, tokens, RAG, tools and MCP, agents, memory, security, evals.' },
-  'tracks/certifications/aws-genai-pro': { tag: 'certs', title: 'AWS GenAI Pro (AIP-C01)', blurb: 'Exam prep app: 28 chapters, question bank and mock exams.' },
+  'tracks/certifications/aws-genai-pro': { tag: 'certs', title: 'AWS GenAI Pro (AIP-C01)', blurb: 'Advanced. Certificate questions and six hands-on projects. Not on the beginner path.' },
   'drills/javascript': { tag: 'js', title: 'JavaScript drills', blurb: 'Eight topics with ten tested tasks each. Run them with make test.' },
   'programs/code-for-cleaning': { tag: 'java', title: 'Code for Cleaning', blurb: 'Real-life Java tasks in rounds: passwords, budgets, calendars, a small server check.' },
   'sheets/java': { tag: 'java', blurb: 'Where each Java topic lives, plus the server picture: controller, service, repository.' },

@@ -253,7 +253,7 @@ export const STAGES = [
       { id: 'p02', type: 'do', title: 'Ship your About-me page in Docker', href: PROJECT('extras/docker-portfolio'), time: '4–6 h' },
       { id: 'p04', type: 'do', title: 'React todo app', href: PROJECT('extras/react-todo'), time: '6–10 h' },
       { id: 'ai-guide', type: 'read', title: 'AI engineering field guide', href: 'tracks/ai/index.html', time: '31 chapters' },
-      { id: 'aws-genai', type: 'read', title: 'AWS GenAI Pro exam prep', href: 'tracks/certifications/aws-genai-pro/index.html', time: 'weeks' },
+      { id: 'aws-genai', type: 'read', title: 'Advanced: AWS GenAI certificate and six projects', href: 'tracks/certifications/aws-genai-pro/index.html', time: 'weeks' },
     ],
   },
 ]

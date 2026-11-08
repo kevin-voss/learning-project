@@ -45,7 +45,7 @@ Why this order:
 | — | [ParcelPilot](../tracks/spring-boot/README.md) | Spring Boot, step by step | the parcel table from 11 |
 | 12 | [Calculator](../projects/12-calculator/README.md) | recursion, parsing | tests |
 
-Optional extras: [Docker for your page](../projects/extras/docker-portfolio/README.md), [React todo app](../projects/extras/react-todo/README.md), [Code for Cleaning](../programs/code-for-cleaning/README.md).
+Optional extras: [Docker for your page](../projects/extras/docker-portfolio/README.md), [React todo app](../projects/extras/react-todo/README.md), [Code for Cleaning](../programs/code-for-cleaning/README.md). The [AWS GenAI certificate and six projects](../tracks/certifications/aws-genai-pro/index.html) sit here too. They are advanced. A beginner does not need them.
 
 ## One home per topic
 

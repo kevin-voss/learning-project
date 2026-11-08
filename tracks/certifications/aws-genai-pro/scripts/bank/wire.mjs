@@ -49,7 +49,6 @@ const scripts = [
   "js/labs/catalog.js",
   "js/labs/view.js",
   "js/path/micro.js",
-  "js/path/fde.js",
   "js/path/capstone.js",
   "js/path/pages.js",
   "js/core/routes.js",
@@ -59,7 +58,8 @@ const scripts = [
 
 const indexPath = join(root, "index.html");
 const index = readFileSync(indexPath, "utf8");
-const tags = scripts.map((file) => `  <script src="${file}"></script>`).join("\n");
+const cacheVersion = "13";
+const tags = scripts.map((file) => `  <script src="${file}?v=${cacheVersion}"></script>`).join("\n");
 const scriptBlock = /<!-- aip-scripts:start -->[\s\S]*<!-- aip-scripts:end -->/;
 if (!scriptBlock.test(index)) throw new Error("index.html is missing aip-scripts markers");
 const nextIndex = index.replace(scriptBlock, `<!-- aip-scripts:start -->\n${tags}\n  <!-- aip-scripts:end -->`);
@@ -88,7 +88,7 @@ const staticAssets = [
 ];
 const swPath = join(root, "sw.js");
 let sw = readFileSync(swPath, "utf8");
-sw = sw.replace(/var CACHE = "[^"]+";/, 'var CACHE = "aip-c01-v11";');
+sw = sw.replace(/var CACHE = "[^"]+";/, 'var CACHE = "aip-c01-v' + cacheVersion + '";');
 const body = staticAssets.map((file) => `  "${file}"`).join(",\n");
 sw = sw.replace(/\/\* aip-precache:start \*\/[\s\S]*\/\* aip-precache:end \*\//, `/* aip-precache:start */\n${body}\n  /* aip-precache:end */`);
 if (!sw.includes("aip-precache:start")) throw new Error("sw.js is missing precache markers");

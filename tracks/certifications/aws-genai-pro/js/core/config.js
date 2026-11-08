@@ -63,7 +63,5 @@ AIP.ROUTES = {
   readiness: "#/readiness",
   pool: "#/pool",
   labs: "#/labs",
-  micro: "#/micro",
-  fde: "#/fde",
-  capstones: "#/capstones"
+  micro: "#/micro"
 };

@@ -1,5 +1,5 @@
 /* AIP-C01 PWA service worker. Register only from http(s) — not file://. */
-var CACHE = "aip-c01-v11";
+var CACHE = "aip-c01-v13";
 var FONT_CACHE = "aip-c01-fonts-v1";
 var PRECACHE = [
   /* aip-precache:start */
@@ -148,7 +148,6 @@ var PRECACHE = [
   "./js/labs/catalog.js",
   "./js/labs/view.js",
   "./js/path/micro.js",
-  "./js/path/fde.js",
   "./js/path/capstone.js",
   "./js/path/pages.js",
   "./js/core/routes.js",
@@ -173,11 +172,15 @@ function cleanUrl(request) {
 
 function serveAppShell(request) {
   var shell = new URL("./index.html", self.registration.scope).href;
-  return caches.match(shell).then(function (cached) {
-    if (cached) return cached;
-    return caches.match("./index.html").then(function (relative) {
-      if (relative) return relative;
-      return fetch(request).catch(function () { return caches.match(shell); });
+  return fetch(request).then(function (response) {
+    if (response && response.ok) {
+      var copy = response.clone();
+      caches.open(CACHE).then(function (cache) { cache.put(shell, copy); });
+    }
+    return response;
+  }).catch(function () {
+    return caches.match(shell).then(function (cached) {
+      return cached || caches.match("./index.html");
     });
   });
 }
@@ -189,7 +192,12 @@ function isFontRequest(url) {
 self.addEventListener("install", function (event) {
   event.waitUntil(
     caches.open(CACHE).then(function (cache) {
-      return cache.addAll(PRECACHE);
+      return Promise.all(PRECACHE.map(function (url) {
+        return fetch(new Request(url, { cache: "reload" })).then(function (response) {
+          if (!response || !response.ok) throw new Error("precache " + url);
+          return cache.put(url, response);
+        });
+      }));
     }).then(function () {
       return self.skipWaiting();
     })
@@ -245,16 +253,16 @@ self.addEventListener("fetch", function (event) {
 
   if (url.origin === self.location.origin) {
     event.respondWith(
-      caches.match(cleanUrl(request)).then(function (cached) {
-        if (cached) return cached;
-        return fetch(request).then(function (response) {
-          if (!response || response.status !== 200 || response.type === "opaque") return response;
+      fetch(request).then(function (response) {
+        if (response && response.status === 200 && response.type !== "opaque") {
           var copy = response.clone();
           caches.open(CACHE).then(function (cache) {
             cache.put(cleanUrl(request), copy);
           });
-          return response;
-        });
+        }
+        return response;
+      }).catch(function () {
+        return caches.match(cleanUrl(request));
       })
     );
     return;

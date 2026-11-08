@@ -170,6 +170,7 @@ window.AIP = window.AIP || {};
       if (filter === "all") return true;
       return AIP.chapterTags(q).indexOf(AIP.padChapterId(filter)) !== -1;
     }
+    if (filter.study && !(AIP.isStudyQuestion && AIP.isStudyQuestion(q))) return false;
     if (filter.source && String(q.source || "") !== String(filter.source)) return false;
     if (filter.domain != null && questionDomain(q) !== Number(filter.domain)) return false;
     if (filter.subdomain && String(q.subdomain || "") !== String(filter.subdomain)) return false;
@@ -291,6 +292,7 @@ window.AIP = window.AIP || {};
     var out = { mode: mode };
     if (domain != null && domain !== "") out.domain = Number(domain);
     if (source) out.source = source;
+    if (params.get("study") === "1" || params.get("study") === "true") out.study = true;
     if (service) out.service = service;
     if (status) out.status = status;
     if (strategy) out.strategy = strategy;
@@ -304,8 +306,8 @@ window.AIP = window.AIP || {};
     if (spec.id) pool = AIP.filterQuestions({ id: spec.id });
     else if (spec.mode === "certsafari") pool = AIP.questionsBySource("certsafari");
     else if (spec.mode === "random65") pool = shuffle(AIP.sortQuestions(AIP.questions || [])).slice(0, 65);
-    else if (spec.domain != null || spec.source || spec.service || spec.status) pool = AIP.filterQuestions({ domain: spec.domain, source: spec.source, service: spec.service, status: spec.status });
-    else pool = AIP.sortQuestions(AIP.questions || []);
+    else if (spec.domain != null || spec.source || spec.service || spec.status) pool = AIP.filterQuestions({ domain: spec.domain, source: spec.source, service: spec.service, status: spec.status, study: !spec.source });
+    else pool = AIP.studyPool ? AIP.studyPool({}) : AIP.sortQuestions(AIP.questions || []);
     if (spec.strategy === "adaptive") pool = priorityQuestions(pool);
     else if (spec.mode !== "random65" && !spec.id) pool = shuffle(pool);
     var count = Number(spec.count);
@@ -315,7 +317,7 @@ window.AIP = window.AIP || {};
 
   AIP.filterQuery = function (filter) {
     var parts = [];
-    ["domain", "service", "source", "status"].forEach(function (key) {
+    ["domain", "service", "source", "status", "study"].forEach(function (key) {
       if (filter && filter[key] != null && filter[key] !== "" && filter[key] !== "all") {
         parts.push(encodeURIComponent(key) + "=" + encodeURIComponent(filter[key]));
       }

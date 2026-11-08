@@ -1,0 +1,86 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Safety stack. About one dollar a month. Budgets alert; they do not cap spending.",
+  "Resources": {
+    "Alerts": {
+      "Type": "AWS::SNS::Topic",
+      "Properties": {
+        "TopicName": "lp-lab-alerts"
+      }
+    },
+    "Dlq": {
+      "Type": "AWS::SQS::Queue",
+      "Properties": {
+        "QueueName": "lp-lab-ttl-dlq"
+      }
+    },
+    "Boundary": {
+      "Type": "AWS::IAM::ManagedPolicy",
+      "Properties": {
+        "ManagedPolicyName": "lp-lab-boundary",
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "cloudformation:DeleteStack",
+                "cloudformation:DescribeStacks"
+              ],
+              "Resource": "arn:aws:cloudformation:*:*:stack/lp-lab-*/*"
+            },
+            {
+              "Effect": "Deny",
+              "Action": "kms:CreateKey",
+              "Resource": "*"
+            },
+            {
+              "Effect": "Deny",
+              "Action": "ec2:CreateVpc",
+              "Resource": "*"
+            }
+          ]
+        }
+      }
+    },
+    "SchedulerRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "RoleName": "lp-lab-scheduler",
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "scheduler.amazonaws.com"
+              },
+              "Action": "sts:AssumeRole"
+            }
+          ]
+        },
+        "Policies": [
+          {
+            "PolicyName": "delete-labs",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": "cloudformation:DeleteStack",
+                  "Resource": "arn:aws:cloudformation:*:*:stack/lp-lab-*/*"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "TtlGroup": {
+      "Type": "AWS::Scheduler::ScheduleGroup",
+      "Properties": {
+        "Name": "lp-ttl"
+      }
+    }
+  }
+}

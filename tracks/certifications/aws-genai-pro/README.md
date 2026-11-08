@@ -83,7 +83,10 @@ To add mock questions: `AIP.registerQuestions([{ id, chapters, domain, source, s
 
 ## Question bank status
 
-- Practice: 56 items (2 per chapter 00–27).
+- Practice: 51 original items stay in the study pool. Five derived items (`p-03-2`, `p-05-1`, `p-05-2`, `p-18-2`, `p-20-1`) are quarantined and do not appear in quizzes.
+- Original bank: drafts in `js/questions/original/`, mapped to the exam skills. A question stays a draft until you mark it approved.
+- Fresh mocks, a 40-question diagnostic, readiness, labs, six microcredentials, capstones, and an unverified FDE page are linked from the home screen.
+- `make aip-test` runs the app tests. Real AWS labs stay blocked until you type the stack name.
 - ExamTopics: pages 1–3 (`et-1`–`et-30`). Pages 4–12 are empty stubs until pasted.
 - CertSafari: **358 items** (`cs-001`–`cs-358`) from [CertSafari AIP-C01](https://www.certsafari.com/aws/gen-ai-developer-professional), sorted by domain → subdomain, with stems, choices, correct letters, subdomain, and per-option explanations kept verbatim. **358 / 360** unique questions imported (99%). Master deduped JSON: `js/questions/raw/certsafari-all.json`. Browse grouped at `#/bank`.
 

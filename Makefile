@@ -16,7 +16,7 @@
 
 TOPICS := variables math strings arrays conditionals loops functions objects
 
-.PHONY: test help new-exercise new-quiz test-task test-sql site catalog check-path $(TOPICS)
+.PHONY: test help new-exercise new-quiz test-task test-sql site catalog check-path aip-test lab-recover lab-status lab-audit $(TOPICS)
 
 help:
 	@echo "make test              — every drill topic"
@@ -29,6 +29,9 @@ help:
 	@echo "make catalog           — rewrite the generated parts of hub/index.html"
 	@echo "make check-path        — check hub/path.mjs (ids, retired ids, links)"
 	@echo "make site              — check the path, build dist/site, check every link"
+	@echo "make aip-test          — AIP-C01 app tests"
+	@echo "make lab-status        — read-only lab stack status"
+	@echo "make lab-recover       — confirmed lab recovery (no AWS call without approval)"
 
 test:
 	bun test ./drills/javascript/
@@ -90,7 +93,20 @@ catalog:
 check-path:
 	node hub/scripts/check-path.mjs
 
+aip-test:
+	node tracks/certifications/aws-genai-pro/scripts/tests/run.mjs
+
+lab-status:
+	node tracks/certifications/aws-genai-pro/scripts/tools/aws/recovery/lab-status.mjs
+
+lab-audit:
+	node tracks/certifications/aws-genai-pro/scripts/tools/aws/recovery/lab-audit.mjs
+
+lab-recover:
+	node tracks/certifications/aws-genai-pro/scripts/tools/aws/recovery/lab-recover.mjs $(STACK)
+
 site:
+	node tracks/certifications/aws-genai-pro/scripts/tests/run.mjs
 	node hub/scripts/check-path.mjs
 	node hub/scripts/build-site.mjs
 	node hub/scripts/check-links.mjs

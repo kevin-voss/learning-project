@@ -118,6 +118,7 @@ AIP.registerQuestions([
     chapters: ["03"],
     domain: 1,
     source: "practice",
+    quarantine: true,
     stem: "Legal must approve and version hundreds of prompt templates used across Regions. Auditors need to know who published a change. Which approach meets this with the LEAST operational overhead?",
     choices: [
       { id: "A", text: "Amazon Bedrock Prompt Management versions plus IAM-restricted publish and AWS CloudTrail." },
@@ -166,6 +167,7 @@ AIP.registerQuestions([
     chapters: ["05"],
     domain: 2,
     source: "practice",
+    quarantine: true,
     stem: "A React app must display Bedrock tokens as they are generated for 15–45 second policy answers at high concurrency. API Gateway REST integrations to a RequestResponse Lambda currently time out. Which change BEST fixes the UX?",
     choices: [
       { id: "A", text: "Raise the Lambda timeout to 15 minutes and keep synchronous REST." },
@@ -182,6 +184,7 @@ AIP.registerQuestions([
     chapters: ["05"],
     domain: 2,
     source: "practice",
+    quarantine: true,
     multi: true,
     stem: "An existing Amplify + AppSync + Bedrock Knowledge Bases app hits resolver/Lambda timeouts on RetrieveAndGenerate. Choose TWO acceptable directions.",
     choices: [
@@ -604,6 +607,7 @@ AIP.registerQuestions([
     chapters: ["18"],
     domain: 5,
     source: "practice",
+    quarantine: true,
     stem: "HR leadership wants to know whether assistant quality and toxicity differ across employee groups. Which service is the BEST fit for that fairness/bias requirement?",
     choices: [
       { id: "A", text: "Amazon SageMaker Clarify (FM/bias evaluation) on a sliced dataset." },
@@ -653,6 +657,7 @@ AIP.registerQuestions([
     chapters: ["20"],
     domain: 4,
     source: "practice",
+    quarantine: true,
     stem: "Office-hours QPS is steady and users complain about time-to-first-token and 429s. Night traffic is near zero. Which combination BEST fits?",
     choices: [
       { id: "A", text: "Stream tokens to the client; purchase Bedrock provisioned throughput for the daytime chat model; keep on-demand for spiky/offline jobs." },

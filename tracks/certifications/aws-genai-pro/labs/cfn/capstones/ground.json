@@ -1,0 +1,66 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Capstone v1 Ground. Lifetime 72 hours.",
+  "Parameters": {
+    "LabName": {
+      "Type": "String",
+      "AllowedPattern": "lp-lab-[a-z0-9-]{1,40}"
+    }
+  },
+  "Resources": {
+    "Docs": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "BucketName": {
+          "Fn::Sub": "${LabName}-docs"
+        },
+        "LifecycleConfiguration": {
+          "Rules": [
+            {
+              "Id": "expire-one-day",
+              "Status": "Enabled",
+              "ExpirationInDays": 1
+            }
+          ]
+        },
+        "Tags": [
+          {
+            "Key": "lp-lab",
+            "Value": {
+              "Ref": "LabName"
+            }
+          }
+        ]
+      }
+    },
+    "EmptyFn": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Runtime": "nodejs20.x",
+        "Handler": "index.handler",
+        "Role": {
+          "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:role/lp-lab-reaper"
+        },
+        "Timeout": 60,
+        "Code": {
+          "ZipFile": "exports.handler = async () => ({ PhysicalResourceId: 'empty', Status: 'SUCCESS' });"
+        }
+      }
+    },
+    "EmptyDocs": {
+      "Type": "Custom::EmptyBucket",
+      "DependsOn": "Docs",
+      "Properties": {
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "EmptyFn",
+            "Arn"
+          ]
+        },
+        "BucketName": {
+          "Ref": "Docs"
+        }
+      }
+    }
+  }
+}

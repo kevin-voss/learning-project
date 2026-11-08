@@ -44,7 +44,11 @@ AIP.STORAGE_KEYS = {
   ui: "aip-c01:v1:ui",
   exam: "aip-c01:v1:exam",
   examRuns: "aip-c01:v1:exam-runs",
-  examPrefs: "aip-c01:v1:exam-prefs"
+  examPrefs: "aip-c01:v1:exam-prefs",
+  seen: "aip-c01:v1:seen",
+  history: "aip-c01:v1:history",
+  reserve: "aip-c01:v1:reserve",
+  approvals: "aip-c01:v1:approvals"
 };
 
 AIP.PROGRESS_CELLS = 14;
@@ -55,5 +59,11 @@ AIP.ROUTES = {
   quiz: "#/quiz/",
   exam: "#/exam",
   bank: "#/bank",
-  stats: "#/stats"
+  stats: "#/stats",
+  readiness: "#/readiness",
+  pool: "#/pool",
+  labs: "#/labs",
+  micro: "#/micro",
+  fde: "#/fde",
+  capstones: "#/capstones"
 };

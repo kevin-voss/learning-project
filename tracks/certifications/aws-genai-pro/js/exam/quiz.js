@@ -119,7 +119,9 @@ AIP.quiz = (function () {
   function start(filter, options) {
     options = options || {};
     var items;
-    if (filter === "all" && options.examMode && AIP.questionsForExam) {
+    if (options.items) items = options.items.slice();
+    else if (Array.isArray(filter)) items = filter.slice();
+    else if (filter === "all" && options.examMode && AIP.questionsForExam) {
       items = AIP.questionsForExam(options.examMode);
     } else {
       items = questionsFor(filter);
@@ -147,7 +149,10 @@ AIP.quiz = (function () {
       skipped: {},
       startedAt: Date.now(),
       createdAt: Date.now(),
-      runId: filter === "all" && options.persistExam !== false ? (options.runId || newRunId()) : null
+      formKind: options.formKind || "",
+      freshness: options.freshness || {},
+      scoreSaved: false,
+      runId: (filter === "all" || options.items || Array.isArray(filter)) && options.persistExam !== false ? (options.runId || newRunId()) : null
     };
     persistExam();
     return session;
@@ -202,7 +207,11 @@ AIP.quiz = (function () {
     var ok = want.length > 0 && sameLetters(got, want);
     session.revealed = true;
     session.results[session.index] = ok;
-    if (q.id != null && q.id !== "") AIP.storage.recordAttempt(q.id, ok);
+    if (q.id != null && q.id !== "") {
+      var kind = session.formKind;
+      var mode = kind === "mock" || kind === "diagnostic" || kind === "mini" ? "mock" : "practice";
+      AIP.storage.recordAttempt(q.id, ok, { mode: mode });
+    }
     persistExam();
     return ok;
   }
@@ -274,6 +283,7 @@ AIP.quiz = (function () {
     }
     var q = currentQuestion();
     if (!q) return "<p>No quiz loaded.</p>";
+    if (q.id != null && AIP.storage.markSeen) AIP.storage.markSeen(q.id);
     var stats = q.id != null ? AIP.storage.questionStats(q.id) : { correct: 0, wrong: 0, attempts: [] };
     var multi = isMulti(q);
     var html = "";
@@ -332,7 +342,26 @@ AIP.quiz = (function () {
       html += '<div class="chapter-actions">';
       if (more) html += '<button type="button" class="btn primary" data-quiz="next">Next question</button>';
       else {
-        html += '<div class="card"><h3>Attempt complete</h3><p>' + session.results.filter(Boolean).length + ' / ' + session.items.length + ' correct this round. Lifetime counts are kept so you can see which items you miss repeatedly.</p></div>';
+        if (session.formKind && !session.scoreSaved && AIP.scoreForm && AIP.storage.pushHistory) {
+          var shaped = session.items.map(function (item) {
+            return { repeat: session.freshness && session.freshness[item.id] === false };
+          });
+          var score = AIP.scoreForm(shaped, session.results);
+          AIP.storage.pushHistory({
+            at: Date.now(),
+            kind: session.formKind,
+            total: score.total,
+            fresh: score.fresh,
+            repeat: score.repeat,
+            freshRatio: score.freshRatio
+          });
+          session.scoreSaved = true;
+          session.formScore = score;
+        }
+        var scoreLine = session.formScore && session.formScore.fresh != null
+          ? " Fresh-only score: " + Math.round(session.formScore.fresh * 100) + "%."
+          : "";
+        html += '<div class="card"><h3>Attempt complete</h3><p>' + session.results.filter(Boolean).length + ' / ' + session.items.length + ' correct this round.' + scoreLine + ' Lifetime counts are kept so you can see which items you miss repeatedly.</p></div>';
       }
       html += '<button type="button" class="btn" data-quiz="reset">Try this set again</button>';
       if (more) html += '<button type="button" class="btn ghost" data-quiz="skip">Skip for now</button>';

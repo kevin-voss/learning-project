@@ -1,0 +1,7 @@
+[
+  {"name": "3 easy practice answers", "n": 1.44, "level": "too little"},
+  {"name": "20 answers on 2 questions", "n": 3.12, "level": "too little"},
+  {"name": "10 fresh level-2 mock answers", "L": 0.86, "level": "strong"},
+  {"name": "same answers 120 days later", "n": 0.63, "level": "no evidence"},
+  {"name": "8 of 10 fresh level-3", "L": 0.62, "level": "proficient"}
+]

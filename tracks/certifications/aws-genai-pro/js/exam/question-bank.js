@@ -164,6 +164,7 @@ window.AIP = window.AIP || {};
   }
 
   function matchesFilter(q, filter, stats) {
+    if (q && q.quarantine && !(filter && typeof filter === "object" && filter.includeQuarantine)) return false;
     if (!filter || filter === "all") return true;
     if (typeof filter === "string") {
       if (filter === "all") return true;

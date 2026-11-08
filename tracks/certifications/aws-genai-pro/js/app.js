@@ -24,6 +24,10 @@ AIP.app = (function () {
       var startId = params.get("id") || "";
       return { name: "exam", examMode: examMode, startId: startId, runId: params.get("run") || "", session: params.get("session") || "" };
     }
+    if (AIP.matchRoute) {
+      var custom = AIP.matchRoute(parts);
+      if (custom) return custom;
+    }
     if (parts[0] === "stats") return { name: "stats" };
     if (parts[0] === "bank") return { name: "bank", filter: AIP.parseExamMode ? AIP.parseExamMode(location.hash) : {} };
     if (parts[0] === "practice") return { name: "practice", filter: AIP.parseExamMode ? AIP.parseExamMode(location.hash) : {} };
@@ -97,6 +101,7 @@ AIP.app = (function () {
     else if (route.name === "stats") titleEl.innerHTML = "Question stats<small>Right vs wrong counts</small>";
     else if (route.name === "bank") titleEl.innerHTML = "Question list<small>Filter by domain · service · history</small>";
     else if (route.name === "practice") titleEl.innerHTML = "Question list practice<small>Filtered questions · no fixed exam size</small>";
+    else if (AIP.routeTitle && AIP.routeTitle(route)) titleEl.innerHTML = AIP.routeTitle(route);
     else if (route.name === "quiz") {
       var c = AIP.findChapterMeta(route.id);
       titleEl.innerHTML = (c ? AIP.escape(c.id) + ". " + AIP.escape(c.title) : "Quiz") + "<small>Chapter quiz</small>";
@@ -164,7 +169,9 @@ AIP.app = (function () {
     setTitle();
     renderSidebar();
     updateProgress();
-    if (route.name === "home") setView(AIP.renderHome());
+    var custom = AIP.renderRoute ? AIP.renderRoute(route) : "";
+    if (custom) setView(custom);
+    else if (route.name === "home") setView(AIP.renderHome());
     else if (route.name === "stats") setView(AIP.quiz.renderStats());
     else if (route.name === "bank") setView(AIP.renderBank ? AIP.renderBank(route.filter) : "<p>Question list not loaded.</p>");
     else if (route.name === "practice") {
@@ -256,6 +263,54 @@ AIP.app = (function () {
         AIP.storage.resetQuizStats();
         draw();
       }
+      return;
+    }
+    var formButton = e.target.closest("[data-form]");
+    if (formButton && AIP.startStudyForm) {
+      var started = AIP.startStudyForm(formButton.getAttribute("data-form"));
+      if (started && started.runId) location.hash = "#/exam?run=" + encodeURIComponent(started.runId);
+      else setView(AIP.renderPool());
+      return;
+    }
+    var reserveBox = e.target.closest("[data-reserve]");
+    if (reserveBox && AIP.storage.setReserve) {
+      AIP.storage.setReserve(reserveBox.checked);
+      setView(AIP.renderPool());
+      return;
+    }
+    var labButton = e.target.closest("[data-lab-check]");
+    if (labButton && AIP.labById && AIP.runChecks) {
+      var lab = AIP.labById(labButton.getAttribute("data-lab-check"));
+      var answer = {};
+      Array.prototype.forEach.call(view.querySelectorAll("[data-lab-field]"), function (field) {
+        answer[field.getAttribute("data-lab-field")] = field.value;
+      });
+      var checked = AIP.runChecks(answer, lab.checks);
+      var slot = document.getElementById("labResult");
+      if (slot) slot.innerHTML = '<div class="card"><p>' + (checked.ok ? "That matches the lab." : "Not yet. Look again at " + AIP.escape(checked.failures.join(", ")) + ".") + '</p></div>';
+      return;
+    }
+    if (e.target.closest("[data-backup='export']") && AIP.storage.exportBackup) {
+      var blob = new Blob([JSON.stringify(AIP.storage.exportBackup(), null, 2)], { type: "application/json" });
+      var link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "aip-progress.json";
+      link.click();
+      return;
+    }
+    if (e.target.closest("[data-backup='import']")) {
+      var picker = document.createElement("input");
+      picker.type = "file";
+      picker.accept = "application/json";
+      picker.addEventListener("change", function () {
+        var file = picker.files && picker.files[0];
+        if (!file) return;
+        file.text().then(function (text) {
+          AIP.storage.importBackup(JSON.parse(text));
+          draw();
+        });
+      });
+      picker.click();
       return;
     }
     var examAction = e.target.closest("[data-exam]");

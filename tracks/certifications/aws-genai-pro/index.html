@@ -56,6 +56,12 @@
 
       <footer class="sidebar-foot">
         <a href="#/bank">Question bank</a>
+        <a href="#/pool">Fresh mock</a>
+        <a href="#/readiness">Readiness</a>
+        <a href="#/labs">Labs</a>
+        <a href="#/micro">Microcredentials</a>
+        <a href="#/capstones">Capstones</a>
+        <a href="#/fde">FDE</a>
         <a href="#/exam">Full mock exam</a>
         <a href="#/stats">Question stats</a>
         <button type="button" data-act="reset-progress">Reset chapter progress</button>
@@ -78,29 +84,37 @@
     </div>
   </div>
 
+  <!-- aip-scripts:start -->
   <script src="js/core/ns.js"></script>
   <script src="js/core/config.js"></script>
+  <script src="js/course/skills.js"></script>
+  <script src="js/course/blueprint.js"></script>
+  <script src="js/progress/model/mastery.js"></script>
+  <script src="js/progress/model/readiness.js"></script>
+  <script src="js/progress/model/schedule.js"></script>
+  <script src="js/progress/store/migrate.js"></script>
+  <script src="js/progress/store/backup.js"></script>
   <script src="js/course/study-guide.js"></script>
   <script src="js/course/chapters.js"></script>
   <script src="js/core/storage.js"></script>
+  <script src="js/content/exam/25-architecture-patterns.js"></script>
+  <script src="js/content/exam/26-exam-decision-guide.js"></script>
+  <script src="js/content/exam/27-final-architecture.js"></script>
   <script src="js/content/foundations/00-architecture-overview.js"></script>
   <script src="js/content/foundations/01-genai-foundations.js"></script>
   <script src="js/content/foundations/02-choosing-a-foundation-model.js"></script>
   <script src="js/content/foundations/03-amazon-bedrock.js"></script>
   <script src="js/content/foundations/04-prompt-engineering.js"></script>
   <script src="js/content/integration-agents/05-application-integration.js"></script>
+  <script src="js/content/integration-agents/11-agents.js"></script>
+  <script src="js/content/integration-agents/12-agent-tools.js"></script>
+  <script src="js/content/integration-agents/13-workflow-orchestration.js"></script>
+  <script src="js/content/integration-agents/14-memory-and-state.js"></script>
   <script src="js/content/knowledge/06-data-ingestion.js"></script>
   <script src="js/content/knowledge/07-embeddings.js"></script>
   <script src="js/content/knowledge/08-vector-databases.js"></script>
   <script src="js/content/knowledge/09-rag.js"></script>
   <script src="js/content/knowledge/10-bedrock-knowledge-bases.js"></script>
-  <script src="js/content/integration-agents/11-agents.js"></script>
-  <script src="js/content/integration-agents/12-agent-tools.js"></script>
-  <script src="js/content/integration-agents/13-workflow-orchestration.js"></script>
-  <script src="js/content/integration-agents/14-memory-and-state.js"></script>
-  <script src="js/content/trust/15-safety-and-guardrails.js"></script>
-  <script src="js/content/trust/16-security-and-privacy.js"></script>
-  <script src="js/content/trust/17-governance.js"></script>
   <script src="js/content/operate/18-evaluation.js"></script>
   <script src="js/content/operate/19-observability.js"></script>
   <script src="js/content/operate/20-performance.js"></script>
@@ -108,10 +122,9 @@
   <script src="js/content/ship/22-deployment.js"></script>
   <script src="js/content/ship/23-cicd.js"></script>
   <script src="js/content/ship/24-troubleshooting.js"></script>
-  <script src="js/content/exam/25-architecture-patterns.js"></script>
-  <script src="js/content/exam/26-exam-decision-guide.js"></script>
-  <script src="js/content/exam/27-final-architecture.js"></script>
-  <!-- Missing examtopics-pXX.js files should be empty stubs: AIP.registerQuestions([]); so file:// loads do not 404. -->
+  <script src="js/content/trust/15-safety-and-guardrails.js"></script>
+  <script src="js/content/trust/16-security-and-privacy.js"></script>
+  <script src="js/content/trust/17-governance.js"></script>
   <script src="js/questions/examtopics/p01/examtopics-p01.js"></script>
   <script src="js/questions/examtopics/p01/examtopics-p02.js"></script>
   <script src="js/questions/examtopics/p01/examtopics-p03.js"></script>
@@ -161,12 +174,57 @@
   <script src="js/questions/certsafari/p07/certsafari-p35.js"></script>
   <script src="js/questions/certsafari/p08/certsafari-p36.js"></script>
   <script src="js/questions/data/practice.js"></script>
+  <script src="js/questions/data/kept-map.js"></script>
+  <script src="js/questions/original/d1/t11/part-1.js"></script>
+  <script src="js/questions/original/d1/t12/part-1.js"></script>
+  <script src="js/questions/original/d1/t13/part-1.js"></script>
+  <script src="js/questions/original/d1/t14/part-1.js"></script>
+  <script src="js/questions/original/d1/t14/part-2.js"></script>
+  <script src="js/questions/original/d1/t15/part-1.js"></script>
+  <script src="js/questions/original/d1/t15/part-2.js"></script>
+  <script src="js/questions/original/d1/t16/part-1.js"></script>
+  <script src="js/questions/original/d1/t16/part-2.js"></script>
+  <script src="js/questions/original/d2/t21/part-1.js"></script>
+  <script src="js/questions/original/d2/t21/part-2.js"></script>
+  <script src="js/questions/original/d2/t22/part-1.js"></script>
+  <script src="js/questions/original/d2/t23/part-1.js"></script>
+  <script src="js/questions/original/d2/t23/part-2.js"></script>
+  <script src="js/questions/original/d2/t24/part-1.js"></script>
+  <script src="js/questions/original/d2/t24/part-2.js"></script>
+  <script src="js/questions/original/d2/t25/part-1.js"></script>
+  <script src="js/questions/original/d3/t31/part-1.js"></script>
+  <script src="js/questions/original/d3/t31/part-2.js"></script>
+  <script src="js/questions/original/d3/t31/part-3.js"></script>
+  <script src="js/questions/original/d3/t32/part-1.js"></script>
+  <script src="js/questions/original/d3/t33/part-1.js"></script>
+  <script src="js/questions/original/d3/t34/part-1.js"></script>
+  <script src="js/questions/original/d4/t41/part-1.js"></script>
+  <script src="js/questions/original/d4/t42/part-1.js"></script>
+  <script src="js/questions/original/d4/t43/part-1.js"></script>
+  <script src="js/questions/original/d5/t51/part-1.js"></script>
+  <script src="js/questions/original/d5/t51/part-2.js"></script>
+  <script src="js/questions/original/d5/t52/part-1.js"></script>
   <script src="js/course/render.js"></script>
   <script src="js/exam/question-bank.js"></script>
   <script src="js/exam/bank-views.js"></script>
+  <script src="js/exam/form.js"></script>
   <script src="js/exam/quiz.js"></script>
   <script src="js/exam/stats-view.js"></script>
+  <script src="js/progress/views/readiness.js"></script>
+  <script src="js/progress/views/pool.js"></script>
+  <script src="js/labs/check.js"></script>
+  <script src="js/labs/data/level-1.js"></script>
+  <script src="js/labs/data/level-2.js"></script>
+  <script src="js/labs/data/level-3.js"></script>
+  <script src="js/labs/catalog.js"></script>
+  <script src="js/labs/view.js"></script>
+  <script src="js/path/micro.js"></script>
+  <script src="js/path/fde.js"></script>
+  <script src="js/path/capstone.js"></script>
+  <script src="js/path/pages.js"></script>
+  <script src="js/core/routes.js"></script>
   <script src="js/core/pwa.js"></script>
   <script src="js/app.js"></script>
+  <!-- aip-scripts:end -->
 </body>
 </html>

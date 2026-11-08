@@ -29,9 +29,8 @@ AIP.storage = (function () {
 
   function quiz() {
     var q = read(AIP.STORAGE_KEYS.quiz, { questions: {} });
-    if (!q.questions || typeof q.questions !== "object" || Array.isArray(q.questions)) {
-      q.questions = {};
-    }
+    if (AIP.migrateQuiz) q = AIP.migrateQuiz(q);
+    else if (!q.questions || typeof q.questions !== "object" || Array.isArray(q.questions)) q.questions = {};
     return q;
   }
 
@@ -74,8 +73,9 @@ AIP.storage = (function () {
     return { correct: 0, wrong: 0, last: null, attempts: [] };
   }
 
-  function recordAttempt(questionId, correct) {
+  function recordAttempt(questionId, correct, meta) {
     if (questionId == null || questionId === "") return emptyRow();
+    meta = meta || {};
     var q = quiz();
     var row = q.questions[questionId];
     if (!row || typeof row !== "object") row = emptyRow();
@@ -85,10 +85,73 @@ AIP.storage = (function () {
     if (correct) row.correct += 1;
     else row.wrong += 1;
     row.last = correct ? "correct" : "wrong";
-    row.attempts.push({ at: Date.now(), correct: !!correct });
+    var exp = meta.exp != null ? Number(meta.exp) : (AIP.exposureForIndex ? AIP.exposureForIndex(row.attempts.length) : 1);
+    row.attempts.push({
+      at: Date.now(),
+      correct: !!correct,
+      mode: meta.mode === "mock" ? "mock" : "practice",
+      exp: exp
+    });
     q.questions[questionId] = row;
     write(AIP.STORAGE_KEYS.quiz, q);
     return row;
+  }
+
+  function seenMap() {
+    var seen = read(AIP.STORAGE_KEYS.seen, {});
+    return seen && typeof seen === "object" && !Array.isArray(seen) ? seen : {};
+  }
+
+  function markSeen(id) {
+    if (id == null || id === "") return;
+    var seen = seenMap();
+    if (!seen[id]) {
+      seen[id] = Date.now();
+      write(AIP.STORAGE_KEYS.seen, seen);
+    }
+  }
+
+  function scoreHistory() {
+    var rows = read(AIP.STORAGE_KEYS.history, []);
+    return Array.isArray(rows) ? rows : [];
+  }
+
+  function pushHistory(row) {
+    var rows = scoreHistory();
+    rows.push(row);
+    write(AIP.STORAGE_KEYS.history, rows.slice(-40));
+  }
+
+  function reserveOn() {
+    var value = read(AIP.STORAGE_KEYS.reserve, { on: true });
+    return !value || value.on !== false;
+  }
+
+  function setReserve(on) {
+    write(AIP.STORAGE_KEYS.reserve, { on: !!on });
+  }
+
+  function approvals() {
+    var rows = read(AIP.STORAGE_KEYS.approvals, {});
+    return rows && typeof rows === "object" ? rows : {};
+  }
+
+  function isApproved(id) {
+    return !!approvals()[id];
+  }
+
+  function approve(id) {
+    var rows = approvals();
+    rows[id] = Date.now();
+    write(AIP.STORAGE_KEYS.approvals, rows);
+  }
+
+  function exportBackup() {
+    return AIP.backupPayload(function (key) { return read(key, null); });
+  }
+
+  function importBackup(payload) {
+    AIP.restorePayload(payload, write);
   }
 
   function questionStats(questionId) {
@@ -104,6 +167,9 @@ AIP.storage = (function () {
 
   function resetQuizStats() {
     write(AIP.STORAGE_KEYS.quiz, { questions: {} });
+    write(AIP.STORAGE_KEYS.seen, {});
+    write(AIP.STORAGE_KEYS.history, []);
+    write(AIP.STORAGE_KEYS.approvals, {});
     clearExamRuns();
   }
 
@@ -211,6 +277,16 @@ AIP.storage = (function () {
     recordAttempt: recordAttempt,
     questionStats: questionStats,
     resetQuizStats: resetQuizStats,
+    seenMap: seenMap,
+    markSeen: markSeen,
+    scoreHistory: scoreHistory,
+    pushHistory: pushHistory,
+    reserveOn: reserveOn,
+    setReserve: setReserve,
+    isApproved: isApproved,
+    approve: approve,
+    exportBackup: exportBackup,
+    importBackup: importBackup,
     examSession: examSession,
     saveExamSession: saveExamSession,
     clearExamSession: clearExamSession,

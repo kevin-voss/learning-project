@@ -1,7 +1,8 @@
 /* AIP-C01 PWA service worker. Register only from http(s) — not file://. */
-var CACHE = "aip-c01-v9";
+var CACHE = "aip-c01-v11";
 var FONT_CACHE = "aip-c01-fonts-v1";
 var PRECACHE = [
+  /* aip-precache:start */
   "./index.html",
   "./manifest.webmanifest",
   "./css/main.css",
@@ -15,27 +16,34 @@ var PRECACHE = [
   "./css/components/responsive.css",
   "./js/core/ns.js",
   "./js/core/config.js",
+  "./js/course/skills.js",
+  "./js/course/blueprint.js",
+  "./js/progress/model/mastery.js",
+  "./js/progress/model/readiness.js",
+  "./js/progress/model/schedule.js",
+  "./js/progress/store/migrate.js",
+  "./js/progress/store/backup.js",
   "./js/course/study-guide.js",
   "./js/course/chapters.js",
   "./js/core/storage.js",
+  "./js/content/exam/25-architecture-patterns.js",
+  "./js/content/exam/26-exam-decision-guide.js",
+  "./js/content/exam/27-final-architecture.js",
   "./js/content/foundations/00-architecture-overview.js",
   "./js/content/foundations/01-genai-foundations.js",
   "./js/content/foundations/02-choosing-a-foundation-model.js",
   "./js/content/foundations/03-amazon-bedrock.js",
   "./js/content/foundations/04-prompt-engineering.js",
   "./js/content/integration-agents/05-application-integration.js",
+  "./js/content/integration-agents/11-agents.js",
+  "./js/content/integration-agents/12-agent-tools.js",
+  "./js/content/integration-agents/13-workflow-orchestration.js",
+  "./js/content/integration-agents/14-memory-and-state.js",
   "./js/content/knowledge/06-data-ingestion.js",
   "./js/content/knowledge/07-embeddings.js",
   "./js/content/knowledge/08-vector-databases.js",
   "./js/content/knowledge/09-rag.js",
   "./js/content/knowledge/10-bedrock-knowledge-bases.js",
-  "./js/content/integration-agents/11-agents.js",
-  "./js/content/integration-agents/12-agent-tools.js",
-  "./js/content/integration-agents/13-workflow-orchestration.js",
-  "./js/content/integration-agents/14-memory-and-state.js",
-  "./js/content/trust/15-safety-and-guardrails.js",
-  "./js/content/trust/16-security-and-privacy.js",
-  "./js/content/trust/17-governance.js",
   "./js/content/operate/18-evaluation.js",
   "./js/content/operate/19-observability.js",
   "./js/content/operate/20-performance.js",
@@ -43,9 +51,9 @@ var PRECACHE = [
   "./js/content/ship/22-deployment.js",
   "./js/content/ship/23-cicd.js",
   "./js/content/ship/24-troubleshooting.js",
-  "./js/content/exam/25-architecture-patterns.js",
-  "./js/content/exam/26-exam-decision-guide.js",
-  "./js/content/exam/27-final-architecture.js",
+  "./js/content/trust/15-safety-and-guardrails.js",
+  "./js/content/trust/16-security-and-privacy.js",
+  "./js/content/trust/17-governance.js",
   "./js/questions/examtopics/p01/examtopics-p01.js",
   "./js/questions/examtopics/p01/examtopics-p02.js",
   "./js/questions/examtopics/p01/examtopics-p03.js",
@@ -95,11 +103,55 @@ var PRECACHE = [
   "./js/questions/certsafari/p07/certsafari-p35.js",
   "./js/questions/certsafari/p08/certsafari-p36.js",
   "./js/questions/data/practice.js",
+  "./js/questions/data/kept-map.js",
+  "./js/questions/original/d1/t11/part-1.js",
+  "./js/questions/original/d1/t12/part-1.js",
+  "./js/questions/original/d1/t13/part-1.js",
+  "./js/questions/original/d1/t14/part-1.js",
+  "./js/questions/original/d1/t14/part-2.js",
+  "./js/questions/original/d1/t15/part-1.js",
+  "./js/questions/original/d1/t15/part-2.js",
+  "./js/questions/original/d1/t16/part-1.js",
+  "./js/questions/original/d1/t16/part-2.js",
+  "./js/questions/original/d2/t21/part-1.js",
+  "./js/questions/original/d2/t21/part-2.js",
+  "./js/questions/original/d2/t22/part-1.js",
+  "./js/questions/original/d2/t23/part-1.js",
+  "./js/questions/original/d2/t23/part-2.js",
+  "./js/questions/original/d2/t24/part-1.js",
+  "./js/questions/original/d2/t24/part-2.js",
+  "./js/questions/original/d2/t25/part-1.js",
+  "./js/questions/original/d3/t31/part-1.js",
+  "./js/questions/original/d3/t31/part-2.js",
+  "./js/questions/original/d3/t31/part-3.js",
+  "./js/questions/original/d3/t32/part-1.js",
+  "./js/questions/original/d3/t33/part-1.js",
+  "./js/questions/original/d3/t34/part-1.js",
+  "./js/questions/original/d4/t41/part-1.js",
+  "./js/questions/original/d4/t42/part-1.js",
+  "./js/questions/original/d4/t43/part-1.js",
+  "./js/questions/original/d5/t51/part-1.js",
+  "./js/questions/original/d5/t51/part-2.js",
+  "./js/questions/original/d5/t52/part-1.js",
   "./js/course/render.js",
   "./js/exam/question-bank.js",
   "./js/exam/bank-views.js",
+  "./js/exam/form.js",
   "./js/exam/quiz.js",
   "./js/exam/stats-view.js",
+  "./js/progress/views/readiness.js",
+  "./js/progress/views/pool.js",
+  "./js/labs/check.js",
+  "./js/labs/data/level-1.js",
+  "./js/labs/data/level-2.js",
+  "./js/labs/data/level-3.js",
+  "./js/labs/catalog.js",
+  "./js/labs/view.js",
+  "./js/path/micro.js",
+  "./js/path/fde.js",
+  "./js/path/capstone.js",
+  "./js/path/pages.js",
+  "./js/core/routes.js",
   "./js/core/pwa.js",
   "./js/app.js",
   "./icons/icon.svg",
@@ -109,6 +161,7 @@ var PRECACHE = [
   "./icons/browser/apple-touch-icon.png",
   "./icons/browser/favicon-32.png",
   "./icons/browser/favicon-48.png"
+  /* aip-precache:end */
 ];
 
 function cleanUrl(request) {
@@ -116,6 +169,17 @@ function cleanUrl(request) {
   url.search = "";
   url.hash = "";
   return url.href;
+}
+
+function serveAppShell(request) {
+  var shell = new URL("./index.html", self.registration.scope).href;
+  return caches.match(shell).then(function (cached) {
+    if (cached) return cached;
+    return caches.match("./index.html").then(function (relative) {
+      if (relative) return relative;
+      return fetch(request).catch(function () { return caches.match(shell); });
+    });
+  });
 }
 
 function isFontRequest(url) {
@@ -158,13 +222,7 @@ self.addEventListener("fetch", function (event) {
   if (url.protocol !== "http:" && url.protocol !== "https:") return;
 
   if (request.mode === "navigate") {
-    event.respondWith(
-      caches.match("./index.html").then(function (cached) {
-        return cached || fetch(request);
-      }).catch(function () {
-        return caches.match("./index.html");
-      })
-    );
+    event.respondWith(serveAppShell(request));
     return;
   }
 

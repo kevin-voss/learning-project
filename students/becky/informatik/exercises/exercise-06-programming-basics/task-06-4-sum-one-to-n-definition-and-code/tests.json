@@ -1,0 +1,41 @@
+{
+  "task": "06_4",
+  "tests": [
+    {
+      "name": "definition and sum(4) equals 10",
+      "part": "a",
+      "input": ["4"],
+      "exact": [
+        "Recursive definition (natural numbers 1..n, with sum(0) = 0):",
+        "sum(0) = 0",
+        "For integers n >= 1: sum(n) = n + sum(n - 1)",
+        "",
+        "JavaScript:",
+        "function sum(n) {",
+        "  if (n === 0) return 0",
+        "  return n + sum(n - 1)",
+        "}",
+        "",
+        "sum(4) = 10"
+      ]
+    },
+    {
+      "name": "sum(0) is 0 with same boilerplate",
+      "part": "b",
+      "input": ["0"],
+      "exact": [
+        "Recursive definition (natural numbers 1..n, with sum(0) = 0):",
+        "sum(0) = 0",
+        "For integers n >= 1: sum(n) = n + sum(n - 1)",
+        "",
+        "JavaScript:",
+        "function sum(n) {",
+        "  if (n === 0) return 0",
+        "  return n + sum(n - 1)",
+        "}",
+        "",
+        "sum(0) = 0"
+      ]
+    }
+  ]
+}

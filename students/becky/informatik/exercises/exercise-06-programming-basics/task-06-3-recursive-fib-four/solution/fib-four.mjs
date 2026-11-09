@@ -1,0 +1,8 @@
+console.log('fib(4) = fib(3) + fib(2)')
+console.log('fib(3) = fib(2) + fib(1)')
+console.log('fib(2) = fib(1) + fib(0)')
+console.log('fib(1) = 1')
+console.log('fib(0) = 0')
+console.log('fib(2) = 1')
+console.log('fib(3) = 2')
+console.log('fib(4) = 3')

@@ -8,6 +8,9 @@
 // program prints for what is typed in, so the student is free to choose file, class and method
 // names. --solution runs the same tests on solution/ (teachers use it to prove the tests are right).
 //
+// Desk: either Java (.java — compiled with javac) **or** one Node script (.mjs or .js — run with node).
+// If both .java and .js files are present, that is an error. More than one .js/.mjs: add MAIN=file.mjs.
+//
 // tests.json:
 // {
 //   "task": "04_2",
@@ -106,6 +109,25 @@ function findTask(opts) {
     fail(`Task ${opts.task} exists for ${where}. Add STUDENT=<name> (and SUBJECT=<subject> when a student has several).`);
   }
   return matches[0].dir;
+}
+
+// The one .js / .mjs file to run with `node` (any name). If several, pass MAIN=file.mjs .
+function findJsEntry(folder, files, wanted) {
+  const jsFiles = files.filter((file) => file.endsWith('.mjs') || file.endsWith('.js'));
+  if (!jsFiles.length) return '';
+  if (wanted) {
+    const chosen = jsFiles.find(
+      (file) => file === wanted || file.replace(/\.(mjs|js)$/i, '') === wanted,
+    );
+    if (!chosen) fail(`No script ${wanted}. Found: ${jsFiles.join(', ') || 'none'}.`);
+    return join(folder, chosen);
+  }
+  if (jsFiles.length > 1) {
+    fail(
+      `More than one .js/.mjs file in ${relative(repo, folder)}/: ${jsFiles.join(', ')}. Keep one file or add MAIN=<name.mjs>.`,
+    );
+  }
+  return join(folder, jsFiles[0]);
 }
 
 // The class to start: the one .java file whose class has a main method. Any name works.
@@ -217,33 +239,66 @@ if (!tests.length) fail(`No tests for part ${opts.part}. Parts: ${parts.join(', 
 
 const deskName = opts.solution ? 'solution' : 'my-solution';
 const desk = join(taskDir, deskName);
-const sources = existsSync(desk) ? readdirSync(desk).filter(file => file.endsWith('.java')) : [];
+const allFiles = existsSync(desk) ? readdirSync(desk) : [];
+const javaSources = allFiles.filter((file) => file.endsWith('.java'));
+const jsSources = allFiles.filter((file) => file.endsWith('.mjs') || file.endsWith('.js'));
 const title = `Task ${suite.task || ''} · testing ${deskName}/${opts.part ? ` · part ${opts.part}` : ''}`;
 console.log(`\n${title}\n${'─'.repeat(title.length)}`);
-if (!sources.length) fail(`No .java file in ${relative(repo, desk)}/ yet. Write your program there first.`, 1);
-
-const build = mkdtempSync(join(tmpdir(), 'task-test-'));
-const compile = spawnSync('javac', ['-J-Duser.language=en', '-encoding', 'UTF-8', '-d', build, ...sources], { cwd: desk, encoding: 'utf8' });
-if (compile.status !== 0) {
-  rmSync(build, { recursive: true, force: true });
-  console.log(`❌ Your code does not compile yet. javac says:\n\n${indent(compile.stderr || compile.stdout, '    ')}\n`);
-  console.log('Fix the first error first, then run the tests again. Stuck? /stuck in Cursor.');
-  process.exit(1);
+if (!javaSources.length && !jsSources.length) {
+  fail(
+    `No .java or .js/.mjs file in ${relative(repo, desk)}/ yet. Write your program there first.`,
+    1,
+  );
+}
+if (javaSources.length && jsSources.length) {
+  fail(
+    `Pick one: either .java files or one .js/.mjs in ${relative(repo, desk)}/ — not both.`,
+    1,
+  );
 }
 
-const mainClass = findMain(desk, sources, opts.main);
+const useNode = jsSources.length > 0;
+let build = '';
+let mainClass = '';
+let nodeEntry = '';
+if (useNode) {
+  nodeEntry = findJsEntry(desk, jsSources, opts.main);
+} else {
+  build = mkdtempSync(join(tmpdir(), 'task-test-'));
+  const compile = spawnSync(
+    'javac',
+    ['-J-Duser.language=en', '-encoding', 'UTF-8', '-d', build, ...javaSources],
+    { cwd: desk, encoding: 'utf8' },
+  );
+  if (compile.status !== 0) {
+    rmSync(build, { recursive: true, force: true });
+    console.log(`❌ Your code does not compile yet. javac says:\n\n${indent(compile.stderr || compile.stdout, '    ')}\n`);
+    console.log('Fix the first error first, then run the tests again. Stuck? /stuck in Cursor.');
+    process.exit(1);
+  }
+  mainClass = findMain(desk, javaSources, opts.main);
+}
+
 let passed = 0;
 tests.forEach((test, index) => {
   const typed = test.input ? [].concat(test.input).join('\n') + '\n' : '';
-  const run = spawnSync('java', ['-Duser.language=en', '-Duser.country=US', '-cp', build, mainClass],
-    { input: typed, encoding: 'utf8', timeout: TIMEOUT_MS });
+  const run = useNode
+    ? spawnSync('node', [nodeEntry], { cwd: desk, input: typed, encoding: 'utf8', timeout: TIMEOUT_MS })
+    : spawnSync(
+        'java',
+        ['-Duser.language=en', '-Duser.country=US', '-cp', build, mainClass],
+        { input: typed, encoding: 'utf8', timeout: TIMEOUT_MS },
+      );
   const printed = (run.stdout || '') + (run.stderr || '');
-  const crash = printed.match(/Exception in thread "main" ([\w.$]+)/);
+  const javaCrash = printed.match(/Exception in thread "main" ([\w.$]+)/);
+  const nodeCrash = useNode && run.status !== 0 && /(^|\n)[^\n]*(Error|Exception)[^\n]*(\n|$)/m.test(printed);
   let problems;
   if (run.error && run.error.code === 'ETIMEDOUT') {
     problems = [`it did not stop within ${TIMEOUT_MS / 1000} seconds (an endless loop, or waiting for more input?)`];
-  } else if (crash) {
-    problems = [`your program crashed with ${crash[1].split('.').pop()} (red text below)`];
+  } else if (!useNode && javaCrash) {
+    problems = [`your program crashed with ${javaCrash[1].split('.').pop()} (red text below)`];
+  } else if (useNode && nodeCrash) {
+    problems = [`your script stopped with an error (red text below)`];
   } else {
     problems = judge(test, printed);
   }
@@ -258,7 +313,7 @@ tests.forEach((test, index) => {
   for (const problem of problems) console.log(`      problem:   ${problem}`);
   console.log(`      your program printed:\n${indent(printed || '(nothing)')}`);
 });
-rmSync(build, { recursive: true, force: true });
+if (build) rmSync(build, { recursive: true, force: true });
 
 console.log(`\n${passed} of ${tests.length} tests pass.`);
 if (passed === tests.length) {

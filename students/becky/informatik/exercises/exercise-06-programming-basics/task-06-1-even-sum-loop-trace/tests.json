@@ -1,0 +1,17 @@
+{
+  "task": "06_1",
+  "tests": [
+    {
+      "name": "trace of even sum from 1 to 5 matches sheet",
+      "part": "a",
+      "exact": [
+        "1 | Sum: 0",
+        "2 | Sum: 2",
+        "3 | Sum: 2",
+        "4 | Sum: 6",
+        "5 | Sum: 6",
+        "Total sum: 6"
+      ]
+    }
+  ]
+}

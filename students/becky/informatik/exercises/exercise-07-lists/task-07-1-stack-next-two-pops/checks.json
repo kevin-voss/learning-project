@@ -1,0 +1,38 @@
+{
+  "nextTask": "task-07-2-queue-next-two-gets",
+  "nextLabel": "Task 07_2 · Queue next two gets",
+  "parts": [
+    {
+      "id": "pops",
+      "label": "Two pops",
+      "file": "StackPops.java",
+      "prompt": "After pushes 7, 8, 3, 1, 6 — which two numbers does pop() return?",
+      "fields": [
+        {
+          "id": "first",
+          "label": "first pop()",
+          "kind": "number",
+          "placeholder": "0",
+          "accept": ["6"],
+          "hint": "Pop always takes the top — the last value pushed.",
+          "traps": [
+            { "accept": ["7"], "hint": "7 is at the bottom of the stack, not the top." },
+            { "accept": ["1"], "hint": "1 is second-from-top; the first pop takes the top." }
+          ]
+        },
+        {
+          "id": "second",
+          "label": "second pop()",
+          "kind": "number",
+          "placeholder": "0",
+          "accept": ["1"],
+          "hint": "After 6 is gone, what sits on top?",
+          "traps": [
+            { "accept": ["8"], "hint": "8 is below 1 — pop removes 1 first." },
+            { "accept": ["3"], "hint": "Count from the top after the first pop." }
+          ]
+        }
+      ]
+    }
+  ]
+}

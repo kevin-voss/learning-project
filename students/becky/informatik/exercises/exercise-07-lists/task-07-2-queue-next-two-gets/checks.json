@@ -1,0 +1,36 @@
+{
+  "nextTask": "task-07-3-linked-list-stack-sketch",
+  "nextLabel": "Task 07_3 · Linked-list stack sketch",
+  "parts": [
+    {
+      "id": "gets",
+      "label": "Two gets",
+      "file": "QueueGets.java",
+      "prompt": "Same values in a queue: 7, 8, 3, 1, 6. Which two numbers does get() return?",
+      "fields": [
+        {
+          "id": "first",
+          "label": "first get()",
+          "kind": "number",
+          "placeholder": "0",
+          "accept": ["7"],
+          "hint": "A queue serves the front — the first value that went in.",
+          "traps": [
+            { "accept": ["6"], "hint": "6 is at the back. get() takes from the front." }
+          ]
+        },
+        {
+          "id": "second",
+          "label": "second get()",
+          "kind": "number",
+          "placeholder": "0",
+          "accept": ["8"],
+          "hint": "After 7 leaves, the front is the next arrival.",
+          "traps": [
+            { "accept": ["1"], "hint": "Do not confuse queue order with stack order from task 07_1." }
+          ]
+        }
+      ]
+    }
+  ]
+}

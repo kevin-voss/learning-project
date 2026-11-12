@@ -11,6 +11,7 @@ Weekly sheets for *Einführung in die Informatik*. Programming exercises are und
 | 04 | [Switching circuits](exercise-04-switching-circuits/README.md) | 04_1 · 04_2 · 04_3 · 04_4 · 04_5 |
 | 05 | [Machine language and assembler](exercise-05-machine-language-and-assembler/README.md) | 05_1 · 05_2 · 05_3 |
 | 06 | [Programming basics](exercise-06-programming-basics/README.md) | 06_1 · 06_2 · 06_3 · 06_4 |
+| 07 | [Lists](exercise-07-lists/README.md) | 07_1 · 07_2 · 07_3 · 07_4 |
 <!-- index:end -->
 
 Back to [Informatik](../README.md).

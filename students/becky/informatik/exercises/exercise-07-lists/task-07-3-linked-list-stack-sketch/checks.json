@@ -1,0 +1,41 @@
+{
+  "nextTask": "task-07-4-remove-from-linked-list",
+  "nextLabel": "Task 07_4 · Remove from linked list",
+  "parts": [
+    {
+      "id": "values",
+      "label": "Head to tail",
+      "file": "ListStack.java",
+      "prompt": "After push(7), push(3), pop(), push(5), push(9): values from first toward null?",
+      "fields": [
+        {
+          "id": "n1",
+          "label": "1st node",
+          "kind": "number",
+          "placeholder": "0",
+          "accept": ["9"],
+          "hint": "Push adds at first; the last push is on top."
+        },
+        {
+          "id": "n2",
+          "label": "2nd node",
+          "kind": "number",
+          "placeholder": "0",
+          "accept": ["5"],
+          "hint": "pop() removed 3; then 5 was pushed on top of 7."
+        },
+        {
+          "id": "n3",
+          "label": "3rd node",
+          "kind": "number",
+          "placeholder": "0",
+          "accept": ["7"],
+          "hint": "7 was never removed — it sits at the bottom of the three nodes.",
+          "traps": [
+            { "accept": ["3"], "hint": "pop() removed the node that held 3." }
+          ]
+        }
+      ]
+    }
+  ]
+}

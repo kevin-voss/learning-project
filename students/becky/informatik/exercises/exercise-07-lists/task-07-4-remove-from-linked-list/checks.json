@@ -1,0 +1,31 @@
+{
+  "nextTask": null,
+  "nextLabel": null,
+  "parts": [
+    {
+      "id": "summary",
+      "label": "One-line summary",
+      "file": "Remove.java",
+      "prompt": "One short sentence: what does remove(L, v) do?",
+      "fields": [
+        {
+          "id": "sentence",
+          "label": "summary",
+          "kind": "text",
+          "placeholder": "It removes…",
+          "accept": [
+            "removes the first node after the start whose value is v by linking past it",
+            "removes the first occurrence of v that is not the first node",
+            "finds the first node with value v that is not at first and unlinks it",
+            "skips the first node with value v if it is not the head"
+          ],
+          "hint": "The loop checks x.next.value, not x.value.",
+          "traps": [
+            { "accept": ["removes all nodes with value v"], "hint": "Only one node is unlinked when x.next matches." },
+            { "accept": ["removes the first node with value v"], "hint": "If v is only in L.first, the loop never removes it." }
+          ]
+        }
+      ]
+    }
+  ]
+}

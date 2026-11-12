@@ -1,0 +1,25 @@
+{
+  "task": "08_2",
+  "tests": [
+    {
+      "name": "when a equals b at 5 only five appears",
+      "input": [],
+      "expect": ["low only: 5"]
+    },
+    {
+      "name": "when a equals b at 10 only ten appears",
+      "input": [],
+      "expect": ["high only: 10"]
+    },
+    {
+      "name": "100 random values stayed inside 5 through 10",
+      "input": [],
+      "expect": ["all in range: true"]
+    },
+    {
+      "name": "common off-by-one gives four",
+      "input": [],
+      "reject": ["low only: 4", "high only: 9"]
+    }
+  ]
+}

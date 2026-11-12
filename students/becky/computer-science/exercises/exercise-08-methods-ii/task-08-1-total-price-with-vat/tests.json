@@ -1,0 +1,29 @@
+{
+  "task": "08_1",
+  "tests": [
+    {
+      "name": "unit price, quantity, and 19 % VAT",
+      "part": "a",
+      "input": [],
+      "expect": ["11.9"]
+    },
+    {
+      "name": "two arguments assumes 19 % VAT",
+      "part": "b",
+      "input": [],
+      "expect": ["59.5"]
+    },
+    {
+      "name": "one argument assumes qty 1 and 19 % VAT",
+      "part": "c",
+      "input": [],
+      "expect": ["9.52"]
+    },
+    {
+      "name": "commercial round to cents on 7 % VAT",
+      "part": "a",
+      "input": [],
+      "expect": ["3.56"]
+    }
+  ]
+}

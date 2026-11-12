@@ -1,0 +1,24 @@
+{
+  "task": "08_4",
+  "tests": [
+    {
+      "name": "mirrorCopy leaves original array unchanged",
+      "part": "a",
+      "input": [],
+      "expect": ["[1, 13, 3, 42, 5]"],
+      "reject": ["after copy source: [5"]
+    },
+    {
+      "name": "mirrorCopy returns reversed order",
+      "part": "a",
+      "input": [],
+      "expect": ["mirrored copy: [5, 42, 3, 13, 1]"]
+    },
+    {
+      "name": "mirrorInPlace reverses inside the array",
+      "part": "b",
+      "input": [],
+      "expect": ["in place: [5, 42, 3, 13, 1]"]
+    }
+  ]
+}

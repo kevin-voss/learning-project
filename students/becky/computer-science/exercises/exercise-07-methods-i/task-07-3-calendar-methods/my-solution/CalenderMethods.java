@@ -9,10 +9,15 @@ public class CalenderMethods {
         System.out.println("Please put in the Day: ");
         int day = new java.util.Scanner(System.in).nextInt();
 
-        
-        
-       
-        nextDateCalc( DateValidation(daysPerMonthCalc(month, isLeapYear(month, year)), isLeapYear(month, year), day, month), daysPerMonthCalc(month, isLeapYear(month, year)), isLeapYear(month, year), day, month, year);
+       //nextDateCalc String return "dd.mm.yyyy" 
+       //DateValidation boolean
+       //daysPerMonth int - 31 || 30 || 28 || 29
+       //leapYear boolean
+       //-> leapYear(int month, int year)
+       //-> daysPerMonth(int month, boolean leapYear)
+       //-> DateValidation(int daysPerMonth,int day, int month)
+       //-> nextDateCalc(boolean valid, int daysPerMonth, int day, int month, int year)
+        System.out.println(nextDateCalc(DateValidation(daysPerMonthCalc(month, isLeapYear(month, year)), day, month), daysPerMonthCalc(month, isLeapYear(month, year)), day, month, year));
     }
     
     public static boolean isLeapYear(int month, int year) {
@@ -20,13 +25,10 @@ public class CalenderMethods {
 
         if (month != 2) {
             return leapYear;
-        } else if ((year % 4) == 0 || (year % 400) == 0) {
+        } else if ((year % 4) == 0 && (year % 100) != 0 || (year % 400) == 0) {
            leapYear = true;
-
-           if ((year % 100) == 0) {
-            leapYear = false;
-           }
         }
+        
         return leapYear;
     }
 
@@ -39,15 +41,12 @@ public class CalenderMethods {
             daysPerMonth = 29;
         } else if (month == 4 || month == 6 || month == 9 || month == 11 ) {
            daysPerMonth = 30;           //Month with 30d
-        } else if (month == 1 || month == 3 || month == 5 || month == 7 ||
-            month == 8 || month == 10 || month == 12) {
-            daysPerMonth = 31;
         } 
 
         return daysPerMonth;
     }
 
-    public static boolean DateValidation(int daysPerMonth, boolean leap, int day, int month) {
+    public static boolean DateValidation(int daysPerMonth, int day, int month) {
         //month <= 12, day <= daysPerMonth
         boolean isDateValid = false;
 
@@ -61,10 +60,26 @@ public class CalenderMethods {
     }
 
     //Valid answer
-    public static void nextDateCalc(boolean valid, int daysPerMonth, int day, int month, int year) {
-        //day + 1, if day == daysPerMonth -> day = 1
-        //month: if day == daysPerMonth -> month + 1
-        //year: if day == daysPerMonth & month = 12 -> Month = 1, Year + 1
+    public static String nextDateCalc(boolean valid, int daysPerMonth, int day, int month, int year) {
+    
+        if (day < daysPerMonth && valid) {  //day + 1, if day < daysPerMonth -> day = 1
+            day ++;
+        } else if (day == daysPerMonth && valid) { //month: if day == daysPerMonth -> month +1
+            month ++;
+            day = 1;
+        } else if (day == daysPerMonth && month == 12 && valid) { //year: if day == daysPerMonth & month == 12 -> day = 1, Month = 1, Year + 1
+            year ++;
+            month = 1;
+            day = 1;
+        } else {
+            return "Das eingegebene Datum ist nicht korrekt!";
+        }
+
+        String date = "" + day + "." + "" + month + "." + "" + year;
+        
+        return date;
+        
+        
     }
 
 

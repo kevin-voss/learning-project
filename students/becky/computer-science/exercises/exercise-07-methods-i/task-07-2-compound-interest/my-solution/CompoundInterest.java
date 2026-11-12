@@ -16,14 +16,17 @@ public class CompoundInterest {
 
         double endCapital = 0.0;
 
-        //calculation of end capital: 
-        for(int c = 0; c <= duration; c++) {
+        
+        for(int year = 1; year <= duration; year++) {   //loop over the years
             System.out.println("interest Rate: " + interestRate + "%");
 
+            //calculation of end capital: 
             double interest = (startCapital / 100) * interestRate;
-            System.out.println("interest Rate in Year " + c + ": " + interest + "EUR");
+            System.out.println("interest Rate in Year " + year + ": " + interest + "EUR");
 
             endCapital = startCapital + interest;
+            
+            //adjusting interestRate
             interestRate = interestRate + 0.01;
         }
 

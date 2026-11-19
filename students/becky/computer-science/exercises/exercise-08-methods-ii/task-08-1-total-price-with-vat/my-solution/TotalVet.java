@@ -18,16 +18,16 @@ public class TotalVet {
 
     public static double totalPrice(double euro, int quantity, int vat) {
         //calc of priceWithoutVat:
-        double priceWithoutVat = euro * quantity;
+        double netto = euro * quantity;
 
         // calc of total vat:
-        double totalVat = (priceWithoutVat / 100) * vat;
+        double totalVat = (netto / 100) * vat;
 
         //calc of totalPrice:
-        double totalPrice = totalVat + priceWithoutVat;
+        double totalPrice = totalVat + netto;   //oder double brutto = (euro * quantity) * (1 + vat / 100.0);
 
         //calc of endPrice: (round commertionally)
-        double endPrice = Math.round(totalPrice);
+        double endPrice = Math.round(totalPrice * 100) / 100.00;
 
         System.out.println("Endpreis: " + endPrice);
 
@@ -37,42 +37,13 @@ public class TotalVet {
     public static double totalPrice(double euro, int quantity) {
         int vat = 19;
 
-        //calc of priceWithoutVat:
-        double priceWithoutVat = euro * quantity;
-
-        // calc of total vat:
-        double totalVat = (priceWithoutVat / 100) * vat;
-
-        //calc of totalPrice:
-        double totalPrice = totalVat + priceWithoutVat;
-
-        //calc of endPrice: (round commertionally)
-        double endPrice = Math.round(totalPrice);
-
-        System.out.println("Endpreis: " + endPrice);
-
-        return  endPrice;
+        return  totalPrice(euro, quantity, vat);
     }
 
     public static double totalPrice(double euro) {
         int vat = 19;
         int quantity = 1;
 
-        //calc of priceWithoutVat:
-        double priceWithoutVat = euro * quantity;
-
-        // calc of total vat:
-        double totalVat = (priceWithoutVat / 100) * vat;
-
-        //calc of totalPrice:
-        double totalPrice = totalVat + priceWithoutVat;
-
-        //calc of endPrice: (round commertionally)
-        double endPrice = Math.round(totalPrice);
-
-        System.out.println("Endpreis: " + endPrice);
-
-
-        return  endPrice;
+        return  totalPrice(euro, quantity, vat);
     }
 }

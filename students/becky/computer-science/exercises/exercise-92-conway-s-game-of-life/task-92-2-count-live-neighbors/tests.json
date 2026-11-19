@@ -1,0 +1,26 @@
+{
+  "task": "92_2",
+  "tests": [
+    {
+      "name": "top-left corner of a full 2x2 block: three live neighbours",
+      "input": ["2", "2", "##", "##", "0", "0"],
+      "expect": ["live neighbors: 3"]
+    },
+    {
+      "name": "a lone live cell in 1x1: zero neighbours",
+      "input": ["1", "1", "#", "0", "0"],
+      "expect": ["live neighbors: 0"]
+    },
+    {
+      "name": "centre of an empty 3x3 grid: zero neighbours",
+      "input": ["3", "3", "...", "...", "...", "1", "1"],
+      "expect": ["live neighbors: 0"]
+    },
+    {
+      "name": "centre of a plus shape: four live neighbours",
+      "input": ["3", "3", ".#.", "###", ".#.", "1", "1"],
+      "expect": ["live neighbors: 4"],
+      "reject": ["live neighbors: 8"]
+    }
+  ]
+}

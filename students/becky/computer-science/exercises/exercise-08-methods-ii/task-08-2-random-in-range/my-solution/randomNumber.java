@@ -4,7 +4,7 @@ public class randomNumber {
         int max = 20;
 
         //random Number with max and min incusive
-        int Num = Math.random() * (max + 1 - min) + min; 
+        int Num = (int) ( Math.random()) * ( max - min + 1 ) + min; //nochmal Anschauen!!!
         
         System.out.println(Num);
     }

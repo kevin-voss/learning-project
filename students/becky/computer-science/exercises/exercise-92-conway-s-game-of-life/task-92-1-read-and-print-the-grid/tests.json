@@ -1,0 +1,25 @@
+{
+  "task": "92_1",
+  "tests": [
+    {
+      "name": "a 3x3 grid with one live cell in the middle",
+      "input": ["3", "3", "...", ".#.", "..."],
+      "lines": [". . .", ". # .", ". . ."]
+    },
+    {
+      "name": "a 2x2 grid: top row alive, bottom row dead",
+      "input": ["2", "2", "##", ".."],
+      "lines": ["# #", ". ."]
+    },
+    {
+      "name": "1x1 alive: one hash with a trailing space",
+      "input": ["1", "1", "#"],
+      "lines": ["# "]
+    },
+    {
+      "name": "1x1 dead: one dot with a trailing space",
+      "input": ["1", "1", "."],
+      "lines": [". "]
+    }
+  ]
+}

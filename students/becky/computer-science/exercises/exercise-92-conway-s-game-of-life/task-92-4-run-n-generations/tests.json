@@ -1,0 +1,25 @@
+{
+  "task": "92_4",
+  "tests": [
+    {
+      "name": "blinker: one generation gives vertical line",
+      "input": ["3", "3", "...", "###", "...", "1"],
+      "lines": [". # .", ". # .", ". # ."]
+    },
+    {
+      "name": "blinker: two generations back to horizontal",
+      "input": ["3", "3", "...", "###", "...", "2"],
+      "lines": [". . .", "# # #", ". . ."]
+    },
+    {
+      "name": "zero generations: starting grid unchanged",
+      "input": ["2", "2", "##", "..", "0"],
+      "lines": ["# #", ". ."]
+    },
+    {
+      "name": "stable 2x2 block after five generations",
+      "input": ["2", "2", "##", "##", "5"],
+      "lines": ["# #", "# #"]
+    }
+  ]
+}

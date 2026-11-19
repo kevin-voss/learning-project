@@ -9,26 +9,30 @@ public class TriangleAngularCalc {
         System.out.println("Please put in the length of c: ");
         double c = new java.util.Scanner(System.in).nextDouble();
 
-        round(angularCalc(a, b, c));
+        double[] angulars = angularCalc(a, b, c);
+        round(angulars);
 
     }
 
     public static double[] angularCalc(double a, double b, double c) {
-         //calc of angularB:
-         double angularA = (b * b + c * c - a * a) / (2 * b * c);
+        double cosA = (b * b + c * c - a * a) / (2 * b * c);
+        double cosB = (a * a + c * c - b * b) / (2 * a * c);
+        double cosC = (a * a + b * b - c * c) / (2 * a * b);
 
-         //calc of angularB:
-         double angularB = (a * a + c * c - b * b) / (2 * a * c);
- 
-         //calc of angularC:
-         double angularC = (a * a + b * b - c * c) / (2 * a * b);
+        if (cosA + cosB + cosC > 180) {
+            System.out.println("Dies ist kein Dreieck!");
+        }
 
-         double[] angulars = {angularA, angularB, angularC};
+        double[] angulars = {cosA, cosB, cosC};
+
+        for (int i = 0; i <= angulars.length; i++) {
+            System.out.prinln(angulars[i]);
+        }
          
         return angulars;
     }
 
-    public static double[] round(double[] angulars) {
+    public static void round(double[] angulars) {
         System.out.println("Please put in, on how many decimal places you want to round: ");
         int decimalPlaces = new java.util.Scanner(System.in).nextInt();
 
@@ -41,7 +45,6 @@ public class TriangleAngularCalc {
 
             angulars[i] = angular;
         }
-
-        return angulars;
+        //System.out.println(angulars);
     }
 }

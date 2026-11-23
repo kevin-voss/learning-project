@@ -1,4 +1,4 @@
-public class TriangleAngularCalc {
+public class TriangleAngularCalc { //läuft aktuell nicht
     public static void main(String[] args) {
         System.out.println("Please put in the length of a: ");
         double a = new java.util.Scanner(System.in).nextDouble();

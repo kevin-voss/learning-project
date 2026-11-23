@@ -1,0 +1,20 @@
+{
+  "cursor.cpp.enablePartialAccepts": false,
+  "cursor.cpp.disabledLanguages": [
+    "java",
+    "javascript",
+    "typescript",
+    "javascriptreact",
+    "typescriptreact",
+    "html",
+    "css",
+    "json",
+    "jsonc",
+    "markdown",
+    "plaintext",
+    "scminput",
+    "shellscript"
+  ],
+  "editor.inlineSuggest.enabled": false,
+  "editor.suggest.preview": false
+}

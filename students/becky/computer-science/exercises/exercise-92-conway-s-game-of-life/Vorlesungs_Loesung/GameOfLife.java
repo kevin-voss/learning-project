@@ -14,7 +14,7 @@ public class GameOfLife {
      */
 
     public static void main(String[] args) {
-        print(init());
+        init();
     }
 
     /** Waits 250 ms between generations. */
@@ -30,41 +30,41 @@ public class GameOfLife {
      * One generation: every cell looks at neighbours on the OLD board (copy),
      * then writes its new state into cells.
      */
-    public static void nextTurn(int[][][] cells) {
-        int[][][] copy = copyOfCells(cells);                      
+    public static boolean nextTurn(int[][][] cells) {
+        // int[][][] copy = copyOfCells(cells);                   
         
         for (int row = 0; row < cells.length; row++) {
             for (int col = 0; col < cells[row].length; col++) {
-                int neighbours = countNeighbours(copy, row, col);
+                int neighbours = countNeighbours(cells, row, col);
 
-                if (copy[row][col][0] == 1) {
-                    // Live cell: survive only with 2 or 3 neighbours.
-                    cells[row][col][0] = (neighbours == 2 || neighbours == 3) ? 1 : 0;
+                //System.out.println("Alive value: " + cells[row][col][0]);
 
-                    boolean newState = neighbours == 2 || neighbours == 3;
-                    checkChanges(copy, newState, row, col);
+                if (cells[row][col][0] == 1) {
+                    if (neighbours != 2 && neighbours != 3) {
+                        System.out.println("SET CELL DEAD. ROW: " + row + ", COL: " + col);
+                        cells[row][col][0] = 0;
+                        return isRestartConditionMatched(cells, row, col);
+                    }
                 } else {
-                    // Dead cell: birth only with exactly 3 neighbours.
-                    cells[row][col][0] = (neighbours == 3) ? 1 : 0;
-
-                    boolean newState =  neighbours != 3;
-                    checkChanges(copy, newState, row, col);
+                    if (neighbours == 3) {
+                        System.out.println("SET CELL ALIVE. ROW: " + row + ", COL: " + col);
+                        cells[row][col][0] = 1;
+                        return isRestartConditionMatched(cells, row, col);
+                    }
                 }
             }
         }
+
+        return false;
     }
 
-    public static void checkChanges(int[][][] cells, boolean newState, int row, int col) {                        
-        boolean oldState = true;
-        
-        //if Element changed increment count
-        if (oldState != newState) {        
-            cells[row][col][1]++;
+    public static boolean isRestartConditionMatched(int[][][] cells, int row, int col) {   
+        // return true when a cell changed 6 times or more.
+        // so we can reset the game.
+        if (cells[row][col][1] >= 6) {
+            System.out.println("RESTART CONDITION MATCHED!");
         }
-        //restart logic
-        if (cells[row][col][1] >= 6) {        
-            init();
-        }
+        return cells[row][col][1] >= 6;                     
     }
 
 
@@ -126,7 +126,7 @@ public class GameOfLife {
     }
 
     /** Fills each cell randomly (50% alive), then shows the start grid. */
-    public static int[][][] init() {
+    public static void init() {
         // Lecture demo: fixed size 12 rows x 36 columns (1 = alive).
         int[][][] cells = new int[12][36][2];
 
@@ -142,14 +142,15 @@ public class GameOfLife {
             }
         }
 
+        print(cells);
+
+        boolean isRunning = false;
         int turns = 0;
-        while (true) {
+        while (!isRunning) {
             System.out.println("Turn: " + turns++);
+            isRunning = nextTurn(cells);
             print(cells);
-            nextTurn(cells);
             pause();                // Short delay so you can watch the pattern change.
         }
-
-        return cells;
     }
 }
